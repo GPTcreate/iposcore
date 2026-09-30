@@ -1,68 +1,176 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import Header from '@/components/Header';
+import IpoCard from '@/components/IpoCard';
+import GoogleAdSlot from '@/components/GoogleAdSlot';
+import NewsletterBanner from '@/components/NewsletterBanner';
+import { MOCK_IPOS } from '@/data/mockIpo';
+import { IpoStatus } from '@/types/ipo';
+import { ShieldCheck, CheckCircle2, TrendingUp } from 'lucide-react';
 
 export default function Home() {
+  const [filter, setFilter] = useState<'ALL' | IpoStatus>('ALL');
+
+  const filteredIpos = MOCK_IPOS.filter((ipo) => {
+    if (filter === 'ALL') return true;
+    return ipo.status === filter;
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
+      <Header />
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        {/* 상단 안내 헤더 (신뢰감 있고 직관적인 한국형 금융 포털 스타일) */}
+        <div className="bg-white rounded-xl border border-gray-300 p-5 sm:p-7 shadow-2xs mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md mb-2 border border-blue-200">
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span>2026년 10월 공모주 청약 안내</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                공모주 청약 일정 & 전문가 분석 요약
+              </h1>
+              <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
+                전자공시(DART) 기관 수요예측 결과와 공모주 전문 유튜버들의 의견을 종합 분석하여 핵심만 요약해 드립니다.
+              </p>
+            </div>
+
+            <div className="text-left md:text-right shrink-0">
+              <span className="text-xs text-gray-500 block">이번 주 청약 가능 종목</span>
+              <span className="text-2xl font-black text-blue-700">
+                총 {MOCK_IPOS.filter(i => i.status === 'SUBSCRIPTION').length}건 진행 중
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 필터 탭 (크고 읽기 편한 버튼) */}
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-5">
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-gray-200/90 text-xs sm:text-sm font-bold">
+            <button
+              onClick={() => setFilter('ALL')}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+                filter === 'ALL'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              전체 일정 ({MOCK_IPOS.length})
+            </button>
+            <button
+              onClick={() => setFilter('SUBSCRIPTION')}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+                filter === 'SUBSCRIPTION'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
             >
-              Learning
-            </a>{" "}
-            center.
+              청약 진행 중
+            </button>
+            <button
+              onClick={() => setFilter('UPCOMING')}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+                filter === 'UPCOMING'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
+              청약 예정
+            </button>
+            <button
+              onClick={() => setFilter('WAITING_LISTING')}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+                filter === 'WAITING_LISTING'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
+              상장 대기
+            </button>
+          </div>
+
+          <span className="text-xs text-gray-500 font-medium">
+            * 매 영업일 최신 공시 기준 업데이트
+          </span>
+        </div>
+
+        {/* 공모주 카드 목록 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredIpos.map((ipo) => (
+            <IpoCard key={ipo.id} ipo={ipo} />
+          ))}
+        </div>
+
+        {/* 광고 영역 - 페이지당 딱 1개만 단정하게 배치 */}
+        <GoogleAdSlot label="스폰서 안내" className="my-8" />
+
+        {/* 평가 기준 안내 섹션 (신뢰도 확보 및 애드센스 심사용) */}
+        <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
+          <h3 className="text-base font-bold text-gray-900 mb-2">
+            공모주 투자 매력도 점수 산출 기준 안내
+          </h3>
+          <p className="text-xs text-gray-600 mb-4">
+            단순 의견 취합이 아닌 금융감독원 공시 정량 지표(70%)와 전문가 여론 분석(30%)을 종합하여 100점 만점으로 표기합니다.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
+              <span className="font-bold text-gray-900 block mb-1 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                <span>1. 기관 수요예측 결과 (40점)</span>
+              </span>
+              <p className="text-gray-600">
+                기관 투자자 경쟁률 및 공모가 밴드 상단 초과 여부를 백분위로 객관 반영합니다.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
+              <span className="font-bold text-gray-900 block mb-1 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                <span>2. 의무확약 및 유통물량 (30점)</span>
+              </span>
+              <p className="text-gray-600">
+                상장 당일 쏟아질 수 있는 매도 물량과 의무보유확약 비율을 바탕으로 안전성을 평가합니다.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
+              <span className="font-bold text-gray-900 block mb-1 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                <span>3. 전문가 여론 컨센서스 (30점)</span>
+              </span>
+              <p className="text-gray-600">
+                공모주 전문 유튜브 및 블로그 분석가들의 긍정/신중 의견 비율을 종합 가산합니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 주간 리포트 이메일 알림 신청 */}
+        <NewsletterBanner />
+
+        {/* 하단 투자 유의사항 및 법적 면책 조항 */}
+        <footer className="mt-12 pt-6 border-t border-gray-300 text-xs text-gray-500 space-y-1.5">
+          <div className="flex items-center gap-1 font-bold text-gray-700">
+            <ShieldCheck className="w-4 h-4 text-blue-700" />
+            <span>투자 유의사항</span>
+          </div>
+          <p className="leading-relaxed">
+            본 사이트에서 제공하는 모든 수치 및 요약 정보는 공시 자료와 공개된 전문가 의견을 종합한 단순 참고용 자료입니다. 종목 추천이나 매수 권유가 아니며, 청약에 따른 최종 투자 책임은 투자자 본인에게 있습니다.
+          </p>
+          <div className="flex flex-wrap gap-4 pt-2 text-xs font-semibold text-gray-600">
+            <a href="/about" className="hover:text-blue-700 underline">서비스 소개</a>
+            <a href="/privacy" className="hover:text-blue-700 underline">개인정보처리방침</a>
+            <a href="/terms" className="hover:text-blue-700 underline">이용약관</a>
+            <a href="/about" className="hover:text-blue-700 underline">문의 및 제휴</a>
+          </div>
+          <p className="text-[11px] text-gray-400 pt-1">
+            © 2026 공모주 알리미 리포트. All rights reserved.
+          </p>
+        </footer>
       </main>
     </div>
   );

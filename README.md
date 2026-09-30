@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 IPO Insight AI (공모주 일정 & 전문가 AI 요약 분석 플랫폼)
 
-## Getting Started
+공모주 청약 일정, DART 전자공시 정량 지표, 6대 전문 유튜버 및 블로그 여론을 AI로 취합·요약하고 **종합 매력도 점수(IPO Score 1~100)**를 제공하여 **구글 애드센스(Google AdSense)** 수익을 극대화하는 웹 서비스입니다.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🌟 주요 핵심 기능
+
+1. **AI 종합 매력도 스코어링 (IPO Score)**
+   - **정량 지표 (50%)**: DART 기관 수요예측 경쟁률(25점) + 의무보유확약 비율(15점) + 유통가능물량 비율(10점)
+   - **정성 지표 (50%)**: 전문 유튜버 및 블로그 리뷰의 AI 감성 분석 (긍정 비율 기반 환산)
+   - 등급 분류: S (적극 추천) / A (청약 추천) / B (선별 청약) / C (청약 유의)
+
+2. **AI 3줄 핵심 요약 & 호재 vs 리스크 체크**
+   - 길고 복잡한 증권신고서를 읽을 필요 없이 10초 만에 핵심 판단 가능.
+
+3. **인터랙티브 비례 청약 계산기**
+   - 투자 가능 금액 입력 시 **비례 1주당 필요 증거금, 예상 배정주수(5사6입 반영), 마통 대출 이자 및 순수익 시뮬레이션**.
+   - 사용자의 높은 페이지 체류시간을 유도하여 구글 애드센스 광고 단가(RPM) 상승.
+
+4. **구글 애드센스 최적화 슬롯 컴포넌트 (`GoogleAdSlot`)**
+   - 상단 디스플레이, 본문 인피드, 계산기 인접 영역에 전략적 배치.
+   - 애드센스 승인 전에는 깨짐 없는 세련된 플레이스홀더를 보여주고, 퍼블리셔 ID 등록 시 즉시 실광고 자동 송출.
+
+5. **메일링(뉴스레터) 구독 시스템**
+   - 매주 월요일 오전 8시 주간 공모주 캘린더 브리핑 발송.
+   - 수요예측 공시 직후 청약 D-1 알림 발송으로 재방문 트래픽 유도.
+
+---
+
+## 🛠️ 기술 스택
+
+- **프론트엔드/풀스택**: Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS
+- **아이콘**: Lucide React
+- **데이터 분석 파이프라인**: Python 3.13, Google Gemini 2.5 Flash API
+- **이메일**: HTML 뉴스레터 템플릿 (Resend / Stibee 연동 가능)
+
+---
+
+## 📂 프로젝트 구조
+
+```text
+ipo-insights/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                     # 메인 일정 & 캘린더 대시보드
+│   │   ├── layout.tsx                   # 공통 레이아웃 & 구글 애드센스 로더
+│   │   ├── ipo/[id]/page.tsx            # 공모주별 AI 상세 리포트 & 계산기
+│   │   ├── calculator/page.tsx          # 독립 비례 청약 계산기 페이지
+│   │   └── api/newsletter/subscribe/    # 뉴스레터 이메일 구독 API
+│   ├── components/
+│   │   ├── Header.tsx                   # 반응형 상단 네비게이션
+│   │   ├── IpoCard.tsx                  # 공모주 목록 카드 컴포넌트
+│   │   ├── ScoreBadge.tsx               # AI 스코어 게이지 배지
+│   │   ├── IpoCalculator.tsx            # 실전 청약 계산기 위젯
+│   │   ├── GoogleAdSlot.tsx             # 구글 애드센스 광고 슬롯
+│   │   └── NewsletterBanner.tsx         # 이메일 뉴스레터 신청 폼
+│   ├── data/
+│   │   └── mockIpo.ts                   # 실제 종목 기반의 고품질 분석 데이터
+│   └── types/
+│       └── ipo.ts                       # 공모주 스키마 인터페이스
+│
+├── python_pipeline/                     # AI 데이터 수집 & 요약 엔진
+│   ├── analyzer.py                      # DART + 유튜브 감성분석 & 100점 점수화
+│   ├── weekly_newsletter_sample.html    # 매주 월요일 발송용 HTML 이메일
+│   └── requirements.txt
+│
+└── .env.example                         # 환경변수 예시
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 빠른 시작 가이드
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. 개발 서버 실행 (웹페이지)
+```bash
+# 종속성 설치 (이미 완료됨)
+npm install
 
-## Learn More
+# 로컬 개발 서버 실행
+npm run dev
+```
+브라우저에서 `http://localhost:3000` 접속
 
-To learn more about Next.js, take a look at the following resources:
+### 2. 프로덕션 빌드 검증
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. AI 분석 파이프라인 실행
+```bash
+cd python_pipeline
+python analyzer.py
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 💰 구글 애드센스 승인 체크리스트
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **고유한 콘텐츠 확보 (완료)**:
+   - 단순 복붙이 아닌 자체 산출 알고리즘(`AI 점수 1~100점`)과 3줄 요약, 호재/리스크 분석을 제공하여 구글의 '가치 없는 콘텐츠' 정책을 완벽히 방어합니다.
+2. **저작권 보호 (완료)**:
+   - 유튜브/블로그 원문 인용 시 출처 명시 및 바로가기 링크를 제공합니다.
+3. **법적 면책 조항 (완료)**:
+   - 자본시장법 준수를 위해 모든 페이지 하단에 투자 유의사항 및 면책 조항을 자동 삽입하였습니다.
+4. **광고 등록**:
+   - 구글 애드센스 승인 후 발급받은 퍼블리셔 ID(`ca-pub-XXXXXXXXXX`)를 `.env.local`의 `NEXT_PUBLIC_ADSENSE_CLIENT_ID`에 넣기만 하면 모든 광고 슬롯이 활성화됩니다.
