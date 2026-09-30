@@ -47,54 +47,77 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 필터 탭 (크고 읽기 편한 버튼) */}
-        <div className="flex items-center justify-between flex-wrap gap-2 mb-5">
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-gray-200/90 text-xs sm:text-sm font-bold">
+        {/* 필터 탭 (모바일 터치 최적화 가로 스크롤 & 지난 공모주 탭 추가) */}
+        <div className="mb-5 space-y-2">
+          <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-gray-200/90 text-xs sm:text-sm font-bold overflow-x-auto scrollbar-none touch-pan-x">
             <button
+              type="button"
               onClick={() => setFilter('ALL')}
-              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'ALL'
-                  ? 'bg-white text-blue-700 shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900'
+                  ? 'bg-blue-700 text-white shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              전체 일정 ({MOCK_IPOS.length})
+              전체 ({MOCK_IPOS.length})
             </button>
             <button
+              type="button"
               onClick={() => setFilter('SUBSCRIPTION')}
-              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'SUBSCRIPTION'
-                  ? 'bg-white text-blue-700 shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900'
+                  ? 'bg-blue-700 text-white shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              청약 진행 중
+              청약 진행 중 ({MOCK_IPOS.filter(i => i.status === 'SUBSCRIPTION').length})
             </button>
             <button
+              type="button"
               onClick={() => setFilter('UPCOMING')}
-              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'UPCOMING'
-                  ? 'bg-white text-blue-700 shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900'
+                  ? 'bg-blue-700 text-white shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              청약 예정
+              청약 예정 ({MOCK_IPOS.filter(i => i.status === 'UPCOMING').length})
             </button>
             <button
+              type="button"
               onClick={() => setFilter('WAITING_LISTING')}
-              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${
+              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'WAITING_LISTING'
-                  ? 'bg-white text-blue-700 shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900'
+                  ? 'bg-blue-700 text-white shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              상장 대기
+              상장 대기 ({MOCK_IPOS.filter(i => i.status === 'WAITING_LISTING').length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilter('LISTED')}
+              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                filter === 'LISTED'
+                  ? 'bg-blue-700 text-white shadow-xs'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
+              }`}
+            >
+              지난 공모주 ({MOCK_IPOS.filter(i => i.status === 'LISTED').length})
             </button>
           </div>
 
-          <span className="text-xs text-gray-500 font-medium">
-            * 매 영업일 최신 공시 기준 업데이트
-          </span>
+          <div className="flex justify-between items-center text-xs text-gray-500 px-1">
+            <span>
+              현재 보기: <strong className="text-blue-800 font-bold">{
+                filter === 'ALL' ? '전체 일정' :
+                filter === 'SUBSCRIPTION' ? '청약 진행 중' :
+                filter === 'UPCOMING' ? '청약 예정' :
+                filter === 'WAITING_LISTING' ? '상장 대기' : '지난 공모주 (상장 완료)'
+              }</strong> ({filteredIpos.length}개 종목)
+            </span>
+            <span className="hidden sm:inline">* 매 영업일 최신 공시 기준 업데이트</span>
+          </div>
         </div>
 
         {/* 공모주 카드 목록 */}
