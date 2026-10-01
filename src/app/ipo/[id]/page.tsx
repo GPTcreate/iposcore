@@ -335,13 +335,19 @@ export default async function IpoDetailPage({ params }: PageProps) {
                     <p className="text-gray-600 text-xs mt-0.5">{rev.summary}</p>
                   </div>
                   <a
-                    href={rev.url}
+                    href={
+                      rev.url && rev.url !== 'https://youtube.com' && rev.url !== 'https://blog.naver.com'
+                        ? rev.url
+                        : rev.sourceType === 'YOUTUBE'
+                          ? `https://www.youtube.com/results?search_query=${encodeURIComponent(`${rev.author} ${ipo.name} 공모주`)}`
+                          : `https://search.naver.com/search.naver?where=article&query=${encodeURIComponent(`${rev.author} ${ipo.name} 공모주`)}`
+                    }
                     target="_blank"
                     rel="noreferrer"
-                    className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-100 text-gray-800 text-xs font-semibold cursor-pointer"
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 text-gray-800 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
                   >
-                    <span>원문 영상 보기</span>
-                    <ExternalLink className="w-3 h-3 text-gray-500" />
+                    <span>{rev.sourceType === 'YOUTUBE' ? '원문 영상 시청' : '원문 글 읽기'}</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
                   </a>
                 </div>
               ))}

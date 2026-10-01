@@ -51,14 +51,34 @@ export const MOCK_IPOS: IpoItem[] = [
       {
         id: 'rev-mel-1',
         sourceType: 'YOUTUBE',
-        author: '공모주 수첩 TV',
+        author: '아이언의 공모주',
         title: '멜콘 수요예측 결과 분석: 균등 1주 가능할까? 비례 전략',
-        url: 'https://youtube.com',
+        url: 'https://www.youtube.com/results?search_query=%EC%95%84%EC%9D%B4%EC%96%B8+%EB%A9%9C%EC%BD%98+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
         publishedAt: '2026-09-30',
         sentiment: 'POSITIVE',
-        summary: '기관 경쟁률 980대 1에 확약 16%. 유통물량 24%로 준수하여 균등+비례 청약 추천.'
-      }
-    ]
+        summary: '기관 경쟁률 982:1에 의무확약 16%. 상장일 유통물량 24%로 준수하여 균등 및 비례 청약 적극 추천.',
+      },
+      {
+        id: 'rev-mel-2',
+        sourceType: 'YOUTUBE',
+        author: '주식애소리',
+        title: '멜콘 신영증권 비례 1주당 필요 증거금 및 청약 한도 총정리',
+        url: 'https://www.youtube.com/results?search_query=%EC%A3%BC%EC%8B%9D%EC%95%A0%EC%86%8C%EB%A6%AC+%EB%A9%9C%EC%BD%98+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
+        publishedAt: '2026-10-01',
+        sentiment: 'POSITIVE',
+        summary: '공모가 15,500원 확정. 신영증권 수수료 2,000원 감안해도 비례 청약 실익 충분할 것으로 예상.',
+      },
+      {
+        id: 'rev-mel-3',
+        sourceType: 'BLOG',
+        author: '수미숨의 자투리 경제학',
+        title: '반도체 칠러 전문 멜콘 IPO 증권신고서 정밀 분석',
+        url: 'https://search.naver.com/search.naver?where=article&query=%EC%88%98%EB%AF%B8%EC%88%A8+%EB%A9%9C%EC%BD%98+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
+        publishedAt: '2026-09-30',
+        sentiment: 'POSITIVE',
+        summary: '삼성전자 및 SK하이닉스 벤더사향 초정밀 칠러 공급 레퍼런스 확고. 실적 턴어라운드 국면.',
+      },
+    ],
   },
   {
     id: 'jincostec',
@@ -88,22 +108,43 @@ export const MOCK_IPOS: IpoItem[] = [
       bulletPoints: [
         '미국·일본 중심 K-뷰티 수출 호조로 하이드로겔 아이패치 주문량 급증',
         '기관 경쟁률 812:1로 밴드 상단 초과 5,800원 확정',
-        '공모 규모 180억원의 소형주로 상장일 시초가 수급 유입 기대'
+        '공모 규모 180억원의 소형주로 상장일 시초가 수급 유입 기대',
       ],
       positivePoints: [
         '소형주 품절주 효과 기대 및 가벼운 시가총액',
-        '해외 인디 브랜드사향 수주 가시성 높음'
+        '해외 인디 브랜드사향 수주 가시성 높음',
       ],
       riskPoints: [
-        '중소형 화장품 OEM/ODM 업계 내 단가 경쟁 심화 가능성'
-      ]
+        '중소형 화장품 OEM/ODM 업계 내 단가 경쟁 심화 가능성',
+      ],
     },
     sentimentConsensus: {
       positiveRatio: 74,
       neutralRatio: 21,
-      cautionRatio: 5
+      cautionRatio: 5,
     },
-    expertReviews: []
+    expertReviews: [
+      {
+        id: 'rev-jin-1',
+        sourceType: 'YOUTUBE',
+        author: '주식애소리',
+        title: '진코스텍 공모가 5,800원 확정! 하나증권 청약 전 체크포인트',
+        url: 'https://www.youtube.com/results?search_query=%EC%A3%BC%EC%8B%9D%EC%95%A0%EC%86%8C%EB%A6%AC+%EC%A7%84%EC%BD%94%EC%8A%A4%ED%85%8D+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
+        publishedAt: '2026-10-01',
+        sentiment: 'POSITIVE',
+        summary: '공모 규모 180억원의 소형주 매력. K-뷰티 수출 호조에 따른 하이드로겔 아이패치 수혜.',
+      },
+      {
+        id: 'rev-jin-2',
+        sourceType: 'BLOG',
+        author: '아이언의 공모주 이야기',
+        title: '진코스텍 수요예측 결과 및 비례 청약 전략표',
+        url: 'https://search.naver.com/search.naver?where=article&query=%EC%95%84%EC%9D%B4%EC%96%B8+%EC%A7%84%EC%BD%94%EC%8A%A4%ED%85%8D+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
+        publishedAt: '2026-10-01',
+        sentiment: 'POSITIVE',
+        summary: '기관 경쟁률 812:1로 준수. 유통물량 29%대이나 절대 공모금액이 적어 상장 당일 변동성 기대.',
+      },
+    ],
   },
 
   // ==========================================
@@ -347,14 +388,24 @@ export const MOCK_IPOS: IpoItem[] = [
       {
         id: 'rev-born-1',
         sourceType: 'YOUTUBE',
-        author: '공모주 수첩 TV',
-        title: '더본코리아 상장일 시초가 분석: 따블 이상 기대 가능할까?',
-        url: 'https://youtube.com',
+        author: '박곰희TV',
+        title: '더본코리아 백종원 대표 IPO, 공모주 청약 전 필수 시청 가이드',
+        url: 'https://www.youtube.com/results?search_query=%EB%B0%95%EA%B3%B0%ED%9D%AC+%EB%8D%94%EB%B3%B8%EC%BD%94%EB%A6%AC%EC%95%84+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
         publishedAt: '2024-10-25',
         sentiment: 'POSITIVE',
-        summary: '기관 경쟁률 734:1에 유통물량이 20% 미만이라 상장 당일 수급 프리미엄 뚜렷.'
-      }
-    ]
+        summary: '국민적 인지도와 프랜차이즈 해외 진출 모멘텀. 기관 경쟁률 734:1로 흥행 성공.',
+      },
+      {
+        id: 'rev-born-2',
+        sourceType: 'YOUTUBE',
+        author: '아이언의 공모주',
+        title: '더본코리아 상장일 시초가 분석: 따블 이상 기대 가능할까?',
+        url: 'https://www.youtube.com/results?search_query=%EC%95%84%EC%9D%B4%EC%96%B8+%EB%8D%94%EB%B3%B8%EC%BD%94%EB%A6%AC%EC%95%84+%EA%B3%B5%EB%AA%A8%EC%A3%BC',
+        publishedAt: '2024-10-26',
+        sentiment: 'POSITIVE',
+        summary: '기관 경쟁률 734:1에 유통물량이 20% 미만이라 상장 당일 수급 프리미엄 뚜렷.',
+      },
+    ],
   },
   {
     id: 'clobot',
