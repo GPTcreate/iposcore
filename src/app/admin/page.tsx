@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { CrawlChannel, CrawlJobLog } from '@/types/admin';
 import { INITIAL_CHANNELS, INITIAL_LOGS } from '@/data/mockAdmin';
@@ -19,10 +19,42 @@ import {
   Users,
   Database,
   Trash2,
-  ExternalLink
+  ExternalLink,
+  Lock,
+  LogOut,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const auth = sessionStorage.getItem('iposcore_admin_auth');
+      if (auth === 'true') {
+        setIsAuthenticated(true);
+      }
+    }
+  }, []);
+
+  const handleAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pinInput.trim() === '7788' || pinInput.trim() === 'admin2026') {
+      setIsAuthenticated(true);
+      setPinError(false);
+      sessionStorage.setItem('iposcore_admin_auth', 'true');
+    } else {
+      setPinError(true);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('iposcore_admin_auth');
+  };
+
   const [channels, setChannels] = useState<CrawlChannel[]>(INITIAL_CHANNELS);
   const [logs, setLogs] = useState<CrawlJobLog[]>(INITIAL_LOGS);
   const [isCrawling, setIsCrawling] = useState(false);
@@ -107,6 +139,53 @@ export default function AdminPage() {
     }, 1500);
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
+        <Header />
+        <main className="max-w-md mx-auto px-4 py-16 sm:py-24">
+          <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200 text-center">
+            <div className="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-6 h-6" />
+            </div>
+            <h1 className="text-xl font-bold text-gray-900 mb-1">관리자 보안 인증</h1>
+            <p className="text-xs text-gray-500 mb-6">
+              공모주 알리미 리포트 관리자 전용 제어 센터입니다.<br />
+              관리자 보안 PIN 번호를 입력해 주세요.
+            </p>
+
+            <form onSubmit={handleAuthSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="password"
+                  placeholder="보안 암호 (PIN)"
+                  value={pinInput}
+                  onChange={(e) => {
+                    setPinInput(e.target.value);
+                    if (pinError) setPinError(false);
+                  }}
+                  autoFocus
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-hidden focus:ring-2 focus:ring-blue-600 text-center text-base font-bold tracking-widest"
+                />
+                {pinError && (
+                  <p className="text-xs text-rose-600 mt-2 font-medium">
+                    인증 암호가 일치하지 않습니다. 다시 입력해주세요.
+                  </p>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-xs transition-colors cursor-pointer"
+              >
+                관리자 제어판 접속
+              </button>
+            </form>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
       <Header />
@@ -115,9 +194,19 @@ export default function AdminPage() {
         {/* 상단 타이틀 */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-300 pb-5">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-100 text-blue-800 text-xs font-bold mb-2">
-              <Settings className="w-3.5 h-3.5" />
-              <span>크롤링 파이프라인 제어 센터</span>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-100 text-blue-800 text-xs font-bold">
+                <Settings className="w-3.5 h-3.5" />
+                <span>크롤링 파이프라인 제어 센터</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                title="관리자 로그아웃"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>로그아웃</span>
+              </button>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-gray-900">
               관리자 제어 센터

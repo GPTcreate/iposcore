@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, Calculator, Bell, Settings } from 'lucide-react';
+import { Calendar, Calculator, Bell } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -25,36 +25,31 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* 네비게이션 - 큰 글씨와 읽기 편한 라벨 */}
-        <nav className="flex items-center gap-2 sm:gap-4 text-sm font-semibold">
+        {/* 네비게이션 - 모바일에서는 아이콘 위주로 컴팩트하게, 데스크톱에서는 텍스트 함께 표시 */}
+        <nav className="flex items-center gap-1 sm:gap-3 text-sm font-semibold shrink-0">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
+            title="청약 일정"
           >
-            <Calendar className="w-4 h-4 text-gray-500" />
-            <span>청약 일정</span>
+            <Calendar className="w-4 h-4 text-gray-600 shrink-0" />
+            <span className="hidden sm:inline">청약 일정</span>
           </Link>
           <Link
             href="/calculator"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
+            title="비례 계산기"
           >
-            <Calculator className="w-4 h-4 text-gray-500" />
-            <span>비례 계산기</span>
-          </Link>
-          <Link
-            href="/admin"
-            className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-xs text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors"
-            title="관리자 설정"
-          >
-            <Settings className="w-4 h-4" />
-            <span className="hidden md:inline">관리자</span>
+            <Calculator className="w-4 h-4 text-gray-600 shrink-0" />
+            <span className="hidden sm:inline">비례 계산기</span>
           </Link>
           <a
             href="#newsletter-section"
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors shrink-0"
           >
-            <Bell className="w-3.5 h-3.5" />
-            <span>청약 알림 신청</span>
+            <Bell className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">청약 알림 신청</span>
+            <span className="sm:hidden">알림 신청</span>
           </a>
         </nav>
       </div>
