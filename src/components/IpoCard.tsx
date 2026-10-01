@@ -11,6 +11,12 @@ interface IpoCardProps {
 export default function IpoCard({ ipo }: IpoCardProps) {
   // 상태별 라벨 및 스타일 (단정하고 눈에 잘 띄는 스타일)
   const getStatusBadge = () => {
+    if (ipo.isCancelled) {
+      return {
+        text: '공모 취소',
+        className: 'bg-rose-700 text-white font-bold'
+      };
+    }
     switch (ipo.status) {
       case 'SUBSCRIPTION':
         return {
@@ -71,7 +77,9 @@ export default function IpoCard({ ipo }: IpoCardProps) {
           <div className="flex justify-between items-center py-0.5 border-b border-gray-200/80 pb-1.5">
             <span className="text-gray-500 font-medium">확정 공모가</span>
             <span className="font-extrabold text-sm text-gray-900">
-              {ipo.confirmedPrice > 0 ? (
+              {ipo.isCancelled ? (
+                <span className="text-rose-600 font-bold text-xs">공모 취소 (철회)</span>
+              ) : ipo.confirmedPrice > 0 ? (
                 `${ipo.confirmedPrice.toLocaleString()}원`
               ) : (
                 <span className="text-gray-600 font-semibold text-xs">
@@ -84,7 +92,9 @@ export default function IpoCard({ ipo }: IpoCardProps) {
           <div className="flex justify-between items-center py-0.5 border-b border-gray-200/80 pb-1.5">
             <span className="text-gray-500 font-medium">기관 경쟁률</span>
             <span className="font-bold text-gray-900">
-              {ipo.institutionalCompetitionRate > 0 ? (
+              {ipo.isCancelled ? (
+                <span className="text-gray-400 font-normal">철회로 미실시/미공개</span>
+              ) : ipo.institutionalCompetitionRate > 0 ? (
                 `${ipo.institutionalCompetitionRate.toLocaleString()} : 1`
               ) : (
                 <span className="text-gray-400 font-normal">수요예측 발표 전</span>
@@ -108,8 +118,21 @@ export default function IpoCard({ ipo }: IpoCardProps) {
           </div>
         </div>
 
-        {/* 상장 완료 종목 실전 수익률 (시초가 & 종가) */}
-        {ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
+        {/* 공모 취소/철회 종목 사유 안내 박스 */}
+        {ipo.isCancelled && (
+          <div className="rounded-lg border border-rose-200 bg-rose-50/90 p-2.5 mb-3 text-xs">
+            <div className="flex items-center gap-1.5 font-bold text-rose-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
+              <span>공모 철회 안내</span>
+            </div>
+            <p className="text-[11px] text-rose-900 mt-1 line-clamp-2 leading-relaxed">
+              {ipo.cancelReason || '기관 수요예측 부진 및 시장 피드백으로 증권신고서를 철회했습니다.'}
+            </p>
+          </div>
+        )}
+
+        {/* 상장 완료 종목 실전 수익률 (시초가 & 종가, 정상 상장 종목만) */}
+        {!ipo.isCancelled && ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
           <div className="rounded-lg border border-emerald-300 bg-emerald-50/70 p-2.5 mb-3">
             <div className="flex justify-between items-center mb-1 text-[11px] font-bold text-emerald-900">
               <span className="flex items-center gap-1">

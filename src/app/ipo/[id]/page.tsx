@@ -103,9 +103,14 @@ export default async function IpoDetailPage({ params }: PageProps) {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded text-xs font-bold bg-blue-700 text-white">
-                  {ipo.market}
+                <span className={`px-2.5 py-1 rounded text-xs font-bold ${ipo.isCancelled ? 'bg-rose-700 text-white' : 'bg-blue-700 text-white'}`}>
+                  {ipo.isCancelled ? '공모 취소' : ipo.market}
                 </span>
+                {ipo.isCancelled && (
+                  <span className="px-2 py-1 rounded text-xs font-bold bg-gray-100 text-gray-700 border border-gray-200">
+                    {ipo.market}
+                  </span>
+                )}
                 <span className="text-xs font-semibold text-gray-500">종목코드 {ipo.code}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900">
@@ -139,21 +144,41 @@ export default async function IpoDetailPage({ params }: PageProps) {
             </div>
             <div>
               <span className="text-gray-500 block mb-0.5 font-medium">상장일</span>
-              <span className="font-bold text-blue-700 text-sm">
-                {ipo.listingDate || '추후 공시 예정'}
+              <span className={`font-bold text-sm ${ipo.isCancelled ? 'text-rose-700' : 'text-blue-700'}`}>
+                {ipo.isCancelled ? '공모 철회 (취소)' : ipo.listingDate || '추후 공시 예정'}
               </span>
             </div>
             <div>
               <span className="text-gray-500 block mb-0.5 font-medium">확정 공모가</span>
               <span className="font-black text-gray-900 text-sm">
-                {ipo.confirmedPrice > 0 ? `${ipo.confirmedPrice.toLocaleString()}원` : '수요예측 대기'}
+                {ipo.isCancelled ? (
+                  <span className="text-rose-700 font-bold">공모 취소</span>
+                ) : ipo.confirmedPrice > 0 ? (
+                  `${ipo.confirmedPrice.toLocaleString()}원`
+                ) : (
+                  '수요예측 대기'
+                )}
               </span>
             </div>
           </div>
         </div>
 
-        {/* 상장 완료 종목 실전 수익률 배너 (시초가 & 종가) */}
-        {ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
+        {/* 공모 취소/철회 종목 사유 안내 배너 */}
+        {ipo.isCancelled && (
+          <div className="p-5 rounded-xl bg-rose-50 border border-rose-300 shadow-2xs">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2 py-0.5 rounded text-[11px] font-extrabold bg-rose-600 text-white">공모 취소</span>
+              <span className="text-xs font-bold text-rose-700">증권신고서 철회 완료</span>
+            </div>
+            <h3 className="text-base font-bold text-gray-900">공모 추진 철회 및 일정 취소 안내</h3>
+            <p className="text-xs text-gray-700 mt-1 leading-relaxed">
+              {ipo.cancelReason || '기관 수요예측 결과 및 시장 피드백을 감안하여 상장 일정을 철회하였습니다. 일반 투자자 청약은 진행되지 않았으며, 추후 공모 구조 개편 후 재도전할 예정입니다.'}
+            </p>
+          </div>
+        )}
+
+        {/* 상장 완료 종목 실전 수익률 배너 (시초가 & 종가, 정상 상장 종목만) */}
+        {!ipo.isCancelled && ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
           <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-300 shadow-2xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
@@ -398,14 +423,16 @@ export default async function IpoDetailPage({ params }: PageProps) {
         {/* 광고 영역 - 상세 페이지 내 단 딱 1개만 단정하게 배치 */}
         <GoogleAdSlot label="스폰서 안내" />
 
-        {/* 4. 실전 비례 청약 계산기 */}
-        <div>
-          <IpoCalculator
-            initialPrice={ipo.confirmedPrice > 0 ? ipo.confirmedPrice : ipo.priceBandMax}
-            initialCompetitionRate={ipo.institutionalCompetitionRate}
-            stockName={ipo.name}
-          />
-        </div>
+        {/* 4. 실전 비례 청약 계산기 (취소 종목 제외) */}
+        {!ipo.isCancelled && (
+          <div>
+            <IpoCalculator
+              initialPrice={ipo.confirmedPrice > 0 ? ipo.confirmedPrice : ipo.priceBandMax}
+              initialCompetitionRate={ipo.institutionalCompetitionRate}
+              stockName={ipo.name}
+            />
+          </div>
+        )}
 
         {/* 뉴스레터 구독 */}
         <NewsletterBanner />

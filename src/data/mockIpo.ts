@@ -307,18 +307,25 @@ export const MOCK_IPOS: IpoItem[] = [
   },
 
   // ==========================================
-  // 3. 상장 대기 / 일정 조정 (WAITING_LISTING)
+  // 3. 상장 대기 (WAITING_LISTING)
+  // ==========================================
+  // 현재 청약 마감 후 상장 대기 중인 종목 없음 (수요예측 및 청약 완료 시 추가)
+
+  // ==========================================
+  // 4. 지난 공모주 (상장 완료 및 공모 취소: LISTED)
   // ==========================================
   {
     id: 'k-bank',
     name: '케이뱅크',
     code: '279570',
     market: 'KOSPI',
-    status: 'WAITING_LISTING',
-    subscriptionStart: '2026-10-21',
-    subscriptionEnd: '2026-10-22',
-    refundDate: '2026-10-24',
-    listingDate: '추후 재공시',
+    status: 'LISTED',
+    isCancelled: true,
+    cancelReason: '기관 수요예측 부진 및 대규모 구주매출(49%) 부담으로 공모 철회신고서 제출',
+    subscriptionStart: '2024-10-21',
+    subscriptionEnd: '2024-10-22',
+    refundDate: '2024-10-24',
+    listingDate: '공모 취소 (철회)',
     priceBandMin: 9500,
     priceBandMax: 12000,
     confirmedPrice: 0,
@@ -334,22 +341,18 @@ export const MOCK_IPOS: IpoItem[] = [
     aiScore: 49,
     scoreGrade: 'C',
     aiSummary: {
-      headline: '국내 1호 인터넷전문은행 대어, 공모 구조 재정비 후 상장 재추진 중',
+      headline: '공모 취소: 기관 수요예측 부진 및 구주매출 부담으로 증권신고서 철회',
       bulletPoints: [
-        '조 단위 대형 공모로 구주매출 비중(49%) 축소 및 밸류에이션 재조정 추진',
-        '업비트 예치금 의존도 완화 및 기업대출 포트폴리오 다각화 성과',
-        '수요예측 일정 재확정 시 공모가 밴드 및 주관사 최종 공시 예정'
+        '기관 투자자 대상 수요예측 흥행 부진 및 49% 구주매출 물량 부담으로 공모 철회',
+        '업비트 예수금 비중 및 밸류에이션 논란을 정비한 후 차후 상장 재도전 예정',
+        '일반 투자자 청약은 진행되지 않고 공식 취소되었습니다.'
       ],
-      positivePoints: ['흑자 기조 안착 및 코스피 200 특례편입 잠재력'],
-      riskPoints: ['구주매출 비중 및 상장일 유통물량 부담']
+      positivePoints: ['흑자 기조 안착 및 향후 공모 구조 개편 기대'],
+      riskPoints: ['대규모 구주매출 비중 및 업비트 예치금 의존도']
     },
-    sentimentConsensus: { positiveRatio: 55, neutralRatio: 30, cautionRatio: 15 },
+    sentimentConsensus: { positiveRatio: 25, neutralRatio: 30, cautionRatio: 45 },
     expertReviews: []
   },
-
-  // ==========================================
-  // 4. 지난 공모주 (상장 완료: LISTED)
-  // ==========================================
   {
     id: 'theborn-korea',
     name: '더본코리아',

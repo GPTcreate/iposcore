@@ -151,11 +151,18 @@ export default function Home() {
         </div>
 
         {/* 공모주 카드 목록 (페이징 & 점진적 로딩으로 렉 방지) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {displayedIpos.map((ipo) => (
-            <IpoCard key={ipo.id} ipo={ipo} />
-          ))}
-        </div>
+        {displayedIpos.length === 0 ? (
+          <div className="bg-white rounded-xl border border-gray-300 p-10 text-center text-gray-500 shadow-2xs">
+            <p className="text-base font-semibold text-gray-700">현재 해당하는 공모주 일정이 없습니다.</p>
+            <p className="text-xs text-gray-500 mt-1">새로운 공시 및 청약 일정이 발표되면 신속하게 반영됩니다.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {displayedIpos.map((ipo) => (
+              <IpoCard key={ipo.id} ipo={ipo} />
+            ))}
+          </div>
+        )}
 
         {/* 더보기 및 스크롤 로딩 트리거 (렉 방지) */}
         {hasMore && (
