@@ -255,7 +255,33 @@ export default function AdminPage() {
     setIsAddingChannel(false);
   };
 
-  // 수동 크롤링 & 실시간 점수 재산출 실행 트리거
+  // 방법 2 자동 스케줄러 (D-1 및 신규 예정 종목 선별) 실행 트리거
+  const handleTriggerMethod2Check = async () => {
+    setIsCrawling(true);
+    try {
+      const res = await fetch('/api/cron/update?manual=true');
+      const data = await res.json();
+
+      const newLog: CrawlJobLog = {
+        id: `log-${Date.now()}`,
+        targetStockName: data.processedCount > 0 ? `${data.processedCount}개 종목 선별 처리` : '대상 종목 없음',
+        source: '방법 2 자동 파이프라인 (청약 예정 등록 시 1회 + 청약 전날 D-1 1회)',
+        status: data.success ? 'SUCCESS' : 'FAILED',
+        collectedCount: data.processedCount || 0,
+        timestamp: new Date().toLocaleTimeString(),
+        message: data.message || `처리 ${data.processedCount || 0}건 / 스킵 ${data.skippedCount || 0}건`,
+      };
+      setLogs([newLog, ...logs]);
+      alert(`[방법 2 파이프라인 실행 완료]\n• 선별 처리: ${data.processedCount || 0}건 (청약 전날 D-1 및 신규 등록)\n• 불필요 스킵: ${data.skippedCount || 0}건 (비용 절감)\n• DART 공시 확인: ${data.dartFilingsCount || 0}건`);
+    } catch (err) {
+      console.error(err);
+      alert('방법 2 파이프라인 실행 중 오류가 발생했습니다.');
+    } finally {
+      setIsCrawling(false);
+    }
+  };
+
+  // 특정 종목 수동 강제 분석 트리거
   const handleTriggerCrawl = async () => {
     setIsCrawling(true);
     try {
@@ -272,7 +298,7 @@ export default function AdminPage() {
         message: data.message || `DART 실시간 공시 동기화 및 ${selectedStock} AI 점수 재산출 완료!`,
       };
       setLogs([newLog, ...logs]);
-      alert(`[${selectedStock}] DART 공시 동기화 및 AI 점수 재산출이 완료되었습니다!`);
+      alert(`[${selectedStock}] 수동 즉시 분석 및 AI 점수 재산출이 완료되었습니다!`);
     } catch (err) {
       console.error(err);
       alert('크롤링 파이프라인 동기화 중 오류가 발생했습니다.');
@@ -372,49 +398,64 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* 1. 수동 즉시 크롤링 & AI 점수 재산출 섹션 */}
+        {/* 1. 방법 2 자동화 정책 및 수동 트리거 섹션 */}
         <section className="p-6 rounded-xl bg-blue-900 text-white shadow-2xs space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-800 text-blue-200 text-[11px] font-semibold mb-1 border border-blue-700">
+                <CheckCircle className="w-3 h-3 text-emerald-400" />
+                <span>방법 2 파이프라인 가동 중</span>
+              </div>
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <RotateCw className="w-4 h-4 text-blue-300" />
-                <span>원클릭 수동 크롤링 & 점수 재산출</span>
+                <span>지능형 2단계 자동 실행 정책 (D-1 & 청약 예정)</span>
               </h2>
-              <p className="text-xs text-blue-200 mt-1">
-                종목을 선택하고 실행하시면 최신 전문가 유튜브/블로그 글을 즉시 수집하여 점수를 갱신합니다.
+              <p className="text-xs text-blue-200 mt-1 max-w-xl leading-relaxed">
+                매일 무차별 실행하지 않고 <strong>① 청약 예정 신규 등록 시 1회</strong>, <strong>② 청약 전날(D-1) 수요예측 확정 시 1회</strong>만 정확히 실행하여 불필요한 LLM API 비용을 $0로 방어합니다.
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <select
-                value={selectedStock}
-                onChange={(e) => setSelectedStock(e.target.value)}
-                className="px-3 py-2 rounded-lg bg-blue-950 border border-blue-700 text-white text-xs font-semibold focus:outline-hidden"
-              >
-                {MOCK_IPOS.map((ipo) => (
-                  <option key={ipo.id} value={ipo.name} className="bg-neutral-900 text-white">
-                    {ipo.name} ({ipo.market})
-                  </option>
-                ))}
-              </select>
-
+            <div className="flex flex-wrap items-center gap-2">
               <button
-                onClick={handleTriggerCrawl}
+                onClick={handleTriggerMethod2Check}
                 disabled={isCrawling}
-                className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-md disabled:opacity-50 cursor-pointer"
               >
                 {isCrawling ? (
                   <>
                     <RotateCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>AI 수집 및 분석 중...</span>
+                    <span>파이프라인 선별 실행 중...</span>
                   </>
                 ) : (
                   <>
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>지금 즉시 실행</span>
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>방법 2 스케줄러 점검</span>
                   </>
                 )}
               </button>
+
+              <div className="flex items-center gap-1.5 bg-blue-950/80 p-1 rounded-xl border border-blue-800">
+                <select
+                  value={selectedStock}
+                  onChange={(e) => setSelectedStock(e.target.value)}
+                  className="px-2.5 py-1.5 rounded-lg bg-transparent text-white text-xs font-semibold focus:outline-hidden"
+                >
+                  {MOCK_IPOS.map((ipo) => (
+                    <option key={ipo.id} value={ipo.name} className="bg-neutral-900 text-white">
+                      {ipo.name} ({ipo.market})
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={handleTriggerCrawl}
+                  disabled={isCrawling}
+                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  <Play className="w-3 h-3 fill-current" />
+                  <span>선택 즉시분석</span>
+                </button>
+              </div>
             </div>
           </div>
         </section>
