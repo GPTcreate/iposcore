@@ -10,31 +10,61 @@ import { IpoStatus } from '@/types/ipo';
 import { ShieldCheck, CheckCircle2, TrendingUp } from 'lucide-react';
 
 export default function Home() {
-  const [filter, setFilter] = useState<'ALL' | IpoStatus>('ALL');
+  const [filter, setFilter] = useState<'ALL' | IpoStatus>('SUBSCRIPTION');
+  const PAGE_SIZE = 6;
+  const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   const filteredIpos = MOCK_IPOS.filter((ipo) => {
     if (filter === 'ALL') return true;
     return ipo.status === filter;
   });
 
+  // 필터 변경 시 표시 개수 리셋
+  React.useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filter]);
+
+  const displayedIpos = filteredIpos.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredIpos.length;
+  const loadMoreRef = React.useRef<HTMLDivElement>(null);
+
+  // 스크롤 감지 자동 더보기 (무한 스크롤 & 렉 방지)
+  React.useEffect(() => {
+    if (!hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredIpos.length));
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) observer.observe(currentRef);
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, [hasMore, filteredIpos.length]);
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
       <Header />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* 상단 안내 헤더 (신뢰감 있고 직관적인 한국형 금융 포털 스타일) */}
+        {/* 상단 안내 헤더 */}
         <div className="bg-white rounded-xl border border-gray-300 p-5 sm:p-7 shadow-2xs mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md mb-2 border border-blue-200">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>2026년 10월 공모주 청약 안내</span>
+                <span>실시간 공모주 청약 안내</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
                 공모주 청약 일정 & 전문가 분석 요약
               </h1>
               <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
-                전자공시(DART) 기관 수요예측 결과와 공모주 전문 유튜버들의 의견을 종합 분석하여 핵심만 요약해 드립니다.
+                전자공시(DART) 기관 수요예측 결과와 공모주 전문 분석가들의 의견을 종합 분석하여 핵심만 요약해 드립니다.
               </p>
             </div>
 
@@ -120,12 +150,24 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 공모주 카드 목록 */}
+        {/* 공모주 카드 목록 (페이징 & 점진적 로딩으로 렉 방지) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredIpos.map((ipo) => (
+          {displayedIpos.map((ipo) => (
             <IpoCard key={ipo.id} ipo={ipo} />
           ))}
         </div>
+
+        {/* 더보기 및 스크롤 로딩 트리거 (렉 방지) */}
+        {hasMore && (
+          <div ref={loadMoreRef} className="py-6 text-center">
+            <button
+              onClick={() => setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredIpos.length))}
+              className="px-6 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-100 text-gray-800 text-xs sm:text-sm font-bold shadow-2xs transition-colors cursor-pointer"
+            >
+              공모주 더보기 ({filteredIpos.length - visibleCount}개 남음) ↓
+            </button>
+          </div>
+        )}
 
         {/* 광고 영역 - 페이지당 딱 1개만 단정하게 배치 */}
         <GoogleAdSlot label="스폰서 안내" className="my-8" />

@@ -25,8 +25,8 @@ export const MOCK_IPOS: IpoItem[] = [
     circulatingSupplyRate: 24.3,
     totalOfferingAmount: 280,
     marketCapAtIpo: 1520,
-    aiScore: 87,
-    scoreGrade: 'A',
+    aiScore: 89,
+    scoreGrade: 'S',
     aiSummary: {
       headline: '반도체·디스플레이 초정밀 온도조절 칠러 강자, 공모가 상단 초과 확정',
       bulletPoints: [
@@ -101,7 +101,7 @@ export const MOCK_IPOS: IpoItem[] = [
     circulatingSupplyRate: 29.5,
     totalOfferingAmount: 180,
     marketCapAtIpo: 890,
-    aiScore: 81,
+    aiScore: 76,
     scoreGrade: 'A',
     aiSummary: {
       headline: 'K-뷰티 하이드로겔 마스크팩 OEM/ODM 강자, 글로벌 수출 확대 수혜',
@@ -321,8 +321,8 @@ export const MOCK_IPOS: IpoItem[] = [
     circulatingSupplyRate: 37.2,
     totalOfferingAmount: 9800,
     marketCapAtIpo: 50000,
-    aiScore: 68,
-    scoreGrade: 'B',
+    aiScore: 49,
+    scoreGrade: 'C',
     aiSummary: {
       headline: '국내 1호 인터넷전문은행 대어, 공모 구조 재정비 후 상장 재추진 중',
       bulletPoints: [
@@ -362,8 +362,8 @@ export const MOCK_IPOS: IpoItem[] = [
     circulatingSupplyRate: 19.7,
     totalOfferingAmount: 1020,
     marketCapAtIpo: 4918,
-    aiScore: 88,
-    scoreGrade: 'S',
+    aiScore: 83,
+    scoreGrade: 'A',
     aiSummary: {
       headline: '백종원 대표 외식 프랜차이즈, 상장 첫날 +51% 급등 마감하며 대흥행',
       bulletPoints: [
@@ -681,7 +681,7 @@ export const MOCK_IPOS: IpoItem[] = [
     circulatingSupplyRate: 31.8,
     totalOfferingAmount: 288,
     marketCapAtIpo: 1780,
-    aiScore: 54,
+    aiScore: 37,
     scoreGrade: 'C',
     aiSummary: {
       headline: '초고해상도 지구관측 영상 SAR 위성 기업, 공모가 하단 미달 확정',
