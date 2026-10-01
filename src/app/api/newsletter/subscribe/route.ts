@@ -1,48 +1,52 @@
 import { NextResponse } from 'next/server';
-
-// 메모리 캐시 (실제 운영 시 Supabase 또는 DB 연동)
-const subscribers: { email: string; frequency: string; subscribedAt: string }[] = [];
+import { validateEmail } from '@/lib/emailValidator';
+import { registerSubscriber } from '@/lib/subscriberStore';
+import { sendVerificationEmail } from '@/lib/emailSender';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, frequency = 'ALL' } = body;
 
-    if (!email || !email.includes('@')) {
+    // 1. 가짜 메일 및 유효성 엄격 검증
+    const validation = validateEmail(email);
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: '유효한 이메일 주소를 입력해주세요.' },
+        {
+          error: validation.reason,
+          suggestedCorrection: validation.suggestedCorrection,
+        },
         { status: 400 }
       );
     }
 
-    // 중복 체크
-    const existing = subscribers.find((sub) => sub.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-      existing.frequency = frequency;
-      return NextResponse.json({
-        message: '이미 등록된 이메일입니다. 구독 옵션이 업데이트되었습니다.',
-        email,
-      });
-    }
+    const cleanEmail = validation.normalizedEmail;
 
-    subscribers.push({
-      email,
-      frequency,
-      subscribedAt: new Date().toISOString(),
+    // 2. 가입 처리 (PENDING 상태로 등록 후 동의 메일 발송)
+    const { subscriber, isNew } = await registerSubscriber({
+      email: cleanEmail,
+      frequency: frequency === 'WEEKLY' ? 'WEEKLY' : 'ALL',
+      skipDoubleOptIn: false, // 동의하기 메일 발송을 위해 PENDING 시작
     });
 
-    console.log(`[Newsletter] 신규 구독자 등록: ${email} (${frequency}) - 누적: ${subscribers.length}명`);
+    // 3. 수신 동의/인증 메일 자동 발송
+    const sendResult = await sendVerificationEmail(subscriber);
 
-    // 향후 Resend / Stibee 연동 시 여기서 Welcome 메일 발송 트리거
+    const message = isNew
+      ? `${cleanEmail} 주소로 수신 동의 확인 메일을 발송했습니다. 메일함에서 [구독 동의] 버튼을 눌러주시면 신청이 최종 완료됩니다.`
+      : `이미 등록된 이메일입니다. 구독 확인 메일을 다시 발송해 드렸습니다. 메일함을 확인해주세요.`;
+
     return NextResponse.json({
-      message: '성공적으로 구독되었습니다! 매주 월요일 아침 첫 리포트를 보내드립니다.',
-      email,
-      subscriberCount: subscribers.length
+      success: true,
+      message,
+      email: cleanEmail,
+      status: subscriber.status,
+      deliveryMode: sendResult.mode,
     });
   } catch (error) {
-    console.error('Subscription error:', error);
+    console.error('[SubscribeRoute] 처리 에러:', error);
     return NextResponse.json(
-      { error: '서버 처리 중 오류가 발생했습니다.' },
+      { error: '서버 처리 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' },
       { status: 500 }
     );
   }

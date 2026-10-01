@@ -22,7 +22,13 @@ import {
   ExternalLink,
   Lock,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  FileSpreadsheet,
+  MailCheck,
+  UserX,
+  Check,
+  Mail,
+  RefreshCw,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -70,6 +76,129 @@ export default function AdminPage() {
   // 뉴스레터 발송 상태
   const [newsletterSending, setNewsletterSending] = useState(false);
   const [newsletterSent, setNewsletterSent] = useState(false);
+
+  // 실제 뉴스레터 구독자 및 동기화 상태
+  interface SubscriberItem {
+    id: string;
+    email: string;
+    status: 'PENDING' | 'ACTIVE' | 'CANCELLED';
+    frequency: 'WEEKLY' | 'ALL';
+    verificationToken: string;
+    unsubscribeToken: string;
+    subscribedAt: string;
+    verifiedAt?: string;
+    unsubscribedAt?: string;
+  }
+
+  const [subscribers, setSubscribers] = useState<SubscriberItem[]>([]);
+  const [subStats, setSubStats] = useState({ total: 0, active: 0, pending: 0, cancelled: 0 });
+  const [integrationStatus, setIntegrationStatus] = useState({
+    googleSheetWebhookConfigured: false,
+    resendConfigured: false,
+    smtpConfigured: false,
+  });
+  const [testEmailAddress, setTestEmailAddress] = useState('');
+  const [testEmailLoading, setTestEmailLoading] = useState(false);
+  const [testEmailResult, setTestEmailResult] = useState<string | null>(null);
+  const [sheetsSyncLoading, setSheetsSyncLoading] = useState(false);
+  const [sheetsSyncResult, setSheetsSyncResult] = useState<string | null>(null);
+  const [showSheetsGuide, setShowSheetsGuide] = useState(false);
+
+  const fetchSubscribers = async () => {
+    try {
+      const res = await fetch('/api/newsletter/admin');
+      if (res.ok) {
+        const data = await res.json();
+        setSubscribers(data.subscribers || []);
+        setSubStats(data.stats || { total: 0, active: 0, pending: 0, cancelled: 0 });
+        setIntegrationStatus({
+          googleSheetWebhookConfigured: data.googleSheetWebhookConfigured,
+          resendConfigured: data.resendConfigured,
+          smtpConfigured: data.smtpConfigured,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchSubscribers();
+    }
+  }, [isAuthenticated]);
+
+  const handleCancelSubscriber = async (email: string) => {
+    if (!confirm(`[${email}] 님의 구독을 수동으로 수신 취소(거부) 처리하시겠습니까?`)) return;
+    try {
+      const res = await fetch('/api/newsletter/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MANUAL_UNSUBSCRIBE', email }),
+      });
+      if (res.ok) {
+        alert('수신 취소 처리가 완료되었습니다.');
+        fetchSubscribers();
+      }
+    } catch {
+      alert('처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleVerifySubscriber = async (token: string, email: string) => {
+    if (!confirm(`[${email}] 님을 수동으로 구독 승인(활성화) 처리하시겠습니까?`)) return;
+    try {
+      const res = await fetch('/api/newsletter/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MANUAL_VERIFY', token }),
+      });
+      if (res.ok) {
+        alert('구독 활성화 처리가 완료되었습니다.');
+        fetchSubscribers();
+      }
+    } catch {
+      alert('처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleSendTestEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!testEmailAddress) return;
+    setTestEmailLoading(true);
+    setTestEmailResult(null);
+    try {
+      const res = await fetch('/api/newsletter/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'SEND_TEST_EMAIL', testTo: testEmailAddress }),
+      });
+      const data = await res.json();
+      setTestEmailResult(data.success ? `발송 성공 (${data.mode} 모드)` : '발송 실패');
+    } catch {
+      setTestEmailResult('발송 요청 에러');
+    } finally {
+      setTestEmailLoading(false);
+    }
+  };
+
+  const handleTestSheetsSync = async () => {
+    setSheetsSyncLoading(true);
+    setSheetsSyncResult(null);
+    try {
+      const res = await fetch('/api/newsletter/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'TEST_SHEETS_SYNC' }),
+      });
+      const data = await res.json();
+      setSheetsSyncResult(data.message || (data.success ? '연동 성공' : '연동 실패'));
+    } catch {
+      setSheetsSyncResult('요청 에러');
+    } finally {
+      setSheetsSyncLoading(false);
+    }
+  };
 
   // 채널 활성/비활성 토글
   const toggleChannelStatus = (id: string) => {
@@ -434,50 +563,240 @@ export default function AdminPage() {
           </div>
         </section>
 
-        {/* 3. 주간 뉴스레터 발송 제어 */}
-        <section className="p-6 rounded-2xl bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 shadow-sm space-y-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
+        {/* 3. 주간 뉴스레터 & 구독자 관리 센터 */}
+        <section className="p-6 rounded-2xl bg-white border border-gray-300 shadow-2xs space-y-6">
+          <div className="flex items-center justify-between flex-wrap gap-4 border-b border-gray-200 pb-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Send className="w-4 h-4 text-blue-600" />
-                <span>뉴스레터 발송 센터 (수신자: 142명)</span>
-              </h2>
-              <p className="text-xs text-gray-500">
-                매주 월요일 아침 8시 자동 발송 외에, 긴급 공모주 속보나 테스트 메일을 즉시 발송할 수 있습니다.
+              <div className="flex items-center gap-2">
+                <Send className="w-5 h-5 text-blue-700" />
+                <h2 className="text-lg font-bold text-gray-900">
+                  뉴스레터 & 구독자 실시간 관리
+                </h2>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                구글 스프레드시트 실시간 동기화, 이메일 자동 발송, 가짜 메일 필터링 및 수신 거부(취소) 내역을 관리합니다.
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <a
-                href="/python_pipeline/weekly_newsletter_sample.html"
-                target="_blank"
-                className="px-3 py-1.5 rounded-xl border border-gray-300 dark:border-neutral-700 text-xs font-semibold text-gray-700 dark:text-neutral-300 hover:bg-gray-100 transition-colors"
-              >
-                메일 템플릿 미리보기
-              </a>
+            <div className="flex items-center gap-2 flex-wrap">
               <button
-                onClick={handleSendNewsletter}
-                disabled={newsletterSending}
-                className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
+                type="button"
+                onClick={() => setShowSheetsGuide(!showSheetsGuide)}
+                className="px-3 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-colors flex items-center gap-1.5 cursor-pointer"
               >
-                {newsletterSending ? (
-                  <span>발송 진행 중...</span>
-                ) : (
-                  <>
-                    <Send className="w-3.5 h-3.5" />
-                    <span>전체 구독자 발송</span>
-                  </>
-                )}
+                <FileSpreadsheet className="w-3.5 h-3.5" />
+                <span>구글 시트 연동 가이드</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleTestSheetsSync}
+                disabled={sheetsSyncLoading}
+                className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {sheetsSyncLoading ? '시트 테스트 중...' : '시트 연동 테스트'}
+              </button>
+              <button
+                type="button"
+                onClick={fetchSubscribers}
+                className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>새로고침</span>
               </button>
             </div>
           </div>
 
-          {newsletterSent && (
-            <div className="p-3 rounded-xl bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-emerald-500" />
-              <span>142명의 구독자에게 이메일 브리핑 발송이 정상적으로 트리거되었습니다.</span>
+          {/* 구글 시트 연동 가이드 박스 */}
+          {showSheetsGuide && (
+            <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-300 text-xs space-y-2">
+              <div className="flex items-center justify-between font-bold text-emerald-900">
+                <span className="flex items-center gap-1.5">
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-700" />
+                  <span>구글 스프레드시트 1분 연동 방법 (무료)</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowSheetsGuide(false)}
+                  className="text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  ✕ 닫기
+                </button>
+              </div>
+              <ol className="list-decimal list-inside space-y-1 text-gray-700 leading-relaxed">
+                <li>구글 드라이브에서 <strong>새 스프레드시트</strong>를 만듭니다.</li>
+                <li>상단 메뉴 [확장 프로그램] → <strong>[Apps Script]</strong>를 클릭합니다.</li>
+                <li>프로젝트 폴더의 <code>scripts/google-sheets-script.js</code> 코드를 복사해서 붙여넣습니다.</li>
+                <li>우측 상단 <strong>[배포] → [새 배포]</strong> 선택 후, 유형을 <strong>'웹 앱'</strong>으로 지정합니다.</li>
+                <li><strong>'액세스 권한'을 [모든 사용자(Anyone)]</strong>로 설정하고 배포합니다.</li>
+                <li>발급된 <strong>웹 앱 URL</strong>을 Vercel 환경변수 <code>GOOGLE_SHEET_WEBHOOK_URL</code>에 등록하면 끝!</li>
+              </ol>
             </div>
           )}
+
+          {sheetsSyncResult && (
+            <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-xs flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>{sheetsSyncResult}</span>
+            </div>
+          )}
+
+          {/* 구독 통계 및 연동 상태 카드 4종 */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50/80">
+              <span className="text-gray-500 block font-medium">총 신청 이메일</span>
+              <span className="text-xl font-black text-gray-900 mt-0.5 block">{subStats.total}건</span>
+              <span className="text-[10px] text-gray-400 mt-1 block">누적 등록</span>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60">
+              <span className="text-emerald-800 block font-medium">정상 구독 중 (동의완료)</span>
+              <span className="text-xl font-black text-emerald-700 mt-0.5 block">{subStats.active}명</span>
+              <span className="text-[10px] text-emerald-600 mt-1 block">정기 발송 대상</span>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/60">
+              <span className="text-amber-800 block font-medium">동의 대기 (PENDING)</span>
+              <span className="text-xl font-black text-amber-700 mt-0.5 block">{subStats.pending}명</span>
+              <span className="text-[10px] text-amber-600 mt-1 block">메일 인증 대기</span>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-rose-200 bg-rose-50/60">
+              <span className="text-rose-800 block font-medium">수신 취소 (거부)</span>
+              <span className="text-xl font-black text-rose-700 mt-0.5 block">{subStats.cancelled}명</span>
+              <span className="text-[10px] text-rose-600 mt-1 block">발송 제외됨</span>
+            </div>
+          </div>
+
+          {/* 시스템 연결 상태 인디케이터 */}
+          <div className="flex flex-wrap items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200 text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-500 font-medium">구글 시트 연동:</span>
+              <span className={`px-2 py-0.5 rounded font-bold ${integrationStatus.googleSheetWebhookConfigured ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-700'}`}>
+                {integrationStatus.googleSheetWebhookConfigured ? '🟢 실시간 연동 중' : '⚪ 미설정 (웹훅 대기)'}
+              </span>
+            </div>
+            <div className="h-3 w-px bg-gray-300 hidden sm:block" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-500 font-medium">이메일 발송기:</span>
+              <span className={`px-2 py-0.5 rounded font-bold ${integrationStatus.resendConfigured ? 'bg-emerald-100 text-emerald-800' : integrationStatus.smtpConfigured ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}`}>
+                {integrationStatus.resendConfigured ? '🟢 Resend API 활성' : integrationStatus.smtpConfigured ? '🟢 SMTP 활성' : '🟡 시뮬레이션 모드'}
+              </span>
+            </div>
+          </div>
+
+          {/* 테스트 메일 즉시 발송 도구 */}
+          <form onSubmit={handleSendTestEmail} className="flex flex-col sm:flex-row gap-2 items-center text-xs">
+            <input
+              type="email"
+              value={testEmailAddress}
+              onChange={(e) => setTestEmailAddress(e.target.value)}
+              placeholder="테스트 메일 수신할 이메일 주소 입력"
+              className="w-full sm:w-80 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-hidden focus:border-blue-600"
+            />
+            <button
+              type="submit"
+              disabled={testEmailLoading}
+              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-bold transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              {testEmailLoading ? '발송 중...' : '테스트 메일 1건 발송'}
+            </button>
+            {testEmailResult && (
+              <span className="text-blue-700 font-semibold">{testEmailResult}</span>
+            )}
+          </form>
+
+          {/* 실제 구독자 목록 테이블 */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-gray-600" />
+                <span>구독자 명단 ({subscribers.length}건)</span>
+              </h3>
+              <span className="text-[11px] text-gray-500">* 수신 거부된 회원은 발송 시 자동 제외됩니다.</span>
+            </div>
+
+            <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
+                  <tr>
+                    <th className="px-3 py-2.5">이메일 주소</th>
+                    <th className="px-3 py-2.5">상태</th>
+                    <th className="px-3 py-2.5">수신 옵션</th>
+                    <th className="px-3 py-2.5">신청 일시</th>
+                    <th className="px-3 py-2.5">인증/취소 일시</th>
+                    <th className="px-3 py-2.5 text-right">상태 관리</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {subscribers.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-3 py-8 text-center text-gray-400">
+                        아직 등록된 구독자가 없습니다. 메인 페이지 하단 뉴스레터 배너에서 신청해보세요!
+                      </td>
+                    </tr>
+                  ) : (
+                    subscribers.map((sub) => (
+                      <tr key={sub.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-3 py-2.5 font-bold text-gray-900">
+                          {sub.email}
+                        </td>
+                        <td className="px-3 py-2.5">
+                          {sub.status === 'ACTIVE' && (
+                            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                              구독 중
+                            </span>
+                          )}
+                          {sub.status === 'PENDING' && (
+                            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">
+                              동의 대기
+                            </span>
+                          )}
+                          {sub.status === 'CANCELLED' && (
+                            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-gray-200 text-gray-600 line-through">
+                              수신 취소
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-3 py-2.5 text-gray-600">
+                          {sub.frequency === 'WEEKLY' ? '주간 브리핑만' : '실시간 전체'}
+                        </td>
+                        <td className="px-3 py-2.5 text-gray-500 font-mono text-[11px]">
+                          {sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleString('ko-KR') : '-'}
+                        </td>
+                        <td className="px-3 py-2.5 text-gray-500 font-mono text-[11px]">
+                          {sub.status === 'ACTIVE' && sub.verifiedAt
+                            ? `동의: ${new Date(sub.verifiedAt).toLocaleDateString('ko-KR')}`
+                            : sub.status === 'CANCELLED' && sub.unsubscribedAt
+                            ? `취소: ${new Date(sub.unsubscribedAt).toLocaleDateString('ko-KR')}`
+                            : '-'}
+                        </td>
+                        <td className="px-3 py-2.5 text-right space-x-1">
+                          {sub.status === 'PENDING' && (
+                            <button
+                              type="button"
+                              onClick={() => handleVerifySubscriber(sub.verificationToken, sub.email)}
+                              className="px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] cursor-pointer"
+                            >
+                              수동 승인
+                            </button>
+                          )}
+                          {sub.status !== 'CANCELLED' && (
+                            <button
+                              type="button"
+                              onClick={() => handleCancelSubscriber(sub.email)}
+                              className="px-2 py-1 rounded bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold text-[11px] cursor-pointer"
+                            >
+                              수신 취소
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         {/* 4. 최근 수집 및 파이프라인 작업 로그 */}
