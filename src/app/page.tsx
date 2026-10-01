@@ -15,7 +15,7 @@ export default function Home() {
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   const filteredIpos = MOCK_IPOS.filter((ipo) => {
-    if (filter === 'ALL') return true;
+    if (filter === 'ALL') return ipo.status !== 'LISTED';
     return ipo.status === filter;
   });
 
@@ -89,7 +89,7 @@ export default function Home() {
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              전체 ({MOCK_IPOS.length})
+              전체 ({MOCK_IPOS.filter(i => i.status !== 'LISTED').length})
             </button>
             <button
               type="button"
@@ -140,7 +140,7 @@ export default function Home() {
           <div className="flex justify-between items-center text-xs text-gray-500 px-1">
             <span>
               현재 보기: <strong className="text-blue-800 font-bold">{
-                filter === 'ALL' ? '전체 일정' :
+                filter === 'ALL' ? '전체 일정 (지난 공모주 제외)' :
                 filter === 'SUBSCRIPTION' ? '청약 진행 중' :
                 filter === 'UPCOMING' ? '청약 예정' :
                 filter === 'WAITING_LISTING' ? '상장 대기' : '지난 공모주 (상장 완료)'
