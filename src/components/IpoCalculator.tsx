@@ -11,10 +11,10 @@ interface IpoCalculatorProps {
 }
 
 export default function IpoCalculator({
-  initialPrice = 28000,
+  initialPrice = 20000,
   initialCompetitionRate = 1200,
   initialRefundDays = 2,
-  stockName = '뉴로로보틱스'
+  stockName = '공모주'
 }: IpoCalculatorProps) {
   const depositInputId = useId();
   const priceInputId = useId();
