@@ -90,7 +90,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-4909665367366825';
 
   return (
     <html lang="ko" className="h-full antialiased">
@@ -99,22 +99,19 @@ export default function RootLayout({
         <meta name="naver-site-verification" content="f8c14856098197779f67aee1ebff8417cda43110" />
         <meta name="google-site-verification" content="google-search-console-verification" />
         
+        {/* 구글 애드센스 소유권 확인 메타 태그 & 스크립트 */}
+        <meta name="google-adsense-account" content="ca-pub-4909665367366825" />
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
+          crossOrigin="anonymous"
+        />
+
         {/* 구조화 데이터 (JSON-LD) for Search Engine Rich Snippets */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-
-        {/* 구글 애드센스 스크립트 */}
-        {adClient && (
-          <Script
-            id="google-adsense"
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-neutral-950 text-gray-900 dark:text-neutral-100">
         {children}

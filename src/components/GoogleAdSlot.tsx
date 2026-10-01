@@ -17,8 +17,8 @@ export default function GoogleAdSlot({
   className = '',
   label = '광고'
 }: GoogleAdSlotProps) {
-  // 실제 애드센스 클라이언트 ID 환경변수 (없으면 플레이스홀더 모드로 렌더링)
-  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  // 실제 애드센스 클라이언트 ID (환경변수 또는 등록된 퍼블리셔 ID)
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-4909665367366825';
 
   useEffect(() => {
     if (adClient && typeof window !== 'undefined') {
