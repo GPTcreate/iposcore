@@ -22,6 +22,7 @@ import {
   LogOut,
   FileSpreadsheet,
   RefreshCw,
+  Download,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -189,6 +190,32 @@ export default function AdminPage() {
     } finally {
       setSheetsSyncLoading(false);
     }
+  };
+
+  const handleExportCsv = () => {
+    if (subscribers.length === 0) {
+      alert('다운로드할 구독자 데이터가 없습니다.');
+      return;
+    }
+    const headers = ['이메일', '구독상태', '수신옵션', '신청일시', '인증/동의일시', '수신취소일시'];
+    const rows = subscribers.map((s) => [
+      s.email,
+      s.status === 'ACTIVE' ? '구독중' : s.status === 'PENDING' ? '인증대기' : '수신취소',
+      s.frequency === 'WEEKLY' ? '주간브리핑' : '실시간전체',
+      s.subscribedAt ? new Date(s.subscribedAt).toLocaleString('ko-KR') : '',
+      s.verifiedAt ? new Date(s.verifiedAt).toLocaleString('ko-KR') : '',
+      s.unsubscribedAt ? new Date(s.unsubscribedAt).toLocaleString('ko-KR') : '',
+    ]);
+
+    const csvContent = '\uFEFF' + [headers, ...rows].map((e) => e.map((cell) => `"${cell}"`).join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `iposcore_subscribers_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // 채널 활성/비활성 토글
@@ -583,6 +610,15 @@ export default function AdminPage() {
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>새로고침</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleExportCsv}
+                className="px-3 py-1.5 rounded-lg border border-blue-300 bg-blue-50 text-blue-800 text-xs font-bold hover:bg-blue-100 transition-colors flex items-center gap-1 cursor-pointer"
+                title="모바일에서도 엑셀/CSV 파일로 즉시 다운로드"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>CSV 다운로드</span>
               </button>
             </div>
           </div>
