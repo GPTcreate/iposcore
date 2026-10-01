@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import './globals.css';
+import CookieConsent from '@/components/CookieConsent';
 
 const siteUrl = 'https://iposcore.kr';
 
@@ -115,6 +115,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-neutral-950 text-gray-900 dark:text-neutral-100">
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
