@@ -38,9 +38,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // 공모주별 상세 페이지
+  // 공모주별 상세 페이지 (표준 6자리 증권코드 기준)
   const ipoRoutes: MetadataRoute.Sitemap = MOCK_IPOS.map((ipo) => ({
-    url: `${baseUrl}/ipo/${ipo.id}`,
+    url: `${baseUrl}/ipo/${ipo.code}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
     priority: 0.8,

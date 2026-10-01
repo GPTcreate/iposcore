@@ -27,7 +27,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const ipo = MOCK_IPOS.find((item) => item.id === id);
+  const ipo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
   if (!ipo) {
     return {
       title: '공모주 정보를 찾을 수 없습니다 | 공모주 알리미',
@@ -40,15 +40,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? `${ipo.confirmedPrice.toLocaleString()}원 (확정)`
       : `${ipo.priceBandMin.toLocaleString()}~${ipo.priceBandMax.toLocaleString()}원 (희망)`;
 
-  const title = `${ipo.name} 공모주 청약 분석 리포트 - 공모가·경쟁률·AI점수`;
-  const description = `${ipo.name} (${ipo.market}) 공모주 청약 일정(${ipo.subscriptionStart}~${ipo.subscriptionEnd}), 공모가 ${priceText}, 주관사 ${underwriterNames}. 기관 수요예측 경쟁률 ${ipo.institutionalCompetitionRate}:1 및 전문가 AI 요약 분석.`;
+  const title = `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 - 공모가·경쟁률·AI점수`;
+  const description = `${ipo.name} (${ipo.code}, ${ipo.market}) 공모주 청약 일정(${ipo.subscriptionStart}~${ipo.subscriptionEnd}), 공모가 ${priceText}, 주관사 ${underwriterNames}. 기관 수요예측 경쟁률 ${ipo.institutionalCompetitionRate}:1 및 전문가 AI 요약 분석.`;
 
   return {
     title,
     description,
     keywords: [
       ipo.name,
+      ipo.code,
       `${ipo.name} 공모주`,
+      `${ipo.code} 공모주`,
       `${ipo.name} 청약`,
       `${ipo.name} 상장일`,
       `${ipo.name} 수요예측`,
@@ -56,26 +58,33 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ...ipo.underwriters.map((u) => u.name),
     ],
     alternates: {
-      canonical: `https://iposcore.kr/ipo/${ipo.id}`,
+      canonical: `https://iposcore.kr/ipo/${ipo.code}`,
     },
     openGraph: {
-      title: `${ipo.name} 공모주 청약 분석 리포트 | 공모주 알리미`,
+      title: `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 | 공모주 알리미`,
       description,
-      url: `https://iposcore.kr/ipo/${ipo.id}`,
+      url: `https://iposcore.kr/ipo/${ipo.code}`,
       type: 'article',
     },
   };
 }
 
 export async function generateStaticParams() {
-  return MOCK_IPOS.map((ipo) => ({
-    id: ipo.id,
-  }));
+  const params: { id: string }[] = [];
+  for (const ipo of MOCK_IPOS) {
+    // 1. 증권코드(6자리 숫자) 우선 표준 라우팅 (예: /ipo/377480)
+    params.push({ id: ipo.code });
+    // 2. 기존 영문 슬러그 호환성 유지 (예: /ipo/melcon)
+    if (ipo.id !== ipo.code) {
+      params.push({ id: ipo.id });
+    }
+  }
+  return params;
 }
 
 export default async function IpoDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const ipo = MOCK_IPOS.find((item) => item.id === id);
+  const ipo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
 
   if (!ipo) {
     notFound();
