@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
-import { ArrowLeft, Info, Mail, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Info, Mail, CheckCircle2 } from 'lucide-react';
 
 export const metadata = {
   title: '서비스 소개 및 문의 | 공모주 알리미 리포트',
@@ -45,7 +45,7 @@ export default function AboutPage() {
                 공모주 청약은 많은 분들이 참여하는 대표적인 재테크 수단이지만, 매번 수십 장에 달하는 전자공시(DART) 투자설명서를 일일이 정독하거나 유튜브 채널을 여러 개 찾아보는 것은 상당한 시간과 노력이 소모됩니다.
               </p>
               <p>
-                <strong>'공모주 알리미 리포트'</strong>는 공시된 핵심 수치(기관경쟁률, 의무확약, 유통물량)와 검증된 전문가들의 리뷰를 종합 분석하여 **단 10초 만에 공모주의 매력도와 리스크를 객관적으로 파악**할 수 있도록 돕고자 제작되었습니다.
+                <strong>&apos;공모주 알리미 리포트&apos;</strong>는 공시된 핵심 수치(기관경쟁률, 의무확약, 유통물량)와 검증된 전문가들의 리뷰를 종합 분석하여 **단 10초 만에 공모주의 매력도와 리스크를 객관적으로 파악**할 수 있도록 돕고자 제작되었습니다.
               </p>
             </section>
 

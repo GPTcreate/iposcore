@@ -396,7 +396,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
                       <span className="font-bold text-gray-900">{rev.author}</span>
                       <span className="text-gray-400 text-[11px]">{rev.publishedAt}</span>
                     </div>
-                    <p className="text-gray-800 font-semibold mt-1">"{rev.title}"</p>
+                    <p className="text-gray-800 font-semibold mt-1">&ldquo;{rev.title}&rdquo;</p>
                     <p className="text-gray-600 text-xs mt-0.5">{rev.summary}</p>
                   </div>
                   <a

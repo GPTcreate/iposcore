@@ -20,9 +20,10 @@ export default function Home() {
   });
 
   // 필터 변경 시 표시 개수 리셋
-  React.useEffect(() => {
+  const handleFilterChange = (newFilter: 'ALL' | IpoStatus) => {
+    setFilter(newFilter);
     setVisibleCount(PAGE_SIZE);
-  }, [filter]);
+  };
 
   const displayedIpos = filteredIpos.slice(0, visibleCount);
   const hasMore = visibleCount < filteredIpos.length;
@@ -82,7 +83,7 @@ export default function Home() {
           <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-gray-200/90 text-xs sm:text-sm font-bold overflow-x-auto scrollbar-none touch-pan-x">
             <button
               type="button"
-              onClick={() => setFilter('ALL')}
+              onClick={() => handleFilterChange('ALL')}
               className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'ALL'
                   ? 'bg-blue-700 text-white shadow-xs'
@@ -93,7 +94,7 @@ export default function Home() {
             </button>
             <button
               type="button"
-              onClick={() => setFilter('SUBSCRIPTION')}
+              onClick={() => handleFilterChange('SUBSCRIPTION')}
               className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'SUBSCRIPTION'
                   ? 'bg-blue-700 text-white shadow-xs'
@@ -104,7 +105,7 @@ export default function Home() {
             </button>
             <button
               type="button"
-              onClick={() => setFilter('UPCOMING')}
+              onClick={() => handleFilterChange('UPCOMING')}
               className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'UPCOMING'
                   ? 'bg-blue-700 text-white shadow-xs'
@@ -115,7 +116,7 @@ export default function Home() {
             </button>
             <button
               type="button"
-              onClick={() => setFilter('WAITING_LISTING')}
+              onClick={() => handleFilterChange('WAITING_LISTING')}
               className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'WAITING_LISTING'
                   ? 'bg-blue-700 text-white shadow-xs'
@@ -126,7 +127,7 @@ export default function Home() {
             </button>
             <button
               type="button"
-              onClick={() => setFilter('LISTED')}
+              onClick={() => handleFilterChange('LISTED')}
               className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                 filter === 'LISTED'
                   ? 'bg-blue-700 text-white shadow-xs'

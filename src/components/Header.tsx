@@ -43,14 +43,14 @@ export default function Header() {
             <Calculator className="w-4 h-4 text-gray-600 shrink-0" />
             <span className="hidden sm:inline">비례 계산기</span>
           </Link>
-          <a
-            href="#newsletter-section"
+          <Link
+            href="/#newsletter-section"
             className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors shrink-0"
           >
             <Bell className="w-3.5 h-3.5 shrink-0" />
             <span className="hidden sm:inline">청약 알림 신청</span>
             <span className="sm:hidden">알림 신청</span>
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

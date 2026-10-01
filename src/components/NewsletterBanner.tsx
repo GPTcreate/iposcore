@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, CheckCircle, Bell, ArrowRight, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
+import { Mail, Bell, ArrowRight, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function NewsletterBanner() {
   const [email, setEmail] = useState('');

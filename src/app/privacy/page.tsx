@@ -40,7 +40,7 @@ export default function PrivacyPage() {
             <section className="space-y-2">
               <h2 className="text-base font-bold text-gray-900">1. 수집하는 개인정보 항목 및 수집 방법</h2>
               <p>
-                '공모주 알리미 리포트'(이하 '서비스')는 이용자에게 주간 공모주 청약 알림 및 리포트 발송을 위해 최소한의 개인정보만을 수집합니다.
+                &apos;공모주 알리미 리포트&apos;(이하 &apos;서비스&apos;)는 이용자에게 주간 공모주 청약 알림 및 리포트 발송을 위해 최소한의 개인정보만을 수집합니다.
               </p>
               <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm pl-2 text-gray-600">
                 <li><strong>수집 항목</strong>: 이메일 주소 (뉴스레터 구독 신청 시)</li>
@@ -61,7 +61,7 @@ export default function PrivacyPage() {
             <section className="space-y-2">
               <h2 className="text-base font-bold text-gray-900">3. 구글 애드센스(Google AdSense) 및 제3자 쿠키 안내</h2>
               <p>
-                본 웹사이트는 구글(Google LLC)이 제공하는 웹 광고 서비스인 '구글 애드센스'를 이용하고 있습니다.
+                본 웹사이트는 구글(Google LLC)이 제공하는 웹 광고 서비스인 &apos;구글 애드센스&apos;를 이용하고 있습니다.
               </p>
               <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm pl-2 text-gray-600">
                 <li>구글을 포함한 제3자 공급업체는 이용자가 본 웹사이트 또는 다른 웹사이트를 방문한 기록을 바탕으로 쿠키를 사용하여 맞춤형 광고를 게재합니다.</li>

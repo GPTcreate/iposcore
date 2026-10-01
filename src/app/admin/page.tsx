@@ -13,8 +13,6 @@ import {
   Video,
   BookOpen,
   CheckCircle,
-  XCircle,
-  AlertCircle,
   Send,
   Users,
   Database,
@@ -22,12 +20,7 @@ import {
   ExternalLink,
   Lock,
   LogOut,
-  ShieldCheck,
   FileSpreadsheet,
-  MailCheck,
-  UserX,
-  Check,
-  Mail,
   RefreshCw,
 } from 'lucide-react';
 
@@ -40,7 +33,7 @@ export default function AdminPage() {
     if (typeof window !== 'undefined') {
       const auth = sessionStorage.getItem('iposcore_admin_auth');
       if (auth === 'true') {
-        setIsAuthenticated(true);
+        setTimeout(() => setIsAuthenticated(true), 0);
       }
     }
   }, []);
@@ -71,11 +64,7 @@ export default function AdminPage() {
   const [newChannelName, setNewChannelName] = useState('');
   const [newChannelType, setNewChannelType] = useState<'YOUTUBE' | 'BLOG'>('YOUTUBE');
   const [newChannelUrl, setNewChannelUrl] = useState('');
-  const [newReliability, setNewReliability] = useState(5);
-
-  // 뉴스레터 발송 상태
-  const [newsletterSending, setNewsletterSending] = useState(false);
-  const [newsletterSent, setNewsletterSent] = useState(false);
+  const [newReliability] = useState(5);
 
   // 실제 뉴스레터 구독자 및 동기화 상태
   interface SubscriberItem {
@@ -123,9 +112,11 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) return;
+    const timer = setTimeout(() => {
       fetchSubscribers();
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [isAuthenticated]);
 
   const handleCancelSubscriber = async (email: string) => {
@@ -263,16 +254,6 @@ export default function AdminPage() {
     }
   };
 
-  // 뉴스레터 발송 시뮬레이션
-  const handleSendNewsletter = () => {
-    if (!confirm('현재 등록된 142명의 구독자에게 이번 주 공모주 브리핑을 발송하시겠습니까?')) return;
-    setNewsletterSending(true);
-    setTimeout(() => {
-      setNewsletterSending(false);
-      setNewsletterSent(true);
-      setTimeout(() => setNewsletterSent(false), 5000);
-    }, 1500);
-  };
 
   if (!isAuthenticated) {
     return (
@@ -626,8 +607,8 @@ export default function AdminPage() {
                 <li>구글 드라이브에서 <strong>새 스프레드시트</strong>를 만듭니다.</li>
                 <li>상단 메뉴 [확장 프로그램] → <strong>[Apps Script]</strong>를 클릭합니다.</li>
                 <li>프로젝트 폴더의 <code>scripts/google-sheets-script.js</code> 코드를 복사해서 붙여넣습니다.</li>
-                <li>우측 상단 <strong>[배포] → [새 배포]</strong> 선택 후, 유형을 <strong>'웹 앱'</strong>으로 지정합니다.</li>
-                <li><strong>'액세스 권한'을 [모든 사용자(Anyone)]</strong>로 설정하고 배포합니다.</li>
+                <li>우측 상단 <strong>[배포] → [새 배포]</strong> 선택 후, 유형을 <strong>&apos;웹 앱&apos;</strong>으로 지정합니다.</li>
+                <li><strong>&apos;액세스 권한&apos;을 [모든 사용자(Anyone)]</strong>로 설정하고 배포합니다.</li>
                 <li>발급된 <strong>웹 앱 URL</strong>을 Vercel 환경변수 <code>GOOGLE_SHEET_WEBHOOK_URL</code>에 등록하면 끝!</li>
               </ol>
             </div>

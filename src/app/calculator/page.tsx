@@ -40,7 +40,7 @@ export default function CalculatorPage() {
         {/* 계산기 활용 도움말 */}
         <div className="p-6 rounded-xl bg-white border border-gray-300 shadow-2xs text-xs space-y-3">
           <h3 className="font-bold text-gray-900 text-sm">
-            💡 공모주 비례 배정 '5사6입 법칙'이란?
+            💡 공모주 비례 배정 &apos;5사6입 법칙&apos;이란?
           </h3>
           <p className="text-gray-600 leading-relaxed">
             비례 배정 시 소수점 이하 자리가 <strong>0.6 이상이면 1주 배정(올림)</strong>, <strong>0.5 이하이면 버림</strong> 처리되는 경우가 일반적입니다. 예를 들어 계산 결과가 1.62주라면 2주를 받을 확률이 매우 높으므로, 증거금을 조금 더 채워 0.6 단위를 맞추는 것이 실전에서 유리합니다.

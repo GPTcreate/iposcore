@@ -51,7 +51,7 @@ export default function TermsPage() {
             <section className="space-y-2">
               <h2 className="text-base font-bold text-gray-900">제1조 (목적)</h2>
               <p>
-                본 약관은 '공모주 알리미 리포트'(이하 '서비스')가 제공하는 웹사이트 및 뉴스레터 관련 서비스의 이용 조건 및 절차에 관한 기본적인 사항을 규정함을 목적으로 합니다.
+                본 약관은 &apos;공모주 알리미 리포트&apos;(이하 &apos;서비스&apos;)가 제공하는 웹사이트 및 뉴스레터 관련 서비스의 이용 조건 및 절차에 관한 기본적인 사항을 규정함을 목적으로 합니다.
               </p>
             </section>
 

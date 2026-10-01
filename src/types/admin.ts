@@ -1,5 +1,3 @@
-import { IpoItem } from './ipo';
-
 export interface CrawlChannel {
   id: string;
   name: string;
