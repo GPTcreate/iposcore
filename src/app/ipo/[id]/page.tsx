@@ -336,17 +336,17 @@ export default async function IpoDetailPage({ params }: PageProps) {
                   </div>
                   <a
                     href={
-                      rev.url && rev.url !== 'https://youtube.com' && rev.url !== 'https://blog.naver.com'
+                      rev.url && !rev.url.includes('where=article') && rev.url !== 'https://youtube.com' && rev.url !== 'https://blog.naver.com'
                         ? rev.url
                         : rev.sourceType === 'YOUTUBE'
-                          ? `https://www.youtube.com/results?search_query=${encodeURIComponent(`${rev.author} ${ipo.name} 공모주`)}`
-                          : `https://search.naver.com/search.naver?where=article&query=${encodeURIComponent(`${rev.author} ${ipo.name} 공모주`)}`
+                          ? `https://www.youtube.com/results?search_query=${encodeURIComponent(`${rev.author.replace(/의.*$/, '').replace(/TV$/, '').trim()} ${ipo.name} 공모주`)}`
+                          : `https://search.naver.com/search.naver?where=blog&query=${encodeURIComponent(`${ipo.name} 공모주`)}`
                     }
                     target="_blank"
                     rel="noreferrer"
                     className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 text-gray-800 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
                   >
-                    <span>{rev.sourceType === 'YOUTUBE' ? '원문 영상 시청' : '원문 글 읽기'}</span>
+                    <span>{rev.sourceType === 'YOUTUBE' ? '원문 영상 시청' : '원문 블로그 글 보기'}</span>
                     <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
                   </a>
                 </div>
