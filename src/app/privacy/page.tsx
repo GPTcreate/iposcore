@@ -82,7 +82,7 @@ export default function PrivacyPage() {
               <p>서비스 이용 중 발생하는 개인정보 보호 관련 민원은 아래 이메일로 접수하실 수 있습니다:</p>
               <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-xs">
                 <p>• <strong>담당 부서</strong>: 운영지원팀</p>
-                <p>• <strong>문의 이메일</strong>: contact@ipo-insights.kr (또는 관리자 메일)</p>
+                <p>• <strong>문의 이메일</strong>: <a href="mailto:hanmanju88@gmail.com" className="text-blue-700 underline font-semibold">hanmanju88@gmail.com</a></p>
               </div>
             </section>
           </div>

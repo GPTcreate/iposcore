@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
@@ -22,6 +23,48 @@ import {
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const ipo = MOCK_IPOS.find((item) => item.id === id);
+  if (!ipo) {
+    return {
+      title: '공모주 정보를 찾을 수 없습니다 | 공모주 알리미',
+    };
+  }
+
+  const underwriterNames = ipo.underwriters.map((u) => u.name).join(', ');
+  const priceText =
+    ipo.confirmedPrice > 0
+      ? `${ipo.confirmedPrice.toLocaleString()}원 (확정)`
+      : `${ipo.priceBandMin.toLocaleString()}~${ipo.priceBandMax.toLocaleString()}원 (희망)`;
+
+  const title = `${ipo.name} 공모주 청약 분석 리포트 - 공모가·경쟁률·AI점수`;
+  const description = `${ipo.name} (${ipo.market}) 공모주 청약 일정(${ipo.subscriptionStart}~${ipo.subscriptionEnd}), 공모가 ${priceText}, 주관사 ${underwriterNames}. 기관 수요예측 경쟁률 ${ipo.institutionalCompetitionRate}:1 및 전문가 AI 요약 분석.`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      ipo.name,
+      `${ipo.name} 공모주`,
+      `${ipo.name} 청약`,
+      `${ipo.name} 상장일`,
+      `${ipo.name} 수요예측`,
+      `${ipo.name} 공모가`,
+      ...ipo.underwriters.map((u) => u.name),
+    ],
+    alternates: {
+      canonical: `https://iposcore.kr/ipo/${ipo.id}`,
+    },
+    openGraph: {
+      title: `${ipo.name} 공모주 청약 분석 리포트 | 공모주 알리미`,
+      description,
+      url: `https://iposcore.kr/ipo/${ipo.id}`,
+      type: 'article',
+    },
+  };
 }
 
 export async function generateStaticParams() {

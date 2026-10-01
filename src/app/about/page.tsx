@@ -85,7 +85,7 @@ export default function AboutPage() {
                 기재된 공시 수치에 정정이 필요하거나 채널 연동, 광고/제휴 관련 문의는 아래 이메일로 연락주시면 영업일 기준 24시간 이내에 회신해 드립니다.
               </p>
               <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 font-semibold text-sm">
-                📧 공식 문의 이메일: <a href="mailto:admin@ipo-insights.kr" className="underline font-bold">admin@ipo-insights.kr</a>
+                📧 공식 문의 이메일: <a href="mailto:hanmanju88@gmail.com" className="underline font-bold">hanmanju88@gmail.com</a>
               </div>
             </section>
           </div>

@@ -188,7 +188,7 @@ export default function Home() {
             <a href="/about" className="hover:text-blue-700 underline">서비스 소개</a>
             <a href="/privacy" className="hover:text-blue-700 underline">개인정보처리방침</a>
             <a href="/terms" className="hover:text-blue-700 underline">이용약관</a>
-            <a href="/about" className="hover:text-blue-700 underline">문의 및 제휴</a>
+            <a href="mailto:hanmanju88@gmail.com" className="hover:text-blue-700 underline">문의: hanmanju88@gmail.com</a>
           </div>
           <p className="text-[11px] text-gray-400 pt-1">
             © 2026 공모주 알리미 리포트. All rights reserved.

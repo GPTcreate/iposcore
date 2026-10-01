@@ -79,6 +79,13 @@ export default function TermsPage() {
                 서비스는 시스템 유지보수, 공시 API 제공업체의 사정 또는 운영상 필요에 따라 사전 공지 없이 서비스의 일부 또는 전부를 변경하거나 중단할 수 있습니다.
               </p>
             </section>
+
+            <section className="space-y-2">
+              <h2 className="text-base font-bold text-gray-900">제5조 (문의처)</h2>
+              <p>
+                서비스 이용 관련 건의, 제휴 및 권리침해 신고는 공식 이메일(<a href="mailto:hanmanju88@gmail.com" className="text-blue-700 underline font-semibold">hanmanju88@gmail.com</a>)로 문의하실 수 있습니다.
+              </p>
+            </section>
           </div>
         </div>
       </main>
