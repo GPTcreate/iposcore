@@ -12,9 +12,13 @@ from typing import List, Dict
 
 # 관리자 페이지에서 등록한 화이트리스트 유튜브 채널 목록
 TARGET_CHANNELS = [
-    {"name": "공모주 수첩 TV", "channel_id": "@ipo_notebook"},
-    {"name": "소리주식Lab", "channel_id": "@sori_stock"},
-    {"name": "스마트공모주", "channel_id": "@smart_ipo"}
+    {"name": "아이언의 공모주", "channel_id": "@iron_ipo", "handle": "@iron_ipo"},
+    {"name": "주식애소리", "channel_id": "@sori_stock", "handle": "@sori_stock"},
+    {"name": "박곰희TV", "channel_id": "@parkgomhee", "handle": "@parkgomhee"},
+    {"name": "소소하게 크게", "channel_id": "@soso_ipo", "handle": "@soso_ipo"},
+    {"name": "달팽이주식", "channel_id": "@snails_stock", "handle": "@snails_stock"},
+    {"name": "주식하는 전업주부", "channel_id": "@housewife_stock", "handle": "@housewife_stock"},
+    {"name": "어쩌다마주친공모주", "channel_id": "@eogong_ipo", "handle": "@eogong_ipo"}
 ]
 
 def search_stock_youtube_reviews(stock_name: str) -> List[Dict[str, str]]:
