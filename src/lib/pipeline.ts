@@ -74,13 +74,17 @@ export function identifyPipelineTargets(
       continue;
     }
 
-    // 관리자 수동 강제 실행인 경우
-    if (forceStockName && ipo.name === forceStockName) {
-      targets.push({
-        ipo,
-        triggerType: 'MANUAL_FORCE',
-        reason: `관리자 수동 즉시 실행 요청 (${ipo.name})`,
-      });
+    // 관리자 수동 강제 실행인 경우 해당 단일 종목만 집중 처리
+    if (forceStockName) {
+      if (ipo.name === forceStockName) {
+        targets.push({
+          ipo,
+          triggerType: 'MANUAL_FORCE',
+          reason: `관리자 수동 즉시 실행 요청 (${ipo.name})`,
+        });
+      } else {
+        skipped.push({ stock: ipo, reason: `특정 종목 수동 지정 실행 중으로 제외 (${forceStockName})` });
+      }
       continue;
     }
 

@@ -118,58 +118,75 @@ ${reviewsText}
 * 주의: positiveRatio + neutralRatio + cautionRatio 의 합은 반드시 100이 되어야 합니다.
 `;
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              responseMimeType: 'application/json',
-              temperature: 0.2,
-            },
-          }),
+      const candidateModels = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+      let rawJsonText: string | null = null;
+      let usedModelName = 'Gemini 3.5 Flash';
+
+      for (const model of candidateModels) {
+        try {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: AbortSignal.timeout(4000),
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                  responseMimeType: 'application/json',
+                  temperature: 0.2,
+                },
+              }),
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) {
+              rawJsonText = text;
+              usedModelName = model === 'gemini-3.5-flash' ? 'Gemini 3.5 Flash' : model;
+              break;
+            }
+          }
+        } catch {
+          // 다음 모델로 폴백
         }
-      );
+      }
 
-      if (response.ok) {
-        const data = await response.json();
-        const rawJsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawJsonText) {
-          const parsed = JSON.parse(rawJsonText);
-          const positiveRatio = Math.max(0, Math.min(100, Number(parsed.positiveRatio) || 70));
-          const neutralRatio = Math.max(0, Math.min(100 - positiveRatio, Number(parsed.neutralRatio) || 20));
-          const cautionRatio = Math.max(0, 100 - positiveRatio - neutralRatio);
+      if (rawJsonText) {
+        const parsed = JSON.parse(rawJsonText);
+        const positiveRatio = Math.max(0, Math.min(100, Number(parsed.positiveRatio) || 70));
+        const neutralRatio = Math.max(0, Math.min(100 - positiveRatio, Number(parsed.neutralRatio) || 20));
+        const cautionRatio = Math.max(0, 100 - positiveRatio - neutralRatio);
 
-          const sentimentConsensus = { positiveRatio, neutralRatio, cautionRatio };
-          const aiSummary = {
-            headline: parsed.headline || `${ipo.name} 공모주 투자 심층 분석`,
-            bulletPoints: Array.isArray(parsed.bulletPoints) ? parsed.bulletPoints : [`${stageLabel} 반영 완료`],
-            positivePoints: Array.isArray(parsed.positivePoints) ? parsed.positivePoints : ['수급 유입 기대'],
-            riskPoints: Array.isArray(parsed.riskPoints) ? parsed.riskPoints : ['상장일 변동성 주의'],
-          };
+        const sentimentConsensus = { positiveRatio, neutralRatio, cautionRatio };
+        const aiSummary = {
+          headline: parsed.headline || `${ipo.name} 공모주 투자 심층 분석`,
+          bulletPoints: Array.isArray(parsed.bulletPoints) ? parsed.bulletPoints : [`${stageLabel} 반영 완료`],
+          positivePoints: Array.isArray(parsed.positivePoints) ? parsed.positivePoints : ['수급 유입 기대'],
+          riskPoints: Array.isArray(parsed.riskPoints) ? parsed.riskPoints : ['상장일 변동성 주의'],
+        };
 
-          const scoring = calculateIpoScore({
-            institutionalCompetitionRate: ipo.institutionalCompetitionRate || 0,
-            lockupCommitmentRate: ipo.lockupCommitmentRate || 0,
-            circulatingSupplyRate: ipo.circulatingSupplyRate || 30,
-            priceBandMin: ipo.priceBandMin || 0,
-            priceBandMax: ipo.priceBandMax || 0,
-            confirmedPrice: ipo.confirmedPrice || 0,
-            sentimentConsensus,
-          });
+        const scoring = calculateIpoScore({
+          institutionalCompetitionRate: ipo.institutionalCompetitionRate || 0,
+          lockupCommitmentRate: ipo.lockupCommitmentRate || 0,
+          circulatingSupplyRate: ipo.circulatingSupplyRate || 30,
+          priceBandMin: ipo.priceBandMin || 0,
+          priceBandMax: ipo.priceBandMax || 0,
+          confirmedPrice: ipo.confirmedPrice || 0,
+          sentimentConsensus,
+        });
 
-          return {
-            sentimentConsensus,
-            aiSummary,
-            expertReviews: sourceReviews,
-            aiScore: scoring.score,
-            scoreGrade: scoring.scoreGrade,
-            llmUsed: true,
-            llmModel: 'Gemini 2.5 Flash',
-          };
-        }
+        return {
+          sentimentConsensus,
+          aiSummary,
+          expertReviews: sourceReviews,
+          aiScore: scoring.score,
+          scoreGrade: scoring.scoreGrade,
+          llmUsed: true,
+          llmModel: usedModelName,
+        };
       }
     } catch (err) {
       console.warn('[SentimentAnalyzer] Gemini API 호출 실패, 도메인 휴리스틱 엔진으로 대체:', err);
