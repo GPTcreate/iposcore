@@ -6,11 +6,28 @@ DART 전자공시 오픈 API 연동 모듈 (fetch_dart_ipos.py)
 """
 
 import os
+import sys
 import requests
 import json
+from pathlib import Path
 from datetime import datetime, timedelta
 
-DART_API_KEY = os.environ.get("DART_API_KEY", "")
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+def get_dart_api_key():
+    key = os.environ.get("DART_API_KEY", "")
+    if key:
+        return key
+    # .env.local 탐색
+    env_path = Path(__file__).resolve().parent.parent / ".env.local"
+    if env_path.exists():
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            if line.startswith("DART_API_KEY="):
+                return line.split("=", 1)[1].strip()
+    return ""
+
+DART_API_KEY = get_dart_api_key()
 
 def fetch_latest_ipo_filings(days: int = 30):
     """
@@ -29,7 +46,7 @@ def fetch_latest_ipo_filings(days: int = 30):
         "crtfc_key": DART_API_KEY,
         "bgn_de": start_date,
         "end_de": end_date,
-        "pblntf_detail_ty": "C001", // 증권신고(지분증권)
+        "pblntf_detail_ty": "C001",  # 증권신고(지분증권)
         "page_no": 1,
         "page_count": 50
     }
@@ -53,4 +70,4 @@ if __name__ == "__main__":
     print("=== DART 공모주 공시 수집기 실행 테스트 ===")
     filings = fetch_latest_ipo_filings(14)
     for f in filings[:5]:
-        print(f"• [{f.get('corp_name')}] {f.get('report_nm')} (접수일: {f.get('rcept_dt')})")
+        print(f"- [{f.get('corp_name')}] {f.get('report_nm')} (접수일: {f.get('rcept_dt')})")

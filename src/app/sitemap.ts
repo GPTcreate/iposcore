@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { MOCK_IPOS } from '@/data/mockIpo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipo-insights.kr';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 
   // 정적 페이지
   const routes: MetadataRoute.Sitemap = [
