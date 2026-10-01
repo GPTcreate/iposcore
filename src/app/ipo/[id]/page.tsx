@@ -152,6 +152,46 @@ export default async function IpoDetailPage({ params }: PageProps) {
           </div>
         </div>
 
+        {/* 상장 완료 종목 실전 수익률 배너 (시초가 & 종가) */}
+        {ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
+          <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-300 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[11px] font-extrabold bg-emerald-600 text-white">상장 완료</span>
+                  <span className="text-xs font-semibold text-gray-600">확정 공모가 {ipo.confirmedPrice.toLocaleString()}원 기준</span>
+                </div>
+                <h3 className="text-base font-bold text-gray-900 mt-1">상장 당일 실전 수익률 결과</h3>
+              </div>
+              <div className="flex items-center gap-6 sm:gap-8 bg-white/90 py-2.5 px-5 rounded-lg border border-emerald-200">
+                <div>
+                  <span className="text-xs text-gray-500 block font-medium">시초가 수익률</span>
+                  <div className="flex items-baseline gap-1.5 mt-0.5">
+                    <span className={`text-xl font-black ${ipo.openingReturnRate && ipo.openingReturnRate > 0 ? 'text-rose-600' : ipo.openingReturnRate && ipo.openingReturnRate < 0 ? 'text-blue-600' : 'text-gray-900'}`}>
+                      {ipo.openingReturnRate && ipo.openingReturnRate > 0 ? `+${ipo.openingReturnRate.toFixed(1)}%` : `${ipo.openingReturnRate?.toFixed(1)}%`}
+                    </span>
+                    {ipo.openingPrice && (
+                      <span className="text-xs text-gray-500 font-medium">({ipo.openingPrice.toLocaleString()}원)</span>
+                    )}
+                  </div>
+                </div>
+                <div className="h-8 w-px bg-gray-200" />
+                <div>
+                  <span className="text-xs text-gray-500 block font-medium">종가 수익률</span>
+                  <div className="flex items-baseline gap-1.5 mt-0.5">
+                    <span className={`text-xl font-black ${ipo.closingReturnRate && ipo.closingReturnRate > 0 ? 'text-rose-600' : ipo.closingReturnRate && ipo.closingReturnRate < 0 ? 'text-blue-600' : 'text-gray-900'}`}>
+                      {ipo.closingReturnRate && ipo.closingReturnRate > 0 ? `+${ipo.closingReturnRate.toFixed(1)}%` : `${ipo.closingReturnRate?.toFixed(1)}%`}
+                    </span>
+                    {ipo.closingPrice && (
+                      <span className="text-xs text-gray-500 font-medium">({ipo.closingPrice.toLocaleString()}원)</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 1. 핵심 요약 3가지 & 호재 vs 리스크 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 p-6 rounded-xl bg-white border border-gray-300 shadow-2xs space-y-4">

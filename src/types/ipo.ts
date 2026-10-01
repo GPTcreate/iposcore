@@ -60,6 +60,12 @@ export interface IpoItem {
     cautionRatio: number;  // %
   };
   
+  // 상장 결과 지표 (상장 완료 종목)
+  openingPrice?: number;         // 상장일 시초가 (원)
+  openingReturnRate?: number;    // 시초가 기준 수익률 (%)
+  closingPrice?: number;         // 상장일 종가 (원)
+  closingReturnRate?: number;    // 종가 기준 수익률 (%)
+
   expertReviews: ExpertReview[];
 }
 

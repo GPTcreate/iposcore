@@ -374,6 +374,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 4918,
     aiScore: 83,
     scoreGrade: 'A',
+    openingPrice: 46350,
+    openingReturnRate: 36.3,
+    closingPrice: 51400,
+    closingReturnRate: 51.2,
     aiSummary: {
       headline: '백종원 대표 외식 프랜차이즈, 상장 첫날 +51% 급등 마감하며 대흥행',
       bulletPoints: [
@@ -441,6 +445,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 3100,
     aiScore: 83,
     scoreGrade: 'A',
+    openingPrice: 15000,
+    openingReturnRate: 15.4,
+    closingPrice: 12500,
+    closingReturnRate: -3.8,
     aiSummary: {
       headline: '지능형 실내 자율주행 로봇 소프트웨어 선도 기업, 성공적 코스닥 상장',
       bulletPoints: [
@@ -477,6 +485,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 1230,
     aiScore: 91,
     scoreGrade: 'S',
+    openingPrice: 24000,
+    openingReturnRate: 100.0,
+    closingPrice: 20050,
+    closingReturnRate: 67.1,
     aiSummary: {
       headline: 'SAP ERP 보안 솔루션 독점 1위, 상장일 시초가 +85% 따블 달성',
       bulletPoints: [
@@ -513,6 +525,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 3500,
     aiScore: 86,
     scoreGrade: 'A',
+    openingPrice: 16500,
+    openingReturnRate: -8.3,
+    closingPrice: 13750,
+    closingReturnRate: -23.6,
     aiSummary: {
       headline: '차량용 OLED 디스플레이 전장 부품 핵심 공급사, 연 매출 5,000억 중견기업',
       bulletPoints: [
@@ -549,6 +565,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 2030,
     aiScore: 85,
     scoreGrade: 'A',
+    openingPrice: 15100,
+    openingReturnRate: -5.6,
+    closingPrice: 11800,
+    closingReturnRate: -26.3,
     aiSummary: {
       headline: '3D 홀로토모그래피 글로벌 원천기술 보유, 하버드/MIT 납품 레퍼런스',
       bulletPoints: [
@@ -585,6 +605,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 2100,
     aiScore: 82,
     scoreGrade: 'A',
+    openingPrice: 14800,
+    openingReturnRate: -7.5,
+    closingPrice: 9880,
+    closingReturnRate: -38.3,
     aiSummary: {
       headline: '드론 및 로봇 에듀테크 기반 국방/방산 드론 확장, 흑자 고성장 기업',
       bulletPoints: [
@@ -621,6 +645,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 1600,
     aiScore: 89,
     scoreGrade: 'S',
+    openingPrice: 21500,
+    openingReturnRate: -6.5,
+    closingPrice: 16400,
+    closingReturnRate: -28.7,
     aiSummary: {
       headline: '마이크로바이옴 맞춤형 헬스케어, 암웨이 지분 투자 및 수요예측 대박',
       bulletPoints: [
@@ -657,6 +685,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 1700,
     aiScore: 84,
     scoreGrade: 'A',
+    openingPrice: 22000,
+    openingReturnRate: 83.3,
+    closingPrice: 18100,
+    closingReturnRate: 50.8,
     aiSummary: {
       headline: 'SMT 스마트팩토리 공정 자동화 솔루션 기업, 테슬라/스페이스X 납품 이력',
       bulletPoints: [
@@ -693,6 +725,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 1780,
     aiScore: 37,
     scoreGrade: 'C',
+    openingPrice: 10250,
+    openingReturnRate: -14.6,
+    closingPrice: 9800,
+    closingReturnRate: -18.3,
     aiSummary: {
       headline: '초고해상도 지구관측 영상 SAR 위성 기업, 공모가 하단 미달 확정',
       bulletPoints: [
@@ -729,6 +765,10 @@ export const MOCK_IPOS: IpoItem[] = [
     marketCapAtIpo: 1900,
     aiScore: 42,
     scoreGrade: 'C',
+    openingPrice: 13200,
+    openingReturnRate: -17.5,
+    closingPrice: 11500,
+    closingReturnRate: -28.1,
     aiSummary: {
       headline: '기관 수요예측 참패 및 공모가 하단 미달, 상장일 매도 우위 주의',
       bulletPoints: [
