@@ -6,6 +6,7 @@ import ScoreBadge from '@/components/ScoreBadge';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import IpoCalculator from '@/components/IpoCalculator';
 import NewsletterBanner from '@/components/NewsletterBanner';
+import ShareButtons from '@/components/ShareButtons';
 import { MOCK_IPOS } from '@/data/mockIpo';
 import {
   ArrowLeft,
@@ -42,8 +43,8 @@ export default async function IpoDetailPage({ params }: PageProps) {
       <Header />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-        {/* 뒤로 가기 링크 */}
-        <div>
+        {/* 뒤로 가기 링크 & 공유 버튼 */}
+        <div className="flex items-center justify-between">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-600 hover:text-blue-700 transition-colors"
@@ -51,6 +52,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
             <ArrowLeft className="w-4 h-4" />
             <span>← 전체 청약 일정 목록으로 돌아가기</span>
           </Link>
+          <ShareButtons stockName={ipo.name} aiScore={ipo.aiScore} />
         </div>
 
         {/* 상단 종목 타이틀 카드 */}
