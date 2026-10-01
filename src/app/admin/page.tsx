@@ -392,8 +392,8 @@ export default function AdminPage() {
               <span className="text-lg font-black text-blue-700">{channels.length}개</span>
             </div>
             <div className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-center">
-              <span className="text-[11px] text-gray-500 block">뉴스레터 구독자</span>
-              <span className="text-lg font-black text-emerald-700">142명</span>
+              <span className="text-[11px] text-gray-500 block">실제 구독자</span>
+              <span className="text-lg font-black text-emerald-700">{subStats.active}명</span>
             </div>
           </div>
         </div>
