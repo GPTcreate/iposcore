@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     other: {
-      'naver-site-verification': process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || '',
+      'naver-site-verification': '17e4d28137098909781e6fb70c5a646ea284f193',
     },
   },
 };
@@ -96,7 +96,7 @@ export default function RootLayout({
     <html lang="ko" className="h-full antialiased">
       <head>
         {/* 구글 서치콘솔 / 네이버 웹마스터 기본 메타 태그 */}
-        <meta name="naver-site-verification" content="f8c14856098197779f67aee1ebff8417cda43110" />
+        <meta name="naver-site-verification" content="17e4d28137098909781e6fb70c5a646ea284f193" />
         <meta name="google-site-verification" content="google-search-console-verification" />
         
         {/* 구글 애드센스 소유권 확인 메타 태그 & 스크립트 */}
