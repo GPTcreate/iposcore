@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import CookieConsent from '@/components/CookieConsent';
+import VisitorBeacon from '@/components/VisitorBeacon';
 
 const siteUrl = 'https://iposcore.kr';
 
@@ -114,6 +115,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-neutral-950 text-gray-900 dark:text-neutral-100">
+        <VisitorBeacon />
         {children}
         <CookieConsent />
       </body>

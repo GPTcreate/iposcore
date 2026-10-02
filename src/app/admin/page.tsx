@@ -115,10 +115,23 @@ export default function AdminPage() {
   const [telegramLoading, setTelegramLoading] = useState(false);
   const [telegramResult, setTelegramResult] = useState<string | null>(null);
 
+  // 방문자 통계 상태 (TODAY & TOTAL)
+  const [visitorStats, setVisitorStats] = useState<{ today: number; total: number }>({ today: 0, total: 0 });
+
   // 오늘 날짜 기준 (KST) 신규 및 인증 구독자 계산
   const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
   const todaySubscribers = subscribers.filter((s) => s.subscribedAt && s.subscribedAt.startsWith(todayStr)).length;
   const todayVerified = subscribers.filter((s) => s.verifiedAt && s.verifiedAt.startsWith(todayStr)).length;
+
+  const fetchVisitorStats = async () => {
+    try {
+      const res = await fetch('/api/visitors');
+      if (res.ok) {
+        const data = await res.json();
+        setVisitorStats({ today: data.today || 0, total: data.total || 0 });
+      }
+    } catch {}
+  };
 
   const fetchSubscribers = async () => {
     try {
@@ -142,6 +155,7 @@ export default function AdminPage() {
     if (!isAuthenticated) return;
     const timer = setTimeout(() => {
       fetchSubscribers();
+      fetchVisitorStats();
       fetchTelegramStatus();
     }, 0);
     return () => clearTimeout(timer);
@@ -579,22 +593,41 @@ https://iposcore.kr/ipo/${ipo.code}`;
             </p>
           </div>
 
-          {/* 주요 통계 카드 (TODAY & TOTAL) */}
+          {/* 주요 통계 카드 (방문자 & 구독자 TODAY & TOTAL) */}
           <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="px-3.5 py-2 rounded-xl bg-blue-50 border border-blue-200 text-center min-w-[95px]">
-              <span className="text-[11px] font-bold text-blue-700 block">TODAY (오늘)</span>
+            {/* 방문자 통계 */}
+            <div className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-center min-w-[105px]">
+              <span className="text-[11px] font-bold text-amber-800 block flex items-center justify-center gap-1">
+                <Users className="w-3 h-3 text-amber-600" />
+                <span>오늘 방문 (Today)</span>
+              </span>
+              <span className="text-xl font-black text-amber-950">{visitorStats.today.toLocaleString()}명</span>
+              <span className="text-[10px] text-amber-700 block">실시간 트래픽</span>
+            </div>
+            <div className="px-3.5 py-2 rounded-xl bg-amber-50/60 border border-amber-200 text-center min-w-[105px]">
+              <span className="text-[11px] font-bold text-amber-800 block flex items-center justify-center gap-1">
+                <Users className="w-3 h-3 text-amber-600" />
+                <span>누적 방문 (Total)</span>
+              </span>
+              <span className="text-xl font-black text-amber-950">{visitorStats.total.toLocaleString()}명</span>
+              <span className="text-[10px] text-amber-700 block">총 누적 방문자</span>
+            </div>
+
+            {/* 뉴스레터 구독자 통계 */}
+            <div className="px-3.5 py-2 rounded-xl bg-blue-50 border border-blue-200 text-center min-w-[100px]">
+              <span className="text-[11px] font-bold text-blue-700 block">오늘 구독</span>
               <span className="text-xl font-black text-blue-900">{todaySubscribers}건</span>
               <span className="text-[10px] text-blue-600 block">인증 {todayVerified}명</span>
             </div>
-            <div className="px-3.5 py-2 rounded-xl bg-white border border-gray-300 text-center min-w-[95px]">
-              <span className="text-[11px] font-bold text-gray-500 block">TOTAL (누적)</span>
+            <div className="px-3.5 py-2 rounded-xl bg-white border border-gray-300 text-center min-w-[100px]">
+              <span className="text-[11px] font-bold text-gray-500 block">누적 구독</span>
               <span className="text-xl font-black text-gray-900">{subStats.total}건</span>
               <span className="text-[10px] text-emerald-700 font-bold block">{subStats.active}명 활성</span>
             </div>
             <div className="px-3.5 py-2 rounded-xl bg-white border border-gray-300 text-center min-w-[95px]">
               <span className="text-[11px] font-bold text-gray-500 block">공모주</span>
               <span className="text-xl font-black text-blue-700">{MOCK_IPOS.length}종목</span>
-              <span className="text-[10px] text-gray-500 block">전체 라인업</span>
+              <span className="text-[10px] text-gray-500 block">DART 실시간</span>
             </div>
           </div>
         </div>
