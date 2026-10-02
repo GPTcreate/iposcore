@@ -9,42 +9,42 @@ export const MOCK_IPOS: IpoItem[] = [
     "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-10-01",
     "subscriptionEnd": "2026-10-02",
-    "refundDate": "2026-10-05",
-    "listingDate": "2026-10-13",
-    "priceBandMin": 13000,
-    "priceBandMax": 15000,
-    "confirmedPrice": 15500,
+    "refundDate": "2026-10-07",
+    "listingDate": "2026-10-15",
+    "priceBandMin": 10700,
+    "priceBandMax": 12300,
+    "confirmedPrice": 12300,
     "underwriters": [
       {
-        "name": "신영증권",
-        "allocatedShares": 450000,
+        "name": "대신증권",
+        "allocatedShares": 625000,
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 982.4,
-    "lockupCommitmentRate": 16.8,
-    "circulatingSupplyRate": 24.3,
-    "totalOfferingAmount": 280,
-    "marketCapAtIpo": 1520,
+    "institutionalCompetitionRate": 1136.8,
+    "lockupCommitmentRate": 33.1,
+    "circulatingSupplyRate": 34.6,
+    "totalOfferingAmount": 308,
+    "marketCapAtIpo": 1550,
     "aiSummary": {
-      "headline": "반도체·디스플레이 초정밀 온도조절 칠러 강자, 공모가 상단 초과 확정",
+      "headline": "반도체 포토공정 초정밀 온·습도 제어시스템(THC/XPS) 강자, 밴드 상단 확정",
       "bulletPoints": [
-        "삼성전자 및 SK하이닉스 1차 벤더향 납품 레퍼런스 보유",
-        "기관 수요예측 982:1 기록으로 공모가 15,500원에 확정",
-        "상장일 유통가능물량이 24.3%로 비교적 가벼운 수급 구조"
+        "ASML 및 도쿄일렉트론(TEL) 노광장비 연동 국내 유일 온·습도 제어 기술 보유",
+        "기관 수요예측 1,136:1 기록으로 공모가 12,300원(상단) 확정",
+        "의무보유확약 비율 33.1%로 기관 장기 보유 물량 대거 확보"
       ],
       "positivePoints": [
-        "반도체 HBM 고단화에 따른 초정밀 칠러 수요 급증",
-        "흑자 영업이익률 15% 이상 유지 중인 실적 안정성"
+        "삼성전자·SK하이닉스 선단 공정 증설에 따른 초정밀 환경제어 장비 필수 수요",
+        "의무보유확약 33.1%로 상장 초기 출회 매물 대폭 축소"
       ],
       "riskPoints": [
-        "신영증권 단독 주관으로 비례 청약 시 경쟁률 치열 예상"
+        "대신증권 단독 주관으로 일반 배정 물량(62.5만주) 대비 청약 경쟁 치열"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 80,
-      "neutralRatio": 16,
-      "cautionRatio": 4
+      "positiveRatio": 85,
+      "neutralRatio": 12,
+      "cautionRatio": 3
     },
     "expertReviews": [
       {
@@ -55,7 +55,7 @@ export const MOCK_IPOS: IpoItem[] = [
         "url": "https://www.youtube.com/watch?v=PVWW3PbSY5k",
         "publishedAt": "2026-10-01",
         "sentiment": "POSITIVE",
-        "summary": "공모가 15,500원 확정, 첫날 청약 흐름 분석 및 균등 1주 배정 확률 점검."
+        "summary": "공모가 12,300원 확정, 대신증권 청약 흐름 분석 및 균등 1주 배정 확률 점검."
       },
       {
         "id": "rev-mel-2",
@@ -65,7 +65,7 @@ export const MOCK_IPOS: IpoItem[] = [
         "url": "https://www.youtube.com/watch?v=tMurBOnBcY0",
         "publishedAt": "2026-10-01",
         "sentiment": "POSITIVE",
-        "summary": "ASML 국내 유일 공급사 레퍼런스, 사이즈 및 가격 메리트, 기대수익률 총정리."
+        "summary": "ASML 국내 유일 공급사 레퍼런스, 대신증권 단독 청약 전략, 기대수익률 총정리."
       },
       {
         "id": "rev-mel-3",
@@ -75,10 +75,10 @@ export const MOCK_IPOS: IpoItem[] = [
         "url": "https://blog.naver.com/kastro83/224427206492",
         "publishedAt": "2026-10-01",
         "sentiment": "POSITIVE",
-        "summary": "반도체 초정밀 칠러 공급 레퍼런스, 기관 경쟁률 및 상장일 유통물량 정밀 분석."
+        "summary": "반도체 초정밀 칠러 공급 레퍼런스, 기관 경쟁률 1,136:1 및 상장일 유통물량 정밀 분석."
       }
     ],
-    "aiScore": 89,
+    "aiScore": 91,
     "scoreGrade": "S"
   },
   {
@@ -91,34 +91,34 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionEnd": "2026-10-06",
     "refundDate": "2026-10-08",
     "listingDate": "2026-10-15",
-    "priceBandMin": 4800,
-    "priceBandMax": 5500,
-    "confirmedPrice": 5800,
+    "priceBandMin": 19500,
+    "priceBandMax": 23500,
+    "confirmedPrice": 23500,
     "underwriters": [
       {
         "name": "하나증권",
-        "allocatedShares": 520000,
+        "allocatedShares": 213000,
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 812.1,
-    "lockupCommitmentRate": 11.4,
-    "circulatingSupplyRate": 29.5,
-    "totalOfferingAmount": 180,
+    "institutionalCompetitionRate": 1097.6,
+    "lockupCommitmentRate": 5.3,
+    "circulatingSupplyRate": 58.4,
+    "totalOfferingAmount": 200,
     "marketCapAtIpo": 890,
     "aiSummary": {
-      "headline": "K-뷰티 하이드로겔 마스크팩 OEM/ODM 강자, 글로벌 수출 확대 수혜",
+      "headline": "K-뷰티 하이드로겔 마스크팩 OEM/ODM 코스닥 이전상장, 공모가 상단 확정",
       "bulletPoints": [
         "미국·일본 중심 K-뷰티 수출 호조로 하이드로겔 아이패치 주문량 급증",
-        "기관 경쟁률 812:1로 밴드 상단 초과 5,800원 확정",
-        "공모 규모 180억원의 소형주로 상장일 시초가 수급 유입 기대"
+        "기관 수요예측 1,097:1 기록으로 공모가 23,500원(상단) 확정",
+        "코넥스 이전상장 특성상 상장일 유통가능물량이 58.4%로 수급 부담 점검 필요"
       ],
       "positivePoints": [
-        "소형주 품절주 효과 기대 및 가벼운 시가총액",
-        "해외 인디 브랜드사향 수주 가시성 높음"
+        "글로벌 인디 화장품 브랜드향 OEM/ODM 수주 가시성 우수",
+        "기관 경쟁률 1,000:1 상회로 안정적인 공모가 상단 안착"
       ],
       "riskPoints": [
-        "상장일 유통물량 29.5%로 보통 수준, 단기 차익 실현 매물 주의"
+        "상장일 유통물량 58.4%로 기존 코넥스 주주 차익 실현 출회 주의"
       ]
     },
     "sentimentConsensus": {
@@ -135,7 +135,7 @@ export const MOCK_IPOS: IpoItem[] = [
         "url": "https://www.youtube.com/results?search_query=%EC%A7%84%EC%BD%94%EC%8A%A4%ED%85%8D+%EA%B3%B5%EB%AA%A8%EC%A3%BC",
         "publishedAt": "2026-10-01",
         "sentiment": "POSITIVE",
-        "summary": "5,800원 확정, 소형주 수급 탄력 점검 및 균등 비례 배정 예상주수 분석."
+        "summary": "23,500원 확정, 소형주 수급 탄력 점검 및 균등 비례 배정 예상주수 분석."
       },
       {
         "id": "rev-jin-2",
@@ -220,9 +220,9 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "한국투자증권",
+        "name": "KB증권",
         "allocatedShares": 500000,
-        "fee": 2000
+        "fee": 1500
       }
     ],
     "institutionalCompetitionRate": 0,
@@ -269,9 +269,9 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "KB증권",
+        "name": "대신증권",
         "allocatedShares": 600000,
-        "fee": 1500
+        "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
@@ -416,7 +416,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "한국투자증권",
+        "name": "삼성증권",
         "allocatedShares": 480000,
         "fee": 2000
       }
@@ -465,13 +465,8 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "NH투자증권",
+        "name": "삼성증권",
         "allocatedShares": 720000,
-        "fee": 2000
-      },
-      {
-        "name": "신한투자증권",
-        "allocatedShares": 240000,
         "fee": 2000
       }
     ],
@@ -519,9 +514,9 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "KB증권",
+        "name": "신한투자증권",
         "allocatedShares": 550000,
-        "fee": 1500
+        "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
@@ -568,7 +563,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "삼성증권",
+        "name": "NH투자증권",
         "allocatedShares": 500000,
         "fee": 2000
       }
@@ -617,7 +612,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "하나증권",
+        "name": "미래에셋증권",
         "allocatedShares": 600000,
         "fee": 2000
       }
@@ -661,26 +656,26 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionEnd": "2026-09-23",
     "refundDate": "2026-09-25",
     "listingDate": "2026-10-10",
-    "priceBandMin": 8500,
-    "priceBandMax": 10000,
-    "confirmedPrice": 11000,
+    "priceBandMin": 16000,
+    "priceBandMax": 19500,
+    "confirmedPrice": 19500,
     "underwriters": [
       {
-        "name": "신한투자증권",
+        "name": "IBK투자증권",
         "allocatedShares": 500000,
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 1052.4,
+    "institutionalCompetitionRate": 1676.3,
     "lockupCommitmentRate": 18.2,
     "circulatingSupplyRate": 23.5,
-    "totalOfferingAmount": 220,
+    "totalOfferingAmount": 290,
     "marketCapAtIpo": 1450,
     "aiSummary": {
       "headline": "협동로봇 기반 맞춤형 표준 로봇 자동화 솔루션, 밴드 상단 초과 흥행",
       "bulletPoints": [
         "제조·물류 현장 투입용 모듈형 협동로봇 솔루션 플랫폼 소프트웨어 공급",
-        "수요예측 경쟁률 1,052:1 기록, 공모가 상단 10% 초과 확정",
+        "수요예측 경쟁률 1,676:1 기록, 공모가 상단 19,500원 확정",
         "상장일 유통물량 23.5%로 매우 가벼운 수급으로 시초가 상승 기대"
       ],
       "positivePoints": [
@@ -710,12 +705,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionEnd": "2026-09-24",
     "refundDate": "2026-09-26",
     "listingDate": "2026-10-14",
-    "priceBandMin": 15000,
-    "priceBandMax": 17500,
-    "confirmedPrice": 18500,
+    "priceBandMin": 12500,
+    "priceBandMax": 14600,
+    "confirmedPrice": 14600,
     "underwriters": [
       {
-        "name": "미래에셋증권",
+        "name": "대신증권",
         "allocatedShares": 650000,
         "fee": 2000
       }
@@ -730,11 +725,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "bulletPoints": [
         "항재밍(Anti-Jamming) 및 위성항법 복합 항법장치 국산화 완료",
         "K-방산 수출 호조로 한화에어로, LIG넥스원향 장기 수주 잔고 급증",
-        "수요예측 914:1 기록, 확정공모가 18,500원 상단 돌파"
+        "수요예측 흥행으로 확정공모가 14,600원 밴드 상단 확정"
       ],
       "positivePoints": [
         "방산/우주항공 확실한 실적 기반과 국가 안보 필수 국산화 부품",
-        "해외 수주 물량 확대에 따른 레버리지 효과"
+        "대신증권 단독 주관으로 깔끔한 배정 구조"
       ],
       "riskPoints": [
         "방산 프로젝트 계약 일정에 따른 매출 인식 시점 지연 가능성"
@@ -759,14 +754,19 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionEnd": "2026-09-25",
     "refundDate": "2026-09-29",
     "listingDate": "2026-10-16",
-    "priceBandMin": 12000,
-    "priceBandMax": 13500,
-    "confirmedPrice": 14000,
+    "priceBandMin": 15000,
+    "priceBandMax": 18000,
+    "confirmedPrice": 18000,
     "underwriters": [
       {
-        "name": "KB증권",
-        "allocatedShares": 450000,
-        "fee": 1500
+        "name": "유진투자증권",
+        "allocatedShares": 300000,
+        "fee": 2000
+      },
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 150000,
+        "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 885.2,
