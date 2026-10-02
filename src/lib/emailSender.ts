@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { Subscriber } from './subscriberStore';
+import { MOCK_IPOS } from '@/data/mockIpo';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'newsletter@iposcore.kr';
@@ -90,15 +91,14 @@ export async function sendEmail({ to, subject, html, text }: SendMailOptions): P
 }
 
 /**
- * 1. 수신 동의 / 인증 메일 발송 (Double Opt-in)
+ * 1. 수신 동의 / 인증 메일 HTML 템플릿 생성기 (Double Opt-in)
  */
-export async function sendVerificationEmail(subscriber: Subscriber) {
+export function getVerificationEmailTemplate(subscriber: { email: string; verificationToken: string; unsubscribeToken: string }) {
   const verifyUrl = `${SITE_URL}/api/newsletter/verify?token=${subscriber.verificationToken}`;
   const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
-
   const subject = `[공모주 알리미] 뉴스레터 구독 확인 및 수신 동의 안내`;
-  const html = `
-<!DOCTYPE html>
+
+  const html = `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
@@ -106,15 +106,12 @@ export async function sendVerificationEmail(subscriber: Subscriber) {
 </head>
 <body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #111827;">
   <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-    <!-- 헤더 -->
     <tr>
       <td style="padding: 32px 32px 20px 32px; background-color: #1d4ed8; text-align: center;">
         <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">공모주 알리미</h1>
         <p style="margin: 6px 0 0 0; color: #bfdbfe; font-size: 13px;">iposcore.kr | 공모주 청약 분석 리포트</p>
       </td>
     </tr>
-
-    <!-- 본문 -->
     <tr>
       <td style="padding: 32px;">
         <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 700; color: #111827;">
@@ -125,7 +122,6 @@ export async function sendVerificationEmail(subscriber: Subscriber) {
           아래 <strong>[구독 동의 및 확인하기]</strong> 버튼을 누르시면 수신 동의가 완료되며, 매주 월요일 아침 이번 주 공모주 핵심 요약 리포트를 받아보실 수 있습니다.
         </p>
 
-        <!-- 확인 버튼 -->
         <table align="center" cellpadding="0" cellspacing="0" style="margin: 28px auto;">
           <tr>
             <td align="center" style="border-radius: 10px; background-color: #1d4ed8;">
@@ -136,7 +132,6 @@ export async function sendVerificationEmail(subscriber: Subscriber) {
           </tr>
         </table>
 
-        <!-- 혜택 안내 -->
         <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-top: 24px;">
           <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: bold; color: #1f2937;">제공되는 리포트 내용</p>
           <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #6b7280; line-height: 1.6;">
@@ -153,8 +148,6 @@ export async function sendVerificationEmail(subscriber: Subscriber) {
         </p>
       </td>
     </tr>
-
-    <!-- 푸터 및 수신 거부 -->
     <tr>
       <td style="padding: 24px 32px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; line-height: 1.6;">
         <p style="margin: 0 0 6px 0;">
@@ -167,30 +160,29 @@ export async function sendVerificationEmail(subscriber: Subscriber) {
     </tr>
   </table>
 </body>
-</html>
-  `;
+</html>`;
 
-  return sendEmail({ to: subscriber.email, subject, html });
+  return { subject, html };
 }
 
 /**
- * 2. 수신 거부 완료 안내 메일
+ * 2. 수신 거부 완료 안내 메일 HTML 템플릿 생성기
  */
-export async function sendUnsubscribeConfirmationEmail(subscriber: Subscriber) {
+export function getUnsubscribeEmailTemplate(subscriber: { email: string }) {
   const resubscribeUrl = `${SITE_URL}#newsletter-section`;
   const subject = `[공모주 알리미] 수신 거부(구독 취소) 처리가 완료되었습니다`;
-  const html = `
-<!DOCTYPE html>
+
+  const html = `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <title>${subject}</title>
 </head>
 <body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #111827;">
-  <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden;">
+  <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
     <tr>
-      <td style="padding: 28px; text-align: center; border-bottom: 1px solid #e5e7eb;">
-        <h2 style="margin: 0 0 8px 0; color: #111827; font-size: 18px;">수신 거부 처리 완료</h2>
+      <td style="padding: 28px; text-align: center; border-bottom: 1px solid #e5e7eb; background-color: #ffffff;">
+        <h2 style="margin: 0 0 8px 0; color: #111827; font-size: 18px; font-weight: 800;">수신 거부 처리 완료</h2>
         <p style="margin: 0; color: #6b7280; font-size: 13px;">공모주 알리미 (iposcore.kr)</p>
       </td>
     </tr>
@@ -199,21 +191,136 @@ export async function sendUnsubscribeConfirmationEmail(subscriber: Subscriber) {
         <p style="margin: 0 0 12px 0;">
           <strong>${subscriber.email}</strong> 님의 수신 거부 요청이 정상적으로 처리되었습니다.
         </p>
-        <p style="margin: 0 0 20px 0;">
+        <p style="margin: 0 0 24px 0;">
           앞으로 공모주 알리미에서 발송되는 정기 리포트 메일이 발송되지 않습니다.<br/>
           그동안 서비스를 이용해 주셔서 감사드리며, 언제든 다시 필요하실 때 홈페이지에서 재신청하실 수 있습니다.
         </p>
         <p style="margin: 0; text-align: center;">
-          <a href="${resubscribeUrl}" style="display: inline-block; padding: 10px 20px; font-size: 13px; font-weight: bold; background-color: #f3f4f6; color: #1f2937; text-decoration: none; border-radius: 8px; border: 1px solid #d1d5db;">
-            홈페이지 바로가기
+          <a href="${resubscribeUrl}" style="display: inline-block; padding: 12px 24px; font-size: 13px; font-weight: bold; background-color: #1d4ed8; color: #ffffff; text-decoration: none; border-radius: 8px;">
+            공모주 알리미 홈 바로가기 →
           </a>
         </p>
       </td>
     </tr>
   </table>
 </body>
-</html>
-  `;
+</html>`;
 
+  return { subject, html };
+}
+
+/**
+ * 3. 주간 정기 공모주 핵심 요약 리포트 메일 HTML 템플릿 생성기
+ */
+export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubscribeToken?: string }) {
+  const unsubToken = subscriber.unsubscribeToken || 'demo_token';
+  const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${unsubToken}`;
+  const calculatorUrl = `${SITE_URL}/calculator`;
+  const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 (멜콘·진코스텍 등)`;
+
+  const activeIpos = MOCK_IPOS.filter((i) => i.status === 'SUBSCRIPTION').slice(0, 2);
+  const upcomingIpos = MOCK_IPOS.filter((i) => i.status === 'UPCOMING').slice(0, 3);
+
+  const activeRows = activeIpos.map((ipo) => `
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <strong style="font-size: 16px; color: #0f172a;">${ipo.name} (${ipo.market})</strong>
+        <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; background-color: #dbeafe; color: #1e40af;">
+          종합 ${ipo.aiScore}점 (${ipo.scoreGrade}등급)
+        </span>
+      </div>
+      <p style="margin: 0 0 8px 0; font-size: 13px; color: #334155; line-height: 1.5;">
+        ${ipo.aiSummary.headline}
+      </p>
+      <div style="font-size: 12px; color: #64748b; line-height: 1.6;">
+        • 확정 공모가: <strong>${ipo.confirmedPrice.toLocaleString()}원</strong> | 주관사: ${ipo.underwriters.map((u) => u.name).join(', ')}<br/>
+        • 청약 기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}<br/>
+        • 전문가 여론: 긍정 ${ipo.sentimentConsensus.positiveRatio}% / 중립 ${ipo.sentimentConsensus.neutralRatio}%
+      </div>
+      <div style="margin-top: 10px;">
+        <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="font-size: 12px; font-weight: bold; color: #2563eb; text-decoration: none;">
+          상세 투자 리포트 보기 →
+        </a>
+      </div>
+    </div>
+  `).join('');
+
+  const upcomingRows = upcomingIpos.map((ipo) => `
+    <li style="margin-bottom: 8px; font-size: 13px; color: #334155;">
+      <strong>${ipo.name}</strong> (${ipo.subscriptionStart} 청약 예정) : ${ipo.aiSummary.headline}
+    </li>
+  `).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>${subject}</title>
+</head>
+<body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #111827;">
+  <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+    <tr>
+      <td style="padding: 28px 32px 20px 32px; background-color: #1d4ed8; text-align: center;">
+        <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 800;">공모주 알리미 주간 리포트</h1>
+        <p style="margin: 6px 0 0 0; color: #bfdbfe; font-size: 13px;">이번 주 꼭 챙겨봐야 할 청약 종목 완벽 정리</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 32px;">
+        <h2 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+          🔥 이번 주 청약 진행 종목
+        </h2>
+        ${activeRows}
+
+        <h2 style="margin: 24px 0 12px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+          📅 다음 주 청약 예정 기대주
+        </h2>
+        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+          ${upcomingRows}
+        </ul>
+
+        <table align="center" cellpadding="0" cellspacing="0" style="margin: 28px auto 16px auto;">
+          <tr>
+            <td align="center" style="border-radius: 10px; background-color: #0f172a;">
+              <a href="${calculatorUrl}" target="_blank" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 10px;">
+                비례 배정 & 대출이자 계산기 열기 →
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 24px 32px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; line-height: 1.6;">
+        <p style="margin: 0 0 4px 0;">
+          본 메일은 <strong>${subscriber.email}</strong> 님의 수신 동의에 의해 발송된 정기 뉴스레터입니다.
+        </p>
+        <p style="margin: 0;">
+          수신을 원치 않으시면 언제든 <a href="${unsubscribeUrl}" style="color: #4b5563; text-decoration: underline;">수신거부</a>를 클릭하세요.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  return { subject, html };
+}
+
+/**
+ * 이메일 발송 실행 래퍼들
+ */
+export async function sendVerificationEmail(subscriber: Subscriber) {
+  const { subject, html } = getVerificationEmailTemplate(subscriber);
+  return sendEmail({ to: subscriber.email, subject, html });
+}
+
+export async function sendUnsubscribeConfirmationEmail(subscriber: Subscriber) {
+  const { subject, html } = getUnsubscribeEmailTemplate(subscriber);
+  return sendEmail({ to: subscriber.email, subject, html });
+}
+
+export async function sendWeeklyReportEmail(subscriber: Subscriber) {
+  const { subject, html } = getWeeklyReportEmailTemplate(subscriber);
   return sendEmail({ to: subscriber.email, subject, html });
 }

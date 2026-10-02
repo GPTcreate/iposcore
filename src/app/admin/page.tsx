@@ -23,6 +23,9 @@ import {
   FileSpreadsheet,
   RefreshCw,
   Download,
+  Eye,
+  Mail,
+  X,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -93,6 +96,8 @@ export default function AdminPage() {
   const [sheetsSyncLoading, setSheetsSyncLoading] = useState(false);
   const [sheetsSyncResult, setSheetsSyncResult] = useState<string | null>(null);
   const [showSheetsGuide, setShowSheetsGuide] = useState(false);
+  const [showEmailPreviewModal, setShowEmailPreviewModal] = useState(false);
+  const [activePreviewTemplate, setActivePreviewTemplate] = useState<'verification' | 'report' | 'unsubscribe'>('verification');
 
   const fetchSubscribers = async () => {
     try {
@@ -742,26 +747,116 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* 테스트 메일 즉시 발송 도구 */}
-          <form onSubmit={handleSendTestEmail} className="flex flex-col sm:flex-row gap-2 items-center text-xs">
-            <input
-              type="email"
-              value={testEmailAddress}
-              onChange={(e) => setTestEmailAddress(e.target.value)}
-              placeholder="테스트 메일 수신할 이메일 주소 입력"
-              className="w-full sm:w-80 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-hidden focus:border-blue-600"
-            />
+          {/* 테스트 메일 발송 및 템플릿 실시간 미리보기 도구 */}
+          <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between text-xs pt-1">
+            <form onSubmit={handleSendTestEmail} className="flex flex-col sm:flex-row gap-2 items-center w-full lg:w-auto">
+              <input
+                type="email"
+                value={testEmailAddress}
+                onChange={(e) => setTestEmailAddress(e.target.value)}
+                placeholder="테스트 메일 수신할 이메일 주소 입력"
+                className="w-full sm:w-80 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-hidden focus:border-blue-600"
+              />
+              <button
+                type="submit"
+                disabled={testEmailLoading}
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-bold transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {testEmailLoading ? '발송 중...' : '테스트 메일 1건 발송'}
+              </button>
+              {testEmailResult && (
+                <span className="text-blue-700 font-semibold">{testEmailResult}</span>
+              )}
+            </form>
+
             <button
-              type="submit"
-              disabled={testEmailLoading}
-              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-bold transition-colors disabled:opacity-50 cursor-pointer"
+              type="button"
+              onClick={() => setShowEmailPreviewModal(true)}
+              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-800 font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
-              {testEmailLoading ? '발송 중...' : '테스트 메일 1건 발송'}
+              <Eye className="w-3.5 h-3.5 text-blue-700" />
+              <span>발송 메일 문구/디자인 미리보기 (3종)</span>
             </button>
-            {testEmailResult && (
-              <span className="text-blue-700 font-semibold">{testEmailResult}</span>
-            )}
-          </form>
+          </div>
+
+          {/* 발송 이메일 템플릿 실시간 미리보기 모달 */}
+          {showEmailPreviewModal && (
+            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+              <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-gray-200">
+                <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-base flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-blue-600" />
+                      <span>발송 이메일 템플릿 실시간 미리보기</span>
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      구독자에게 실제로 전송되는 HTML 이메일의 문구와 레이아웃을 확인합니다.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowEmailPreviewModal(false)}
+                    className="p-1.5 rounded-lg hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* 템플릿 탭 전환 */}
+                <div className="flex border-b border-gray-200 bg-gray-100/90 p-2 gap-1.5 overflow-x-auto text-xs font-bold">
+                  <button
+                    onClick={() => setActivePreviewTemplate('verification')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activePreviewTemplate === 'verification'
+                        ? 'bg-white text-blue-700 shadow-xs'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    1. 구독 확인 & 수신 동의
+                  </button>
+                  <button
+                    onClick={() => setActivePreviewTemplate('report')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activePreviewTemplate === 'report'
+                        ? 'bg-white text-blue-700 shadow-xs'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    2. 주간 공모주 리포트
+                  </button>
+                  <button
+                    onClick={() => setActivePreviewTemplate('unsubscribe')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activePreviewTemplate === 'unsubscribe'
+                        ? 'bg-white text-blue-700 shadow-xs'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    3. 수신 거부 완료 안내
+                  </button>
+                  <div className="ml-auto flex items-center shrink-0">
+                    <a
+                      href={`/api/newsletter/preview?template=${activePreviewTemplate}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[11px] text-blue-700 hover:underline flex items-center gap-1 font-semibold px-2"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      <span>새 탭에서 전체화면 보기</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* 실시간 iframe 뷰어 */}
+                <div className="flex-1 p-3 sm:p-4 bg-gray-100 overflow-y-auto">
+                  <iframe
+                    src={`/api/newsletter/preview?template=${activePreviewTemplate}`}
+                    className="w-full h-[500px] rounded-xl border border-gray-300 bg-white shadow-xs"
+                    title="Email Template Preview"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 실제 구독자 목록 테이블 */}
           <div>
