@@ -12,7 +12,7 @@ export async function POST() {
 
 export async function GET() {
   try {
-    const stats = getVisitorStats();
+    const stats = await getVisitorStats();
     return NextResponse.json({ success: true, ...stats });
   } catch (error) {
     return NextResponse.json({ success: false, error: '통계 조회 실패' }, { status: 500 });

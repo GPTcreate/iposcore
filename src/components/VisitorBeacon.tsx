@@ -4,13 +4,15 @@ import { useEffect } from 'react';
 
 export default function VisitorBeacon() {
   useEffect(() => {
-    // 세션당 1회 또는 브라우저 방문 시 가볍게 비콘 전송 (admin 페이지 제외)
-    if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/admin')) {
-      const hasVisitedSession = sessionStorage.getItem('iposcore_visit_logged');
-      if (!hasVisitedSession) {
-        sessionStorage.setItem('iposcore_visit_logged', '1');
-        fetch('/api/visitors', { method: 'POST' }).catch(() => {});
-      }
+    if (typeof window === 'undefined') return;
+    if (window.location.pathname.startsWith('/admin')) return;
+
+    // 10초 이내 중복 호출만 가볍게 방지하고 실제 유입 방문을 정확하게 카운트
+    const lastHit = sessionStorage.getItem('iposcore_last_visit_time');
+    const now = Date.now();
+    if (!lastHit || now - parseInt(lastHit, 10) > 10000) {
+      sessionStorage.setItem('iposcore_last_visit_time', now.toString());
+      fetch('/api/visitors', { method: 'POST', keepalive: true }).catch(() => {});
     }
   }, []);
 
