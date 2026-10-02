@@ -98,6 +98,8 @@ export default function AdminPage() {
   const [showSheetsGuide, setShowSheetsGuide] = useState(false);
   const [showEmailPreviewModal, setShowEmailPreviewModal] = useState(false);
   const [activePreviewTemplate, setActivePreviewTemplate] = useState<'verification' | 'report' | 'unsubscribe'>('verification');
+  const [weeklyCronLoading, setWeeklyCronLoading] = useState(false);
+  const [weeklyCronResult, setWeeklyCronResult] = useState<string | null>(null);
 
   const fetchSubscribers = async () => {
     try {
@@ -176,6 +178,25 @@ export default function AdminPage() {
       setTestEmailResult('발송 요청 에러');
     } finally {
       setTestEmailLoading(false);
+    }
+  };
+
+  const handleTriggerWeeklyReport = async () => {
+    if (!confirm('매주 월요일 09:35 KST 정기 공모주 핵심 리포트를 활성 구독자들에게 즉시 발송하시겠습니까?')) return;
+    setWeeklyCronLoading(true);
+    setWeeklyCronResult(null);
+    try {
+      const res = await fetch('/api/cron/newsletter?manual=true');
+      const data = await res.json();
+      if (data.success) {
+        setWeeklyCronResult(`✅ 성공: ${data.message} (${data.sentCount}건 발송)`);
+      } else {
+        setWeeklyCronResult(`❌ 실패: ${data.error || '발송 실패'}`);
+      }
+    } catch {
+      setWeeklyCronResult('❌ 네트워크 요청 에러');
+    } finally {
+      setWeeklyCronLoading(false);
     }
   };
 
@@ -769,15 +790,32 @@ export default function AdminPage() {
               )}
             </form>
 
-            <button
-              type="button"
-              onClick={() => setShowEmailPreviewModal(true)}
-              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-800 font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <Eye className="w-3.5 h-3.5 text-blue-700" />
-              <span>발송 메일 문구/디자인 미리보기 (3종)</span>
-            </button>
+            <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+              <button
+                type="button"
+                onClick={handleTriggerWeeklyReport}
+                disabled={weeklyCronLoading}
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <Send className="w-3.5 h-3.5 text-emerald-700" />
+                <span>{weeklyCronLoading ? '발송 중...' : '월요일 09:35 리포트 즉시 발송'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowEmailPreviewModal(true)}
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-800 font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <Eye className="w-3.5 h-3.5 text-blue-700" />
+                <span>발송 메일 문구/디자인 미리보기 (3종)</span>
+              </button>
+            </div>
           </div>
+          {weeklyCronResult && (
+            <div className="text-xs font-semibold px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-800">
+              {weeklyCronResult}
+            </div>
+          )}
 
           {/* 발송 이메일 템플릿 실시간 미리보기 모달 */}
           {showEmailPreviewModal && (

@@ -211,43 +211,53 @@ export function getUnsubscribeEmailTemplate(subscriber: { email: string }) {
 
 /**
  * 3. 주간 정기 공모주 핵심 요약 리포트 메일 HTML 템플릿 생성기
+ * [전략: 점수는 간단히 뱃지/등급으로 호기심을 자극하고, 웹사이트 방문(CTR)을 극대화]
  */
 export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubscribeToken?: string }) {
   const unsubToken = subscriber.unsubscribeToken || 'demo_token';
   const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${unsubToken}`;
   const calculatorUrl = `${SITE_URL}/calculator`;
-  const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 (멜콘·진코스텍 등)`;
+  const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 & 실전 배정 공략`;
 
   const activeIpos = MOCK_IPOS.filter((i) => i.status === 'SUBSCRIPTION').slice(0, 2);
   const upcomingIpos = MOCK_IPOS.filter((i) => i.status === 'UPCOMING').slice(0, 3);
 
-  const activeRows = activeIpos.map((ipo) => `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 12px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <strong style="font-size: 16px; color: #0f172a;">${ipo.name} (${ipo.market})</strong>
-        <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; background-color: #dbeafe; color: #1e40af;">
-          종합 ${ipo.aiScore}점 (${ipo.scoreGrade}등급)
+  const activeCards = activeIpos.map((ipo) => `
+    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 17px; font-weight: 800; color: #0f172a;">
+          ${ipo.name} <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${ipo.market} · ${ipo.code})</span>
+        </span>
+        <span style="display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 800; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">
+          ${ipo.scoreGrade}등급 · ${ipo.aiScore}점
         </span>
       </div>
-      <p style="margin: 0 0 8px 0; font-size: 13px; color: #334155; line-height: 1.5;">
+
+      <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #1e293b; line-height: 1.5;">
         ${ipo.aiSummary.headline}
       </p>
-      <div style="font-size: 12px; color: #64748b; line-height: 1.6;">
-        • 확정 공모가: <strong>${ipo.confirmedPrice.toLocaleString()}원</strong> | 주관사: ${ipo.underwriters.map((u) => u.name).join(', ')}<br/>
-        • 청약 기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}<br/>
-        • 전문가 여론: 긍정 ${ipo.sentimentConsensus.positiveRatio}% / 중립 ${ipo.sentimentConsensus.neutralRatio}%
+
+      <div style="background-color: #f8fafc; border-radius: 8px; padding: 12px; font-size: 12px; color: #475569; line-height: 1.6; margin-bottom: 14px;">
+        • <strong>확정 공모가:</strong> ${ipo.confirmedPrice.toLocaleString()}원 (${ipo.underwriters.map(u => u.name).join(', ')})<br/>
+        • <strong>청약 마감일:</strong> ~ ${ipo.subscriptionEnd}까지
       </div>
-      <div style="margin-top: 10px;">
-        <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="font-size: 12px; font-weight: bold; color: #2563eb; text-decoration: none;">
-          상세 투자 리포트 보기 →
+
+      <div style="text-align: center;">
+        <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
+          👉 ${ipo.name} AI 심층 분석 & 전문가 여론 리포트 전문 보기
         </a>
       </div>
     </div>
   `).join('');
 
-  const upcomingRows = upcomingIpos.map((ipo) => `
-    <li style="margin-bottom: 8px; font-size: 13px; color: #334155;">
-      <strong>${ipo.name}</strong> (${ipo.subscriptionStart} 청약 예정) : ${ipo.aiSummary.headline}
+  const upcomingList = upcomingIpos.map((ipo) => `
+    <li style="margin-bottom: 10px; font-size: 13px; color: #334155; line-height: 1.5;">
+      <strong>${ipo.name}</strong> (${ipo.subscriptionStart} 청약 예정)
+      <span style="display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; background-color: #f1f5f9; color: #475569; font-weight: bold; margin-left: 4px;">
+        ${ipo.scoreGrade}등급 (사전평가)
+      </span>
+      <br/>
+      <span style="color: #64748b; font-size: 12px;">${ipo.aiSummary.headline.slice(0, 42)}...</span>
     </li>
   `).join('');
 
@@ -257,49 +267,81 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
   <meta charset="utf-8">
   <title>${subject}</title>
 </head>
-<body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #111827;">
-  <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+<body style="margin: 0; padding: 20px 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; color: #0f172a;">
+  <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+    
+    <!-- 메일 헤더 -->
     <tr>
-      <td style="padding: 28px 32px 20px 32px; background-color: #1d4ed8; text-align: center;">
-        <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 800;">공모주 알리미 주간 리포트</h1>
-        <p style="margin: 6px 0 0 0; color: #bfdbfe; font-size: 13px;">이번 주 꼭 챙겨봐야 할 청약 종목 완벽 정리</p>
+      <td style="padding: 28px 24px 20px 24px; background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%); text-align: center;">
+        <span style="display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; background-color: rgba(255,255,255,0.2); color: #ffffff; margin-bottom: 8px;">
+          매주 월요일 아침 배달되는 핵심 인사이트
+        </span>
+        <h1 style="margin: 0; color: #ffffff; font-size: 21px; font-weight: 900; letter-spacing: -0.5px;">
+          공모주 알리미 주간 핵심 리포트
+        </h1>
+        <p style="margin: 6px 0 0 0; color: #bfdbfe; font-size: 13px;">
+          이번 주 필수 청약 종목 & 실전 배정 전략
+        </p>
       </td>
     </tr>
+
+    <!-- 메인 본문 -->
     <tr>
-      <td style="padding: 32px;">
-        <h2 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-          🔥 이번 주 청약 진행 종목
-        </h2>
-        ${activeRows}
+      <td style="padding: 24px;">
+        
+        <!-- 섹션 1: 이번 주 청약 종목 -->
+        <div style="margin-bottom: 24px;">
+          <h2 style="margin: 0 0 14px 0; font-size: 15px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+            🔥 이번 주 청약 진행 종목 (핵심 요약)
+          </h2>
+          ${activeCards}
+        </div>
 
-        <h2 style="margin: 24px 0 12px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-          📅 다음 주 청약 예정 기대주
-        </h2>
-        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-          ${upcomingRows}
-        </ul>
+        <!-- 섹션 2: 배정 계산기 유도 박스 (높은 클릭율) -->
+        <div style="background-color: #eff6ff; border: 1.5px dashed #3b82f6; border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 24px;">
+          <strong style="display: block; font-size: 15px; color: #1e40af; margin-bottom: 4px;">
+            🧮 내 투자금으로 몇 주 배정받을까?
+          </strong>
+          <p style="margin: 0 0 12px 0; font-size: 12px; color: #475569; line-height: 1.5;">
+            비례 경쟁률 및 마통 대출 이자 기회비용을 1초 만에 무료로 계산해 보세요.
+          </p>
+          <a href="${calculatorUrl}" target="_blank" style="display: inline-block; padding: 10px 24px; font-size: 13px; font-weight: 800; background-color: #1e40af; color: #ffffff; text-decoration: none; border-radius: 8px;">
+            실전 비례 배정 계산기 바로가기 →
+          </a>
+        </div>
 
-        <table align="center" cellpadding="0" cellspacing="0" style="margin: 28px auto 16px auto;">
-          <tr>
-            <td align="center" style="border-radius: 10px; background-color: #0f172a;">
-              <a href="${calculatorUrl}" target="_blank" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 10px;">
-                비례 배정 & 대출이자 계산기 열기 →
-              </a>
-            </td>
-          </tr>
-        </table>
+        <!-- 섹션 3: 다음 주 청약 예정 기대주 -->
+        <div style="margin-bottom: 24px;">
+          <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 800; color: #0f172a;">
+            📅 다음 주 청약 예정 기대주
+          </h3>
+          <ul style="margin: 0; padding-left: 20px;">
+            ${upcomingList}
+          </ul>
+        </div>
+
+        <!-- 전체 캘린더 방문 유도 버튼 -->
+        <div style="text-align: center; padding-top: 10px; border-top: 1px solid #e2e8f0;">
+          <a href="${SITE_URL}/?tab=UPCOMING" target="_blank" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 800; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 10px;">
+            📊 10월 공모주 전체 캘린더 & D-Day 알림 확인하기 →
+          </a>
+        </div>
+
       </td>
     </tr>
+
+    <!-- 메일 푸터 -->
     <tr>
-      <td style="padding: 24px 32px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; line-height: 1.6;">
+      <td style="padding: 20px 24px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 11px; color: #64748b; line-height: 1.6;">
         <p style="margin: 0 0 4px 0;">
-          본 메일은 <strong>${subscriber.email}</strong> 님의 수신 동의에 의해 발송된 정기 뉴스레터입니다.
+          본 메일은 <strong>${subscriber.email}</strong> 님의 수신 동의에 따라 <strong>매주 월요일 아침 9시 35분</strong>에 발송되는 정기 리포트입니다.
         </p>
         <p style="margin: 0;">
-          수신을 원치 않으시면 언제든 <a href="${unsubscribeUrl}" style="color: #4b5563; text-decoration: underline;">수신거부</a>를 클릭하세요.
+          더 이상 메일을 원치 않으시면 <a href="${unsubscribeUrl}" style="color: #475569; text-decoration: underline;">수신거부(구독취소)</a>를 클릭하세요. | © iposcore.kr
         </p>
       </td>
     </tr>
+
   </table>
 </body>
 </html>`;
