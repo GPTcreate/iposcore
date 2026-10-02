@@ -202,8 +202,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 57,
-    "scoreGrade": "C"
+    "aiScore": 69,
+    "scoreGrade": "B"
   },
   {
     "id": "ms-bio",
@@ -251,8 +251,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 10
     },
     "expertReviews": [],
-    "aiScore": 52,
-    "scoreGrade": "C"
+    "aiScore": 64,
+    "scoreGrade": "B"
   },
   {
     "id": "dts-tech",
@@ -300,8 +300,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 7
     },
     "expertReviews": [],
-    "aiScore": 57,
-    "scoreGrade": "C"
+    "aiScore": 69,
+    "scoreGrade": "B"
   },
   {
     "id": "ck-solution",
@@ -349,8 +349,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 7
     },
     "expertReviews": [],
-    "aiScore": 59,
-    "scoreGrade": "C"
+    "aiScore": 71,
+    "scoreGrade": "B"
   },
   {
     "id": "barofarm",
@@ -398,8 +398,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 57,
-    "scoreGrade": "C"
+    "aiScore": 69,
+    "scoreGrade": "B"
   },
   {
     "id": "dongwon-parts",
@@ -447,7 +447,7 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 5
     },
     "expertReviews": [],
-    "aiScore": 61,
+    "aiScore": 73,
     "scoreGrade": "B"
   },
   {
@@ -501,8 +501,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 7
     },
     "expertReviews": [],
-    "aiScore": 53,
-    "scoreGrade": "C"
+    "aiScore": 65,
+    "scoreGrade": "B"
   },
   {
     "id": "tne-korea",
@@ -550,8 +550,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 57,
-    "scoreGrade": "C"
+    "aiScore": 69,
+    "scoreGrade": "B"
   },
   {
     "id": "lablup",
@@ -599,8 +599,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 4
     },
     "expertReviews": [],
-    "aiScore": 58,
-    "scoreGrade": "C"
+    "aiScore": 70,
+    "scoreGrade": "B"
   },
   {
     "id": "intellivix",
@@ -648,8 +648,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 57,
-    "scoreGrade": "C"
+    "aiScore": 69,
+    "scoreGrade": "B"
   },
   {
     "id": "brills",

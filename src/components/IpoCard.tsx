@@ -56,7 +56,12 @@ export default function IpoCard({ ipo }: IpoCardProps) {
               {ipo.market}
             </span>
           </div>
-          <ScoreBadge score={ipo.aiScore} grade={ipo.scoreGrade} size="sm" />
+          <ScoreBadge
+            score={ipo.aiScore}
+            grade={ipo.scoreGrade}
+            size="sm"
+            isPendingForecast={ipo.status === 'UPCOMING'}
+          />
         </div>
 
         {/* 종목명 및 코드 (큰 글씨) */}

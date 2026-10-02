@@ -19,10 +19,43 @@ export default function Home() {
     return ipo.status === filter;
   });
 
-  // 필터 변경 시 표시 개수 리셋
+  // 브라우저 뒤로가기(백스페이스 등) 시 기존에 보던 탭 복원
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const restoreActiveTab = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') as ('ALL' | IpoStatus) | null;
+      const savedTab = sessionStorage.getItem('iposcore_active_tab') as ('ALL' | IpoStatus) | null;
+      const validTabs: ('ALL' | IpoStatus)[] = ['ALL', 'SUBSCRIPTION', 'UPCOMING', 'WAITING_LISTING', 'LISTED'];
+
+      const targetTab = tabParam && validTabs.includes(tabParam)
+        ? tabParam
+        : savedTab && validTabs.includes(savedTab)
+        ? savedTab
+        : null;
+
+      if (targetTab) {
+        setFilter(targetTab);
+      }
+    };
+
+    restoreActiveTab();
+    window.addEventListener('popstate', restoreActiveTab);
+    return () => window.removeEventListener('popstate', restoreActiveTab);
+  }, []);
+
+  // 필터 변경 시 표시 개수 리셋 및 URL/세션스토리지에 탭 상태 저장
   const handleFilterChange = (newFilter: 'ALL' | IpoStatus) => {
     setFilter(newFilter);
     setVisibleCount(PAGE_SIZE);
+
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('iposcore_active_tab', newFilter);
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', newFilter);
+      window.history.replaceState({ ...window.history.state, tab: newFilter }, '', url.toString());
+    }
   };
 
   const displayedIpos = filteredIpos.slice(0, visibleCount);

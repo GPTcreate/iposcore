@@ -4,10 +4,35 @@ interface ScoreBadgeProps {
   score: number;
   grade: 'S' | 'A' | 'B' | 'C';
   size?: 'sm' | 'md' | 'lg';
+  isPendingForecast?: boolean;
 }
 
-export default function ScoreBadge({ score, grade, size = 'md' }: ScoreBadgeProps) {
+export default function ScoreBadge({
+  score,
+  grade,
+  size = 'md',
+  isPendingForecast = false,
+}: ScoreBadgeProps) {
   const getGradeInfo = () => {
+    if (isPendingForecast) {
+      if (score >= 74) {
+        return {
+          label: '수요예측 대기 (기대주)',
+          textColor: 'text-blue-700',
+          bgColor: 'bg-blue-50',
+          borderColor: 'border-blue-200',
+          badgeColor: 'bg-blue-600 text-white',
+        };
+      }
+      return {
+        label: '수요예측 발표 대기',
+        textColor: 'text-indigo-700',
+        bgColor: 'bg-indigo-50',
+        borderColor: 'border-indigo-200',
+        badgeColor: 'bg-indigo-600 text-white',
+      };
+    }
+
     switch (grade) {
       case 'S':
         return {
@@ -60,7 +85,7 @@ export default function ScoreBadge({ score, grade, size = 'md' }: ScoreBadgeProp
     return (
       <div className={`p-4 sm:p-5 rounded-xl border ${info.borderColor} ${info.bgColor} flex flex-col items-center justify-center min-w-[200px]`}>
         <span className="text-xs font-semibold text-gray-500 mb-1">
-          종합 투자 매력도 점수
+          {isPendingForecast ? '사전 투자 매력도 점수 (예측 전)' : '종합 투자 매력도 점수'}
         </span>
         <div className="flex items-baseline gap-1 my-0.5">
           <span className={`text-4xl sm:text-5xl font-black ${info.textColor}`}>{score}</span>
@@ -69,6 +94,12 @@ export default function ScoreBadge({ score, grade, size = 'md' }: ScoreBadgeProp
         <div className={`mt-2 text-xs font-bold px-3 py-1 rounded-full ${info.badgeColor}`}>
           등급 {grade} · {info.label}
         </div>
+        {isPendingForecast && (
+          <p className="text-[11px] text-gray-500 mt-2 text-center leading-tight">
+            수요예측 발표 전 잠정 점수이며,<br />
+            청약 전날(D-1) 확정 공시 시 최종 갱신됩니다.
+          </p>
+        )}
       </div>
     );
   }
