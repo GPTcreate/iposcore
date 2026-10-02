@@ -332,7 +332,7 @@ AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
 <h3>🔍 2. DART 기관 수요예측 & 유통물량 분석</h3>
 <ul style="line-height: 1.8; color: #334155;">
   <li><strong>기관 경쟁률:</strong> <span style="color: #dc2626; font-weight: bold;">${compText}</span></li>
-  <li><strong>의무보유확약 비율:</strong> ${ipo.lockupRate > 0 ? ipo.lockupRate + '%' : '확인 중'}</li>
+  <li><strong>의무보유확약 비율:</strong> ${ipo.lockupCommitmentRate > 0 ? ipo.lockupCommitmentRate + '%' : '확인 중'}</li>
   <li><strong>상장일 유통가능물량 비율:</strong> ${ipo.circulatingSupplyRate}% (수급 부담 수준 체크 필수)</li>
   <li><strong>AI 종합 투자 매력도:</strong> <span style="background: #eff6ff; color: #1d4ed8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">${ipo.scoreGrade}등급 (${ipo.aiScore}점 / 100점)</span></li>
 </ul>
