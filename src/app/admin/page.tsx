@@ -1304,23 +1304,36 @@ https://iposcore.kr/ipo/${ipo.code}`;
                   rows={6}
                   className="w-full p-2.5 rounded-lg border border-gray-300 bg-white font-mono text-[11px] text-gray-800 focus:outline-hidden leading-relaxed resize-none"
                 />
-                <button
-                  type="button"
-                  onClick={handleCopyMarketingText}
-                  className="absolute top-2 right-2 px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs cursor-pointer transition-colors"
-                >
-                  {copyFeedback ? (
-                    <>
-                      <Check className="w-3 h-3" />
-                      <span>복사 완료!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3 h-3" />
-                      <span>1초 복사</span>
-                    </>
+                <div className="absolute top-2 right-2 flex items-center gap-1.5">
+                  {marketingPlatform === 'TISTORY' && (
+                    <a
+                      href="https://www.tistory.com/member/blog"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 rounded-md bg-orange-600 hover:bg-orange-700 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs transition-colors"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      <span>티스토리 글쓰기 열기</span>
+                    </a>
                   )}
-                </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyMarketingText}
+                    className="px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs cursor-pointer transition-colors"
+                  >
+                    {copyFeedback ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        <span>복사 완료!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        <span>1초 복사</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
