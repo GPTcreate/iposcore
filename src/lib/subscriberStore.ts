@@ -99,6 +99,31 @@ export async function syncToGoogleSheet(action: 'SUBSCRIBE' | 'VERIFY' | 'UNSUBS
 }
 
 /**
+ * 구글 스프레드시트에서 구독자 목록 가져오기 (영구 복원)
+ */
+export async function fetchSubscribersFromGoogleSheet(): Promise<Subscriber[]> {
+  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+  if (!webhookUrl) return [];
+
+  try {
+    const res = await fetch(webhookUrl, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.subscribers)) {
+        return data.subscribers;
+      }
+    }
+  } catch (err) {
+    console.warn('[GoogleSheetSync:GET] 구글 시트에서 목록 불러오기 실패:', err);
+  }
+  return [];
+}
+
+/**
  * 신규 구독 신청 또는 기존 구독자 업데이트
  */
 export async function registerSubscriber(params: {

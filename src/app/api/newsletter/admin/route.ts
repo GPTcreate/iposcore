@@ -4,11 +4,29 @@ import {
   verifySubscriber,
   unsubscribeSubscriber,
   syncToGoogleSheet,
+  fetchSubscribersFromGoogleSheet,
+  Subscriber,
 } from '@/lib/subscriberStore';
 import { sendEmail, sendVerificationEmail } from '@/lib/emailSender';
 
 export async function GET() {
-  const subscribers = getAllSubscribers();
+  let subscribers: Subscriber[] = getAllSubscribers();
+
+  if (process.env.GOOGLE_SHEET_WEBHOOK_URL) {
+    try {
+      const remoteSubs = await fetchSubscribersFromGoogleSheet();
+      if (remoteSubs.length > 0) {
+        const map = new Map<string, Subscriber>();
+        for (const s of [...subscribers, ...remoteSubs]) {
+          if (s.email) map.set(s.email.toLowerCase(), s);
+        }
+        subscribers = Array.from(map.values());
+      }
+    } catch (err) {
+      console.warn('[Admin GET] 구글 시트 원격 동기화 실패:', err);
+    }
+  }
+
   const stats = {
     total: subscribers.length,
     active: subscribers.filter((s) => s.status === 'ACTIVE').length,
