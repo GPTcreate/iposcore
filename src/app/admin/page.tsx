@@ -109,7 +109,7 @@ export default function AdminPage() {
 
   // 마케팅 & 바이럴 도구 상태
   const [marketingStock, setMarketingStock] = useState('377480'); // 기본값: 멜콘
-  const [marketingPlatform, setMarketingPlatform] = useState<'CAFE' | 'KAKAO' | 'SNS'>('CAFE');
+  const [marketingPlatform, setMarketingPlatform] = useState<'TISTORY' | 'CAFE' | 'KAKAO' | 'SNS'>('TISTORY');
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [telegramStatus, setTelegramStatus] = useState<{ configured: boolean } | null>(null);
   const [telegramLoading, setTelegramLoading] = useState(false);
@@ -285,6 +285,70 @@ AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
 
 💡 1초 비례 배정 계산기 & 전문가 여론 리포트:
 👉 https://iposcore.kr/ipo/${ipo.code}`;
+    }
+
+    if (marketingPlatform === 'TISTORY') {
+      const priceText = ipo.confirmedPrice > 0 ? `${ipo.confirmedPrice.toLocaleString()}원 (확정)` : `${ipo.priceBandMin.toLocaleString()}원 ~ ${ipo.priceBandMax.toLocaleString()}원 (희망밴드)`;
+      const compText = ipo.institutionalCompetitionRate > 0 ? `${ipo.institutionalCompetitionRate}:1` : '수요예측 발표 대기';
+      const underwritersText = ipo.underwriters.map(u => u.name).join(', ') || '미정';
+      return `<!-- 티스토리 글쓰기 모드: [기본모드] 또는 [HTML모드]에 그대로 붙여넣기 하시면 됩니다 -->
+<h2>📌 ${ipo.name} 공모주 청약 핵심 총정리 & 수요예측 결과</h2>
+<p>안녕하세요! 2026년 공모주 투자 가이드입니다. 오늘은 주목받고 있는 <strong>${ipo.name} (${ipo.market})</strong>의 청약 일정과 DART 기관 수요예측 결과, 의무보유확약, AI 종합 점수를 일목요연하게 정리해 드립니다.</p>
+
+<hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
+
+<h3>📊 1. 핵심 공모 개요</h3>
+<table style="width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px;">
+  <thead>
+    <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1;">
+      <th style="padding: 10px; text-align: left; border: 1px solid #e2e8f0;">항목</th>
+      <th style="padding: 10px; text-align: left; border: 1px solid #e2e8f0;">내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; background: #fdfdfd;">공모주명</td>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;"><strong>${ipo.name}</strong> (${ipo.code || '시장: ' + ipo.market})</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; background: #fdfdfd;">공모가</td>
+      <td style="padding: 10px; border: 1px solid #e2e8f0; color: #2563eb; font-weight: bold;">${priceText}</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; background: #fdfdfd;">청약 일정</td>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;">${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; background: #fdfdfd;">환불일 / 상장일</td>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;">환불일: ${ipo.refundDate || '미정'} / 상장일: ${ipo.listingDate || '미정'}</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; background: #fdfdfd;">주관사</td>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;">${underwritersText}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>🔍 2. DART 기관 수요예측 & 유통물량 분석</h3>
+<ul style="line-height: 1.8; color: #334155;">
+  <li><strong>기관 경쟁률:</strong> <span style="color: #dc2626; font-weight: bold;">${compText}</span></li>
+  <li><strong>의무보유확약 비율:</strong> ${ipo.lockupRate > 0 ? ipo.lockupRate + '%' : '확인 중'}</li>
+  <li><strong>상장일 유통가능물량 비율:</strong> ${ipo.circulatingSupplyRate}% (수급 부담 수준 체크 필수)</li>
+  <li><strong>AI 종합 투자 매력도:</strong> <span style="background: #eff6ff; color: #1d4ed8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">${ipo.scoreGrade}등급 (${ipo.aiScore}점 / 100점)</span></li>
+</ul>
+
+<hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
+
+<h3>🧮 3. 비례 배정 계산기 & 실시간 상세 분석 리포트</h3>
+<p style="line-height: 1.7;">내 투자 증거금으로 몇 주를 배정받을 수 있는지, 실시간 청약 경쟁률 추이 및 전문가 유튜브·블로그 의견 요약은 아래 공식 리포트 페이지에서 무료로 즉시 확인하실 수 있습니다.</p>
+
+<div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 16px; border-radius: 8px; margin: 20px 0;">
+  <p style="margin: 0 0 8px 0; font-weight: bold; color: #166534;">💡 ${ipo.name} 실시간 리포트 바로가기</p>
+  <p style="margin: 0;"><a href="https://iposcore.kr/ipo/${ipo.code}" target="_blank" rel="noopener noreferrer" style="color: #15803d; font-weight: bold; text-decoration: underline;">👉 ${ipo.name} DART 상세 공시 & AI 점수 리포트 보기 (클릭)</a></p>
+  <p style="margin: 6px 0 0 0;"><a href="https://iposcore.kr/calculator" target="_blank" rel="noopener noreferrer" style="color: #15803d; font-weight: bold; text-decoration: underline;">👉 내 증거금 맞춤 비례배정 주수 실시간 계산기 (클릭)</a></p>
+</div>
+
+<p style="color: #64748b; font-size: 13px;">※ 본 포스팅은 공모주 정보 제공 목적이며 투자의 책임은 본인에게 있습니다.</p>`;
     }
 
     return `#공모주 #${ipo.name} 청약 일정 & 수요예측 결과 핵심 요약 🚀
@@ -1204,6 +1268,13 @@ https://iposcore.kr/ipo/${ipo.code}`;
               <div className="flex gap-1 bg-gray-200/80 p-1 rounded-lg font-bold text-[11px]">
                 <button
                   type="button"
+                  onClick={() => setMarketingPlatform('TISTORY')}
+                  className={`flex-1 py-1 rounded transition-colors cursor-pointer ${marketingPlatform === 'TISTORY' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-600 hover:text-gray-900'}`}
+                >
+                  📝 티스토리 블로그용 (완성 서식)
+                </button>
+                <button
+                  type="button"
                   onClick={() => setMarketingPlatform('CAFE')}
                   className={`flex-1 py-1 rounded transition-colors cursor-pointer ${marketingPlatform === 'CAFE' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-600 hover:text-gray-900'}`}
                 >
@@ -1221,7 +1292,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
                   onClick={() => setMarketingPlatform('SNS')}
                   className={`flex-1 py-1 rounded transition-colors cursor-pointer ${marketingPlatform === 'SNS' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-600 hover:text-gray-900'}`}
                 >
-                  블로그/X/스레드용 (숏폼)
+                  SNS/숏폼
                 </button>
               </div>
 
