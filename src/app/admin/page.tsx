@@ -26,6 +26,12 @@ import {
   Eye,
   Mail,
   X,
+  Share2,
+  Copy,
+  Check,
+  Megaphone,
+  Rss,
+  MessageCircle,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -101,6 +107,19 @@ export default function AdminPage() {
   const [weeklyCronLoading, setWeeklyCronLoading] = useState(false);
   const [weeklyCronResult, setWeeklyCronResult] = useState<string | null>(null);
 
+  // 마케팅 & 바이럴 도구 상태
+  const [marketingStock, setMarketingStock] = useState('377480'); // 기본값: 멜콘
+  const [marketingPlatform, setMarketingPlatform] = useState<'CAFE' | 'KAKAO' | 'SNS'>('CAFE');
+  const [copyFeedback, setCopyFeedback] = useState(false);
+  const [telegramStatus, setTelegramStatus] = useState<{ configured: boolean } | null>(null);
+  const [telegramLoading, setTelegramLoading] = useState(false);
+  const [telegramResult, setTelegramResult] = useState<string | null>(null);
+
+  // 오늘 날짜 기준 (KST) 신규 및 인증 구독자 계산
+  const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+  const todaySubscribers = subscribers.filter((s) => s.subscribedAt && s.subscribedAt.startsWith(todayStr)).length;
+  const todayVerified = subscribers.filter((s) => s.verifiedAt && s.verifiedAt.startsWith(todayStr)).length;
+
   const fetchSubscribers = async () => {
     try {
       const res = await fetch('/api/newsletter/admin');
@@ -123,6 +142,7 @@ export default function AdminPage() {
     if (!isAuthenticated) return;
     const timer = setTimeout(() => {
       fetchSubscribers();
+      fetchTelegramStatus();
     }, 0);
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
@@ -198,6 +218,90 @@ export default function AdminPage() {
     } finally {
       setWeeklyCronLoading(false);
     }
+  };
+
+  const fetchTelegramStatus = async () => {
+    try {
+      const res = await fetch('/api/marketing/telegram');
+      if (res.ok) {
+        const data = await res.json();
+        setTelegramStatus(data);
+      }
+    } catch {}
+  };
+
+  const handleSendTelegram = async () => {
+    setTelegramLoading(true);
+    setTelegramResult(null);
+    try {
+      const res = await fetch('/api/marketing/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stockCode: marketingStock }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTelegramResult(data.isSimulated ? '✅ 텔레그램 가상 전송 완료 (환경변수 설정 대기 시뮬레이션)' : '✅ 텔레그램 채널로 실시간 브리핑 전송 성공!');
+      } else {
+        setTelegramResult(`❌ 전송 실패: ${data.error || '오류'}`);
+      }
+    } catch {
+      setTelegramResult('❌ 네트워크 요청 실패');
+    } finally {
+      setTelegramLoading(false);
+    }
+  };
+
+  const selectedIpoItem = MOCK_IPOS.find((i) => i.code === marketingStock || i.id === marketingStock) || MOCK_IPOS[0];
+
+  const getMarketingCopy = () => {
+    const ipo = selectedIpoItem;
+    if (marketingPlatform === 'CAFE') {
+      return `[공모주] 이번 주 ${ipo.name} 청약 경쟁률이랑 유통물량 체크해보셨나요?
+
+안녕하세요! 이번 주 ${ipo.name}(${ipo.code}) 공모주 청약 준비하시는 분들 계신가요?
+
+수요예측 결과 확정 공모가가 ${ipo.confirmedPrice > 0 ? ipo.confirmedPrice.toLocaleString() + '원' : '밴드 ' + ipo.priceBandMin.toLocaleString() + '~' + ipo.priceBandMax.toLocaleString() + '원'}이고, 기관 경쟁률은 ${ipo.institutionalCompetitionRate > 0 ? ipo.institutionalCompetitionRate + ':1' : '발표 대기'}로 나왔네요.
+상장일 유통가능물량이 ${ipo.circulatingSupplyRate}% 수준이라 수급은 괜찮아 보입니다.
+
+주관사는 ${ipo.underwriters.map(u => u.name).join(', ')}이고,
+AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
+
+증거금별 비례 몇 주 배정받을지는 아래 계산기에서 바로 무료로 돌려볼 수 있더라고요.
+배정 수량 미리 체크해보실 분들 참고하세요!
+
+👉 상세 리포트: https://iposcore.kr/ipo/${ipo.code}
+👉 비례 배정 계산기: https://iposcore.kr/calculator`;
+    }
+
+    if (marketingPlatform === 'KAKAO') {
+      return `📢 [공모주 알리미] ${ipo.name} (${ipo.market}) 실전 브리핑
+
+• 확정 공모가: ${ipo.confirmedPrice > 0 ? ipo.confirmedPrice.toLocaleString() + '원' : '밴드 ' + ipo.priceBandMin.toLocaleString() + '원~'}
+• 기관 경쟁률: ${ipo.institutionalCompetitionRate > 0 ? ipo.institutionalCompetitionRate + ':1' : '수요예측 발표 대기'}
+• AI 투자 매력도: ${ipo.scoreGrade}등급 (${ipo.aiScore}점)
+• 청약 기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}
+• 주관사: ${ipo.underwriters.map(u => u.name).join(', ')}
+
+💡 1초 비례 배정 계산기 & 전문가 여론 리포트:
+👉 https://iposcore.kr/ipo/${ipo.code}`;
+    }
+
+    return `#공모주 #${ipo.name} 청약 일정 & 수요예측 결과 핵심 요약 🚀
+
+1. 확정 공모가: ${ipo.confirmedPrice > 0 ? ipo.confirmedPrice.toLocaleString() + '원' : '밴드 상단 확인'}
+2. 기관 경쟁률: ${ipo.institutionalCompetitionRate > 0 ? ipo.institutionalCompetitionRate + ':1' : '발표 대기'}
+3. AI 종합 매력도: ${ipo.scoreGrade}등급 (${ipo.aiScore}점)
+
+상장일 유통물량 분석과 비례 배정 예상 주수 계산기는 아래 링크에서 확인하세요 👇
+https://iposcore.kr/ipo/${ipo.code}`;
+  };
+
+  const handleCopyMarketingText = () => {
+    const text = getMarketingCopy();
+    navigator.clipboard.writeText(text);
+    setCopyFeedback(true);
+    setTimeout(() => setCopyFeedback(false), 2000);
   };
 
   const handleTestSheetsSync = async () => {
@@ -411,15 +515,22 @@ export default function AdminPage() {
             </p>
           </div>
 
-          {/* 주요 통계 카드 */}
-          <div className="flex items-center gap-3">
-            <div className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-center">
-              <span className="text-[11px] text-gray-500 block">등록 채널</span>
-              <span className="text-lg font-black text-blue-700">{channels.length}개</span>
+          {/* 주요 통계 카드 (TODAY & TOTAL) */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="px-3.5 py-2 rounded-xl bg-blue-50 border border-blue-200 text-center min-w-[95px]">
+              <span className="text-[11px] font-bold text-blue-700 block">TODAY (오늘)</span>
+              <span className="text-xl font-black text-blue-900">{todaySubscribers}건</span>
+              <span className="text-[10px] text-blue-600 block">인증 {todayVerified}명</span>
             </div>
-            <div className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-center">
-              <span className="text-[11px] text-gray-500 block">실제 구독자</span>
-              <span className="text-lg font-black text-emerald-700">{subStats.active}명</span>
+            <div className="px-3.5 py-2 rounded-xl bg-white border border-gray-300 text-center min-w-[95px]">
+              <span className="text-[11px] font-bold text-gray-500 block">TOTAL (누적)</span>
+              <span className="text-xl font-black text-gray-900">{subStats.total}건</span>
+              <span className="text-[10px] text-emerald-700 font-bold block">{subStats.active}명 활성</span>
+            </div>
+            <div className="px-3.5 py-2 rounded-xl bg-white border border-gray-300 text-center min-w-[95px]">
+              <span className="text-[11px] font-bold text-gray-500 block">공모주</span>
+              <span className="text-xl font-black text-blue-700">{MOCK_IPOS.length}종목</span>
+              <span className="text-[10px] text-gray-500 block">전체 라인업</span>
             </div>
           </div>
         </div>
@@ -724,30 +835,42 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* 구독 통계 및 연동 상태 카드 4종 */}
+          {/* 구독 통계 및 연동 상태 카드 4종 (TODAY & TOTAL 포함) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50/80">
-              <span className="text-gray-500 block font-medium">총 신청 이메일</span>
-              <span className="text-xl font-black text-gray-900 mt-0.5 block">{subStats.total}건</span>
-              <span className="text-[10px] text-gray-400 mt-1 block">누적 등록</span>
+            <div className="p-3.5 rounded-xl border border-blue-200 bg-blue-50/70">
+              <div className="flex items-center justify-between">
+                <span className="text-blue-800 font-bold">TODAY (오늘)</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-200 text-blue-900 font-bold">당일</span>
+              </div>
+              <span className="text-2xl font-black text-blue-900 mt-1 block">{todaySubscribers}건</span>
+              <span className="text-[10px] text-blue-600 mt-0.5 block">오늘 인증 완료 {todayVerified}명</span>
             </div>
 
-            <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60">
-              <span className="text-emerald-800 block font-medium">정상 구독 중 (동의완료)</span>
-              <span className="text-xl font-black text-emerald-700 mt-0.5 block">{subStats.active}명</span>
-              <span className="text-[10px] text-emerald-600 mt-1 block">정기 발송 대상</span>
+            <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50/80">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 font-bold">TOTAL (누적 전체)</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-200 text-gray-800 font-bold">전체</span>
+              </div>
+              <span className="text-2xl font-black text-gray-900 mt-1 block">{subStats.total}건</span>
+              <span className="text-[10px] text-emerald-700 font-bold mt-0.5 block">정상 활성 {subStats.active}명</span>
             </div>
 
             <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/60">
-              <span className="text-amber-800 block font-medium">동의 대기 (PENDING)</span>
-              <span className="text-xl font-black text-amber-700 mt-0.5 block">{subStats.pending}명</span>
-              <span className="text-[10px] text-amber-600 mt-1 block">메일 인증 대기</span>
+              <div className="flex items-center justify-between">
+                <span className="text-amber-800 font-bold">인증 대기 (PENDING)</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 font-bold">대기</span>
+              </div>
+              <span className="text-2xl font-black text-amber-700 mt-1 block">{subStats.pending}명</span>
+              <span className="text-[10px] text-amber-600 mt-0.5 block">메일 승인 대기</span>
             </div>
 
             <div className="p-3.5 rounded-xl border border-rose-200 bg-rose-50/60">
-              <span className="text-rose-800 block font-medium">수신 취소 (거부)</span>
-              <span className="text-xl font-black text-rose-700 mt-0.5 block">{subStats.cancelled}명</span>
-              <span className="text-[10px] text-rose-600 mt-1 block">발송 제외됨</span>
+              <div className="flex items-center justify-between">
+                <span className="text-rose-800 font-bold">수신 취소 (거부)</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-200 text-rose-900 font-bold">취소</span>
+              </div>
+              <span className="text-2xl font-black text-rose-700 mt-1 block">{subStats.cancelled}명</span>
+              <span className="text-[10px] text-rose-600 mt-0.5 block">발송 제외됨</span>
             </div>
           </div>
 
@@ -990,7 +1113,179 @@ export default function AdminPage() {
           </div>
         </section>
 
-        {/* 4. 최근 수집 및 파이프라인 작업 로그 */}
+        {/* 4. 밴 없는 자동 마케팅 & 바이럴 허브 (Zero-Ban Growth Hub) */}
+        <section className="p-6 rounded-2xl bg-white border border-gray-300 shadow-2xs space-y-5">
+          <div className="flex items-center justify-between flex-wrap gap-3 border-b border-gray-200 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Megaphone className="w-5 h-5 text-indigo-600" />
+                <h2 className="text-lg font-bold text-gray-900">
+                  밴 없는 자동 마케팅 & 바이럴 허브 (Zero-Ban Growth)
+                </h2>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                계정 정지(밴) 위험이 있는 무차별 스팸 매크로 대신, 공식 API 및 고품질 정보성 바이럴로 안전하게 방문자를 유입시킵니다.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 font-bold flex items-center gap-1">
+                <Rss className="w-3.5 h-3.5" />
+                <span>구글/네이버 RSS 피드 가동 중</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* 1. 텔레그램 공식 봇 자동 브리핑 채널 연동 */}
+            <div className="p-4 rounded-xl border border-gray-200 bg-gray-50/70 space-y-3 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-gray-900 flex items-center gap-1.5 text-sm">
+                  <Send className="w-4 h-4 text-blue-600" />
+                  <span>1. 텔레그램 채널 자동 브리핑 봇</span>
+                </span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${telegramStatus?.configured ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-700'}`}>
+                  {telegramStatus?.configured ? '🟢 텔레그램 연동됨' : '⚪ 토큰 미설정 (시뮬레이션)'}
+                </span>
+              </div>
+              <p className="text-gray-600 leading-relaxed text-[11px]">
+                공식 Bot API를 사용하여 청약 시작일과 D-1에 텔레그램 채널로 실시간 요약 카드를 자동 전송합니다. (밴 위험 0%, 주식 채널 구독자 자동 유입)
+              </p>
+
+              <div className="flex items-center gap-2 pt-1 flex-wrap">
+                <select
+                  value={marketingStock}
+                  onChange={(e) => setMarketingStock(e.target.value)}
+                  className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                >
+                  {MOCK_IPOS.map((i) => (
+                    <option key={i.code} value={i.code}>
+                      {i.name} ({i.status === 'SUBSCRIPTION' ? '청약중' : i.status === 'UPCOMING' ? '예정' : '상장대기'})
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={handleSendTelegram}
+                  disabled={telegramLoading}
+                  className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  {telegramLoading ? '전송 중...' : '📢 텔레그램 채널로 즉시 전송'}
+                </button>
+              </div>
+
+              {telegramResult && (
+                <div className="p-2 rounded bg-white border border-gray-200 text-gray-800 font-semibold text-[11px]">
+                  {telegramResult}
+                </div>
+              )}
+
+              <div className="p-2.5 rounded-lg bg-white border border-gray-200 text-[10px] text-gray-500 leading-relaxed">
+                💡 <strong>세팅 팁:</strong> 텔레그램에서 <code>@BotFather</code>로 봇을 만든 후, Vercel 환경변수에 <code>TELEGRAM_BOT_TOKEN</code>과 채널 ID인 <code>TELEGRAM_CHAT_ID</code>를 넣으면 실시간 자동 브리핑이 가동됩니다.
+              </div>
+            </div>
+
+            {/* 2. 커뮤니티 밴 방지 바이럴 텍스트 1초 복사기 */}
+            <div className="p-4 rounded-xl border border-gray-200 bg-gray-50/70 space-y-3 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-gray-900 flex items-center gap-1.5 text-sm">
+                  <Copy className="w-4 h-4 text-indigo-600" />
+                  <span>2. 커뮤니티 밴 방지 바이럴 텍스트 1초 복사기</span>
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-bold">
+                  스팸 필터 0% 회피
+                </span>
+              </div>
+              <p className="text-gray-600 leading-relaxed text-[11px]">
+                스팸 금지어가 없는 자연스러운 투자자 어조의 정보글입니다. 버튼 하나로 복사해 네이버 카페(월재연, 뽐뿌), 카톡 주식방에 붙여넣으면 강퇴 없이 강력한 유입이 발생합니다.
+              </p>
+
+              {/* 플랫폼 선택 탭 */}
+              <div className="flex gap-1 bg-gray-200/80 p-1 rounded-lg font-bold text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => setMarketingPlatform('CAFE')}
+                  className={`flex-1 py-1 rounded transition-colors cursor-pointer ${marketingPlatform === 'CAFE' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-600 hover:text-gray-900'}`}
+                >
+                  네이버 카페/뽐뿌용 (정보글)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMarketingPlatform('KAKAO')}
+                  className={`flex-1 py-1 rounded transition-colors cursor-pointer ${marketingPlatform === 'KAKAO' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-600 hover:text-gray-900'}`}
+                >
+                  카톡 단톡방용 (3줄 브리핑)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMarketingPlatform('SNS')}
+                  className={`flex-1 py-1 rounded transition-colors cursor-pointer ${marketingPlatform === 'SNS' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-600 hover:text-gray-900'}`}
+                >
+                  블로그/X/스레드용 (숏폼)
+                </button>
+              </div>
+
+              {/* 생성된 텍스트 미리보기 박스 */}
+              <div className="relative">
+                <textarea
+                  readOnly
+                  value={getMarketingCopy()}
+                  rows={6}
+                  className="w-full p-2.5 rounded-lg border border-gray-300 bg-white font-mono text-[11px] text-gray-800 focus:outline-hidden leading-relaxed resize-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleCopyMarketingText}
+                  className="absolute top-2 right-2 px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs cursor-pointer transition-colors"
+                >
+                  {copyFeedback ? (
+                    <>
+                      <Check className="w-3 h-3" />
+                      <span>복사 완료!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>1초 복사</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. 검색엔진 SEO & 유기적 유입 상태 안내 */}
+          <div className="p-3.5 rounded-xl bg-indigo-50/60 border border-indigo-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <strong className="text-indigo-950 font-bold block">
+                🌐 네이버 & 구글 자동 검색 색인 피드 (밴 위험 0% 완전 유기적 트래픽)
+              </strong>
+              <p className="text-indigo-800 text-[11px]">
+                새로운 공모주 카드가 등록될 때마다 네이버 서치어드바이저와 구글 검색엔진에 실시간으로 RSS가 공급됩니다.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href="/rss.xml"
+                target="_blank"
+                className="px-3 py-1.5 rounded-lg bg-white border border-indigo-300 text-indigo-700 font-bold text-[11px] hover:bg-indigo-50 transition-colors flex items-center gap-1"
+              >
+                <span>/rss.xml 피드 보기</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <a
+                href="/sitemap.xml"
+                target="_blank"
+                className="px-3 py-1.5 rounded-lg bg-white border border-indigo-300 text-indigo-700 font-bold text-[11px] hover:bg-indigo-50 transition-colors flex items-center gap-1"
+              >
+                <span>/sitemap.xml 보기</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. 최근 수집 및 파이프라인 작업 로그 */}
         <section className="p-6 rounded-2xl bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 shadow-sm space-y-4">
           <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-500" />
