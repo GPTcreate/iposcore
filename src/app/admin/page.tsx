@@ -596,15 +596,25 @@ https://iposcore.kr/ipo/${ipo.code}`;
           {/* 주요 통계 카드 (방문자 & 구독자 TODAY & TOTAL) */}
           <div className="flex items-center gap-2.5 flex-wrap">
             {/* 방문자 통계 */}
-            <div className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-center min-w-[105px]">
+            <div className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-center min-w-[110px] relative group">
               <span className="text-[11px] font-bold text-amber-800 block flex items-center justify-center gap-1">
                 <Users className="w-3 h-3 text-amber-600" />
                 <span>오늘 방문 (Today)</span>
               </span>
               <span className="text-xl font-black text-amber-950">{visitorStats.today.toLocaleString()}명</span>
-              <span className="text-[10px] text-amber-700 block">실시간 트래픽</span>
+              <div className="flex items-center justify-center gap-1 mt-0.5">
+                <span className="text-[10px] text-amber-700">실시간 트래픽</span>
+                <button
+                  type="button"
+                  onClick={fetchVisitorStats}
+                  className="text-amber-800 hover:text-amber-950 text-[10px] underline ml-1 cursor-pointer"
+                  title="새로고침"
+                >
+                  ↻
+                </button>
+              </div>
             </div>
-            <div className="px-3.5 py-2 rounded-xl bg-amber-50/60 border border-amber-200 text-center min-w-[105px]">
+            <div className="px-3.5 py-2 rounded-xl bg-amber-50/60 border border-amber-200 text-center min-w-[110px]">
               <span className="text-[11px] font-bold text-amber-800 block flex items-center justify-center gap-1">
                 <Users className="w-3 h-3 text-amber-600" />
                 <span>누적 방문 (Total)</span>
