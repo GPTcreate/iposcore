@@ -10,7 +10,7 @@ import { IpoStatus } from '@/types/ipo';
 import { ShieldCheck, CheckCircle2, TrendingUp } from 'lucide-react';
 
 export default function Home() {
-  const [filter, setFilter] = useState<'ALL' | IpoStatus>('SUBSCRIPTION');
+  const [filter, setFilter] = useState<'ALL' | IpoStatus>('ALL');
   const PAGE_SIZE = 6;
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
@@ -29,10 +29,28 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const filteredIpos = allIpos.filter((ipo) => {
-    if (filter === 'ALL') return ipo.status !== 'LISTED';
-    return ipo.status === filter;
-  });
+  // 스마트 정렬: 청약 진행 중 -> 청약 예정(마감일 가까운 순) -> 상장 대기(상장일 가까운 순) -> 상장 완료
+  const statusPriority: Record<IpoStatus, number> = {
+    SUBSCRIPTION: 1,
+    UPCOMING: 2,
+    WAITING_LISTING: 3,
+    LISTED: 4,
+  };
+
+  const filteredIpos = allIpos
+    .filter((ipo) => {
+      if (filter === 'ALL') return ipo.status !== 'LISTED';
+      return ipo.status === filter;
+    })
+    .sort((a, b) => {
+      const priorityDiff = (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
+      if (priorityDiff !== 0) return priorityDiff;
+      // 같은 상태 내에서는 청약 시작일/상장일 기준 최신 및 임박 순
+      if (a.status === 'WAITING_LISTING') {
+        return (a.listingDate || '').localeCompare(b.listingDate || '');
+      }
+      return (a.subscriptionStart || '').localeCompare(b.subscriptionStart || '');
+    });
 
   // 브라우저 뒤로가기(백스페이스 등) 시 기존에 보던 탭 복원
   React.useEffect(() => {

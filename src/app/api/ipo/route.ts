@@ -9,8 +9,27 @@ import {
 import { IpoItem } from '@/types/ipo';
 import { calculateIpoScore } from '@/lib/scoring';
 
-export async function GET() {
+// 백그라운드 자동 동기화 상태 관리 (30분 주기 스케줄링)
+let lastAutoSyncTime = 0;
+const AUTO_SYNC_INTERVAL_MS = 30 * 60 * 1000;
+
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const forceSync = searchParams.get('forceSync') === 'true';
+
+    // 0클릭 자동화: 30분 이상 경과 시 또는 명시적 요청 시 논블로킹 백그라운드 자동 동기화 실행
+    const now = Date.now();
+    if (forceSync) {
+      await syncNewIposFromDart({ days: 30, limit: 15 });
+    } else if (now - lastAutoSyncTime > AUTO_SYNC_INTERVAL_MS) {
+      lastAutoSyncTime = now;
+      // 사용자 브라우저 응답 렉이 전혀 발생하지 않도록 논블로킹 백그라운드 비동기 처리
+      syncNewIposFromDart({ days: 30, limit: 15 }).catch((err) => {
+        console.warn('[AutoSync] 백그라운드 DART 자동 수집 경고:', err);
+      });
+    }
+
     const ipos = getAllEffectiveIpos();
     const custom = loadServerCustomIpos();
     return NextResponse.json({

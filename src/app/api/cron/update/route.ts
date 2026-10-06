@@ -12,8 +12,10 @@ export async function GET(request: Request) {
     const forceStock = searchParams.get('stock') || undefined;
     const testDate = searchParams.get('testDate') || undefined;
 
+    const isVercelCron = request.headers.get('x-vercel-cron') === '1';
+
     // Vercel Cron 또는 수동 실행 승인 검증
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual) {
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual && !isVercelCron) {
       return NextResponse.json({ error: '인증되지 않은 요청입니다.' }, { status: 401 });
     }
 

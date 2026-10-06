@@ -292,52 +292,83 @@ export async function syncNewIposFromDart(options?: {
 
   const dartUrl = `https://opendart.fss.or.kr/api/list.json?crtfc_key=${dartApiKey}&bgn_de=${startDate}&end_de=${endDate}&pblntf_detail_ty=C001&page_no=1&page_count=50`;
 
-  const res = await fetch(dartUrl, { next: { revalidate: 0 } });
-  const data = await res.json();
+    let data: any;
+    try {
+      const res = await fetch(dartUrl, { next: { revalidate: 0 } });
+      if (!res.ok) {
+        return {
+          newCount: 0,
+          newIpos: [],
+          existingCount: 0,
+          filingsCount: 0,
+          message: `DART 서버 응답 오류: HTTP ${res.status}`,
+        };
+      }
+      data = await res.json();
+    } catch (networkErr) {
+      return {
+        newCount: 0,
+        newIpos: [],
+        existingCount: 0,
+        filingsCount: 0,
+        message: `DART 통신 오류: ${networkErr instanceof Error ? networkErr.message : '네트워크 에러'}`,
+      };
+    }
 
-  if (data.status !== '000' || !Array.isArray(data.list)) {
-    return {
-      newCount: 0,
-      newIpos: [],
-      existingCount: 0,
-      filingsCount: 0,
-      message: `DART 응답 실패: ${data.message || '데이터 없음'}`,
-    };
-  }
+    if (data.status !== '000' || !Array.isArray(data.list)) {
+      return {
+        newCount: 0,
+        newIpos: [],
+        existingCount: 0,
+        filingsCount: 0,
+        message: `DART 응답 실패: ${data.message || '데이터 없음'}`,
+      };
+    }
 
-  const allCurrentIpos = getAllIpos();
-  const existingNames = new Set(allCurrentIpos.map((i) => i.name));
-  const existingCodes = new Set(allCurrentIpos.map((i) => i.code));
+    const allCurrentIpos = getAllIpos();
+    const existingNames = new Set(allCurrentIpos.map((i) => i.name));
+    const existingCodes = new Set(allCurrentIpos.map((i) => i.code));
 
-  const newIpos: IpoItem[] = [];
-  const processedNames = new Set<string>();
+    const newIpos: IpoItem[] = [];
+    const processedNames = new Set<string>();
 
-  for (const filing of data.list as DartFilingItem[]) {
-    if (newIpos.length >= limit) break;
+    for (const filing of data.list as DartFilingItem[]) {
+      const cleanName = filing.corp_name
+        .replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '')
+        .trim();
 
-    const cleanName = filing.corp_name
-      .replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '')
-      .trim();
+      if (filing.report_nm.includes('철회')) continue;
 
-    if (filing.report_nm.includes('철회')) continue;
+      // 1. 기존 등록 종목의 공시가 '발행조건확정'인 경우 확정 공모가 자동 갱신
+      if (filing.report_nm.includes('발행조건확정')) {
+        const existingIpo = allCurrentIpos.find(
+          (i) => i.name === cleanName || (filing.stock_code && i.code === filing.stock_code)
+        );
+        if (existingIpo && existingIpo.confirmedPrice === 0 && existingIpo.priceBandMax > 0) {
+          existingIpo.confirmedPrice = existingIpo.priceBandMax;
+          addOrUpdateIpo(existingIpo);
+        }
+      }
 
-    const isIpoCandidate =
-      filing.corp_cls === 'E' ||
-      filing.corp_cls === 'N' ||
-      cleanName.includes('스팩') ||
-      cleanName.includes('기업인수목적');
+      if (newIpos.length >= limit) continue;
 
-    if (!isIpoCandidate) continue;
+      const isIpoCandidate =
+        filing.corp_cls === 'E' ||
+        filing.corp_cls === 'N' ||
+        cleanName.includes('스팩') ||
+        cleanName.includes('기업인수목적');
 
-    if (existingNames.has(cleanName) || processedNames.has(cleanName)) continue;
-    if (filing.stock_code && existingCodes.has(filing.stock_code)) continue;
+      if (!isIpoCandidate) continue;
 
-    processedNames.add(cleanName);
+      if (existingNames.has(cleanName) || processedNames.has(cleanName)) continue;
+      if (filing.stock_code && existingCodes.has(filing.stock_code)) continue;
 
-    const created = await createIpoFromDartFiling(filing);
-    newIpos.push(created);
-    existingNames.add(cleanName);
-  }
+      processedNames.add(cleanName);
+
+      const created = await createIpoFromDartFiling(filing);
+      newIpos.push(created);
+      existingNames.add(cleanName);
+    }
 
   return {
     newCount: newIpos.length,

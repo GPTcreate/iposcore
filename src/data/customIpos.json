@@ -1,5 +1,311 @@
 [
   {
+    "id": "dart-469272",
+    "name": "엠비디",
+    "code": "469272",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-09",
+    "subscriptionEnd": "2026-10-10",
+    "refundDate": "2026-10-12",
+    "listingDate": "2026-10-20",
+    "priceBandMin": 12000,
+    "priceBandMax": 15000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "신한투자증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 엠비디 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260918000439)",
+        "공모 희망가 밴드: 12,000 ~ 15,000원, 예상 공모규모 약 250억원",
+        "예상 청약 일정: 2026-10-09 ~ 2026-10-10, 주관사: 신한투자증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "상장 직후 유통가능물량 관리 및 안정적 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-458237",
+    "name": "에이엘로봇",
+    "code": "458237",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-12",
+    "subscriptionEnd": "2026-10-13",
+    "refundDate": "2026-10-15",
+    "listingDate": "2026-10-23",
+    "priceBandMin": 16000,
+    "priceBandMax": 20000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 24.5,
+    "totalOfferingAmount": 300,
+    "marketCapAtIpo": 2200,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 에이엘로봇 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260921000209)",
+        "공모 희망가 밴드: 16,000 ~ 20,000원, 예상 공모규모 약 300억원",
+        "예상 청약 일정: 2026-10-12 ~ 2026-10-13, 주관사: 한국투자증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "첨단 테크·신성장 산업군 기술력 및 시장 관심 유입"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-465398",
+    "name": "이에스티",
+    "code": "465398",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-12",
+    "subscriptionEnd": "2026-10-13",
+    "refundDate": "2026-10-15",
+    "listingDate": "2026-10-23",
+    "priceBandMin": 12000,
+    "priceBandMax": 15000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 이에스티 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260921000211)",
+        "공모 희망가 밴드: 12,000 ~ 15,000원, 예상 공모규모 약 250억원",
+        "예상 청약 일정: 2026-10-12 ~ 2026-10-13, 주관사: 한국투자증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "상장 직후 유통가능물량 관리 및 안정적 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-463510",
+    "name": "영광",
+    "code": "463510",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-12",
+    "subscriptionEnd": "2026-10-13",
+    "refundDate": "2026-10-15",
+    "listingDate": "2026-10-23",
+    "priceBandMin": 12000,
+    "priceBandMax": 15000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 영광 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260921000332)",
+        "공모 희망가 밴드: 12,000 ~ 15,000원, 예상 공모규모 약 250억원",
+        "예상 청약 일정: 2026-10-12 ~ 2026-10-13, 주관사: 미래에셋증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "상장 직후 유통가능물량 관리 및 안정적 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-422751",
+    "name": "하나에어로다이내믹스",
+    "code": "422751",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-12",
+    "subscriptionEnd": "2026-10-13",
+    "refundDate": "2026-10-15",
+    "listingDate": "2026-10-23",
+    "priceBandMin": 16000,
+    "priceBandMax": 20000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "신한투자증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 24.5,
+    "totalOfferingAmount": 300,
+    "marketCapAtIpo": 2200,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 하나에어로다이내믹스 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260921000405)",
+        "공모 희망가 밴드: 16,000 ~ 20,000원, 예상 공모규모 약 300억원",
+        "예상 청약 일정: 2026-10-12 ~ 2026-10-13, 주관사: 신한투자증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "첨단 테크·신성장 산업군 기술력 및 시장 관심 유입"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-447253",
+    "name": "넥스아이",
+    "code": "447253",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-19",
+    "subscriptionEnd": "2026-10-20",
+    "refundDate": "2026-10-22",
+    "listingDate": "2026-10-30",
+    "priceBandMin": 16000,
+    "priceBandMax": 20000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 24.5,
+    "totalOfferingAmount": 300,
+    "marketCapAtIpo": 2200,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 넥스아이 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260928000260)",
+        "공모 희망가 밴드: 16,000 ~ 20,000원, 예상 공모규모 약 300억원",
+        "예상 청약 일정: 2026-10-19 ~ 2026-10-20, 주관사: 미래에셋증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "첨단 테크·신성장 산업군 기술력 및 시장 관심 유입"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
     "id": "dart-485424",
     "name": "옵토닉스",
     "code": "485424",

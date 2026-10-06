@@ -16,8 +16,10 @@ export async function GET(request: Request) {
     const isManual = searchParams.get('manual') === 'true';
     const cronSecret = process.env.CRON_SECRET;
 
+    const isVercelCron = request.headers.get('x-vercel-cron') === '1';
+
     // 인증 검사 (Vercel Cron 헤더 또는 관리자 manual 쿼리)
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual) {
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual && !isVercelCron) {
       return NextResponse.json({ error: 'Unauthorized cron trigger' }, { status: 401 });
     }
 

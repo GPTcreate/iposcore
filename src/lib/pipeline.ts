@@ -2,6 +2,8 @@ import { MOCK_IPOS } from '@/data/mockIpo';
 import { IpoItem } from '@/types/ipo';
 import { getEffectiveIpoStatus } from './ipoUtils';
 import { analyzeIpoSentiment, SentimentAnalysisOutput } from './sentimentAnalyzer';
+import { addOrUpdateIpo } from './ipoServerStore';
+import { sendTelegramBroadcast, formatIpoTelegramMessage } from './telegramNotifier';
 
 export interface PipelineTarget {
   ipo: IpoItem;
@@ -140,6 +142,24 @@ export async function runMethod2Pipeline(options?: {
 
     // 감성 분석 & 종합 점수 산출
     const analysisResult: SentimentAnalysisOutput = await analyzeIpoSentiment(item.ipo, item.triggerType);
+
+    // 업데이트된 분석 결과 영구 저장 (0클릭 자동 반영)
+    const updatedIpo: IpoItem = {
+      ...item.ipo,
+      aiScore: analysisResult.aiScore,
+      scoreGrade: analysisResult.scoreGrade,
+      aiSummary: analysisResult.aiSummary,
+      sentimentConsensus: analysisResult.sentimentConsensus,
+      expertReviews: analysisResult.expertReviews,
+    };
+    addOrUpdateIpo(updatedIpo);
+
+    // D-1 청약 전날인 경우 텔레그램 채널 자동 브리핑 송출
+    if (item.triggerType === 'DAY_BEFORE_SUBSCRIPTION' && process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
+      sendTelegramBroadcast(formatIpoTelegramMessage(updatedIpo)).catch((err) => {
+        console.warn('[Pipeline:Telegram] 자동 브리핑 전송 실패:', err);
+      });
+    }
 
     processedTargets.push({
       stockName: item.ipo.name,
