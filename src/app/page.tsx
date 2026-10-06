@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import IpoCard from '@/components/IpoCard';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { IpoStatus } from '@/types/ipo';
 import { ShieldCheck, CheckCircle2, TrendingUp } from 'lucide-react';
 
@@ -14,7 +14,10 @@ export default function Home() {
   const PAGE_SIZE = 6;
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
-  const filteredIpos = MOCK_IPOS.filter((ipo) => {
+  // KST 현재 일자 및 시각 기준 실시간 상태 동적 전이 적용
+  const allIpos = React.useMemo(() => getAllEffectiveIpos(), []);
+
+  const filteredIpos = allIpos.filter((ipo) => {
     if (filter === 'ALL') return ipo.status !== 'LISTED';
     return ipo.status === filter;
   });
@@ -105,7 +108,7 @@ export default function Home() {
             <div className="text-left md:text-right shrink-0">
               <span className="text-xs text-gray-500 block">이번 주 청약 가능 종목</span>
               <span className="text-2xl font-black text-blue-700">
-                총 {MOCK_IPOS.filter(i => i.status === 'SUBSCRIPTION').length}건 진행 중
+                총 {allIpos.filter(i => i.status === 'SUBSCRIPTION').length}건 진행 중
               </span>
             </div>
           </div>
@@ -123,7 +126,7 @@ export default function Home() {
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              전체 ({MOCK_IPOS.filter(i => i.status !== 'LISTED').length})
+              전체 ({allIpos.filter(i => i.status !== 'LISTED').length})
             </button>
             <button
               type="button"
@@ -134,7 +137,7 @@ export default function Home() {
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              청약 진행 중 ({MOCK_IPOS.filter(i => i.status === 'SUBSCRIPTION').length})
+              청약 진행 중 ({allIpos.filter(i => i.status === 'SUBSCRIPTION').length})
             </button>
             <button
               type="button"
@@ -145,7 +148,7 @@ export default function Home() {
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              청약 예정 ({MOCK_IPOS.filter(i => i.status === 'UPCOMING').length})
+              청약 예정 ({allIpos.filter(i => i.status === 'UPCOMING').length})
             </button>
             <button
               type="button"
@@ -156,7 +159,7 @@ export default function Home() {
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              상장 대기 ({MOCK_IPOS.filter(i => i.status === 'WAITING_LISTING').length})
+              상장 대기 ({allIpos.filter(i => i.status === 'WAITING_LISTING').length})
             </button>
             <button
               type="button"
@@ -167,7 +170,7 @@ export default function Home() {
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
               }`}
             >
-              지난 공모주 ({MOCK_IPOS.filter(i => i.status === 'LISTED').length})
+              지난 공모주 ({allIpos.filter(i => i.status === 'LISTED').length})
             </button>
           </div>
 

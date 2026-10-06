@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { IpoItem } from '@/types/ipo';
+import { getEffectiveIpoStatus } from '@/lib/ipoUtils';
 import ScoreBadge from './ScoreBadge';
 import { Calendar, ChevronRight } from 'lucide-react';
 
@@ -9,6 +10,8 @@ interface IpoCardProps {
 }
 
 export default function IpoCard({ ipo }: IpoCardProps) {
+  const effectiveStatus = getEffectiveIpoStatus(ipo);
+
   // 상태별 라벨 및 스타일 (단정하고 눈에 잘 띄는 스타일)
   const getStatusBadge = () => {
     if (ipo.isCancelled) {
@@ -17,7 +20,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
         className: 'bg-rose-700 text-white font-bold'
       };
     }
-    switch (ipo.status) {
+    switch (effectiveStatus) {
       case 'SUBSCRIPTION':
         return {
           text: '청약 진행 중',
@@ -60,7 +63,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             score={ipo.aiScore}
             grade={ipo.scoreGrade}
             size="sm"
-            isPendingForecast={ipo.status === 'UPCOMING'}
+            isPendingForecast={effectiveStatus === 'UPCOMING'}
           />
         </div>
 
@@ -94,6 +97,19 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             </span>
           </div>
 
+          {/* 일반 청약 마감 후 최종 경쟁률 (상장 대기 또는 상장 완료 종목) */}
+          {ipo.generalCompetitionRate && (effectiveStatus === 'WAITING_LISTING' || effectiveStatus === 'LISTED') && (
+            <div className="flex justify-between items-center py-1 border-b border-blue-200/90 pb-1.5 bg-blue-50/80 -mx-3 px-3">
+              <span className="text-blue-900 font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                <span>일반 청약 경쟁률</span>
+              </span>
+              <span className="font-black text-blue-700 text-sm">
+                {ipo.generalCompetitionRate.toLocaleString()} : 1
+              </span>
+            </div>
+          )}
+
           <div className="flex justify-between items-center py-0.5 border-b border-gray-200/80 pb-1.5">
             <span className="text-gray-500 font-medium">기관 경쟁률</span>
             <span className="font-bold text-gray-900">
@@ -108,10 +124,18 @@ export default function IpoCard({ ipo }: IpoCardProps) {
           </div>
 
           <div className="flex justify-between items-center py-0.5 border-b border-gray-200/80 pb-1.5">
-            <span className="text-gray-500 font-medium">청약 기간</span>
+            <span className="text-gray-500 font-medium">
+              {effectiveStatus === 'WAITING_LISTING' ? '환불 / 상장' : '청약 기간'}
+            </span>
             <span className="font-semibold text-gray-800 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-gray-400" />
-              {ipo.subscriptionStart.slice(5)} ~ {ipo.subscriptionEnd.slice(5)}
+              {effectiveStatus === 'WAITING_LISTING' ? (
+                <span>
+                  환불 {ipo.refundDate.slice(5)} · 상장 <strong className="text-blue-700">{ipo.listingDate ? ipo.listingDate.slice(5) : '미정'}</strong>
+                </span>
+              ) : (
+                <span>{ipo.subscriptionStart.slice(5)} ~ {ipo.subscriptionEnd.slice(5)}</span>
+              )}
             </span>
           </div>
 
@@ -137,7 +161,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
         )}
 
         {/* 상장 완료 종목 실전 수익률 (시초가 & 종가, 정상 상장 종목만) */}
-        {!ipo.isCancelled && ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
+        {!ipo.isCancelled && effectiveStatus === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
           <div className="rounded-lg border border-emerald-300 bg-emerald-50/70 p-2.5 mb-3">
             <div className="flex justify-between items-center mb-1 text-[11px] font-bold text-emerald-900">
               <span className="flex items-center gap-1">

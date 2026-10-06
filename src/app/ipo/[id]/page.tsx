@@ -10,6 +10,7 @@ import NewsletterBanner from '@/components/NewsletterBanner';
 import ShareButtons from '@/components/ShareButtons';
 import DetailBackButton from '@/components/DetailBackButton';
 import { MOCK_IPOS } from '@/data/mockIpo';
+import { getEffectiveIpo } from '@/lib/ipoUtils';
 import {
   ArrowLeft,
   Calendar,
@@ -28,7 +29,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const ipo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
+  const rawIpo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
+  const ipo = rawIpo ? getEffectiveIpo(rawIpo) : null;
   if (!ipo) {
     return {
       title: '공모주 정보를 찾을 수 없습니다 | 공모주 알리미',
@@ -85,7 +87,8 @@ export async function generateStaticParams() {
 
 export default async function IpoDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const ipo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
+  const rawIpo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
+  const ipo = rawIpo ? getEffectiveIpo(rawIpo) : null;
 
   if (!ipo) {
     notFound();
@@ -107,14 +110,30 @@ export default async function IpoDetailPage({ params }: PageProps) {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className={`px-2.5 py-1 rounded text-xs font-bold ${ipo.isCancelled ? 'bg-rose-700 text-white' : 'bg-blue-700 text-white'}`}>
-                  {ipo.isCancelled ? '공모 취소' : ipo.market}
+                <span className={`px-2.5 py-1 rounded text-xs font-bold ${
+                  ipo.isCancelled
+                    ? 'bg-rose-700 text-white'
+                    : ipo.status === 'WAITING_LISTING'
+                    ? 'bg-gray-800 text-white'
+                    : ipo.status === 'SUBSCRIPTION'
+                    ? 'bg-red-600 text-white'
+                    : ipo.status === 'LISTED'
+                    ? 'bg-gray-500 text-white'
+                    : 'bg-blue-700 text-white'
+                }`}>
+                  {ipo.isCancelled
+                    ? '공모 취소'
+                    : ipo.status === 'WAITING_LISTING'
+                    ? '상장 대기'
+                    : ipo.status === 'SUBSCRIPTION'
+                    ? '청약 진행 중'
+                    : ipo.status === 'LISTED'
+                    ? '상장 완료'
+                    : '청약 예정'}
                 </span>
-                {ipo.isCancelled && (
-                  <span className="px-2 py-1 rounded text-xs font-bold bg-gray-100 text-gray-700 border border-gray-200">
-                    {ipo.market}
-                  </span>
-                )}
+                <span className="px-2 py-1 rounded text-xs font-bold bg-gray-100 text-gray-700 border border-gray-200">
+                  {ipo.market}
+                </span>
                 <span className="text-xs font-semibold text-gray-500">종목코드 {ipo.code}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900">
@@ -222,6 +241,58 @@ export default async function IpoDetailPage({ params }: PageProps) {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* 일반 청약 마감 결과 배너 (상장 대기 또는 상장 완료 종목 중 일반 경쟁률 데이터가 있는 경우) */}
+        {!ipo.isCancelled && ipo.generalCompetitionRate && (
+          <div className="p-5 sm:p-6 rounded-xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-blue-200/60 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded text-xs font-black bg-blue-700 text-white">
+                  {ipo.status === 'WAITING_LISTING' ? '청약 마감 · 최종 실전 결과' : '일반 청약 최종 결과'}
+                </span>
+                <span className="text-sm font-bold text-blue-900">
+                  {ipo.status === 'WAITING_LISTING' ? `${ipo.listingDate ? ipo.listingDate.slice(5) + ' ' : ''}코스닥 상장 대기 중` : '상장 완료 종목'}
+                </span>
+              </div>
+              <div className="text-xs text-gray-600 font-medium">
+                납입·환불일: <strong className="text-gray-900">{ipo.refundDate}</strong>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3.5 bg-white/95 rounded-lg border border-blue-200 shadow-xs">
+                <span className="text-gray-500 block text-xs font-medium">일반 최종 경쟁률</span>
+                <span className="text-lg sm:text-xl font-black text-blue-700">
+                  {ipo.generalCompetitionRate.toLocaleString()} : 1
+                </span>
+              </div>
+              {ipo.subscriptionResults?.totalDepositAmount && (
+                <div className="p-3.5 bg-white/95 rounded-lg border border-indigo-200 shadow-xs">
+                  <span className="text-gray-500 block text-xs font-medium">총 청약 증거금</span>
+                  <span className="text-lg sm:text-xl font-black text-indigo-700">
+                    약 {ipo.subscriptionResults.totalDepositAmount}조원
+                  </span>
+                </div>
+              )}
+              {ipo.subscriptionResults?.equalAllocationShares !== undefined && (
+                <div className="p-3.5 bg-white/95 rounded-lg border border-purple-200 shadow-xs">
+                  <span className="text-gray-500 block text-xs font-medium">균등 배정 예상 주수</span>
+                  <span className="text-lg sm:text-xl font-black text-purple-700">
+                    약 {ipo.subscriptionResults.equalAllocationShares}주
+                  </span>
+                </div>
+              )}
+              {ipo.subscriptionResults?.totalAccounts && (
+                <div className="p-3.5 bg-white/95 rounded-lg border border-gray-200 shadow-xs">
+                  <span className="text-gray-500 block text-xs font-medium">총 청약 계좌 수</span>
+                  <span className="text-lg sm:text-xl font-black text-gray-900">
+                    {ipo.subscriptionResults.totalAccounts.toLocaleString()}건
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}

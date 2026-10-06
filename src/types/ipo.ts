@@ -38,10 +38,16 @@ export interface IpoItem {
 
   // 정량 지표 (DART 공시 기반)
   institutionalCompetitionRate: number; // 기관 수요예측 경쟁률 (예: 1120 -> 1120:1)
+  generalCompetitionRate?: number;      // 일반 청약 최종 경쟁률 (예: 3482.95 -> 3482.95:1)
   lockupCommitmentRate: number;         // 의무보유확약 비율 (%)
   circulatingSupplyRate: number;        // 유통가능물량 비율 (%)
   totalOfferingAmount: number;          // 총 공모금액 (억원)
   marketCapAtIpo: number;               // 상장 시 시가총액 (억원)
+  subscriptionResults?: {               // 청약 마감 후 실전 결과
+    totalAccounts?: number;             // 총 청약 건수
+    totalDepositAmount?: number;        // 증거금 규모 (조 원)
+    equalAllocationShares?: number;     // 균등 배정 예상 주수
+  };
 
   // AI 분석 & 점수
   aiScore: number;                      // 1 ~ 100점

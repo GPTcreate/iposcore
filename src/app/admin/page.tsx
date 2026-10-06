@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { CrawlChannel, CrawlJobLog } from '@/types/admin';
 import { INITIAL_CHANNELS, INITIAL_LOGS } from '@/data/mockAdmin';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import {
   Settings,
   Plus,
@@ -67,7 +67,8 @@ export default function AdminPage() {
   const [channels, setChannels] = useState<CrawlChannel[]>(INITIAL_CHANNELS);
   const [logs, setLogs] = useState<CrawlJobLog[]>(INITIAL_LOGS);
   const [isCrawling, setIsCrawling] = useState(false);
-  const [selectedStock, setSelectedStock] = useState(MOCK_IPOS[0].name);
+  const allIpos = React.useMemo(() => getAllEffectiveIpos(), []);
+  const [selectedStock, setSelectedStock] = useState(allIpos[0]?.name || '멜콘');
 
   // 새 채널 추가 모달 폼 상태
   const [isAddingChannel, setIsAddingChannel] = useState(false);
@@ -266,7 +267,7 @@ export default function AdminPage() {
     }
   };
 
-  const selectedIpoItem = MOCK_IPOS.find((i) => i.code === marketingStock || i.id === marketingStock) || MOCK_IPOS[0];
+  const selectedIpoItem = allIpos.find((i) => i.code === marketingStock || i.id === marketingStock) || allIpos[0];
 
   const getMarketingCopy = () => {
     const ipo = selectedIpoItem;
@@ -636,7 +637,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
             </div>
             <div className="px-3.5 py-2 rounded-xl bg-white border border-gray-300 text-center min-w-[95px]">
               <span className="text-[11px] font-bold text-gray-500 block">공모주</span>
-              <span className="text-xl font-black text-blue-700">{MOCK_IPOS.length}종목</span>
+              <span className="text-xl font-black text-blue-700">{allIpos.length}종목</span>
               <span className="text-[10px] text-gray-500 block">DART 실시간</span>
             </div>
           </div>
@@ -684,7 +685,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
                   onChange={(e) => setSelectedStock(e.target.value)}
                   className="px-2.5 py-1.5 rounded-lg bg-transparent text-white text-xs font-semibold focus:outline-hidden"
                 >
-                  {MOCK_IPOS.map((ipo) => (
+                  {allIpos.map((ipo) => (
                     <option key={ipo.id} value={ipo.name} className="bg-neutral-900 text-white">
                       {ipo.name} ({ipo.market})
                     </option>
@@ -1265,9 +1266,9 @@ https://iposcore.kr/ipo/${ipo.code}`;
                   onChange={(e) => setMarketingStock(e.target.value)}
                   className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                 >
-                  {MOCK_IPOS.map((i) => (
+                  {allIpos.map((i) => (
                     <option key={i.code} value={i.code}>
-                      {i.name} ({i.status === 'SUBSCRIPTION' ? '청약중' : i.status === 'UPCOMING' ? '예정' : '상장대기'})
+                      {i.name} ({i.status === 'SUBSCRIPTION' ? '청약중' : i.status === 'UPCOMING' ? '예정' : i.status === 'WAITING_LISTING' ? '상장대기' : '상장완료'})
                     </option>
                   ))}
                 </select>

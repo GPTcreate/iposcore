@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { Subscriber } from './subscriberStore';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllEffectiveIpos } from './ipoUtils';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'newsletter@iposcore.kr';
@@ -219,8 +219,9 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
   const calculatorUrl = `${SITE_URL}/calculator`;
   const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 & 실전 배정 공략`;
 
-  const activeIpos = MOCK_IPOS.filter((i) => i.status === 'SUBSCRIPTION').slice(0, 2);
-  const upcomingIpos = MOCK_IPOS.filter((i) => i.status === 'UPCOMING').slice(0, 3);
+  const allIpos = getAllEffectiveIpos();
+  const activeIpos = allIpos.filter((i) => i.status === 'SUBSCRIPTION').slice(0, 2);
+  const upcomingIpos = allIpos.filter((i) => i.status === 'UPCOMING').slice(0, 3);
 
   const activeCards = activeIpos.map((ipo) => `
     <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">

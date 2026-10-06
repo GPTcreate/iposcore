@@ -1,5 +1,6 @@
 import { MOCK_IPOS } from '@/data/mockIpo';
 import { IpoItem } from '@/types/ipo';
+import { getEffectiveIpoStatus } from './ipoUtils';
 import { analyzeIpoSentiment, SentimentAnalysisOutput } from './sentimentAnalyzer';
 
 export interface PipelineTarget {
@@ -68,8 +69,9 @@ export function identifyPipelineTargets(
   const skipped: { stock: IpoItem; reason: string }[] = [];
 
   for (const ipo of ipos) {
+    const effectiveStatus = getEffectiveIpoStatus(ipo, todayObj);
     // 취소 또는 이미 상장된 종목은 스킵
-    if (ipo.isCancelled || ipo.status === 'LISTED') {
+    if (ipo.isCancelled || effectiveStatus === 'LISTED') {
       skipped.push({ stock: ipo, reason: '이미 상장 완료되었거나 공모 취소된 종목' });
       continue;
     }

@@ -6,7 +6,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "멜콘",
     "code": "377480",
     "market": "KOSDAQ",
-    "status": "SUBSCRIPTION",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-01",
     "subscriptionEnd": "2026-10-02",
     "refundDate": "2026-10-07",
@@ -22,63 +22,70 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 1136.8,
+    "generalCompetitionRate": 3482.95,
     "lockupCommitmentRate": 33.1,
     "circulatingSupplyRate": 34.6,
     "totalOfferingAmount": 308,
     "marketCapAtIpo": 1550,
+    "subscriptionResults": {
+      "totalAccounts": 254009,
+      "totalDepositAmount": 6.7,
+      "equalAllocationShares": 1.23
+    },
     "aiSummary": {
-      "headline": "반도체 포토공정 초정밀 온·습도 제어시스템(THC/XPS) 강자, 밴드 상단 확정",
+      "headline": "청약 경쟁률 3,483:1 대흥행 마감! 증거금 6.7조원 운집, 10월 15일 상장 대기",
       "bulletPoints": [
-        "ASML 및 도쿄일렉트론(TEL) 노광장비 연동 국내 유일 온·습도 제어 기술 보유",
-        "기관 수요예측 1,136:1 기록으로 공모가 12,300원(상단) 확정",
-        "의무보유확약 비율 33.1%로 기관 장기 보유 물량 대거 확보"
+        "일반 청약 최종 경쟁률 3,482.95:1 기록, 청약 증거금 약 6조 7,000억원 유입",
+        "균등 배정 1인당 약 1.23주(추첨 2주 확률), 비례 배정 1주당 증거금 약 2,142만원 소요",
+        "기관 수요예측 1,136:1 및 의무보유확약 33.1%에 이어 일반 청약까지 완벽 흥행",
+        "10월 7일(수) 증거금 환불 후 10월 15일(목) 코스닥 신규 상장 예정"
       ],
       "positivePoints": [
-        "삼성전자·SK하이닉스 선단 공정 증설에 따른 초정밀 환경제어 장비 필수 수요",
-        "의무보유확약 33.1%로 상장 초기 출회 매물 대폭 축소"
+        "일반 청약 3,483:1 초흥행으로 상장일 시초가 수급 유입 기대 극대화",
+        "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력"
       ],
       "riskPoints": [
-        "대신증권 단독 주관으로 일반 배정 물량(62.5만주) 대비 청약 경쟁 치열"
+        "10월 7일 증거금 환불 완료 후 10월 15일 상장일까지 일주일간 수급 공백 주의"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 85,
-      "neutralRatio": 12,
-      "cautionRatio": 3
+      "positiveRatio": 90,
+      "neutralRatio": 8,
+      "cautionRatio": 2
     },
     "expertReviews": [
       {
         "id": "rev-mel-1",
         "sourceType": "YOUTUBE",
         "author": "집돈버 구쯔",
-        "title": "멜콘 공모주 청약 1일차 & 마감 예상 | 최소 수익률은?",
+        "title": "멜콘 공모주 청약 최종 경쟁률 3,483:1 마감! 비례 1주 금액 및 상장일 목표가",
         "url": "https://www.youtube.com/watch?v=PVWW3PbSY5k",
-        "publishedAt": "2026-10-01",
+        "publishedAt": "2026-10-02",
         "sentiment": "POSITIVE",
-        "summary": "공모가 12,300원 확정, 대신증권 청약 흐름 분석 및 균등 1주 배정 확률 점검."
+        "summary": "일반 경쟁률 3,482.95대 1 기록, 증거금 6.7조원 몰려 균등 1.23주 및 상장일 대응 전략."
       },
       {
         "id": "rev-mel-2",
         "sourceType": "YOUTUBE",
         "author": "주식애소리",
-        "title": "[공모주] 멜콘, 삼성전자 & SK하이닉스가 택한 반도체 포토공정 환경장비",
+        "title": "[공모주] 멜콘 최종 결과 & 배정 결과 총정리: 10월 15일 상장일 매도 전략",
         "url": "https://www.youtube.com/watch?v=tMurBOnBcY0",
-        "publishedAt": "2026-10-01",
+        "publishedAt": "2026-10-02",
         "sentiment": "POSITIVE",
-        "summary": "ASML 국내 유일 공급사 레퍼런스, 대신증권 단독 청약 전략, 기대수익률 총정리."
+        "summary": "대신증권 25.4만건 청약, 기관 확약 33.1% 감안한 상장일 유통물량 및 기대수익률 분석."
       },
       {
         "id": "rev-mel-3",
         "sourceType": "BLOG",
         "author": "티엔의 수익실험실 (네이버 블로그)",
-        "title": "멜콘 공모주 청약분석, 기관경쟁률 1,136.84대 1과 비례청약 기회비용",
+        "title": "멜콘 공모주 청약 최종 결과, 경쟁률 3,482.95대 1과 비례 1주 가성비 분석",
         "url": "https://blog.naver.com/kastro83/224427206492",
-        "publishedAt": "2026-10-01",
+        "publishedAt": "2026-10-02",
         "sentiment": "POSITIVE",
-        "summary": "반도체 초정밀 칠러 공급 레퍼런스, 기관 경쟁률 1,136:1 및 상장일 유통물량 정밀 분석."
+        "summary": "공모가 12,300원, 증거금 6.7조원 돌파, 10월 7일 환불일 체크 및 상장일 시초가 전망."
       }
     ],
-    "aiScore": 91,
+    "aiScore": 94,
     "scoreGrade": "S"
   },
   {
@@ -86,7 +93,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "진코스텍",
     "code": "252540",
     "market": "KOSDAQ",
-    "status": "SUBSCRIPTION",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-02",
     "subscriptionEnd": "2026-10-06",
     "refundDate": "2026-10-08",
@@ -102,53 +109,58 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 1097.6,
+    "generalCompetitionRate": 17220.73,
     "lockupCommitmentRate": 5.3,
     "circulatingSupplyRate": 58.4,
     "totalOfferingAmount": 200,
     "marketCapAtIpo": 890,
+    "subscriptionResults": {
+      "totalAccounts": 147227,
+      "equalAllocationShares": 0.72
+    },
     "aiSummary": {
-      "headline": "K-뷰티 하이드로겔 마스크팩 OEM/ODM 코스닥 이전상장, 공모가 상단 확정",
+      "headline": "일반 청약 경쟁률 17,220:1 역대급 마감! 10월 8일 환불, 10월 15일 상장",
       "bulletPoints": [
-        "미국·일본 중심 K-뷰티 수출 호조로 하이드로겔 아이패치 주문량 급증",
-        "기관 수요예측 1,097:1 기록으로 공모가 23,500원(상단) 확정",
-        "코넥스 이전상장 특성상 상장일 유통가능물량이 58.4%로 수급 부담 점검 필요"
+        "10월 6일 마감된 일반 청약 결과 17,220.73:1의 기록적인 청약 경쟁률 기록",
+        "청약 건수 14.7만건, 균등배정 0.72주(추첨 확률 72%), 비례 경쟁률 1,370:1 집계",
+        "확정 공모가 23,500원(상단), 10월 8일 납입/환불 후 10월 15일 멜콘과 동시 상장 예정"
       ],
       "positivePoints": [
-        "글로벌 인디 화장품 브랜드향 OEM/ODM 수주 가시성 우수",
-        "기관 경쟁률 1,000:1 상회로 안정적인 공모가 상단 안착"
+        "소형주 수급 메리트 및 청약 계좌 14.7만 건 이상 참여로 뜨거운 시장 관심",
+        "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
       ],
       "riskPoints": [
-        "상장일 유통물량 58.4%로 기존 코넥스 주주 차익 실현 출회 주의"
+        "코넥스 이전상장 특성상 상장 직후 유통가능물량 58.4%로 기존 주주 차익 매물 소화 필요"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 74,
-      "neutralRatio": 21,
-      "cautionRatio": 5
+      "positiveRatio": 78,
+      "neutralRatio": 18,
+      "cautionRatio": 4
     },
     "expertReviews": [
       {
         "id": "rev-jin-1",
         "sourceType": "YOUTUBE",
         "author": "주식애소리",
-        "title": "[공모주] 진코스텍 청약 전 총정리: 가벼운 공모 규모와 기대 수익률",
+        "title": "[공모주] 진코스텍 청약 최종 결과 & 비례 1주 배정 금액 총정리",
         "url": "https://www.youtube.com/results?search_query=%EC%A7%84%EC%BD%94%EC%8A%A4%ED%85%8D+%EA%B3%B5%EB%AA%A8%EC%A3%BC",
-        "publishedAt": "2026-10-01",
+        "publishedAt": "2026-10-06",
         "sentiment": "POSITIVE",
-        "summary": "23,500원 확정, 소형주 수급 탄력 점검 및 균등 비례 배정 예상주수 분석."
+        "summary": "17,220:1 마감, 균등 배정 0.72주 및 10월 15일 멜콘과 동시 상장일 대응 전략."
       },
       {
         "id": "rev-jin-2",
         "sourceType": "BLOG",
         "author": "아이언의 공모주 이야기",
-        "title": "진코스텍 공모주 청약 정보 및 수요예측 결과 요약",
+        "title": "진코스텍 공모주 청약 최종 마감 결과 및 배정 수량 분석",
         "url": "https://blog.naver.com/msql",
-        "publishedAt": "2026-10-01",
+        "publishedAt": "2026-10-06",
         "sentiment": "POSITIVE",
-        "summary": "하나증권 단독 주관, 1인당 배정 수량 시뮬레이션 및 상장일 대응 전략."
+        "summary": "하나증권 청약 건수 14.7만건, 비례 배정 계산 및 10월 8일 환불일 체크."
       }
     ],
-    "aiScore": 76,
+    "aiScore": 82,
     "scoreGrade": "A"
   },
   {
@@ -156,54 +168,77 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "엘리스그룹",
     "code": "459100",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-10-07",
     "subscriptionEnd": "2026-10-08",
     "refundDate": "2026-10-12",
     "listingDate": "2026-10-20",
-    "priceBandMin": 18000,
-    "priceBandMax": 21000,
-    "confirmedPrice": 0,
+    "priceBandMin": 70400,
+    "priceBandMax": 90500,
+    "confirmedPrice": 90500,
     "underwriters": [
       {
         "name": "미래에셋증권",
-        "allocatedShares": 700000,
+        "allocatedShares": 1555400,
         "fee": 2000
       },
       {
         "name": "삼성증권",
-        "allocatedShares": 300000,
+        "allocatedShares": 666600,
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 26.5,
-    "totalOfferingAmount": 420,
-    "marketCapAtIpo": 2850,
+    "institutionalCompetitionRate": 388.8,
+    "lockupCommitmentRate": 15.2,
+    "circulatingSupplyRate": 20.8,
+    "totalOfferingAmount": 2011,
+    "marketCapAtIpo": 10054,
     "aiSummary": {
-      "headline": "국내 1위 실습 중심 AI 교육·클라우드 인프라 플랫폼, 고성장 테크주",
+      "headline": "확정 공모가 90,500원(상단) 확정! 1조원대 AI 유니콘 10월 7일~8일 일반 청약 개시",
       "bulletPoints": [
-        "자체 AI 실습 플랫폼 엘리스LXP 및 초거대 AI 데이터센터 인프라 구축",
-        "대기업·공공기관 1,800개사 고객사 확보로 B2B 반복 매출 구조",
-        "AI 국가 전략 과제 선정 및 동남아 싱가포르 등 글로벌 진출 본격화"
+        "기관 수요예측 참여 기관 2,367곳, 참여 물량 99.7% 상단 이상 제시로 90,500원 확정",
+        "공모 규모 2,011억원, 상장 후 시가총액 1조 54억원으로 하반기 코스닥 최대어 등극",
+        "상장 직후 유통가능물량이 20.81%로 대형 테크주 중 매우 타이트한 품절주 수급 구조",
+        "청약 기간: 10월 7일(수) ~ 10월 8일(목), 주관사: 미래에셋증권(대표) / 삼성증권(공동)"
       ],
       "positivePoints": [
-        "소프트웨어 교육 시장 독점적 1위 및 고마진 SaaS 비즈니스",
-        "빅테크 파트너십 확대로 안정적 수주 파이프라인"
+        "자체 AI 실습 플랫폼 LXP 및 초거대 AI 데이터센터(PMDC) 독보적 경쟁력",
+        "상장일 유통물량 20.8%로 오버행 부담 극히 낮음",
+        "B2B/B2G 1,800개사 고객사 기반의 탄탄한 SaaS 연간반복매출(ARR)"
       ],
       "riskPoints": [
-        "수요예측 결과 발표 전으로 기관 경쟁률 모니터링 필수"
+        "1주당 공모가 90,500원으로 최소 청약 단위(20주 기준) 증거금 부담 확인 필요"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 72,
-      "neutralRatio": 22,
-      "cautionRatio": 6
+      "positiveRatio": 86,
+      "neutralRatio": 11,
+      "cautionRatio": 3
     },
-    "expertReviews": [],
-    "aiScore": 69,
-    "scoreGrade": "B"
+    "expertReviews": [
+      {
+        "id": "rev-elice-1",
+        "sourceType": "YOUTUBE",
+        "author": "주식애소리",
+        "title": "[공모주] 엘리스그룹 수요예측 결과 분석: 90,500원 확정, 청약해야 할까?",
+        "url": "https://www.youtube.com/results?search_query=%EC%97%98%EB%A6%AC%EC%8A%A4%EA%B7%B8%EB%A3%B9+%EA%B3%B5%EB%AA%A8%EC%A3%BC",
+        "publishedAt": "2026-10-06",
+        "sentiment": "POSITIVE",
+        "summary": "확정공모가 90,500원, 시총 1조원 유니콘의 유통물량 20.8% 메리트 및 미래에셋·삼성 배정 전략."
+      },
+      {
+        "id": "rev-elice-2",
+        "sourceType": "BLOG",
+        "author": "아이언의 공모주 이야기",
+        "title": "엘리스그룹 공모주 수요예측 결과 및 비례배정 청약 한도 분석",
+        "url": "https://blog.naver.com/msql",
+        "publishedAt": "2026-10-06",
+        "sentiment": "POSITIVE",
+        "summary": "기관 경쟁률 388.8:1, 10월 7일~8일 청약 일정 및 증거금별 비례 배정 예상 주수."
+      }
+    ],
+    "aiScore": 88,
+    "scoreGrade": "S"
   },
   {
     "id": "ms-bio",
