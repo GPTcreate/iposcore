@@ -10,7 +10,6 @@ import { IpoStatus } from '@/types/ipo';
 import { ShieldCheck, CheckCircle2, TrendingUp } from 'lucide-react';
 
 export default function Home() {
-  const [filter, setFilter] = useState<'ALL' | IpoStatus>('ALL');
   const PAGE_SIZE = 6;
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
@@ -18,12 +17,28 @@ export default function Home() {
   const initialIpos = React.useMemo(() => getAllEffectiveIpos(), []);
   const [allIpos, setAllIpos] = useState(initialIpos);
 
+  // 청약 진행 중이 0건이면 청약 예정을 기본 탭으로, 아니면 청약 진행 중으로 설정
+  const getDefaultTab = (ipos: typeof initialIpos): 'ALL' | IpoStatus => {
+    const hasSubscription = ipos.some((i) => i.status === 'SUBSCRIPTION');
+    return hasSubscription ? 'SUBSCRIPTION' : 'UPCOMING';
+  };
+
+  const [filter, setFilter] = useState<'ALL' | IpoStatus>(() => getDefaultTab(initialIpos));
+
   React.useEffect(() => {
     fetch('/api/ipo')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && Array.isArray(data.ipos) && data.ipos.length > 0) {
           setAllIpos(data.ipos);
+          // API 응답 기준으로 탭 재결정 (URL/세션에 저장된 탭이 없을 때만)
+          const hasStoredTab =
+            typeof window !== 'undefined' &&
+            (new URLSearchParams(window.location.search).get('tab') ||
+              sessionStorage.getItem('iposcore_active_tab'));
+          if (!hasStoredTab) {
+            setFilter(getDefaultTab(data.ipos));
+          }
         }
       })
       .catch(() => {});
