@@ -1,5 +1,5 @@
 import { IpoItem, IpoStatus } from '@/types/ipo';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllIpos, getIpoByIdOrCode } from './ipoStore';
 
 /**
  * 한국 시간(KST, UTC+9) 현재 Date 객체 반환
@@ -97,5 +97,13 @@ export function getEffectiveIpo(ipo: IpoItem, now = new Date()): IpoItem {
  * 전체 IPO 목록에 실시간 동적 상태를 일괄 적용하여 반환
  */
 export function getAllEffectiveIpos(now = new Date()): IpoItem[] {
-  return MOCK_IPOS.map((ipo) => getEffectiveIpo(ipo, now));
+  return getAllIpos().map((ipo) => getEffectiveIpo(ipo, now));
+}
+
+/**
+ * ID 또는 코드로 IPO를 찾아 실시간 동적 상태를 적용하여 반환
+ */
+export function getEffectiveIpoByIdOrCode(idOrCode: string, now = new Date()): IpoItem | undefined {
+  const ipo = getIpoByIdOrCode(idOrCode);
+  return ipo ? getEffectiveIpo(ipo, now) : undefined;
 }

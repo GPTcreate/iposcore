@@ -32,6 +32,7 @@ import {
   Megaphone,
   Rss,
   MessageCircle,
+  Sparkles,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -119,6 +120,107 @@ export default function AdminPage() {
   // 방문자 통계 상태 (TODAY & TOTAL)
   const [visitorStats, setVisitorStats] = useState<{ today: number; total: number }>({ today: 0, total: 0 });
 
+  // 신규 공모주 카드 자동 생성 & DART 동기화 상태
+  const [adminIpoList, setAdminIpoList] = useState<any[]>(allIpos);
+  const [dartSyncLoading, setDartSyncLoading] = useState(false);
+  const [dartSyncResult, setDartSyncResult] = useState<string | null>(null);
+  const [isAddingIpo, setIsAddingIpo] = useState(false);
+  const [manualIpoLoading, setManualIpoLoading] = useState(false);
+  const [manualIpoForm, setManualIpoForm] = useState({
+    name: '',
+    code: '',
+    market: 'KOSDAQ',
+    priceBandMin: 15000,
+    priceBandMax: 18000,
+    subscriptionStart: '',
+    subscriptionEnd: '',
+    underwriterName: '한국투자증권',
+  });
+
+  const fetchIpos = async () => {
+    try {
+      const res = await fetch('/api/ipo');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.ipos)) {
+          setAdminIpoList(data.ipos);
+        }
+      }
+    } catch {}
+  };
+
+  const handleSyncDart = async () => {
+    setDartSyncLoading(true);
+    setDartSyncResult(null);
+    try {
+      const res = await fetch('/api/ipo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'sync-dart', days: 30, limit: 10 }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setDartSyncResult(`🎉 ${data.message} (현재 총 ${data.totalIposCount || adminIpoList.length}개 운영 중)`);
+        fetchIpos();
+      } else {
+        setDartSyncResult(`❌ 동기화 실패: ${data.error || '오류'}`);
+      }
+    } catch {
+      setDartSyncResult('❌ 네트워크 요청 실패');
+    } finally {
+      setDartSyncLoading(false);
+    }
+  };
+
+  const handleCreateManualIpo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualIpoForm.name) return;
+    setManualIpoLoading(true);
+    try {
+      const res = await fetch('/api/ipo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create', ...manualIpoForm }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setDartSyncResult(`✨ ${data.ipo.name} (${data.ipo.code}) 카드가 생성되었습니다!`);
+        setIsAddingIpo(false);
+        setManualIpoForm({
+          name: '',
+          code: '',
+          market: 'KOSDAQ',
+          priceBandMin: 15000,
+          priceBandMax: 18000,
+          subscriptionStart: '',
+          subscriptionEnd: '',
+          underwriterName: '한국투자증권',
+        });
+        fetchIpos();
+      } else {
+        alert(data.error || '카드 생성 실패');
+      }
+    } catch {
+      alert('네트워크 오류');
+    } finally {
+      setManualIpoLoading(false);
+    }
+  };
+
+  const handleDeleteIpo = async (codeOrId: string, name: string) => {
+    if (!confirm(`'${name}' 공모주 카드를 삭제하시겠습니까?`)) return;
+    try {
+      const res = await fetch(`/api/ipo?code=${codeOrId}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchIpos();
+      } else {
+        alert('기본 내장 종목은 삭제할 수 없거나 이미 삭제되었습니다.');
+      }
+    } catch {
+      alert('삭제 처리 중 오류가 발생했습니다.');
+    }
+  };
+
   // 오늘 날짜 기준 (KST) 신규 및 인증 구독자 계산
   const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
   const todaySubscribers = subscribers.filter((s) => s.subscribedAt && s.subscribedAt.startsWith(todayStr)).length;
@@ -158,6 +260,7 @@ export default function AdminPage() {
       fetchSubscribers();
       fetchVisitorStats();
       fetchTelegramStatus();
+      fetchIpos();
     }, 0);
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
@@ -705,7 +808,237 @@ https://iposcore.kr/ipo/${ipo.code}`;
           </div>
         </section>
 
-        {/* 2. 크롤링 대상 채널 관리 (화이트리스트) */}
+        {/* 2. 신규 공모주 카드 자동 생성 & DART 실시간 동기화 섹션 */}
+        <section className="p-6 rounded-2xl bg-white border border-gray-300 shadow-2xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-indigo-600" />
+                <h2 className="text-lg font-bold text-gray-900">
+                  신규 공모주 카드 자동 생성 & DART 실시간 동기화 ({adminIpoList.length}개 카드 운영 중)
+                </h2>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                금융감독원 전자공시(DART)에 새로운 증권신고서가 접수되면 자동으로 감지하여 메인 페이지와 상세 분석 카드를 즉시 생성합니다.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={handleSyncDart}
+                disabled={dartSyncLoading}
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${dartSyncLoading ? 'animate-spin' : ''}`} />
+                <span>{dartSyncLoading ? 'DART 공시 감지 & 카드 생성 중...' : '🚀 DART 신규 공모주 자동 감지 & 카드 생성'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsAddingIpo(!isAddingIpo)}
+                className="px-3.5 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ 수동 직접 등록</span>
+              </button>
+            </div>
+          </div>
+
+          {/* DART 동기화 결과 메시지 */}
+          {dartSyncResult && (
+            <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 font-bold text-xs flex items-center justify-between">
+              <span>{dartSyncResult}</span>
+              <button onClick={() => setDartSyncResult(null)} className="text-gray-400 hover:text-gray-700 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* 수동 등록 폼 (토글) */}
+          {isAddingIpo && (
+            <form onSubmit={handleCreateManualIpo} className="p-5 rounded-xl border border-indigo-200 bg-indigo-50/50 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
+                  <Plus className="w-4 h-4 text-indigo-600" />
+                  <span>새로운 공모주 수동 등록</span>
+                </span>
+                <span className="text-[11px] text-gray-500">* 등록 즉시 메인 페이지 및 분석 리포트에 자동 반영됩니다.</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">종목명 *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="예: 루미르"
+                    value={manualIpoForm.name}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, name: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">종목코드 (6자리, 비워두면 자동부여)</label>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="예: 474170"
+                    value={manualIpoForm.code}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, code: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">상장 시장</label>
+                  <select
+                    value={manualIpoForm.market}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, market: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  >
+                    <option value="KOSDAQ">KOSDAQ</option>
+                    <option value="KOSPI">KOSPI</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">대표 주관사</label>
+                  <input
+                    type="text"
+                    placeholder="예: 한국투자증권"
+                    value={manualIpoForm.underwriterName}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, underwriterName: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">희망 공모가 최소 (원)</label>
+                  <input
+                    type="number"
+                    value={manualIpoForm.priceBandMin}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, priceBandMin: Number(e.target.value) })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">희망 공모가 최대 (원)</label>
+                  <input
+                    type="number"
+                    value={manualIpoForm.priceBandMax}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, priceBandMax: Number(e.target.value) })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">청약 시작일 (선택)</label>
+                  <input
+                    type="date"
+                    value={manualIpoForm.subscriptionStart}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, subscriptionStart: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">청약 마감일 (선택)</label>
+                  <input
+                    type="date"
+                    value={manualIpoForm.subscriptionEnd}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, subscriptionEnd: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingIpo(false)}
+                  className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-300 cursor-pointer"
+                >
+                  취소
+                </button>
+                <button
+                  type="submit"
+                  disabled={manualIpoLoading}
+                  className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  {manualIpoLoading ? '카드 생성 중...' : '카드 즉시 생성'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* 등록된 전체 공모주 카드 목록 테이블 */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs text-gray-600 font-bold">
+              <span>운영 중인 공모주 목록 ({adminIpoList.length}건)</span>
+              <span>* 카드 클릭 시 실제 웹사이트 상세 리포트로 이동합니다.</span>
+            </div>
+
+            <div className="overflow-x-auto rounded-xl border border-gray-200 max-h-[380px] overflow-y-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-gray-100 text-gray-600 font-bold border-b border-gray-200 sticky top-0 bg-gray-100 z-10">
+                  <tr>
+                    <th className="px-3 py-2.5">상태</th>
+                    <th className="px-3 py-2.5">종목명 (코드)</th>
+                    <th className="px-3 py-2.5">시장</th>
+                    <th className="px-3 py-2.5">공모가 (밴드/확정)</th>
+                    <th className="px-3 py-2.5">청약 기간</th>
+                    <th className="px-3 py-2.5">주관사</th>
+                    <th className="px-3 py-2.5 text-right">관리</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {adminIpoList.map((ipo) => (
+                    <tr key={ipo.code || ipo.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-3 py-2.5">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          ipo.status === 'SUBSCRIPTION' ? 'bg-red-600 text-white' :
+                          ipo.status === 'UPCOMING' ? 'bg-blue-700 text-white' :
+                          ipo.status === 'WAITING_LISTING' ? 'bg-gray-800 text-white' : 'bg-gray-400 text-white'
+                        }`}>
+                          {ipo.status === 'SUBSCRIPTION' ? '청약중' :
+                           ipo.status === 'UPCOMING' ? '청약예정' :
+                           ipo.status === 'WAITING_LISTING' ? '상장대기' : '상장완료'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2.5 font-bold text-gray-900">
+                        <a href={`/ipo/${ipo.code}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 flex items-center gap-1">
+                          <span>{ipo.name}</span>
+                          <span className="text-gray-400 font-normal">({ipo.code})</span>
+                          <ExternalLink className="w-3 h-3 text-gray-400" />
+                        </a>
+                      </td>
+                      <td className="px-3 py-2.5 text-gray-600 font-medium">{ipo.market}</td>
+                      <td className="px-3 py-2.5 font-semibold text-gray-800">
+                        {ipo.confirmedPrice > 0
+                          ? `${ipo.confirmedPrice.toLocaleString()}원`
+                          : `${ipo.priceBandMin.toLocaleString()}~${ipo.priceBandMax.toLocaleString()}원`}
+                      </td>
+                      <td className="px-3 py-2.5 text-gray-600">
+                        {ipo.subscriptionStart} ~ {ipo.subscriptionEnd?.slice(5) || ''}
+                      </td>
+                      <td className="px-3 py-2.5 text-gray-600 truncate max-w-[140px]">
+                        {ipo.underwriters.map((u: any) => u.name).join(', ')}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteIpo(ipo.code, ipo.name)}
+                          className="text-gray-400 hover:text-red-600 p-1 rounded transition-colors cursor-pointer"
+                          title="카드 삭제"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. 크롤링 대상 채널 관리 (화이트리스트) */}
         <section className="p-6 rounded-2xl bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div>

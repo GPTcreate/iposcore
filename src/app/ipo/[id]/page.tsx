@@ -9,8 +9,7 @@ import IpoCalculator from '@/components/IpoCalculator';
 import NewsletterBanner from '@/components/NewsletterBanner';
 import ShareButtons from '@/components/ShareButtons';
 import DetailBackButton from '@/components/DetailBackButton';
-import { MOCK_IPOS } from '@/data/mockIpo';
-import { getEffectiveIpo } from '@/lib/ipoUtils';
+import { getEffectiveIpoByIdOrCode, getAllEffectiveIpos } from '@/lib/ipoUtils';
 import {
   ArrowLeft,
   Calendar,
@@ -27,10 +26,11 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+export const dynamicParams = true;
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const rawIpo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
-  const ipo = rawIpo ? getEffectiveIpo(rawIpo) : null;
+  const ipo = getEffectiveIpoByIdOrCode(id);
   if (!ipo) {
     return {
       title: '공모주 정보를 찾을 수 없습니다 | 공모주 알리미',
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export async function generateStaticParams() {
   const params: { id: string }[] = [];
-  for (const ipo of MOCK_IPOS) {
+  for (const ipo of getAllEffectiveIpos()) {
     // 1. 증권코드(6자리 숫자) 우선 표준 라우팅 (예: /ipo/377480)
     params.push({ id: ipo.code });
     // 2. 기존 영문 슬러그 호환성 유지 (예: /ipo/melcon)
@@ -87,8 +87,7 @@ export async function generateStaticParams() {
 
 export default async function IpoDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const rawIpo = MOCK_IPOS.find((item) => item.code === id || item.id === id);
-  const ipo = rawIpo ? getEffectiveIpo(rawIpo) : null;
+  const ipo = getEffectiveIpoByIdOrCode(id);
 
   if (!ipo) {
     notFound();

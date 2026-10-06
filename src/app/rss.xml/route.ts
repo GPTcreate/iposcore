@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
   
-  const rssItems = MOCK_IPOS.map((ipo) => {
+  const rssItems = getAllEffectiveIpos().map((ipo) => {
     const pubDate = new Date(ipo.subscriptionStart).toUTCString();
     return `
     <item>

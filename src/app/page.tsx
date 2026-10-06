@@ -15,7 +15,19 @@ export default function Home() {
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   // KST 현재 일자 및 시각 기준 실시간 상태 동적 전이 적용
-  const allIpos = React.useMemo(() => getAllEffectiveIpos(), []);
+  const initialIpos = React.useMemo(() => getAllEffectiveIpos(), []);
+  const [allIpos, setAllIpos] = useState(initialIpos);
+
+  React.useEffect(() => {
+    fetch('/api/ipo')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && Array.isArray(data.ipos) && data.ipos.length > 0) {
+          setAllIpos(data.ipos);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const filteredIpos = allIpos.filter((ipo) => {
     if (filter === 'ALL') return ipo.status !== 'LISTED';

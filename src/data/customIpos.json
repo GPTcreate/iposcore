@@ -1,0 +1,155 @@
+[
+  {
+    "id": "dart-485424",
+    "name": "옵토닉스",
+    "code": "485424",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-31",
+    "priceBandMin": 12000,
+    "priceBandMax": 15000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 옵토닉스 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20260929000347)",
+        "공모 희망가 밴드: 12,000 ~ 15,000원, 예상 공모규모 약 250억원",
+        "예상 청약 일정: 2026-10-20 ~ 2026-10-21, 주관사: 대신증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "상장 직후 유통가능물량 관리 및 안정적 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-454392",
+    "name": "케이엠에프",
+    "code": "454392",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-23",
+    "subscriptionEnd": "2026-10-24",
+    "refundDate": "2026-10-26",
+    "listingDate": "2026-11-03",
+    "priceBandMin": 12000,
+    "priceBandMax": 15000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "[DART 접수] 케이엠에프 금융감독원 증권신고서 제출! KOSDAQ 신규 상장 공모 청약 예정",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20261002000390)",
+        "공모 희망가 밴드: 12,000 ~ 15,000원, 예상 공모규모 약 250억원",
+        "예상 청약 일정: 2026-10-23 ~ 2026-10-24, 주관사: 한국투자증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "상장 직후 유통가능물량 관리 및 안정적 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "6",
+    "name": "한화플러스제6호기업인수목적",
+    "code": "450043",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-27",
+    "subscriptionEnd": "2026-10-28",
+    "refundDate": "2026-10-30",
+    "listingDate": "2026-11-07",
+    "priceBandMin": 2000,
+    "priceBandMax": 2000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "NH투자증권",
+        "allocatedShares": 4000000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 85,
+    "totalOfferingAmount": 80,
+    "marketCapAtIpo": 100,
+    "aiScore": 70,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "금융감독원 증권신고서 접수! 공모가 2,000원 신규 스팩 합병 상장 추진",
+      "bulletPoints": [
+        "금융감독원 전자공시(DART) 신규 증권신고서 접수 완료 (접수번호: 20261006000137)",
+        "공모 희망가 밴드: 2,000 ~ 2,000원, 예상 공모규모 약 80억원",
+        "예상 청약 일정: 2026-10-27 ~ 2026-10-28, 주관사: NH투자증권",
+        "기관 투자자 수요예측 결과 및 확정 공모가 공시 시 실시간으로 즉시 반영 예정"
+      ],
+      "positivePoints": [
+        "금융감독원 증권신고서 효력 발생 후 본격적인 기관 수요예측 및 일반 공모 일정 개시",
+        "상장 직후 유통가능물량 관리 및 안정적 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 발표 전 단계이므로 기관 경쟁률 및 의무보유확약 비율 공시를 반드시 확인해야 합니다.",
+        "공모가 밴드 상단 초과 여부 및 상장일 오버행 수급 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  }
+]

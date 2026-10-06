@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // 공모주별 상세 페이지 (표준 6자리 증권코드 기준)
-  const ipoRoutes: MetadataRoute.Sitemap = MOCK_IPOS.map((ipo) => ({
+  const ipoRoutes: MetadataRoute.Sitemap = getAllEffectiveIpos().map((ipo) => ({
     url: `${baseUrl}/ipo/${ipo.code}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
