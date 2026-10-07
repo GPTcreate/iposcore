@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import CookieConsent from '@/components/CookieConsent';
 import VisitorBeacon from '@/components/VisitorBeacon';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const siteUrl = 'https://iposcore.kr';
 
@@ -92,6 +93,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-4909665367366825';
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-SZCS9GN9SN';
 
   return (
     <html lang="ko" className="h-full antialiased">
@@ -115,6 +117,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-neutral-950 text-gray-900 dark:text-neutral-100">
+        <GoogleAnalytics gaId={gaMeasurementId} />
         <VisitorBeacon />
         {children}
         <CookieConsent />
