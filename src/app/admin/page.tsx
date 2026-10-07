@@ -84,8 +84,6 @@ export default function AdminPage() {
     email: string;
     status: 'PENDING' | 'ACTIVE' | 'CANCELLED';
     frequency: 'WEEKLY' | 'ALL';
-    verificationToken: string;
-    unsubscribeToken: string;
     subscribedAt: string;
     verifiedAt?: string;
     unsubscribedAt?: string;
@@ -282,13 +280,13 @@ export default function AdminPage() {
     }
   };
 
-  const handleVerifySubscriber = async (token: string, email: string) => {
+  const handleVerifySubscriber = async (email: string) => {
     if (!confirm(`[${email}] 님을 수동으로 구독 승인(활성화) 처리하시겠습니까?`)) return;
     try {
       const res = await fetch('/api/newsletter/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'MANUAL_VERIFY', token }),
+        body: JSON.stringify({ action: 'MANUAL_VERIFY', email }),
       });
       if (res.ok) {
         alert('구독 활성화 처리가 완료되었습니다.');
@@ -1529,7 +1527,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
                           {sub.status === 'PENDING' && (
                             <button
                               type="button"
-                              onClick={() => handleVerifySubscriber(sub.verificationToken, sub.email)}
+                              onClick={() => handleVerifySubscriber(sub.email)}
                               className="px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] cursor-pointer"
                             >
                               수동 승인

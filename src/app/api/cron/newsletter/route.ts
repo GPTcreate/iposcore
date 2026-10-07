@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllSubscribers } from '@/lib/subscriberStore';
+import { getAllSubscribersAsync } from '@/lib/subscriberStore';
 import { sendWeeklyReportEmail } from '@/lib/emailSender';
 
 export const dynamic = 'force-dynamic';
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized cron trigger' }, { status: 401 });
     }
 
-    const allSubscribers = getAllSubscribers();
+    const allSubscribers = await getAllSubscribersAsync();
     const activeSubscribers = allSubscribers.filter((s) => s.status === 'ACTIVE');
 
     const executionTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });

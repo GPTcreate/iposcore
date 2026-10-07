@@ -1,31 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  getAllSubscribers,
+  getAllSubscribersAsync,
   verifySubscriber,
+  verifySubscriberByEmail,
   unsubscribeSubscriber,
   syncToGoogleSheet,
-  fetchSubscribersFromGoogleSheet,
+  sanitizeSubscriber,
   Subscriber,
 } from '@/lib/subscriberStore';
 import { sendEmail, sendVerificationEmail } from '@/lib/emailSender';
 
 export async function GET() {
-  let subscribers: Subscriber[] = getAllSubscribers();
-
-  if (process.env.GOOGLE_SHEET_WEBHOOK_URL) {
-    try {
-      const remoteSubs = await fetchSubscribersFromGoogleSheet();
-      if (remoteSubs.length > 0) {
-        const map = new Map<string, Subscriber>();
-        for (const s of [...subscribers, ...remoteSubs]) {
-          if (s.email) map.set(s.email.toLowerCase(), s);
-        }
-        subscribers = Array.from(map.values());
-      }
-    } catch (err) {
-      console.warn('[Admin GET] 구글 시트 원격 동기화 실패:', err);
-    }
-  }
+  const subscribers: Subscriber[] = await getAllSubscribersAsync();
 
   const stats = {
     total: subscribers.length,
@@ -34,8 +20,11 @@ export async function GET() {
     cancelled: subscribers.filter((s) => s.status === 'CANCELLED').length,
   };
 
+  // 보안: 클라이언트에 민감한 verificationToken / unsubscribeToken 노출 방지
+  const safeSubscribers = subscribers.map(sanitizeSubscriber);
+
   return NextResponse.json({
-    subscribers,
+    subscribers: safeSubscribers,
     stats,
     googleSheetWebhookConfigured: !!process.env.GOOGLE_SHEET_WEBHOOK_URL,
     resendConfigured: !!process.env.RESEND_API_KEY,
@@ -50,12 +39,23 @@ export async function POST(request: NextRequest) {
 
     if (action === 'MANUAL_UNSUBSCRIBE') {
       const updated = await unsubscribeSubscriber(token || email);
-      return NextResponse.json({ success: !!updated, subscriber: updated });
+      return NextResponse.json({
+        success: !!updated,
+        subscriber: updated ? sanitizeSubscriber(updated) : null,
+      });
     }
 
     if (action === 'MANUAL_VERIFY') {
-      const updated = await verifySubscriber(token);
-      return NextResponse.json({ success: !!updated, subscriber: updated });
+      let updated: Subscriber | null = null;
+      if (token) {
+        updated = await verifySubscriber(token);
+      } else if (email) {
+        updated = await verifySubscriberByEmail(email);
+      }
+      return NextResponse.json({
+        success: !!updated,
+        subscriber: updated ? sanitizeSubscriber(updated) : null,
+      });
     }
 
     if (action === 'SEND_TEST_EMAIL') {
@@ -75,8 +75,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === 'RESEND_VERIFICATION') {
-      const subscribers = getAllSubscribers();
-      const sub = subscribers.find((s) => s.email === email?.toLowerCase());
+      const subscribers = await getAllSubscribersAsync();
+      const sub = subscribers.find((s: Subscriber) => s.email === email?.toLowerCase());
       if (!sub) return NextResponse.json({ error: '구독자를 찾을 수 없습니다.' }, { status: 404 });
       const result = await sendVerificationEmail(sub);
       return NextResponse.json({ success: result.success, mode: result.mode });

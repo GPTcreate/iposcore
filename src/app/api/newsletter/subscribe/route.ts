@@ -44,9 +44,14 @@ export async function POST(request: Request) {
       deliveryMode: sendResult.mode,
     });
   } catch (error) {
-    console.error('[SubscribeRoute] 처리 에러:', error);
+    const errorMsg = error instanceof Error ? error.message : '서버 처리 중 일시적인 오류가 발생했습니다.';
+    console.error('[SubscribeRoute] 처리 에러:', errorMsg);
     return NextResponse.json(
-      { error: '서버 처리 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' },
+      {
+        error: errorMsg.includes('영속 저장소')
+          ? errorMsg
+          : '서버 처리 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
       { status: 500 }
     );
   }

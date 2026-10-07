@@ -17,7 +17,20 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const subscriber = await unsubscribeSubscriber(token);
+  let subscriber = null;
+  try {
+    subscriber = await unsubscribeSubscriber(token);
+  } catch (err) {
+    console.error('[Unsubscribe GET] 영속 저장소 처리 에러:', err instanceof Error ? err.message : err);
+    return new NextResponse(renderHtml({
+      title: '일시적인 저장 오류가 발생했습니다',
+      description: '수신 거부 처리 중 저장소 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      isSuccess: false,
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    });
+  }
 
   if (!subscriber) {
     return new NextResponse(renderHtml({

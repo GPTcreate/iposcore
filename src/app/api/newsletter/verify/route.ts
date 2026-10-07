@@ -16,7 +16,20 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const subscriber = await verifySubscriber(token);
+  let subscriber = null;
+  try {
+    subscriber = await verifySubscriber(token);
+  } catch (err) {
+    console.error('[VerifyRoute] 영속 저장소 처리 에러:', err instanceof Error ? err.message : err);
+    return new NextResponse(renderHtml({
+      title: '일시적인 저장 오류가 발생했습니다',
+      description: '구독 인증 정보를 저장소에 갱신하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      isSuccess: false,
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    });
+  }
 
   if (!subscriber) {
     return new NextResponse(renderHtml({
