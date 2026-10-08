@@ -3,9 +3,20 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import { ArrowLeft, FileText, AlertCircle } from 'lucide-react';
 
-export const metadata = {
-  title: '서비스 이용약관 | 공모주 알리미 리포트',
-  description: '공모주 알리미 리포트 서비스 이용약관 및 투자 유의사항 안내입니다.',
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '서비스 이용약관',
+  description: '공모주 알리미 리포트(IPOScore) 서비스 이용약관 및 투자 유의사항 안내입니다.',
+  alternates: {
+    canonical: 'https://iposcore.kr/terms',
+  },
+  openGraph: {
+    title: '서비스 이용약관 | IPOScore',
+    description: '공모주 알리미 리포트(IPOScore) 서비스 이용약관 및 투자 유의사항',
+    url: 'https://iposcore.kr/terms',
+    images: ['https://iposcore.kr/og-image.png'],
+  },
 };
 
 export default function TermsPage() {

@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import IpoCard from '@/components/IpoCard';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { IpoStatus } from '@/types/ipo';
-import { ShieldCheck, CheckCircle2, TrendingUp } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
 
 export default function Home() {
   const PAGE_SIZE = 6;
@@ -300,6 +301,96 @@ export default function Home() {
                 공모주 전문 유튜브 및 블로그 분석가들의 긍정/신중 의견 비율을 종합 가산합니다.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* 자주 묻는 질문 (FAQ) - 검색엔진 SEO 최적화 및 스마트블록 대응 */}
+        <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
+          <div className="flex items-center gap-2 mb-4">
+            <HelpCircle className="w-5 h-5 text-blue-700" />
+            <h2 className="text-lg font-bold text-gray-900">
+              공모주 청약 자주 묻는 질문 (FAQ) & 핵심 투자 가이드
+            </h2>
+          </div>
+
+          <div className="space-y-3.5 text-xs sm:text-sm">
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+              <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-1.5">
+                <span className="text-blue-700 font-black">Q.</span>
+                2026년 공모주 청약 일정 및 수요예측 결과는 언제 업데이트되나요?
+              </h3>
+              <p className="text-gray-600 leading-relaxed pl-5">
+                금융감독원 전자공시시스템(DART)에 증권신고서 및 투자설명서, 수요예측 결과 보고서가 제출되는 즉시 실시간으로 데이터가 연동됩니다. 공모가 확정, 기관 경쟁률, 의무보유확약 비율 및 상장일 확정 일정까지 빠짐없이 갱신됩니다.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+              <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-1.5">
+                <span className="text-blue-700 font-black">Q.</span>
+                기관 수요예측 경쟁률과 의무보유확약 비율은 왜 중요한가요?
+              </h3>
+              <p className="text-gray-600 leading-relaxed pl-5">
+                기관 경쟁률은 국내외 기관 투자자들의 수요 강도를 객관적으로 증명하는 지표입니다. 통상 <strong>500:1 이상</strong>이면 흥행 성공으로 판단하며, <strong>의무보유확약 비율</strong>(기관이 상장 후 15일~6개월간 팔지 않기로 약속한 물량)이 높을수록 상장 첫날 유통 가능 물량이 급감하여 주가 급등 가능성이 높아집니다.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+              <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-1.5">
+                <span className="text-blue-700 font-black">Q.</span>
+                공모주 비례배정 5사6입 법칙과 계산기 활용법은?
+              </h3>
+              <p className="text-gray-600 leading-relaxed pl-5">
+                비례 배정 시 소수점 자리가 <strong>0.6 이상이면 1주 추가 배정(올림)</strong>, <strong>0.5 이하이면 절사(버림)</strong>되는 배정 방식입니다. 상단 메뉴의 <Link href="/calculator" className="text-blue-700 font-bold underline">공모주 비례배정 계산기</Link>를 활용하시면 투자금액별 예상 배정 주수와 마이너스통장 대출이자 비용을 감안한 실질 순수익을 1초 만에 무료로 시뮬레이션하실 수 있습니다.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+              <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-1.5">
+                <span className="text-blue-700 font-black">Q.</span>
+                공모주 상장일 주가 변동 범위(가격제한폭)는 어떻게 되나요?
+              </h3>
+              <p className="text-gray-600 leading-relaxed pl-5">
+                신규 상장일 첫날 가격제한폭은 공모가 기준 <strong>60% ~ 400% (따따블)</strong>까지 변동 가능합니다. 예를 들어 확정 공모가가 10,000원인 종목은 상장 당일 최저 6,000원에서 최고 40,000원까지 거래될 수 있습니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 검색엔진 색인 및 크롤링을 위한 전체 공모주 바로가기 허브 (Internal Linking Hub) */}
+        <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-blue-700" />
+              <h2 className="text-lg font-bold text-gray-900">
+                2026 공모주 청약 종목별 상세 분석 리포트 색인 ({initialIpos.length}개 종목)
+              </h2>
+            </div>
+            <span className="text-xs text-gray-500 hidden sm:inline">
+              * 종목명을 클릭하시면 기관 경쟁률·확약·AI 점수 상세 페이지로 이동합니다.
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-xs">
+            {initialIpos.map((ipo) => (
+              <Link
+                key={ipo.code}
+                href={`/ipo/${ipo.code}`}
+                className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all flex flex-col justify-between group"
+              >
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <span className="font-bold text-gray-900 group-hover:text-blue-700 truncate">
+                    {ipo.name}
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-semibold shrink-0">
+                    {ipo.market}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[11px] text-gray-500">
+                  <span>{ipo.code}</span>
+                  <span className="font-bold text-blue-700">{ipo.aiScore}점</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
 

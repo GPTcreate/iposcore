@@ -3,9 +3,21 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import { ArrowLeft, Info, Mail, CheckCircle2 } from 'lucide-react';
 
-export const metadata = {
-  title: '서비스 소개 및 문의 | 공모주 알리미 리포트',
-  description: '공모주 알리미 리포트의 설립 목적, 분석 방법론 및 제휴/오류 문의 안내입니다.',
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '서비스 소개 및 분석 방법론',
+  description: '공모주 알리미 리포트(IPOScore)의 설립 목적, AI 투자 매력도 산출 방법론 및 문의 안내입니다.',
+  alternates: {
+    canonical: 'https://iposcore.kr/about',
+  },
+  openGraph: {
+    title: '서비스 소개 및 분석 방법론 | IPOScore',
+    description: '공모주 알리미 리포트(IPOScore)의 설립 목적, AI 투자 매력도 산출 방법론 및 문의 안내',
+    url: 'https://iposcore.kr/about',
+    type: 'website',
+    images: ['https://iposcore.kr/og-image.png'],
+  },
 };
 
 export default function AboutPage() {

@@ -3,9 +3,20 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 
-export const metadata = {
-  title: '개인정보처리방침 | 공모주 알리미 리포트',
-  description: '공모주 알리미 리포트의 개인정보처리방침 안내입니다.',
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '개인정보처리방침',
+  description: '공모주 알리미 리포트(IPOScore)의 개인정보처리방침 안내입니다.',
+  alternates: {
+    canonical: 'https://iposcore.kr/privacy',
+  },
+  openGraph: {
+    title: '개인정보처리방침 | IPOScore',
+    description: '공모주 알리미 리포트(IPOScore)의 개인정보처리방침 안내',
+    url: 'https://iposcore.kr/privacy',
+    images: ['https://iposcore.kr/og-image.png'],
+  },
 };
 
 export default function PrivacyPage() {

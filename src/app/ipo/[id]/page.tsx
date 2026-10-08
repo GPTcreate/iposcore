@@ -64,10 +64,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `https://iposcore.kr/ipo/${ipo.code}`,
     },
     openGraph: {
-      title: `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 | 공모주 알리미`,
+      title: `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 | IPOScore`,
       description,
       url: `https://iposcore.kr/ipo/${ipo.code}`,
       type: 'article',
+      images: [
+        {
+          url: 'https://iposcore.kr/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: `${ipo.name} 공모주 청약 분석 리포트`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 | IPOScore`,
+      description,
+      images: ['https://iposcore.kr/og-image.png'],
     },
   };
 }
@@ -93,8 +107,78 @@ export default async function IpoDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const ipoJsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 - 공모가·수요예측·AI점수`,
+      description: `${ipo.name} (${ipo.code}) 공모주 청약 일정, 기관 경쟁률 ${ipo.institutionalCompetitionRate}:1, 공모가 ${ipo.confirmedPrice > 0 ? ipo.confirmedPrice.toLocaleString() + '원' : '미정'}, 주관사 ${ipo.underwriters.map(u => u.name).join(', ')}.`,
+      datePublished: new Date(ipo.subscriptionStart).toISOString(),
+      dateModified: new Date().toISOString(),
+      author: {
+        '@type': 'Organization',
+        name: 'IPOScore',
+        url: 'https://iposcore.kr',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'IPOScore',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://iposcore.kr/og-image.png',
+        },
+      },
+      image: 'https://iposcore.kr/og-image.png',
+      mainEntityOfPage: `https://iposcore.kr/ipo/${ipo.code}`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FinancialProduct',
+      name: `${ipo.name} 공모주`,
+      description: `${ipo.name} (${ipo.code}, ${ipo.market}) 신규 상장 공모주`,
+      offers: {
+        '@type': 'Offer',
+        price: ipo.confirmedPrice || ipo.priceBandMax,
+        priceCurrency: 'KRW',
+        priceValidUntil: ipo.subscriptionEnd,
+        availability:
+          ipo.status === 'SUBSCRIPTION'
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/PreOrder',
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: '홈',
+          item: 'https://iposcore.kr',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: '공모주 청약 일정',
+          item: 'https://iposcore.kr',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: `${ipo.name} (${ipo.code})`,
+          item: `https://iposcore.kr/ipo/${ipo.code}`,
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ipoJsonLd) }}
+      />
       <Header />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">

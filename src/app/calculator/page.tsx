@@ -5,9 +5,32 @@ import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
 import { Calculator, CheckCircle } from 'lucide-react';
 
-export const metadata = {
-  title: '공모주 비례 청약 계산기 | 예상 배정주수 및 대출이자 시뮬레이터',
-  description: '공모주 청약 시 투자 금액에 따른 예상 비례 배정주수와 마이너스통장 대출 이자 비용을 무료로 계산해보세요.',
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '공모주 비례배정 계산기 & 마이너스통장 이자 시뮬레이터',
+  description:
+    '투자 증거금에 따른 공모주 예상 비례배정 주수(5사6입)와 마이너스통장 대출이자, 실질 투자 수익률을 실시간으로 무료 계산해보세요.',
+  keywords: [
+    '공모주 비례배정 계산기',
+    '공모주 계산기',
+    '공모주 비례 청약',
+    '5사6입',
+    '마이너스통장 이자 계산',
+    '공모주 대출이자',
+    '공모주 증거금 계산',
+  ],
+  alternates: {
+    canonical: 'https://iposcore.kr/calculator',
+  },
+  openGraph: {
+    title: '공모주 비례배정 계산기 & 마이너스통장 이자 시뮬레이터 | IPOScore',
+    description:
+      '투자 증거금에 따른 공모주 예상 비례배정 주수(5사6입)와 마이너스통장 대출이자 실시간 무료 계산',
+    url: 'https://iposcore.kr/calculator',
+    type: 'website',
+    images: ['https://iposcore.kr/og-image.png'],
+  },
 };
 
 export default function CalculatorPage() {
