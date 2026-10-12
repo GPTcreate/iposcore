@@ -1,12 +1,26 @@
 import { NextResponse } from 'next/server';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { getAllGuides } from '@/data/guidesData';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
   
-  const rssItems = getAllEffectiveIpos().map((ipo) => {
+  const guideRssItems = getAllGuides().map((guide) => {
+    const pubDate = new Date(guide.publishedAt).toUTCString();
+    return `
+    <item>
+      <title><![CDATA[[투자 가이드] ${guide.title}]]></title>
+      <link>${siteUrl}/guides/${guide.slug}</link>
+      <guid>${siteUrl}/guides/${guide.slug}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description><![CDATA[${guide.excerpt}]]></description>
+      <category>${guide.category}</category>
+    </item>`;
+  }).join('');
+
+  const ipoRssItems = getAllEffectiveIpos().map((ipo) => {
     const pubDate = new Date(ipo.subscriptionStart).toUTCString();
     return `
     <item>
@@ -18,6 +32,8 @@ export async function GET() {
       <category>공모주</category>
     </item>`;
   }).join('');
+
+  const rssItems = `${guideRssItems}\n${ipoRssItems}`;
 
   const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">

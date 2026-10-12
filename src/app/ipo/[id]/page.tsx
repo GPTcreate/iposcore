@@ -20,6 +20,11 @@ import {
   Video,
   PieChart,
   ShieldAlert,
+  BookOpen,
+  TrendingUp,
+  HelpCircle,
+  FileText,
+  ArrowRight,
 } from 'lucide-react';
 
 interface PageProps {
@@ -533,6 +538,118 @@ export default async function IpoDetailPage({ params }: PageProps) {
                   <span className="text-gray-500">· 수수료 {uw.fee.toLocaleString()}원</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 2-1. IPOScore 에디토리얼 심층 분석 및 수급 리스크 진단 */}
+        <div className="p-6 rounded-xl bg-white border border-gray-300 shadow-2xs space-y-5">
+          <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-blue-700" />
+              <span>{ipo.name} 실전 투자 분석 &amp; 수급 리스크 진단</span>
+            </h2>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded bg-blue-50 text-blue-800 border border-blue-200">
+              IPOScore 자체 분석 칼럼
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-2">
+              <span className="font-bold text-gray-900 block text-xs sm:text-sm flex items-center gap-1.5 text-blue-900">
+                <TrendingUp className="w-4 h-4 text-blue-700" />
+                <span>상장일 유통금액 &amp; 오버행 진단</span>
+              </span>
+              <p className="text-gray-600 leading-relaxed">
+                총 시가총액 {ipo.marketCapAtIpo.toLocaleString()}억원 중 상장일 유통가능 물량은 <strong>{ipo.circulatingSupplyRate}%</strong>로, 금액 기준 <strong>약 {Math.round((ipo.marketCapAtIpo * ipo.circulatingSupplyRate) / 100).toLocaleString()}억원</strong> 수준입니다.
+              </p>
+              <div className="p-2.5 rounded bg-white border border-gray-200 text-gray-800">
+                <span className="font-semibold block mb-0.5">💡 수급 매도 압력:</span>
+                {Math.round((ipo.marketCapAtIpo * ipo.circulatingSupplyRate) / 100) <= 300
+                  ? '300억원 미만 소형 규모로 상장일 초기 매도 압력이 낮아 시초가 탄력이 높을 가능성이 큽니다.'
+                  : Math.round((ipo.marketCapAtIpo * ipo.circulatingSupplyRate) / 100) <= 600
+                  ? '300~600억원 수준의 중간 규모로 무난한 유통 물량이나 장중 차익 실현 매물을 주시해야 합니다.'
+                  : '600억원을 초과하는 중대형 물량으로 상장일 기존 주주 및 기관의 매도 물량 출회에 유의해야 합니다.'}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-2">
+              <span className="font-bold text-gray-900 block text-xs sm:text-sm flex items-center gap-1.5 text-blue-900">
+                <Building className="w-4 h-4 text-blue-700" />
+                <span>공모 규모 및 밸류에이션 매력도</span>
+              </span>
+              <p className="text-gray-600 leading-relaxed">
+                총 공모 모집 금액은 <strong>약 {ipo.totalOfferingAmount.toLocaleString()}억원</strong>이며,
+                {ipo.confirmedPrice > 0
+                  ? ` 공모가는 ${ipo.confirmedPrice.toLocaleString()}원으로 최종 확정되었습니다.`
+                  : ` 희망 공모가 밴드는 ${ipo.priceBandMin.toLocaleString()}~${ipo.priceBandMax.toLocaleString()}원입니다.`}
+              </p>
+              <div className="p-2.5 rounded bg-white border border-gray-200 text-gray-800">
+                <span className="font-semibold block mb-0.5">📊 기관 선호도 평가:</span>
+                {ipo.institutionalCompetitionRate >= 1000
+                  ? '경쟁률 1,000:1을 초과하여 기관들의 선호도가 매우 강한 흥행 종목으로 평가됩니다.'
+                  : ipo.institutionalCompetitionRate >= 500
+                  ? '경쟁률 500~1,000:1 수준으로 시장의 통상적인 관심을 무난하게 확보했습니다.'
+                  : ipo.institutionalCompetitionRate > 0
+                  ? '기관 수요예측 결과가 다소 보수적이므로 청약 전 추가적인 기업 펀더멘털 분석이 권장됩니다.'
+                  : '기관 수요예측 결과 발표 대기 중입니다. 공시 즉시 점수 및 분석이 업데이트됩니다.'}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-2">
+              <span className="font-bold text-gray-900 block text-xs sm:text-sm flex items-center gap-1.5 text-blue-900">
+                <HelpCircle className="w-4 h-4 text-blue-700" />
+                <span>실전 청약 및 자금 운용 팁</span>
+              </span>
+              <p className="text-gray-600 leading-relaxed">
+                청약 마감 후 환불일까지의 소요 일정을 확인하고, 비례 청약 시 마이너스통장 이자 비용과 파킹통장 기회비용을 비교하여 실익을 계산해야 합니다.
+              </p>
+              <div className="p-2.5 rounded bg-white border border-gray-200 text-gray-800">
+                <span className="font-semibold block mb-0.5">💰 배정 전략:</span>
+                {ipo.institutionalCompetitionRate >= 1000
+                  ? '균등 청약은 필수이며, 비례 청약 시 5사6입 단수주 커트라인을 공략하는 자금 배분이 유리합니다.'
+                  : '경쟁률 및 의무확약 수치에 따라 비례 청약 비중을 유연하게 조절하는 균등 위주의 접근이 안전합니다.'}
+              </div>
+            </div>
+          </div>
+
+          {/* 관련 실전 투자 가이드 추천 (내부 링크 연계로 SEO 및 애드센스 품질 극대화) */}
+          <div className="pt-3 border-t border-gray-200">
+            <span className="text-xs font-bold text-gray-700 block mb-2 flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-blue-700" />
+              <span>{ipo.name} 청약 전 꼭 읽어야 할 실전 투자 가이드</span>
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+              <Link
+                href="/guides/institutional-competition-and-lockup-analysis"
+                className="p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-blue-50 hover:border-blue-300 transition-colors flex items-center justify-between group"
+              >
+                <div>
+                  <span className="font-bold text-gray-900 group-hover:text-blue-700 block">수요예측 지표 읽는 법</span>
+                  <span className="text-[11px] text-gray-500">기관경쟁률·확약비율 해석 기준</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-700 shrink-0" />
+              </Link>
+              <Link
+                href="/guides/proportional-allocation-and-5-down-6-up-strategy"
+                className="p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-blue-50 hover:border-blue-300 transition-colors flex items-center justify-between group"
+              >
+                <div>
+                  <span className="font-bold text-gray-900 group-hover:text-blue-700 block">비례배정 5사6입 전략</span>
+                  <span className="text-[11px] text-gray-500">증거금 최소화 및 1주 추가 배정</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-700 shrink-0" />
+              </Link>
+              <Link
+                href="/guides/listing-day-price-limits-and-selling-timing"
+                className="p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-blue-50 hover:border-blue-300 transition-colors flex items-center justify-between group"
+              >
+                <div>
+                  <span className="font-bold text-gray-900 group-hover:text-blue-700 block">상장일 매도 타이밍</span>
+                  <span className="text-[11px] text-gray-500">변동폭 400% 구간 실전 매도법</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-700 shrink-0" />
+              </Link>
             </div>
           </div>
         </div>

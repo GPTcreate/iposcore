@@ -7,6 +7,7 @@ import IpoCard from '@/components/IpoCard';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { GUIDE_ARTICLES } from '@/data/guidesData';
 import { IpoStatus } from '@/types/ipo';
 import { ShieldCheck, CheckCircle2, TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
 
@@ -304,6 +305,57 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 신규: 공모주 투자 가이드 & 심층 분석 칼럼 추천 섹션 */}
+        <section className="my-8 p-6 sm:p-7 rounded-xl border border-gray-300 bg-white shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-gray-200 pb-3">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-blue-700" />
+              <h2 className="text-lg font-bold text-gray-900">
+                공모주 실전 투자 가이드 & 심층 분석 칼럼
+              </h2>
+            </div>
+            <Link
+              href="/guides"
+              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 group"
+            >
+              <span>전체 가이드 보기 ({GUIDE_ARTICLES.length}편 전체)</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          <p className="text-xs text-gray-600 mb-5 leading-relaxed">
+            공모주 청약이 처음이거나 실전 투자 수익률을 극대화하고 싶으신가요? 초보자 입문부터 DART 공시 해석, 비례 5사6입 법칙, 마이너스통장 대출이자 계산까지 검증된 실전 전략을 확인해 보세요.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            {GUIDE_ARTICLES.slice(0, 4).map((guide) => (
+              <Link
+                key={guide.slug}
+                href={`/guides/${guide.slug}`}
+                className="p-4 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/40 transition-all flex flex-col justify-between group shadow-2xs"
+              >
+                <div>
+                  <span className="text-[11px] font-bold text-blue-700 block mb-1">
+                    {guide.category}
+                  </span>
+                  <h3 className="font-bold text-gray-900 group-hover:text-blue-700 transition-colors line-clamp-2 leading-snug">
+                    {guide.title}
+                  </h3>
+                  <p className="text-gray-500 text-[11px] mt-1.5 line-clamp-2 leading-relaxed">
+                    {guide.excerpt}
+                  </p>
+                </div>
+                <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500 font-medium">
+                  <span>읽는 시간 {guide.readTime}</span>
+                  <span className="text-blue-700 font-bold flex items-center">
+                    읽기 <ChevronRight className="w-3 h-3" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {/* 자주 묻는 질문 (FAQ) - 검색엔진 SEO 최적화 및 스마트블록 대응 */}
         <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
           <div className="flex items-center gap-2 mb-4">
@@ -407,9 +459,11 @@ export default function Home() {
             본 사이트에서 제공하는 모든 수치 및 요약 정보는 공시 자료와 공개된 전문가 의견을 종합한 단순 참고용 자료입니다. 종목 추천이나 매수 권유가 아니며, 청약에 따른 최종 투자 책임은 투자자 본인에게 있습니다.
           </p>
           <div className="flex flex-wrap gap-4 pt-2 text-xs font-semibold text-gray-600">
-            <a href="/about" className="hover:text-blue-700 underline">서비스 소개</a>
-            <a href="/privacy" className="hover:text-blue-700 underline">개인정보처리방침</a>
-            <a href="/terms" className="hover:text-blue-700 underline">이용약관</a>
+            <Link href="/guides" className="hover:text-blue-700 underline text-blue-700 font-bold">공모주 투자 가이드</Link>
+            <Link href="/calculator" className="hover:text-blue-700 underline">비례배정 계산기</Link>
+            <Link href="/about" className="hover:text-blue-700 underline">서비스 소개</Link>
+            <Link href="/privacy" className="hover:text-blue-700 underline">개인정보처리방침</Link>
+            <Link href="/terms" className="hover:text-blue-700 underline">이용약관</Link>
             <a href="mailto:hanmanju88@gmail.com" className="hover:text-blue-700 underline">문의: hanmanju88@gmail.com</a>
           </div>
           <p className="text-[11px] text-gray-400 pt-1">

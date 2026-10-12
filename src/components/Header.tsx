@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, Calculator, Bell } from 'lucide-react';
+import { Calendar, Calculator, Bell, BookOpen } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -34,6 +34,14 @@ export default function Header() {
           >
             <Calendar className="w-4 h-4 text-gray-600 shrink-0" />
             <span className="hidden sm:inline">청약 일정</span>
+          </Link>
+          <Link
+            href="/guides"
+            className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
+            title="투자 가이드"
+          >
+            <BookOpen className="w-4 h-4 text-gray-600 shrink-0" />
+            <span className="hidden sm:inline">투자 가이드</span>
           </Link>
           <Link
             href="/calculator"
