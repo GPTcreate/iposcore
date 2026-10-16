@@ -3,6 +3,9 @@ import { runMethod2Pipeline, getKstDateString } from '@/lib/pipeline';
 import { syncNewIposFromDart } from '@/lib/ipoServerStore';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

@@ -9,6 +9,9 @@ import {
 import { IpoItem } from '@/types/ipo';
 import { calculateIpoScore } from '@/lib/scoring';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // 백그라운드 자동 동기화 상태 관리 (30분 주기 스케줄링)
 let lastAutoSyncTime = 0;
 const AUTO_SYNC_INTERVAL_MS = 30 * 60 * 1000;

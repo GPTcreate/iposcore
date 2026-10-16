@@ -6,7 +6,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "멜콘",
     "code": "377480",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-01",
     "subscriptionEnd": "2026-10-02",
     "refundDate": "2026-10-07",
@@ -93,7 +93,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "진코스텍",
     "code": "252540",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-02",
     "subscriptionEnd": "2026-10-06",
     "refundDate": "2026-10-08",
@@ -168,7 +168,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "엘리스그룹",
     "code": "459100",
     "market": "KOSDAQ",
-    "status": "SUBSCRIPTION",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-07",
     "subscriptionEnd": "2026-10-08",
     "refundDate": "2026-10-12",
@@ -245,14 +245,14 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "엠에스바이오",
     "code": "391020",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-12",
     "subscriptionEnd": "2026-10-13",
     "refundDate": "2026-10-15",
     "listingDate": "2026-10-23",
     "priceBandMin": 8000,
     "priceBandMax": 9500,
-    "confirmedPrice": 0,
+    "confirmedPrice": 9500,
     "underwriters": [
       {
         "name": "KB증권",
@@ -260,17 +260,17 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 1500
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
+    "institutionalCompetitionRate": 1150.0,
+    "lockupCommitmentRate": 32.0,
     "circulatingSupplyRate": 31.8,
     "totalOfferingAmount": 190,
     "marketCapAtIpo": 1100,
     "aiSummary": {
-      "headline": "천연물 추출 기반 관절염·간기능 개선 기능성 원료 전문 바이오텍",
+      "headline": "청약 경쟁률 3,076:1 대흥행 마감! 10월 15일 환불, 10월 23일 디티에스와 동시 상장",
       "bulletPoints": [
-        "개별인정형 건강기능식품 원료 식약처 승인 다수 보유",
-        "주요 대형 제약사향 독점 원료 공급으로 안정적 현금흐름 창출",
-        "중국·동남아 글로벌 기능성 식품 시장 수출 가시화"
+        "일반 청약 최종 경쟁률 3,076.02:1 기록, 천연물 건강기능식품 고성장 기대감",
+        "확정 공모가 9,500원 (상단 확정), 증거금 2조 3,000억원 집계",
+        "10월 15일(목) 환불 완료 후 10월 23일(금) 코스닥 신규 상장 대기"
       ],
       "positivePoints": [
         "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 중",
@@ -286,22 +286,23 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 10
     },
     "expertReviews": [],
-    "aiScore": 64,
-    "scoreGrade": "B"
+    "aiScore": 92,
+    "scoreGrade": "S",
+    "generalCompetitionRate": 3076.02
   },
   {
     "id": "dts-tech",
     "name": "디티에스",
     "code": "284010",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-13",
     "subscriptionEnd": "2026-10-14",
     "refundDate": "2026-10-16",
-    "listingDate": "2026-10-26",
+    "listingDate": "2026-10-23",
     "priceBandMin": 12000,
     "priceBandMax": 14000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 18500,
     "underwriters": [
       {
         "name": "대신증권",
@@ -309,17 +310,17 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
+    "institutionalCompetitionRate": 1042.0,
+    "lockupCommitmentRate": 28.5,
     "circulatingSupplyRate": 28.2,
     "totalOfferingAmount": 252,
     "marketCapAtIpo": 1680,
     "aiSummary": {
-      "headline": "LNG 추진선 및 발전 플랜트용 공랭식 열교환기 글로벌 탑티어",
+      "headline": "공모가 18,500원(상단 초과) 확정 및 청약 998:1 흥행 마감! 10월 23일 상장",
       "bulletPoints": [
-        "조선·해양 친환경 고부가가치 선박 수주 호황의 직접 수혜",
-        "글로벌 에너지 메이저사 벤더 등록 완료로 해외 수주 잔고 급증",
-        "공랭식 열교환기 독자 특허 설계로 에너지 효율 극대화"
+        "일반 청약 경쟁률 998.39:1 기록, 청약 증거금 1조 2,000억원 유입",
+        "확정 공모가 18,500원 (희망밴드 14,000원 대폭 초과)",
+        "10월 16일(금) 증거금 환불 완료, 10월 23일(금) 코스닥 신규 상장 예정"
       ],
       "positivePoints": [
         "조선 슈퍼사이클 진입에 따른 탄탄한 3년치 일감 확보",
@@ -335,22 +336,23 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 7
     },
     "expertReviews": [],
-    "aiScore": 69,
-    "scoreGrade": "B"
+    "aiScore": 89,
+    "scoreGrade": "S",
+    "generalCompetitionRate": 998.39
   },
   {
     "id": "ck-solution",
     "name": "씨케이솔루션",
     "code": "381980",
     "market": "KOSPI",
-    "status": "UPCOMING",
-    "subscriptionStart": "2026-10-16",
-    "subscriptionEnd": "2026-10-17",
-    "refundDate": "2026-10-21",
-    "listingDate": "2026-10-29",
-    "priceBandMin": 15700,
-    "priceBandMax": 18000,
-    "confirmedPrice": 0,
+    "status": "LISTED",
+    "subscriptionStart": "2025-03-04",
+    "subscriptionEnd": "2025-03-05",
+    "refundDate": "2025-03-07",
+    "listingDate": "2025-03-17",
+    "priceBandMin": 13500,
+    "priceBandMax": 15000,
+    "confirmedPrice": 15000,
     "underwriters": [
       {
         "name": "NH투자증권",
@@ -364,7 +366,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 567,
     "marketCapAtIpo": 3420,
     "aiSummary": {
-      "headline": "2차전지 배터리 드라이룸 & 클린룸 공조 시스템 유가증권 상장 도전",
+      "headline": "2차전지 배터리 드라이룸 클린룸 공조 시스템 유가증권 상장 완료",
       "bulletPoints": [
         "LG에너지솔루션, 삼성SDI, SK온 국내 배터리 3사 드라이룸 메인 시공사",
         "북미·유럽 현지 공장 동반 진출로 해외 법인 매출 급성장",
@@ -384,8 +386,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 7
     },
     "expertReviews": [],
-    "aiScore": 71,
-    "scoreGrade": "B"
+    "aiScore": 84,
+    "scoreGrade": "A"
   },
   {
     "id": "barofarm",
@@ -393,12 +395,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "code": "488210",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-10-20",
-    "subscriptionEnd": "2026-10-21",
-    "refundDate": "2026-10-23",
-    "listingDate": "2026-10-30",
-    "priceBandMin": 14000,
-    "priceBandMax": 16500,
+    "subscriptionStart": "2026-11-02",
+    "subscriptionEnd": "2026-11-03",
+    "refundDate": "2026-11-05",
+    "listingDate": "2026-11-12",
+    "priceBandMin": 16400,
+    "priceBandMax": 20200,
     "confirmedPrice": 0,
     "underwriters": [
       {
@@ -413,11 +415,11 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 330,
     "marketCapAtIpo": 2200,
     "aiSummary": {
-      "headline": "전국 약국 80%가 사용하는 의약품 주문 통합 B2B 플랫폼 1위",
+      "headline": "전국 약국 80% 점유 의약품 B2B 플랫폼 바로팜, 11월 2일~3일 청약 연기 확정",
       "bulletPoints": [
-        "약국 전용 원스톱 주문·품절 입고 알림 SaaS 솔루션 시장 장악",
-        "제약사 다이렉트 마케팅 및 결제 금융 서비스로 비즈니스 모델 확장",
-        "월간 활성 거래액(GMV) 매 분기 두 자릿수 성장률 달성"
+        "정정 공시 반영: 청약 일정이 11월 2일(월) ~ 11월 3일(화)로 최종 확정",
+        "희망 공모가 16,400 ~ 20,200원, 환불일: 11월 5일(목), 주관사: 미래에셋증권",
+        "약국 원스톱 주문 SaaS 락인 효과와 제약 광고·커머스 고성장세"
       ],
       "positivePoints": [
         "강력한 약국 네트워크 락인(Lock-in) 효과와 압도적 시장 점유율",
@@ -433,8 +435,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 69,
-    "scoreGrade": "B"
+    "aiScore": 80,
+    "scoreGrade": "A"
   },
   {
     "id": "dongwon-parts",
@@ -442,12 +444,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "code": "342930",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-10-22",
-    "subscriptionEnd": "2026-10-23",
-    "refundDate": "2026-10-27",
-    "listingDate": "2026-11-04",
-    "priceBandMin": 22000,
-    "priceBandMax": 26000,
+    "subscriptionStart": "2026-11-02",
+    "subscriptionEnd": "2026-11-03",
+    "refundDate": "2026-11-05",
+    "listingDate": "2026-11-13",
+    "priceBandMin": 23000,
+    "priceBandMax": 26500,
     "confirmedPrice": 0,
     "underwriters": [
       {
@@ -462,11 +464,11 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 390,
     "marketCapAtIpo": 2600,
     "aiSummary": {
-      "headline": "반도체 식각·증착 장비용 초정밀 세라믹 & 메탈 가공 핵심 부품사",
+      "headline": "반도체 식각·증착 부품 선도 동원파츠, 11월 2일~3일 일반 청약",
       "bulletPoints": [
-        "글로벌 톱 반도체 장비사(어플라이드 머티어리얼즈 등) 직납 레퍼런스",
-        "초미세 선단 공정 전환에 따른 정밀 챔버 및 샤워헤드 교체 수요 급증",
-        "5축 초정밀 가공 스마트 팩토리 완전 자동화 라인 가동"
+        "램리서치·세메스 등 글로벌 톱 반도체 장비사향 초정밀 챔버 부품 직납",
+        "희망 공모가 23,000 ~ 26,500원, 청약일: 11월 2일(월) ~ 11월 3일(화)",
+        "환불일: 11월 5일(목), 주관사: 삼성증권"
       ],
       "positivePoints": [
         "상장일 유통물량 23.8%로 매우 가벼운 수급 모멘텀",
@@ -482,8 +484,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 5
     },
     "expertReviews": [],
-    "aiScore": 73,
-    "scoreGrade": "B"
+    "aiScore": 82,
+    "scoreGrade": "A"
   },
   {
     "id": "creates",
@@ -491,31 +493,32 @@ export const MOCK_IPOS: IpoItem[] = [
     "code": "462900",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-10-26",
-    "subscriptionEnd": "2026-10-27",
-    "refundDate": "2026-10-29",
-    "listingDate": "2026-11-06",
-    "priceBandMin": 10500,
-    "priceBandMax": 12500,
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-30",
+    "priceBandMin": 15000,
+    "priceBandMax": 18000,
     "confirmedPrice": 0,
     "underwriters": [
       {
         "name": "삼성증권",
-        "allocatedShares": 720000,
+        "allocatedShares": 700000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 30.5,
+    "circulatingSupplyRate": 29.8,
     "totalOfferingAmount": 360,
     "marketCapAtIpo": 2150,
     "aiSummary": {
-      "headline": "초고속 카메라 센서 기반 글로벌 골프 론치모니터(QED/UNEEKOR) 선도기업",
+      "headline": "글로벌 골프 론치모니터(UNEEKOR) 10월 20일~21일 일반 청약 개시",
       "bulletPoints": [
-        "미국 개인용 골프 시뮬레이터 및 아웃도어 론치모니터 시장 점유율 상위권",
-        "자체 비전 AI 알고리즘으로 볼 스핀 및 클럽 궤적 초정밀 실시간 계측",
-        "해외 매출 비중 70% 이상으로 글로벌 엔터테인먼트 시장 공략"
+        "초고속 비전 센서 기반 미국 골프 시뮬레이터 시장 점유율 최상위권",
+        "희망 공모가 15,000 ~ 18,000원, 청약 기간: 10월 20일(화) ~ 10월 21일(수)",
+        "환불일: 10월 23일(금), 대표 주관사: 삼성증권",
+        "구독형 골프 시뮬레이션 SaaS 매출 확대로 북미 시장 고성장 지속"
       ],
       "positivePoints": [
         "미국 시장 내 프리미엄 브랜드 인지도 확립 및 높은 재구매율",
@@ -531,8 +534,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 7
     },
     "expertReviews": [],
-    "aiScore": 65,
-    "scoreGrade": "B"
+    "aiScore": 79,
+    "scoreGrade": "A"
   },
   {
     "id": "tne-korea",
@@ -540,31 +543,32 @@ export const MOCK_IPOS: IpoItem[] = [
     "code": "382010",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-10-28",
-    "subscriptionEnd": "2026-10-29",
-    "refundDate": "2026-10-31",
-    "listingDate": "2026-11-10",
-    "priceBandMin": 13000,
-    "priceBandMax": 15000,
-    "confirmedPrice": 0,
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-29",
+    "priceBandMin": 12600,
+    "priceBandMax": 15300,
+    "confirmedPrice": 15300,
     "underwriters": [
       {
         "name": "신한투자증권",
-        "allocatedShares": 550000,
+        "allocatedShares": 600000,
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
+    "institutionalCompetitionRate": 982.5,
+    "lockupCommitmentRate": 21.4,
     "circulatingSupplyRate": 26.1,
     "totalOfferingAmount": 238,
     "marketCapAtIpo": 1550,
     "aiSummary": {
-      "headline": "수소연료전지 및 반도체 공정용 초고속 공기베어링 터보블로워 국산화 선도",
+      "headline": "확정 공모가 15,300원(상단) 확정! 수소연료전지 터보블로워 10월 20일~21일 청약",
       "bulletPoints": [
-        "오일리스(Oil-less) 공기포일베어링 원천기술로 친환경 고효율 송풍기 상용화",
-        "현대차 수소 상용차 및 건물용 연료전지 공기공급기 공급사 선정",
-        "산업용 터보압축기 교체 수요 증가로 연평균 30% 매출 성장"
+        "수요예측 결과 공모 희망밴드 최상단인 15,300원으로 최종 확정",
+        "청약 일정: 2026년 10월 20일(화) ~ 10월 21일(수), 주관사: 신한투자증권",
+        "환불일: 2026년 10월 23일(금), 상장예정일: 10월 29일(목)",
+        "공기베어링 원천기술 기반 친환경 고효율 수소·산업용 블로워 독점력 확보"
       ],
       "positivePoints": [
         "초고속 회전체 원천기술 보유로 높은 기술적 진입장벽",
@@ -580,8 +584,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 69,
-    "scoreGrade": "B"
+    "aiScore": 86,
+    "scoreGrade": "A"
   },
   {
     "id": "lablup",
@@ -589,12 +593,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "code": "481020",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-11-03",
-    "subscriptionEnd": "2026-11-04",
-    "refundDate": "2026-11-06",
-    "listingDate": "2026-11-13",
-    "priceBandMin": 24000,
-    "priceBandMax": 29000,
+    "subscriptionStart": "2026-10-22",
+    "subscriptionEnd": "2026-10-23",
+    "refundDate": "2026-10-27",
+    "listingDate": "2026-11-04",
+    "priceBandMin": 19000,
+    "priceBandMax": 22000,
     "confirmedPrice": 0,
     "underwriters": [
       {
@@ -605,15 +609,15 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 25.8,
+    "circulatingSupplyRate": 24.8,
     "totalOfferingAmount": 480,
     "marketCapAtIpo": 3200,
     "aiSummary": {
-      "headline": "엔비디아 파트너사, 생성형 AI GPU 클러스터 가상화 플랫폼 Backend.AI",
+      "headline": "엔비디아 파트너사 AI GPU 가상화 솔루션 래블업, 10월 22일~23일 청약",
       "bulletPoints": [
-        "고가 GPU 자원을 조각내어 공유·배분하는 AI 분산 인프라 플랫폼 기술",
-        "국내 주요 통신사, 클라우드 CSP사 및 대기업 연구소 필수 도입",
-        "소버린 AI 인프라 확산에 따른 글로벌 라이선스 수출 성장"
+        "정정 공시 완료: 청약 일정이 10월 22일(목) ~ 10월 23일(금)로 확정",
+        "희망 공모가 19,000 ~ 22,000원, 환불일: 10월 27일(화), 주관사: NH투자증권",
+        "고가 GPU 인프라 분산 효율화 Backend.AI 플랫폼 글로벌 도입 가속"
       ],
       "positivePoints": [
         "AI 인프라 효율화 소프트웨어 분야 독보적인 기술력과 레퍼런스",
@@ -629,8 +633,8 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 4
     },
     "expertReviews": [],
-    "aiScore": 70,
-    "scoreGrade": "B"
+    "aiScore": 83,
+    "scoreGrade": "A"
   },
   {
     "id": "intellivix",
@@ -638,31 +642,32 @@ export const MOCK_IPOS: IpoItem[] = [
     "code": "372100",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-11-09",
-    "subscriptionEnd": "2026-11-10",
-    "refundDate": "2026-11-12",
-    "listingDate": "2026-11-19",
-    "priceBandMin": 11000,
-    "priceBandMax": 13500,
+    "subscriptionStart": "2026-10-21",
+    "subscriptionEnd": "2026-10-22",
+    "refundDate": "2026-10-26",
+    "listingDate": "2026-10-31",
+    "priceBandMin": 7600,
+    "priceBandMax": 9000,
     "confirmedPrice": 0,
     "underwriters": [
       {
         "name": "미래에셋증권",
-        "allocatedShares": 600000,
+        "allocatedShares": 625000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 28.9,
+    "circulatingSupplyRate": 25.5,
     "totalOfferingAmount": 295,
     "marketCapAtIpo": 1850,
     "aiSummary": {
-      "headline": "국내 1호 지능형 CCTV 공공인증 AI 비전 영상분석 솔루션 강자",
+      "headline": "13년 연속 흑자 안전 AI 딥테크 인텔리빅스, 10월 21일~22일 일반 청약",
       "bulletPoints": [
-        "화재, 침입, 쓰러짐 등 복합 이상행동을 실시간 감지하는 비전 AI 알고리즘",
-        "전국 지자체 통합관제센터 및 스마트시티, 국방 안보 프로젝트 수주 점유율 1위",
-        "엣지 AI 박스 하드웨어 일체형 솔루션으로 B2B 산업안전 분야 확장"
+        "지능형 영상관제(Vizion AI) 및 생성형 AI 플랫폼 보유한 알짜 흑자 테크기업",
+        "희망 공모가 7,600 ~ 9,000원, 청약 기간: 10월 21일(수) ~ 10월 22일(목)",
+        "환불일: 10월 26일(월), 대표 주관사: 미래에셋증권",
+        "스마트시티·산재예방 관제 시장 개화로 공공 및 대기업 수주 확대"
       ],
       "positivePoints": [
         "공공 안전 및 중대재해처벌법 강화에 따른 B2B 영상관제 수요 폭증",
@@ -678,15 +683,15 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 69,
-    "scoreGrade": "B"
+    "aiScore": 81,
+    "scoreGrade": "A"
   },
   {
     "id": "brills",
     "name": "브릴스",
     "code": "471900",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-09-22",
     "subscriptionEnd": "2026-09-23",
     "refundDate": "2026-09-25",
@@ -735,7 +740,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "덕산넵코어스",
     "code": "461230",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-09-23",
     "subscriptionEnd": "2026-09-24",
     "refundDate": "2026-09-26",
@@ -784,7 +789,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "빅웨이브로보틱스",
     "code": "468300",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-09-24",
     "subscriptionEnd": "2026-09-25",
     "refundDate": "2026-09-29",
@@ -1264,5 +1269,683 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": [],
     "aiScore": 77,
     "scoreGrade": "A"
+  },
+  {
+    "id": "한화플러스제6호기업인수목적",
+    "name": "한화플러스제6호기업인수목적",
+    "code": "450043",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-30",
+    "priceBandMin": 2000,
+    "priceBandMax": 2000,
+    "confirmedPrice": 2000,
+    "underwriters": [
+      {
+        "name": "한화투자증권",
+        "allocatedShares": 3500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 85.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 72,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "공모가 2,000원 신규 스팩! 한화플러스제6호스팩 10월 20일~21일 청약",
+      "bulletPoints": [
+        "공모가 2,000원 고정, 청약 기간: 2026년 10월 20일(화) ~ 10월 21일(수)",
+        "환불일: 10월 23일(금), 대표 주관사: 한화투자증권 (일반 청약한도 15만주)",
+        "합병 실패 시에도 원금과 3년치 은행 이자 보장되는 안정적 하방 구조"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "이에스티",
+    "name": "이에스티",
+    "code": "466100",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-22",
+    "subscriptionEnd": "2026-10-23",
+    "refundDate": "2026-10-27",
+    "listingDate": "2026-11-05",
+    "priceBandMin": 10600,
+    "priceBandMax": 12400,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 450000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 26.2,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 77,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "반도체 정전척(ESC) 국산화 선도기업 이에스티, 10월 22일~23일 일반 청약",
+      "bulletPoints": [
+        "웨이퍼 초정밀 고정 핵심 정전척 원천기술 보유 소부장 특례상장",
+        "희망 공모가: 10,600 ~ 12,400원, 청약일: 10월 22일(목) ~ 10월 23일(금)",
+        "환불일: 10월 27일(화), 대표 주관사: 대신증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "아이엠기업인수목적1호",
+    "name": "아이엠기업인수목적1호",
+    "code": "469272",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-26",
+    "subscriptionEnd": "2026-10-27",
+    "refundDate": "2026-10-29",
+    "listingDate": "2026-11-06",
+    "priceBandMin": 2000,
+    "priceBandMax": 2000,
+    "confirmedPrice": 2000,
+    "underwriters": [
+      {
+        "name": "iM증권",
+        "allocatedShares": 3000000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 85.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 71,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "공모가 2,000원! iM증권 신규 스팩 아이엠1호스팩 10월 26일~27일 청약",
+      "bulletPoints": [
+        "확정 공모가 2,000원, 청약 일정: 10월 26일(월) ~ 10월 27일(화)",
+        "환불일: 10월 29일(목), 주관사: iM증권",
+        "원금 및 연복리 반환예치 이자가 보장되는 저위험 스팩 공모주"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "에이엘로봇",
+    "name": "에이엘로봇",
+    "code": "465480",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-26",
+    "subscriptionEnd": "2026-10-27",
+    "refundDate": "2026-10-29",
+    "listingDate": "2026-11-06",
+    "priceBandMin": 15700,
+    "priceBandMax": 17600,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 24.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 78,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "로봇 힘·토크 센서 및 제어 솔루션 에이엘로봇, 10월 26일~27일 청약",
+      "bulletPoints": [
+        "협동로봇 및 스마트 팩토리 필수 초정밀 센서 융합 시스템 국산화",
+        "희망 공모가 15,700 ~ 17,600원, 청약일: 10월 26일(월) ~ 10월 27일(화)",
+        "환불일: 10월 29일(목), 대표 주관사: 대신증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "엠비디",
+    "name": "엠비디",
+    "code": "336680",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-28",
+    "subscriptionEnd": "2026-10-29",
+    "refundDate": "2026-11-02",
+    "listingDate": "2026-11-10",
+    "priceBandMin": 9600,
+    "priceBandMax": 11700,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "하나증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "3D 세포배양 맞춤형 약물 반응 예측 플랫폼 엠비디, 10월 28일~29일 청약",
+      "bulletPoints": [
+        "정정 공시 완료: 10월 28일(수) ~ 10월 29일(목) 청약 진행",
+        "희망 공모가 9,600 ~ 11,700원, 환불일: 11월 2일(월), 주관사: 하나증권",
+        "공모주식 전량 신주 발행으로 연구개발 및 글로벌 임상 확장 자금 유입"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "넥스아이",
+    "name": "넥스아이",
+    "code": "447253",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-03",
+    "subscriptionEnd": "2026-11-04",
+    "refundDate": "2026-11-06",
+    "listingDate": "2026-11-13",
+    "priceBandMin": 10500,
+    "priceBandMax": 12500,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "KB증권",
+        "allocatedShares": 500000,
+        "fee": 1500
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 25.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "머신비전 3D 검사 솔루션 넥스아이, 11월 3일~4일 일반 청약 개시",
+      "bulletPoints": [
+        "희망 공모가 10,500 ~ 12,500원, 청약일: 11월 3일(화) ~ 11월 4일(수)",
+        "환불일: 11월 6일(금), 대표 주관사: KB증권",
+        "반도체 및 2차전지 불량 자동 검출 비전 AI 장비 수요 확대"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "영광와이케이엠씨",
+    "name": "영광와이케이엠씨",
+    "code": "475580",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-04",
+    "subscriptionEnd": "2026-11-05",
+    "refundDate": "2026-11-09",
+    "listingDate": "2026-11-17",
+    "priceBandMin": 9400,
+    "priceBandMax": 11000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 73,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "정밀 금속 가공 및 알루미늄 아노다이징 영광와이케이엠씨, 11월 4일~5일 청약",
+      "bulletPoints": [
+        "희망 공모가: 9,400 ~ 11,000원, 청약 기간: 11월 4일(수) ~ 11월 5일(목)",
+        "환불일: 11월 9일(월), 주관사: 미래에셋증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "옵토닉스",
+    "name": "옵토닉스",
+    "code": "485424",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-05",
+    "subscriptionEnd": "2026-11-06",
+    "refundDate": "2026-11-10",
+    "listingDate": "2026-11-18",
+    "priceBandMin": 10000,
+    "priceBandMax": 12000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "신한투자증권",
+        "allocatedShares": 450000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 27.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 74,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "초정밀 광학 렌즈 및 레이저 모듈 전문 옵토닉스, 11월 5일~6일 청약",
+      "bulletPoints": [
+        "희망 공모가: 10,000 ~ 12,000원, 청약 기간: 11월 5일(목) ~ 11월 6일(금)",
+        "환불일: 11월 10일(화), 주관사: 신한투자증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "하나에어로다이내믹스",
+    "name": "하나에어로다이내믹스",
+    "code": "475960",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-10",
+    "subscriptionEnd": "2026-11-11",
+    "refundDate": "2026-11-13",
+    "listingDate": "2026-11-20",
+    "priceBandMin": 4700,
+    "priceBandMax": 5700,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "하나증권",
+        "allocatedShares": 700000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 24.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 76,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "항공우주 복합재 및 가스터빈 부품사 하나에어로다이내믹스, 11월 10일~11일 청약",
+      "bulletPoints": [
+        "희망 공모가: 4,700 ~ 5,700원, 청약일: 11월 10일(화) ~ 11월 11일(수)",
+        "환불일: 11월 13일(금), 주관사: 하나증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "엔키화이트햇",
+    "name": "엔키화이트햇",
+    "code": "471900",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-23",
+    "priceBandMin": 13000,
+    "priceBandMax": 15000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "NH투자증권",
+        "allocatedShares": 400000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 23.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 76,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "사이버 보안 및 침해사고 방어 전문 엔키화이트햇, 11월 12일~13일 청약",
+      "bulletPoints": [
+        "희망 공모가: 13,000 ~ 15,000원, 청약일: 11월 12일(목) ~ 11월 13일(금)",
+        "환불일: 11월 17일(화), 주관사: NH투자증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "제이앤티지",
+    "name": "제이앤티지",
+    "code": "461230",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-24",
+    "priceBandMin": 26400,
+    "priceBandMax": 30000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 22.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 79,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "수소연료전지 기체확산층(GDL) 국산화 제이앤티지, 11월 12일~13일 일반 청약",
+      "bulletPoints": [
+        "희망 공모가: 26,400 ~ 30,000원, 청약일: 11월 12일(목) ~ 11월 13일(금)",
+        "환불일: 11월 17일(화), 주관사: 대신증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "씨앤엠",
+    "name": "씨앤엠",
+    "code": "468300",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-25",
+    "priceBandMin": 10000,
+    "priceBandMax": 10000,
+    "confirmedPrice": 10000,
+    "underwriters": [
+      {
+        "name": "KB증권",
+        "allocatedShares": 600000,
+        "fee": 1500
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "반도체 패키징 검사 장비 전문 씨앤엠, 11월 12일~13일 공모 청약 개시",
+      "bulletPoints": [
+        "공모가 10,000원, 청약 기간: 11월 12일(목) ~ 11월 13일(금)",
+        "환불일: 11월 17일(화), 대표 주관사: KB증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "아델",
+    "name": "아델",
+    "code": "463510",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-23",
+    "subscriptionEnd": "2026-11-24",
+    "refundDate": "2026-11-26",
+    "listingDate": "2026-12-03",
+    "priceBandMin": 18000,
+    "priceBandMax": 21000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 400000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 25.0,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 78,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "알츠하이머 타우 단백질 표적 항체 치료제 바이오텍 아델, 11월 23일~24일 청약",
+      "bulletPoints": [
+        "희망 공모가: 18,000 ~ 21,000원, 청약일: 11월 23일(월) ~ 11월 24일(화)",
+        "환불일: 11월 26일(목), 주관사: 한국투자증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "케이엠에프",
+    "name": "케이엠에프",
+    "code": "454392",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-24",
+    "subscriptionEnd": "2026-11-25",
+    "refundDate": "2026-11-27",
+    "listingDate": "2026-12-04",
+    "priceBandMin": 15000,
+    "priceBandMax": 17800,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 24.5,
+    "totalOfferingAmount": 250,
+    "marketCapAtIpo": 1800,
+    "aiScore": 76,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "원자력 및 수소 플랜트 고압 배관 피팅 케이엠에프, 11월 24일~25일 청약",
+      "bulletPoints": [
+        "희망 공모가: 15,000 ~ 17,800원, 청약 기간: 11월 24일(화) ~ 11월 25일(수)",
+        "환불일: 11월 27일(금), 주관사: 미래에셋증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": []
   }
 ];

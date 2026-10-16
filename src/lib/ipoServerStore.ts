@@ -337,14 +337,34 @@ export async function syncNewIposFromDart(options?: {
         .replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '')
         .trim();
 
-      if (filing.report_nm.includes('철회')) continue;
+      const existingIpo = allCurrentIpos.find(
+        (i) => i.name === cleanName || (filing.stock_code && i.code === filing.stock_code)
+      );
 
-      // 1. 기존 등록 종목의 공시가 '발행조건확정'인 경우 확정 공모가 자동 갱신
-      if (filing.report_nm.includes('발행조건확정')) {
-        const existingIpo = allCurrentIpos.find(
-          (i) => i.name === cleanName || (filing.stock_code && i.code === filing.stock_code)
-        );
-        if (existingIpo && existingIpo.confirmedPrice === 0 && existingIpo.priceBandMax > 0) {
+      // 1. 공모 철회 공시 접수 시 공모 취소 상태로 자동 전환
+      if (filing.report_nm.includes('철회')) {
+        if (existingIpo) {
+          existingIpo.isCancelled = true;
+          existingIpo.cancelReason = '금융감독원 DART 공모 철회 신고서 접수 (일정 취소)';
+          addOrUpdateIpo(existingIpo);
+        }
+        continue;
+      }
+
+      // 2. '증권발행실적보고서' 접수 시: 일반 청약 마감 및 상장 대기 상태 자동 전이
+      if (filing.report_nm.includes('증권발행실적보고서') && existingIpo) {
+        if (existingIpo.status === 'UPCOMING' || existingIpo.status === 'SUBSCRIPTION') {
+          existingIpo.status = 'WAITING_LISTING';
+          if (existingIpo.confirmedPrice === 0 && existingIpo.priceBandMax > 0) {
+            existingIpo.confirmedPrice = existingIpo.priceBandMax;
+          }
+          addOrUpdateIpo(existingIpo);
+        }
+      }
+
+      // 3. '발행조건확정' 공시 접수 시: 확정 공모가 갱신
+      if (filing.report_nm.includes('발행조건확정') && existingIpo) {
+        if (existingIpo.confirmedPrice === 0 && existingIpo.priceBandMax > 0) {
           existingIpo.confirmedPrice = existingIpo.priceBandMax;
           addOrUpdateIpo(existingIpo);
         }

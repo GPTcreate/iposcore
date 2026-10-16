@@ -66,13 +66,16 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
     return 'WAITING_LISTING';
   }
 
-  // 3. 청약 시작일 ~ 청약 마감일 16시 이전 사이
-  if (todayStr >= ipo.subscriptionStart && todayStr <= ipo.subscriptionEnd) {
+  // 3. 청약 시작일 ~ 청약 마감일 16시 이전 사이 (단, 토/일 주말은 금융시장 휴장이므로 청약 진행 제외)
+  const dayOfWeek = getKstDate(now).getDay(); // 0: 일, 6: 토
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+  if (!isWeekend && todayStr >= ipo.subscriptionStart && todayStr <= ipo.subscriptionEnd) {
     return 'SUBSCRIPTION';
   }
 
-  // 4. 청약 시작일 이전
-  if (todayStr < ipo.subscriptionStart) {
+  // 4. 청약 시작일 이전이거나 주말 대기 중인 경우
+  if (todayStr <= ipo.subscriptionStart || (isWeekend && todayStr <= ipo.subscriptionEnd)) {
     return 'UPCOMING';
   }
 

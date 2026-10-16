@@ -62,10 +62,15 @@ export default function Home() {
     .sort((a, b) => {
       const priorityDiff = (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
       if (priorityDiff !== 0) return priorityDiff;
-      // 같은 상태 내에서는 청약 시작일/상장일 기준 최신 및 임박 순
+      // 상장 완료 종목은 최근 상장일 역순(내림차순) 정렬
+      if (a.status === 'LISTED') {
+        return (b.listingDate || b.subscriptionStart || '').localeCompare(a.listingDate || a.subscriptionStart || '');
+      }
+      // 상장 대기 종목은 상장 임박 순(오름차순) 정렬
       if (a.status === 'WAITING_LISTING') {
         return (a.listingDate || '').localeCompare(b.listingDate || '');
       }
+      // 청약 예정 및 진행 종목은 청약일 임박 순(오름차순) 정렬
       return (a.subscriptionStart || '').localeCompare(b.subscriptionStart || '');
     });
 
