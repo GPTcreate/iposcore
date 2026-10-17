@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/validate-ipo-data.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:data": "node scripts/validate-ipo-data.mjs",
+    "audit:dart": "node scripts/audit-dart-disclosures.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.49.0",

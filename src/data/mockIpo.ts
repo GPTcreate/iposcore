@@ -189,17 +189,24 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 388.8,
+    "generalCompetitionRate": 408.17,
     "lockupCommitmentRate": 15.2,
     "circulatingSupplyRate": 20.8,
     "totalOfferingAmount": 2011,
     "marketCapAtIpo": 10054,
+    "subscriptionResults": {
+      "totalAccounts": 289054,
+      "totalDepositAmount": 10.26,
+      "equalAllocationShares": 0.96,
+      "proportionalCompetitionRate": 816.34
+    },
     "aiSummary": {
-      "headline": "확정 공모가 90,500원(상단) 확정! 1조원대 AI 유니콘 10월 7일~8일 일반 청약 개시",
+      "headline": "일반 청약 경쟁률 408:1 (비례 816:1) 흥행! 증거금 10.26조원 돌파, 10월 20일 코스닥 상장",
       "bulletPoints": [
-        "기관 수요예측 참여 기관 2,367곳, 참여 물량 99.7% 상단 이상 제시로 90,500원 확정",
-        "공모 규모 2,011억원, 상장 후 시가총액 1조 54억원으로 하반기 코스닥 최대어 등극",
-        "상장 직후 유통가능물량이 20.81%로 대형 테크주 중 매우 타이트한 품절주 수급 구조",
-        "청약 기간: 10월 7일(수) ~ 10월 8일(목), 주관사: 미래에셋증권(대표) / 삼성증권(공동)"
+        "일반 청약 최종 경쟁률 408.17:1 (비례배정 경쟁률 816.34:1) 기록, 청약 증거금 10조 2,598억원 운집",
+        "확정 공모가 90,500원 (상단 확정), 상장 후 시총 1조 54억원으로 하반기 코스닥 최대어 등극",
+        "균등 배정 1인당 약 0.96주 (추첨 1주 또는 0주), 10월 12일 환불 완료 후 10월 20일(화) 코스닥 신규 상장 대기",
+        "상장 직후 유통가능물량 20.81%로 대형 테크주 중 매우 타이트한 품절주 수급 구조"
       ],
       "positivePoints": [
         "자체 AI 실습 플랫폼 LXP 및 초거대 AI 데이터센터(PMDC) 독보적 경쟁력",
@@ -314,24 +321,38 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "대신증권",
-        "allocatedShares": 600000,
+        "allocatedShares": 501507,
+        "fee": 2000
+      },
+      {
+        "name": "유진투자증권",
+        "allocatedShares": 55723,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 1042.0,
-    "lockupCommitmentRate": 28.5,
+    "generalCompetitionRate": 986.89,
+    "lockupCommitmentRate": 61.0,
     "circulatingSupplyRate": 28.2,
-    "totalOfferingAmount": 252,
-    "marketCapAtIpo": 1680,
+    "totalOfferingAmount": 412,
+    "marketCapAtIpo": 2338,
+    "subscriptionResults": {
+      "totalAccounts": 240920,
+      "totalDepositAmount": 5.09,
+      "equalAllocationShares": 1.16,
+      "proportionalCompetitionRate": 1973.78
+    },
     "aiSummary": {
-      "headline": "공모가 18,500원(상단 초과) 확정 및 청약 998:1 흥행 마감! 10월 23일 상장",
+      "headline": "공모가 18,500원 확정 & 일반 경쟁률 987:1 (비례 1,974:1) 흥행 마감! 10월 23일 코스닥 상장",
       "bulletPoints": [
-        "일반 청약 경쟁률 998.39:1 기록, 청약 증거금 1조 2,000억원 유입",
-        "확정 공모가 18,500원 (희망밴드 14,000원 대폭 초과)",
-        "10월 16일(금) 증거금 환불 완료, 10월 23일(금) 코스닥 신규 상장 예정"
+        "통합 일반 청약 최종 경쟁률 986.89:1 (비례배정 경쟁률 1,973.78:1) 기록, 청약 증거금 약 5조 868억원 유입",
+        "확정 공모가 18,500원 (희망밴드 12,000~14,000원 대폭 초과), 최종 의무보유확약 비율 61.0% 고배정",
+        "균등 배정 1인당 약 1.16주 (기본 1주 + 16% 추첨 2주), 10월 16일 환불 완료 후 10월 23일(금) 코스닥 신규 상장 대기",
+        "주관사별 경쟁률: 대신증권 일반 998.39:1 (비례 1,996.77:1), 유진투자증권 일반 883.39:1 (비례 1,766.81:1)"
       ],
       "positivePoints": [
         "조선 슈퍼사이클 진입에 따른 탄탄한 3년치 일감 확보",
+        "최종 의무보유확약 비율 61.0% 배정으로 상장일 기관 유통 출회 물량 방어",
         "수익성 높은 특수선용 열교환기 믹스 개선"
       ],
       "riskPoints": [
@@ -345,8 +366,7 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 89,
-    "scoreGrade": "S",
-    "generalCompetitionRate": 998.39
+    "scoreGrade": "S"
   },
   {
     "id": "ck-solution",
@@ -1330,7 +1350,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "이에스티",
     "name": "이에스티",
-    "code": "466100",
+    "code": "412170",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-10-22",
@@ -1428,7 +1448,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "에이엘로봇",
     "name": "에이엘로봇",
-    "code": "465480",
+    "code": "417970",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-10-26",
@@ -1477,7 +1497,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "엠비디",
     "name": "엠비디",
-    "code": "336680",
+    "code": "417050",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-10-28",
@@ -1575,7 +1595,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "영광와이케이엠씨",
     "name": "영광와이케이엠씨",
-    "code": "475580",
+    "code": "409600",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-04",
@@ -1671,7 +1691,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "하나에어로다이내믹스",
     "name": "하나에어로다이내믹스",
-    "code": "475960",
+    "code": "410250",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-10",
@@ -1719,7 +1739,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "엔키화이트햇",
     "name": "엔키화이트햇",
-    "code": "471900",
+    "code": "417950",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-12",
@@ -1767,7 +1787,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "제이앤티지",
     "name": "제이앤티지",
-    "code": "461230",
+    "code": "414030",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-12",
@@ -1815,7 +1835,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "씨앤엠",
     "name": "씨앤엠",
-    "code": "468300",
+    "code": "406180",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-12",

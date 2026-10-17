@@ -83,18 +83,27 @@ export function deleteCustomIpo(idOrCode: string): boolean {
 }
 
 /**
- * 회사명 기반 해시를 통한 결정적 6자리 종목코드 생성 (미부여 시 대체용)
+ * 회사명 및 DART 고유번호 기반 결정적 6자리 종목코드 생성 (기존 등록 코드와의 충돌 자동 회피)
  */
 function generateDeterministicStockCode(corpName: string, corpCode?: string): string {
-  let hash = 0;
-  const str = corpName + (corpCode || '');
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
+  const existingCodes = new Set(getAllIpos().map((i) => i.code));
+  let salt = 0;
+  while (salt < 1000) {
+    let hash = salt;
+    const str = corpName + (corpCode || '') + (salt > 0 ? `_${salt}` : '');
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
+    }
+    const positive = Math.abs(hash);
+    const numPart = (positive % 90000) + 10000;
+    const candidate = `4${numPart}`;
+    if (!existingCodes.has(candidate)) {
+      return candidate;
+    }
+    salt++;
   }
-  const positive = Math.abs(hash);
-  const numPart = (positive % 90000) + 10000;
-  return `4${numPart}`; // 예: 482140
+  return `499999`;
 }
 
 /**
