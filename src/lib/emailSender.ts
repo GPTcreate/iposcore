@@ -220,32 +220,94 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
   const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 & 실전 배정 공략`;
 
   const allIpos = getAllEffectiveIpos();
-  const activeIpos = allIpos.filter((i) => i.status === 'SUBSCRIPTION').slice(0, 2);
-  const upcomingIpos = allIpos.filter((i) => i.status === 'UPCOMING').slice(0, 3);
+  const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
 
-  const activeCards = activeIpos.map((ipo) => `
-    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <span style="font-size: 17px; font-weight: 800; color: #0f172a;">
-          ${ipo.name} <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${ipo.market} · ${ipo.code})</span>
+  // 1. 이번 주 청약 진행 또는 시작 임박 종목 (우선순위: SUBSCRIPTION -> 시작일 가장 빠른 UPCOMING)
+  let activeIpos = allIpos.filter((i) => i.status === 'SUBSCRIPTION' && !i.isCancelled);
+  let isImminentMode = false;
+  if (activeIpos.length === 0) {
+    const upcomingSoon = allIpos
+      .filter((i) => i.status === 'UPCOMING' && !i.isCancelled)
+      .sort((a, b) => a.subscriptionStart.localeCompare(b.subscriptionStart));
+    activeIpos = upcomingSoon.slice(0, 2);
+    isImminentMode = true;
+  }
+
+  const activeIds = new Set(activeIpos.map((i) => i.id));
+
+  // 2. 청약 예정 기대주 (시작일 오름차순 정렬, 상위 3건)
+  const upcomingIpos = allIpos
+    .filter((i) => i.status === 'UPCOMING' && !i.isCancelled && !activeIds.has(i.id))
+    .sort((a, b) => a.subscriptionStart.localeCompare(b.subscriptionStart))
+    .slice(0, 4);
+
+  // 3. 이번 주 상장 대기 종목 (실전 청약 결과 요약, 상장일 오름차순)
+  const waitingIpos = allIpos
+    .filter((i) => i.status === 'WAITING_LISTING' && !i.isCancelled)
+    .sort((a, b) => (a.listingDate || '9999').localeCompare(b.listingDate || '9999'))
+    .slice(0, 3);
+
+  const activeCards = activeIpos.length > 0
+    ? activeIpos.map((ipo) => {
+        const priceText = ipo.confirmedPrice > 0
+          ? `<strong>확정 공모가:</strong> ${ipo.confirmedPrice.toLocaleString()}원`
+          : `<strong>희망 밴드:</strong> ${ipo.priceBandMin.toLocaleString()} ~ ${ipo.priceBandMax.toLocaleString()}원`;
+        const dateText = isImminentMode
+          ? `<strong>청약 시작:</strong> ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}`
+          : `<strong>청약 마감:</strong> ~ ${ipo.subscriptionEnd}까지`;
+
+        return `
+          <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 17px; font-weight: 800; color: #0f172a;">
+                ${ipo.name} <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${ipo.market} · ${ipo.code})</span>
+              </span>
+              <span style="display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 800; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">
+                ${ipo.scoreGrade}등급 · ${ipo.aiScore}점
+              </span>
+            </div>
+
+            <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #1e293b; line-height: 1.5;">
+              ${ipo.aiSummary.headline}
+            </p>
+
+            <div style="background-color: #f8fafc; border-radius: 8px; padding: 12px; font-size: 12px; color: #475569; line-height: 1.6; margin-bottom: 14px;">
+              • ${priceText} (${ipo.underwriters.map((u) => u.name).join(', ')})<br/>
+              • ${dateText}
+            </div>
+
+            <div style="text-align: center;">
+              <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
+                👉 ${ipo.name} AI 심층 분석 & 전문가 여론 리포트 전문 보기
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('')
+    : `
+      <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 18px; text-align: center; color: #475569; font-size: 13px;">
+        📢 이번 주는 신규 청약이 쉬어가는 주간입니다. 다가오는 청약 일정과 상장 대기 종목의 실전 결과를 확인해 보세요.
+      </div>
+    `;
+
+  const waitingCards = waitingIpos.map((ipo) => `
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 800; font-size: 14px; color: #0f172a;">
+          ${ipo.name} <span style="font-size: 11px; color: #64748b;">(${ipo.market})</span>
         </span>
-        <span style="display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 800; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">
-          ${ipo.scoreGrade}등급 · ${ipo.aiScore}점
+        <span style="font-size: 12px; font-weight: 800; color: #2563eb;">
+          📅 ${ipo.listingDate ? ipo.listingDate.slice(5) : '상장 대기'} 상장 예정
         </span>
       </div>
-
-      <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #1e293b; line-height: 1.5;">
-        ${ipo.aiSummary.headline}
-      </p>
-
-      <div style="background-color: #f8fafc; border-radius: 8px; padding: 12px; font-size: 12px; color: #475569; line-height: 1.6; margin-bottom: 14px;">
-        • <strong>확정 공모가:</strong> ${ipo.confirmedPrice.toLocaleString()}원 (${ipo.underwriters.map(u => u.name).join(', ')})<br/>
-        • <strong>청약 마감일:</strong> ~ ${ipo.subscriptionEnd}까지
+      <div style="font-size: 12px; color: #475569; line-height: 1.6;">
+        • 확정 공모가: <strong>${ipo.confirmedPrice.toLocaleString()}원</strong><br/>
+        • 일반 최종 경쟁률: <strong style="color: #1d4ed8;">${ipo.generalCompetitionRate ? ipo.generalCompetitionRate.toLocaleString() + ' : 1' : '집계 중'}</strong>
+        ${ipo.subscriptionResults?.proportionalCompetitionRate ? `<span style="color: #059669; font-weight: bold; margin-left: 6px;">(비례 ${ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()} : 1)</span>` : ''}
       </div>
-
-      <div style="text-align: center;">
-        <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
-          👉 ${ipo.name} AI 심층 분석 & 전문가 여론 리포트 전문 보기
+      <div style="margin-top: 8px; text-align: right;">
+        <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="font-size: 12px; color: #1d4ed8; text-decoration: none; font-weight: bold;">
+          상세 실전 결과 보기 →
         </a>
       </div>
     </div>
@@ -255,10 +317,10 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
     <li style="margin-bottom: 10px; font-size: 13px; color: #334155; line-height: 1.5;">
       <strong>${ipo.name}</strong> (${ipo.subscriptionStart} 청약 예정)
       <span style="display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; background-color: #f1f5f9; color: #475569; font-weight: bold; margin-left: 4px;">
-        ${ipo.scoreGrade}등급 (사전평가)
+        ${ipo.scoreGrade}등급
       </span>
       <br/>
-      <span style="color: #64748b; font-size: 12px;">${ipo.aiSummary.headline.slice(0, 42)}...</span>
+      <span style="color: #64748b; font-size: 12px;">${ipo.aiSummary.headline.slice(0, 45)}...</span>
     </li>
   `).join('');
 
@@ -293,7 +355,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
         <!-- 섹션 1: 이번 주 청약 종목 -->
         <div style="margin-bottom: 24px;">
           <h2 style="margin: 0 0 14px 0; font-size: 15px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
-            🔥 이번 주 청약 진행 종목 (핵심 요약)
+            🔥 ${isImminentMode ? '이번 주 청약 개시 종목 (핵심 요약)' : '이번 주 청약 진행 종목 (핵심 요약)'}
           </h2>
           ${activeCards}
         </div>
@@ -311,10 +373,20 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
           </a>
         </div>
 
-        <!-- 섹션 3: 다음 주 청약 예정 기대주 -->
+        ${waitingIpos.length > 0 ? `
+        <!-- 섹션 3: 이번 주 신규 상장 예정 종목 (실전 청약 결과 요약) -->
         <div style="margin-bottom: 24px;">
           <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 800; color: #0f172a;">
-            📅 다음 주 청약 예정 기대주
+            🚀 이번 주 코스닥/코스피 신규 상장 종목
+          </h3>
+          ${waitingCards}
+        </div>
+        ` : ''}
+
+        <!-- 섹션 4: 다가오는 청약 예정 기대주 -->
+        <div style="margin-bottom: 24px;">
+          <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 800; color: #0f172a;">
+            📅 다가오는 청약 예정 기대주
           </h3>
           <ul style="margin: 0; padding-left: 20px;">
             ${upcomingList}
@@ -324,7 +396,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
         <!-- 전체 캘린더 방문 유도 버튼 -->
         <div style="text-align: center; padding-top: 10px; border-top: 1px solid #e2e8f0;">
           <a href="${SITE_URL}/?tab=UPCOMING" target="_blank" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 800; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 10px;">
-            📊 10월 공모주 전체 캘린더 & D-Day 알림 확인하기 →
+            📊 공모주 전체 캘린더 & D-Day 알림 확인하기 →
           </a>
         </div>
 
