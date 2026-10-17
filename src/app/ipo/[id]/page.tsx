@@ -350,13 +350,21 @@ export default async function IpoDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               <div className="p-3.5 bg-white/95 rounded-lg border border-blue-200 shadow-xs">
                 <span className="text-gray-500 block text-xs font-medium">일반 최종 경쟁률</span>
                 <span className="text-lg sm:text-xl font-black text-blue-700">
                   {ipo.generalCompetitionRate.toLocaleString()} : 1
                 </span>
               </div>
+              {ipo.subscriptionResults?.proportionalCompetitionRate && (
+                <div className="p-3.5 bg-white/95 rounded-lg border border-emerald-200 shadow-xs">
+                  <span className="text-gray-500 block text-xs font-medium">비례배정 경쟁률</span>
+                  <span className="text-lg sm:text-xl font-black text-emerald-700">
+                    {ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()} : 1
+                  </span>
+                </div>
+              )}
               {ipo.subscriptionResults?.totalDepositAmount && (
                 <div className="p-3.5 bg-white/95 rounded-lg border border-indigo-200 shadow-xs">
                   <span className="text-gray-500 block text-xs font-medium">총 청약 증거금</span>

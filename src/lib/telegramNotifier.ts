@@ -63,7 +63,7 @@ export function formatIpoTelegramMessage(ipo: IpoItem): string {
     : `<b>수요예측:</b> 결과 발표 대기 중 (D-1 공시 예정)`;
 
   const generalCompText = ipo.generalCompetitionRate 
-    ? `\n🔥 <b>일반 최종 경쟁률:</b> ${ipo.generalCompetitionRate.toLocaleString()}:1` 
+    ? `\n🔥 <b>일반 최종 경쟁률:</b> ${ipo.generalCompetitionRate.toLocaleString()}:1${ipo.subscriptionResults?.proportionalCompetitionRate ? ` (비례: ${ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()}:1)` : ''}` 
     : '';
 
   const scheduleText = isClosed

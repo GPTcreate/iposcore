@@ -47,6 +47,7 @@ export interface IpoItem {
     totalAccounts?: number;             // 총 청약 건수
     totalDepositAmount?: number;        // 증거금 규모 (조 원)
     equalAllocationShares?: number;     // 균등 배정 예상 주수
+    proportionalCompetitionRate?: number; // 비례 배정 경쟁률 (예: 3076.02 -> 3076.02:1)
   };
 
   // AI 분석 & 점수

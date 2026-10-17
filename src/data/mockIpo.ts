@@ -249,46 +249,54 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionStart": "2026-10-12",
     "subscriptionEnd": "2026-10-13",
     "refundDate": "2026-10-15",
-    "listingDate": "2026-10-23",
-    "priceBandMin": 8000,
-    "priceBandMax": 9500,
-    "confirmedPrice": 9500,
+    "listingDate": "2026-10-22",
+    "priceBandMin": 6800,
+    "priceBandMax": 7800,
+    "confirmedPrice": 7800,
     "underwriters": [
       {
         "name": "KB증권",
-        "allocatedShares": 500000,
+        "allocatedShares": 1002500,
         "fee": 1500
       }
     ],
-    "institutionalCompetitionRate": 1150.0,
-    "lockupCommitmentRate": 32.0,
+    "institutionalCompetitionRate": 1096.56,
+    "generalCompetitionRate": 1538.51,
+    "lockupCommitmentRate": 82.52,
     "circulatingSupplyRate": 31.8,
-    "totalOfferingAmount": 190,
-    "marketCapAtIpo": 1100,
+    "totalOfferingAmount": 312,
+    "marketCapAtIpo": 2122,
+    "subscriptionResults": {
+      "totalAccounts": 286498,
+      "totalDepositAmount": 6.01,
+      "equalAllocationShares": 1.75,
+      "proportionalCompetitionRate": 3076.02
+    },
     "aiSummary": {
-      "headline": "청약 경쟁률 3,076:1 대흥행 마감! 10월 15일 환불, 10월 23일 디티에스와 동시 상장",
+      "headline": "일반 경쟁률 1,539:1 (비례 3,076:1) 대흥행 마감! 확정공모가 7,800원, 10월 22일 코스닥 상장",
       "bulletPoints": [
-        "일반 청약 최종 경쟁률 3,076.02:1 기록, 천연물 건강기능식품 고성장 기대감",
-        "확정 공모가 9,500원 (상단 확정), 증거금 2조 3,000억원 집계",
-        "10월 15일(목) 환불 완료 후 10월 23일(금) 코스닥 신규 상장 대기"
+        "일반 청약 최종 경쟁률 1,538.51:1 (비례배정 경쟁률 3,076.02:1) 기록, 청약 증거금 약 6조 151억원 유입",
+        "확정 공모가 7,800원 (희망밴드 6,800~7,800원 상단 확정), 총 공모금액 312억원",
+        "기관 수요예측 경쟁률 1,096.56:1 및 최종 의무보유확약 비율 82.52% 배정으로 기관 신뢰도 입증",
+        "균등배정 1인당 약 1.75주 (1주 기본 + 75% 추첨 2주 배정), 10월 15일 환불 완료 후 10월 22일(목) 코스닥 신규 상장 대기"
       ],
       "positivePoints": [
-        "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 중",
-        "공모 규모 190억원대로 상대적으로 가벼운 몸집"
+        "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 및 천연물 건강기능식품 고성장 지속",
+        "최종 의무보유확약 82.52% 배정으로 상장일 기관 유통 출회 가능 물량 대폭 축소",
+        "공모가 7,800원 상단 확정 및 증거금 6조원 돌파로 상장 첫날 수급 모멘텀 우수"
       ],
       "riskPoints": [
-        "상장일 유통물량 31.8%로 구주매출 비율 점검 필요"
+        "상장 당일 유통가능물량 31.8%에 대한 단기 차익 실현 매물 출회 가능성 모니터링 필요"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 64,
-      "neutralRatio": 26,
-      "cautionRatio": 10
+      "positiveRatio": 78,
+      "neutralRatio": 16,
+      "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 92,
-    "scoreGrade": "S",
-    "generalCompetitionRate": 3076.02
+    "aiScore": 94,
+    "scoreGrade": "S"
   },
   {
     "id": "dts-tech",

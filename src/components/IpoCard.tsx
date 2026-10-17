@@ -102,11 +102,18 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             <div className="flex justify-between items-center py-1 border-b border-blue-200/90 pb-1.5 bg-blue-50/80 -mx-3 px-3">
               <span className="text-blue-900 font-bold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                <span>일반 청약 경쟁률</span>
+                <span>일반 경쟁률</span>
               </span>
-              <span className="font-black text-blue-700 text-sm">
-                {ipo.generalCompetitionRate.toLocaleString()} : 1
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-blue-700 text-sm">
+                  {ipo.generalCompetitionRate.toLocaleString()} : 1
+                </span>
+                {ipo.subscriptionResults?.proportionalCompetitionRate && (
+                  <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100/80 border border-emerald-300 px-1.5 py-0.5 rounded">
+                    비례 {ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()}:1
+                  </span>
+                )}
+              </div>
             </div>
           )}
 
