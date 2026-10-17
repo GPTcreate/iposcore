@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { CrawlChannel, CrawlJobLog } from '@/types/admin';
+import { IpoItem } from '@/types/ipo';
 import { INITIAL_CHANNELS, INITIAL_LOGS } from '@/data/mockAdmin';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import {
@@ -26,12 +27,10 @@ import {
   Eye,
   Mail,
   X,
-  Share2,
   Copy,
   Check,
   Megaphone,
   Rss,
-  MessageCircle,
   Sparkles,
 } from 'lucide-react';
 
@@ -119,7 +118,7 @@ export default function AdminPage() {
   const [visitorStats, setVisitorStats] = useState<{ today: number; total: number }>({ today: 0, total: 0 });
 
   // 신규 공모주 카드 자동 생성 & DART 동기화 상태
-  const [adminIpoList, setAdminIpoList] = useState<any[]>(allIpos);
+  const [adminIpoList, setAdminIpoList] = useState<IpoItem[]>(allIpos);
   const [dartSyncLoading, setDartSyncLoading] = useState(false);
   const [dartSyncResult, setDartSyncResult] = useState<string | null>(null);
   const [isAddingIpo, setIsAddingIpo] = useState(false);
@@ -252,6 +251,16 @@ export default function AdminPage() {
     }
   };
 
+  const fetchTelegramStatus = async () => {
+    try {
+      const res = await fetch('/api/marketing/telegram');
+      if (res.ok) {
+        const data = await res.json();
+        setTelegramStatus(data);
+      }
+    } catch {}
+  };
+
   useEffect(() => {
     if (!isAuthenticated) return;
     const timer = setTimeout(() => {
@@ -334,16 +343,6 @@ export default function AdminPage() {
     } finally {
       setWeeklyCronLoading(false);
     }
-  };
-
-  const fetchTelegramStatus = async () => {
-    try {
-      const res = await fetch('/api/marketing/telegram');
-      if (res.ok) {
-        const data = await res.json();
-        setTelegramStatus(data);
-      }
-    } catch {}
   };
 
   const handleSendTelegram = async () => {
@@ -1016,7 +1015,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
                         {ipo.subscriptionStart} ~ {ipo.subscriptionEnd?.slice(5) || ''}
                       </td>
                       <td className="px-3 py-2.5 text-gray-600 truncate max-w-[140px]">
-                        {ipo.underwriters.map((u: any) => u.name).join(', ')}
+                        {ipo.underwriters.map((u: { name: string }) => u.name).join(', ')}
                       </td>
                       <td className="px-3 py-2.5 text-right">
                         <button

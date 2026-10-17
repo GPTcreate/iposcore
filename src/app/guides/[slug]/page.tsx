@@ -9,12 +9,10 @@ import {
   Calendar,
   Clock,
   User,
-  Tag,
   CheckCircle2,
   AlertTriangle,
   Info,
   ChevronRight,
-  Share2,
   BookOpen,
 } from 'lucide-react';
 

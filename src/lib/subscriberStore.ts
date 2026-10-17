@@ -23,8 +23,10 @@ export type SafeSubscriber = Omit<Subscriber, 'verificationToken' | 'unsubscribe
  * 클라이언트 또는 외부 로그에 민감한 인증/해지 토큰이 노출되지 않도록 제거
  */
 export function sanitizeSubscriber(sub: Subscriber): SafeSubscriber {
-  const { verificationToken, unsubscribeToken, ...safe } = sub;
-  return safe;
+  const safe: Partial<Subscriber> = { ...sub };
+  delete safe.verificationToken;
+  delete safe.unsubscribeToken;
+  return safe as SafeSubscriber;
 }
 
 // 로컬 파일 저장 경로 (개발/로컬 환경)
@@ -130,6 +132,18 @@ export async function syncToGoogleSheet(
   }
 }
 
+interface GoogleSheetSubscriberRow {
+  id?: string;
+  email?: string;
+  status?: string;
+  frequency?: string;
+  verificationToken?: string;
+  unsubscribeToken?: string;
+  subscribedAt?: string;
+  verifiedAt?: string;
+  unsubscribedAt?: string;
+}
+
 /**
  * 구글 스프레드시트에서 구독자 목록 가져오기 (영구 복원)
  */
@@ -146,7 +160,7 @@ export async function fetchSubscribersFromGoogleSheet(): Promise<Subscriber[]> {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data.subscribers)) {
-        return data.subscribers.map((item: any) => ({
+        return data.subscribers.map((item: GoogleSheetSubscriberRow) => ({
           id: item.id || `sub_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
           email: String(item.email || '').trim().toLowerCase(),
           status: (item.status === 'ACTIVE' || item.status === '구독중'

@@ -15,6 +15,12 @@ export interface DartFilingItem {
   rm?: string;
 }
 
+export interface DartListResponse {
+  status?: string;
+  message?: string;
+  list?: DartFilingItem[];
+}
+
 const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const CUSTOM_IPOS_FILE = path.join(DATA_DIR, 'customIpos.json');
 
@@ -301,8 +307,8 @@ export async function syncNewIposFromDart(options?: {
 
   const dartUrl = `https://opendart.fss.or.kr/api/list.json?crtfc_key=${dartApiKey}&bgn_de=${startDate}&end_de=${endDate}&pblntf_detail_ty=C001&page_no=1&page_count=50`;
 
-    let data: any;
-    try {
+  let data: DartListResponse;
+  try {
       const res = await fetch(dartUrl, { next: { revalidate: 0 } });
       if (!res.ok) {
         return {

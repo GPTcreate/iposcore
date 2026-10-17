@@ -11,6 +11,12 @@ import { GUIDE_ARTICLES } from '@/data/guidesData';
 import { IpoStatus } from '@/types/ipo';
 import { ShieldCheck, CheckCircle2, TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
 
+// 청약 진행 중이 0건이면 청약 예정을 기본 탭으로, 아니면 청약 진행 중으로 설정
+function getDefaultTab(ipos: { status: IpoStatus }[]): 'ALL' | IpoStatus {
+  const hasSubscription = ipos.some((i) => i.status === 'SUBSCRIPTION');
+  return hasSubscription ? 'SUBSCRIPTION' : 'UPCOMING';
+}
+
 export default function Home() {
   const PAGE_SIZE = 6;
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
@@ -18,12 +24,6 @@ export default function Home() {
   // KST 현재 일자 및 시각 기준 실시간 상태 동적 전이 적용
   const initialIpos = React.useMemo(() => getAllEffectiveIpos(), []);
   const [allIpos, setAllIpos] = useState(initialIpos);
-
-  // 청약 진행 중이 0건이면 청약 예정을 기본 탭으로, 아니면 청약 진행 중으로 설정
-  const getDefaultTab = (ipos: typeof initialIpos): 'ALL' | IpoStatus => {
-    const hasSubscription = ipos.some((i) => i.status === 'SUBSCRIPTION');
-    return hasSubscription ? 'SUBSCRIPTION' : 'UPCOMING';
-  };
 
   const [filter, setFilter] = useState<'ALL' | IpoStatus>(() => getDefaultTab(initialIpos));
 

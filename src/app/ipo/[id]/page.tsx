@@ -11,7 +11,6 @@ import ShareButtons from '@/components/ShareButtons';
 import DetailBackButton from '@/components/DetailBackButton';
 import { getEffectiveIpoByIdOrCode, getAllEffectiveIpos } from '@/lib/ipoUtils';
 import {
-  ArrowLeft,
   Calendar,
   Building,
   CheckCircle,

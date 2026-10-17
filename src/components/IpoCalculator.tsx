@@ -35,18 +35,27 @@ export default function IpoCalculator({
   const [applicationFee, setApplicationFee] = useState<number>(2000);
   const [expectedReturnRate, setExpectedReturnRate] = useState<number>(80);
 
-  // 계산 로직
-  const oneShareDeposit = Math.round(targetPrice * expectedCompetition * 0.5);
-  const calculatedProportionalShares = oneShareDeposit > 0 ? depositAmount / oneShareDeposit : 0;
+  // 계산 로직 (0원 입력, 음수 방지 및 엣지 케이스 가드)
+  const safeDeposit = Math.max(0, depositAmount || 0);
+  const safeTargetPrice = Math.max(0, targetPrice || 0);
+  const safeCompetition = Math.max(1, expectedCompetition || 1);
+  const safeRefundDays = Math.max(0, refundDays || 0);
+  const safeLoanRate = Math.max(0, loanInterestRate || 0);
+  const safeFee = safeDeposit > 0 ? Math.max(0, applicationFee || 0) : 0;
+
+  const minEqualDeposit = Math.round(safeTargetPrice * 10 * 0.5);
+  const estimatedEqualShares = safeDeposit >= minEqualDeposit ? 1 : (safeDeposit > 0 ? 1 : 0);
+  const oneShareDeposit = Math.round(safeTargetPrice * safeCompetition * 0.5);
+  const calculatedProportionalShares = oneShareDeposit > 0 ? safeDeposit / oneShareDeposit : 0;
   const guaranteedProportionalShares = Math.floor(calculatedProportionalShares);
   const fiveDownSixUpProbability = calculatedProportionalShares - guaranteedProportionalShares;
 
-  const estimatedEqualShares = 1;
-  const totalEstimatedShares = guaranteedProportionalShares + (fiveDownSixUpProbability >= 0.6 ? 1 : 0) + estimatedEqualShares;
+  const proportionalShares = guaranteedProportionalShares + (fiveDownSixUpProbability >= 0.6 ? 1 : 0);
+  const totalEstimatedShares = safeDeposit > 0 ? (proportionalShares + estimatedEqualShares) : 0;
 
-  const loanInterestCost = Math.round((depositAmount * (loanInterestRate / 100) / 365) * refundDays);
-  const totalCost = loanInterestCost + applicationFee;
-  const profitPerShare = Math.round(targetPrice * (expectedReturnRate / 100));
+  const loanInterestCost = Math.round((safeDeposit * (safeLoanRate / 100) / 365) * safeRefundDays);
+  const totalCost = safeDeposit > 0 ? (loanInterestCost + safeFee) : 0;
+  const profitPerShare = Math.round(safeTargetPrice * (expectedReturnRate / 100));
   const grossProfit = totalEstimatedShares * profitPerShare;
   const netProfit = grossProfit - totalCost;
 

@@ -19,7 +19,7 @@ import {
   sanitizeSubscriber,
   syncToGoogleSheet,
   fetchSubscribersFromGoogleSheet,
-  Subscriber,
+  type Subscriber,
 } from '../src/lib/subscriberStore';
 
 async function runTests() {
@@ -35,8 +35,8 @@ async function runTests() {
   };
 
   const sanitized = sanitizeSubscriber(dummy);
-  assert.strictEqual((sanitized as any).verificationToken, undefined, 'verificationToken must be stripped');
-  assert.strictEqual((sanitized as any).unsubscribeToken, undefined, 'unsubscribeToken must be stripped');
+  assert.strictEqual((sanitized as Record<string, unknown>).verificationToken, undefined, 'verificationToken must be stripped');
+  assert.strictEqual((sanitized as Record<string, unknown>).unsubscribeToken, undefined, 'unsubscribeToken must be stripped');
   assert.strictEqual(sanitized.email, 'test@example.com');
   console.log('✓ Token stripping passed: tokens are not exposed to client');
 
@@ -92,23 +92,20 @@ async function runTests() {
   console.log('\n--- [4] Google Sheet Sync Payload Token Preservation Test ---');
   // Mock global fetch to inspect webhook payload
   const originalFetch = global.fetch;
-  let capturedPayload: any = null;
+  let capturedPayload: Record<string, unknown> = {};
 
-  global.fetch = async (url: any, init?: any) => {
+  global.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
     if (String(url).includes('mock-google-sheet')) {
       if (init?.method === 'POST') {
-        capturedPayload = JSON.parse(init.body);
-        return {
-          ok: true,
+        capturedPayload = JSON.parse(String(init.body || '{}'));
+        return new Response(JSON.stringify({ result: 'success' }), {
           status: 200,
-          json: async () => ({ result: 'success' }),
-        } as any;
+          headers: { 'Content-Type': 'application/json' },
+        });
       }
       if (init?.method === 'GET') {
-        return {
-          ok: true,
-          status: 200,
-          json: async () => ({
+        return new Response(
+          JSON.stringify({
             result: 'success',
             subscribers: [
               {
@@ -123,11 +120,15 @@ async function runTests() {
               },
             ],
           }),
-        } as any;
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
       }
     }
     return originalFetch(url, init);
-  };
+  }) as typeof fetch;
 
   process.env.GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/mock-google-sheet/exec';
 
@@ -162,15 +163,12 @@ async function runTests() {
   console.log('\n--- [5] Production Storage Failure Guard Test ---');
   // Set production environment and simulate failing webhook
   const origNodeEnv = process.env.NODE_ENV;
-  (process.env as any).NODE_ENV = 'production';
+  (process.env as Record<string, string | undefined>).NODE_ENV = 'production';
   process.env.GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/mock-google-sheet-fail/exec';
 
-  global.fetch = async (url: any) => {
-    return {
-      ok: false,
-      status: 500,
-    } as any;
-  };
+  global.fetch = (async () => {
+    return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 });
+  }) as typeof fetch;
 
   let caughtError: Error | null = null;
   try {
@@ -178,8 +176,8 @@ async function runTests() {
       email: `fail_${Date.now()}@example.com`,
       frequency: 'ALL',
     });
-  } catch (err: any) {
-    caughtError = err;
+  } catch (err: unknown) {
+    caughtError = err instanceof Error ? err : new Error(String(err));
   }
 
   assert.ok(caughtError, 'In production, storage failure must throw error');
@@ -187,7 +185,7 @@ async function runTests() {
   console.log('✓ In production, storage failure throws and prevents false success response');
 
   // Restore env
-  (process.env as any).NODE_ENV = origNodeEnv;
+  (process.env as Record<string, string | undefined>).NODE_ENV = origNodeEnv;
   delete process.env.GOOGLE_SHEET_WEBHOOK_URL;
   global.fetch = originalFetch;
 

@@ -220,7 +220,6 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
   const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 & 실전 배정 공략`;
 
   const allIpos = getAllEffectiveIpos();
-  const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
 
   // 1. 이번 주 청약 진행 또는 시작 임박 종목 (우선순위: SUBSCRIPTION -> 시작일 가장 빠른 UPCOMING)
   let activeIpos = allIpos.filter((i) => i.status === 'SUBSCRIPTION' && !i.isCancelled);

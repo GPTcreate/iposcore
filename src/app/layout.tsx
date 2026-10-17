@@ -165,6 +165,9 @@ export default function RootLayout({
         <link rel="alternate" type="application/rss+xml" title="공모주 알리미 리포트 RSS 피드" href={`${siteUrl}/rss.xml`} />
         <link rel="sitemap" type="application/xml" title="Sitemap" href={`${siteUrl}/sitemap.xml`} />
         
+        {/* 구글 서치콘솔 소유권 확인 메타 태그 */}
+        {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
+
         {/* 구글 애드센스 소유권 확인 메타 태그 & 스크립트 */}
         <meta name="google-adsense-account" content="ca-pub-4909665367366825" />
         <script
