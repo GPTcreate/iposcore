@@ -10,6 +10,7 @@ import NewsletterBanner from '@/components/NewsletterBanner';
 import ShareButtons from '@/components/ShareButtons';
 import DetailBackButton from '@/components/DetailBackButton';
 import { getEffectiveIpoByIdOrCode, getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { LEGACY_CODE_ALIASES } from '@/lib/ipoStore';
 import {
   Calendar,
   Building,
@@ -93,12 +94,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export async function generateStaticParams() {
   const params: { id: string }[] = [];
   for (const ipo of getAllEffectiveIpos()) {
-    // 1. 증권코드(6자리 숫자) 우선 표준 라우팅 (예: /ipo/377480)
+    // 1. 증권코드(6자리 숫자) 우선 표준 라우팅 (예: /ipo/179880)
     params.push({ id: ipo.code });
     // 2. 기존 영문 슬러그 호환성 유지 (예: /ipo/melcon)
     if (ipo.id !== ipo.code) {
       params.push({ id: ipo.id });
     }
+  }
+  // 3. 기존 레거시 코드 별칭(Alias) 사전 정적 생성 (예: /ipo/377480, /ipo/252540)
+  for (const alias of Object.keys(LEGACY_CODE_ALIASES)) {
+    params.push({ id: alias });
   }
   return params;
 }
@@ -661,51 +666,100 @@ export default async function IpoDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* 3. 인용된 전문가 출처 목록 */}
-        {ipo.expertReviews.length > 0 && (
-          <div className="p-6 rounded-xl bg-white border border-gray-300 shadow-2xs">
-            <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
-              <span className="flex items-center gap-2">
-                <Video className="w-4 h-4 text-red-600" />
-                <span>참고한 전문 유튜브 & 블로그 리뷰 출처</span>
-              </span>
-              <span className="text-xs font-medium text-gray-500">원문 링크 제공</span>
-            </h2>
+        {/* 3. 인용된 전문가 출처 및 실시간 블로그/영상 분석 */}
+        <div className="p-6 rounded-xl bg-white border border-gray-300 shadow-2xs">
+          <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
+            <span className="flex items-center gap-2">
+              <Video className="w-4 h-4 text-red-600" />
+              <span>전문가 분석 & 실시간 유튜브·블로그 리뷰</span>
+            </span>
+            <span className="text-xs font-medium text-gray-500">원문 및 실시간 검색</span>
+          </h2>
 
-            <div className="space-y-2.5 text-xs">
-              {ipo.expertReviews.map((rev) => (
-                <div key={rev.id} className="p-3 rounded-lg border border-gray-200 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="px-1.5 py-0.5 rounded text-[11px] font-bold bg-gray-200 text-gray-800">
-                        {rev.sourceType === 'YOUTUBE' ? 'YouTube' : 'Blog'}
-                      </span>
-                      <span className="font-bold text-gray-900">{rev.author}</span>
-                      <span className="text-gray-400 text-[11px]">{rev.publishedAt}</span>
+          {ipo.expertReviews && ipo.expertReviews.length > 0 && (
+            <div className="space-y-2.5 text-xs mb-4">
+              {ipo.expertReviews.map((rev) => {
+                const isTistory = rev.url?.includes('tistory.com') || rev.author?.includes('티스토리');
+                return (
+                  <div key={rev.id} className="p-3 rounded-lg border border-gray-200 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-1.5 py-0.5 rounded text-[11px] font-bold ${
+                            rev.sourceType === 'YOUTUBE'
+                              ? 'bg-red-100 text-red-700 border border-red-200'
+                              : isTistory
+                              ? 'bg-orange-100 text-orange-700 border border-orange-200'
+                              : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                          }`}
+                        >
+                          {rev.sourceType === 'YOUTUBE' ? 'YouTube' : isTistory ? '티스토리' : '네이버블로그'}
+                        </span>
+                        <span className="font-bold text-gray-900">{rev.author}</span>
+                        <span className="text-gray-400 text-[11px]">{rev.publishedAt}</span>
+                      </div>
+                      <p className="text-gray-800 font-semibold mt-1">&ldquo;{rev.title}&rdquo;</p>
+                      <p className="text-gray-600 text-xs mt-0.5">{rev.summary}</p>
                     </div>
-                    <p className="text-gray-800 font-semibold mt-1">&ldquo;{rev.title}&rdquo;</p>
-                    <p className="text-gray-600 text-xs mt-0.5">{rev.summary}</p>
+                    <a
+                      href={
+                        rev.url && !rev.url.includes('where=article') && rev.url !== 'https://youtube.com' && rev.url !== 'https://blog.naver.com'
+                          ? rev.url
+                          : rev.sourceType === 'YOUTUBE'
+                            ? `https://www.youtube.com/results?search_query=${encodeURIComponent(`${rev.author.replace(/의.*$/, '').replace(/TV$/, '').trim()} ${ipo.name} 공모주`)}`
+                            : isTistory
+                            ? `https://search.daum.net/search?w=blog&q=${encodeURIComponent(`${ipo.name} 공모주`)}`
+                            : `https://search.naver.com/search.naver?where=blog&query=${encodeURIComponent(`${ipo.name} 공모주`)}`
+                      }
+                      target="_blank"
+                      rel="noreferrer"
+                      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 text-gray-800 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                    >
+                      <span>{rev.sourceType === 'YOUTUBE' ? '원문 영상 시청' : isTistory ? '티스토리 글 보기' : '원문 블로그 글 보기'}</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
+                    </a>
                   </div>
-                  <a
-                    href={
-                      rev.url && !rev.url.includes('where=article') && rev.url !== 'https://youtube.com' && rev.url !== 'https://blog.naver.com'
-                        ? rev.url
-                        : rev.sourceType === 'YOUTUBE'
-                          ? `https://www.youtube.com/results?search_query=${encodeURIComponent(`${rev.author.replace(/의.*$/, '').replace(/TV$/, '').trim()} ${ipo.name} 공모주`)}`
-                          : `https://search.naver.com/search.naver?where=blog&query=${encodeURIComponent(`${ipo.name} 공모주`)}`
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 text-gray-800 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
-                  >
-                    <span>{rev.sourceType === 'YOUTUBE' ? '원문 영상 시청' : '원문 블로그 글 보기'}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
-                  </a>
-                </div>
-              ))}
+                );
+              })}
+            </div>
+          )}
+
+          {/* 실시간 1클릭 외부 리뷰 검색 버튼 (유튜브, 네이버, 티스토리) */}
+          <div className="pt-2">
+            <span className="text-[11px] font-semibold text-gray-500 block mb-2">
+              💡 {ipo.name} 관련 실시간 투자자 리뷰 및 분석글 바로가기
+            </span>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <a
+                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${ipo.name} 공모주`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50/50 hover:bg-red-100 text-red-700 font-bold transition-colors"
+              >
+                <span>YouTube 영상 검색</span>
+                <ExternalLink className="w-3 h-3 text-red-500" />
+              </a>
+              <a
+                href={`https://search.naver.com/search.naver?where=blog&query=${encodeURIComponent(`${ipo.name} 공모주`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100 text-emerald-800 font-bold transition-colors"
+              >
+                <span>네이버 블로그 검색</span>
+                <ExternalLink className="w-3 h-3 text-emerald-600" />
+              </a>
+              <a
+                href={`https://search.daum.net/search?w=blog&q=${encodeURIComponent(`${ipo.name} 공모주`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-orange-200 bg-orange-50/50 hover:bg-orange-100 text-orange-800 font-bold transition-colors"
+              >
+                <span>티스토리 블로그 검색</span>
+                <ExternalLink className="w-3 h-3 text-orange-600" />
+              </a>
             </div>
           </div>
-        )}
+        </div>
 
         {/* 광고 영역 - 상세 페이지 내 단 딱 1개만 단정하게 배치 */}
         <GoogleAdSlot label="스폰서 안내" />

@@ -166,64 +166,42 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 필터 탭 (모바일 터치 최적화 가로 스크롤 & 지난 공모주 탭 추가) */}
+        {/* 필터 탭 (청약 진행 중이 0건일 때는 청약 예정을 앞으로 배치 & 모바일 가로 스크롤 최적화) */}
         <div className="mb-5 space-y-2">
           <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-gray-200/90 text-xs sm:text-sm font-bold overflow-x-auto scrollbar-none touch-pan-x">
-            <button
-              type="button"
-              onClick={() => handleFilterChange('ALL')}
-              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
-                filter === 'ALL'
-                  ? 'bg-blue-700 text-white shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
-              }`}
-            >
-              전체 ({allIpos.filter(i => i.status !== 'LISTED').length})
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('SUBSCRIPTION')}
-              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
-                filter === 'SUBSCRIPTION'
-                  ? 'bg-blue-700 text-white shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
-              }`}
-            >
-              청약 진행 중 ({allIpos.filter(i => i.status === 'SUBSCRIPTION').length})
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('UPCOMING')}
-              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
-                filter === 'UPCOMING'
-                  ? 'bg-blue-700 text-white shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
-              }`}
-            >
-              청약 예정 ({allIpos.filter(i => i.status === 'UPCOMING').length})
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('WAITING_LISTING')}
-              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
-                filter === 'WAITING_LISTING'
-                  ? 'bg-blue-700 text-white shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
-              }`}
-            >
-              상장 대기 ({allIpos.filter(i => i.status === 'WAITING_LISTING').length})
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('LISTED')}
-              className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
-                filter === 'LISTED'
-                  ? 'bg-blue-700 text-white shadow-xs'
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
-              }`}
-            >
-              지난 공모주 ({allIpos.filter(i => i.status === 'LISTED').length})
-            </button>
+            {(() => {
+              const subCount = allIpos.filter((i) => i.status === 'SUBSCRIPTION').length;
+              const hasSub = subCount > 0;
+              const tabs: { key: 'ALL' | IpoStatus; label: string; count: number }[] = [
+                { key: 'ALL', label: '전체', count: allIpos.filter((i) => i.status !== 'LISTED').length },
+                ...(hasSub
+                  ? [
+                      { key: 'SUBSCRIPTION' as const, label: '청약 진행 중', count: subCount },
+                      { key: 'UPCOMING' as const, label: '청약 예정', count: allIpos.filter((i) => i.status === 'UPCOMING').length },
+                    ]
+                  : [
+                      { key: 'UPCOMING' as const, label: '청약 예정', count: allIpos.filter((i) => i.status === 'UPCOMING').length },
+                      { key: 'SUBSCRIPTION' as const, label: '청약 진행 중', count: 0 },
+                    ]),
+                { key: 'WAITING_LISTING', label: '상장 대기', count: allIpos.filter((i) => i.status === 'WAITING_LISTING').length },
+                { key: 'LISTED', label: '지난 공모주', count: allIpos.filter((i) => i.status === 'LISTED').length },
+              ];
+
+              return tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => handleFilterChange(tab.key)}
+                  className={`px-3.5 py-2.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                    filter === tab.key
+                      ? 'bg-blue-700 text-white shadow-xs'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-300/60'
+                  }`}
+                >
+                  {tab.label} ({tab.count})
+                </button>
+              ));
+            })()}
           </div>
 
           <div className="flex justify-between items-center text-xs text-gray-500 px-1">
