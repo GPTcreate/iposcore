@@ -352,9 +352,15 @@ export async function syncNewIposFromDart(options?: {
         .replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '')
         .trim();
 
-      const existingIpo = allCurrentIpos.find(
-        (i) => i.name === cleanName || (filing.stock_code && i.code === filing.stock_code)
-      );
+      const normalizeName = (s: string) => s.replace(/(주식회사|\(주\)|\(유\)|주\s|스팩)/g, '').replace(/기업인수목적.*$/, '').trim();
+      const existingIpo = allCurrentIpos.find((i) => {
+        if (i.name === cleanName) return true;
+        if (filing.stock_code && i.code === filing.stock_code) return true;
+        const normI = normalizeName(i.name);
+        const normClean = normalizeName(cleanName);
+        if (normI.length >= 2 && normI === normClean) return true;
+        return false;
+      });
 
       // 1. 공모 철회 공시 접수 시 공모 취소 상태로 자동 전환
       if (filing.report_nm.includes('철회')) {
