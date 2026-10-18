@@ -585,18 +585,18 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 982.5,
-    "lockupCommitmentRate": 21.4,
-    "circulatingSupplyRate": 26.1,
-    "totalOfferingAmount": 238,
-    "marketCapAtIpo": 1550,
+    "institutionalCompetitionRate": 1041.02,
+    "lockupCommitmentRate": 29.52,
+    "circulatingSupplyRate": 31.29,
+    "totalOfferingAmount": 367.2,
+    "marketCapAtIpo": 1737,
     "aiSummary": {
-      "headline": "확정 공모가 15,300원(상단) 확정! 수소연료전지 터보블로워 10월 20일~21일 청약",
+      "headline": "확정 공모가 15,300원(상단) 확정! 기관 경쟁률 1,041:1 & 의무확약 29.5% 흥행",
       "bulletPoints": [
-        "수요예측 결과 공모 희망밴드 최상단인 15,300원으로 최종 확정",
-        "청약 일정: 2026년 10월 20일(화) ~ 10월 21일(수), 주관사: 신한투자증권",
-        "환불일: 2026년 10월 23일(금), 상장예정일: 10월 29일(목)",
-        "공기베어링 원천기술 기반 친환경 고효율 수소·산업용 블로워 독점력 확보"
+        "수요예측 결과 공모 희망밴드(12,600~15,300원) 최상단인 15,300원으로 최종 확정 (공모규모 367.2억원)",
+        "기관 수요예측 경쟁률 1,041.02:1 기록 및 의무보유확약 비율 29.52%(신청수량 기준) 달성",
+        "상장 직후 유통가능물량 31.29%(3,551,856주), 상장 시가총액 약 1,737억원",
+        "청약 일정: 2026년 10월 20일(화) ~ 10월 21일(수), 주관사: 신한투자증권 (환불일: 10월 23일, 상장예정일: 10월 29일)"
       ],
       "positivePoints": [
         "초고속 회전체 원천기술 보유로 높은 기술적 진입장벽",
@@ -612,7 +612,7 @@ export const MOCK_IPOS: IpoItem[] = [
       "cautionRatio": 6
     },
     "expertReviews": [],
-    "aiScore": 86,
+    "aiScore": 81,
     "scoreGrade": "A"
   },
   {
