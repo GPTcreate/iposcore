@@ -392,24 +392,25 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 25,
-    "totalOfferingAmount": 567,
+    "institutionalCompetitionRate": 1020.35,
+    "lockupCommitmentRate": 5.46,
+    "circulatingSupplyRate": 25.0,
+    "totalOfferingAmount": 472,
     "marketCapAtIpo": 3420,
     "aiSummary": {
-      "headline": "2차전지 배터리 드라이룸 클린룸 공조 시스템 유가증권 상장 완료",
+      "headline": "2차전지 드라이룸 선도 씨케이솔루션, 일반 경쟁률 1,321:1 흥행 성공 및 상장 완료",
       "bulletPoints": [
-        "LG에너지솔루션, 삼성SDI, SK온 국내 배터리 3사 드라이룸 메인 시공사",
-        "북미·유럽 현지 공장 동반 진출로 해외 법인 매출 급성장",
-        "코스피 상장으로 대형 기관 및 패시브 펀드 자금 유입 기대"
+        "공모가 15,000원(희망밴드 상단) 확정 및 기관 경쟁률 1,020.35:1",
+        "일반 청약 증거금 3.71조원 몰리며 경쟁률 1,320.68:1(비례 2,641:1) 기록",
+        "LG에너지솔루션·삼성SDI향 글로벌 드라이룸 수주 기반 탄탄한 실적"
       ],
       "positivePoints": [
-        "유통가능물량 25.0%로 코스피 대형주 대비 매우 양호한 수급",
-        "드라이룸 제습기 핵심 국산화 기술로 독점적 경쟁 우위"
+        "글로벌 2차전지 배터리 드라이룸 시장 독보적 점유율",
+        "안정적인 흑자 기조 및 해외 공장 동반 진출"
       ],
       "riskPoints": [
-        "전기차 캐즘(일시적 둔화) 장기화 시 배터리사 증설 속도 조절 우려"
+        "2차전지 전방 산업 캐펙스(CAPEX) 투자 속도 조절 리스크",
+        "의무보유확약 비율(5.5%)이 비교적 낮은 점"
       ]
     },
     "sentimentConsensus": {
@@ -419,7 +420,13 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 84,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 1320.68,
+    "subscriptionResults": {
+      "totalAccounts": 153400,
+      "totalDepositAmount": 3.71,
+      "proportionalCompetitionRate": 2641.36
+    }
   },
   {
     "id": "barofarm",
@@ -437,15 +444,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "미래에셋증권",
-        "allocatedShares": 650000,
+        "allocatedShares": 445000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 27.4,
-    "totalOfferingAmount": 330,
-    "marketCapAtIpo": 2200,
+    "totalOfferingAmount": 360,
+    "marketCapAtIpo": 2413,
     "aiSummary": {
       "headline": "전국 약국 80% 점유 의약품 B2B 플랫폼 바로팜, 11월 2일~3일 청약 연기 확정",
       "bulletPoints": [
@@ -486,15 +493,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "삼성증권",
-        "allocatedShares": 480000,
+        "allocatedShares": 507500,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 23.8,
-    "totalOfferingAmount": 390,
-    "marketCapAtIpo": 2600,
+    "totalOfferingAmount": 538,
+    "marketCapAtIpo": 2458,
     "aiSummary": {
       "headline": "반도체 식각·증착 부품 선도 동원파츠, 11월 2일~3일 일반 청약",
       "bulletPoints": [
@@ -535,15 +542,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "삼성증권",
-        "allocatedShares": 700000,
+        "allocatedShares": 350000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 29.8,
-    "totalOfferingAmount": 360,
-    "marketCapAtIpo": 2150,
+    "totalOfferingAmount": 252,
+    "marketCapAtIpo": 2361,
     "aiSummary": {
       "headline": "글로벌 골프 론치모니터(UNEEKOR) 10월 20일~21일 일반 청약 개시",
       "bulletPoints": [
@@ -635,7 +642,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "NH투자증권",
-        "allocatedShares": 500000,
+        "allocatedShares": 545000,
         "fee": 2000
       }
     ],
@@ -643,7 +650,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 24.8,
     "totalOfferingAmount": 480,
-    "marketCapAtIpo": 3200,
+    "marketCapAtIpo": 3199,
     "aiSummary": {
       "headline": "엔비디아 파트너사 AI GPU 가상화 솔루션 래블업, 10월 22일~23일 청약",
       "bulletPoints": [
@@ -691,8 +698,8 @@ export const MOCK_IPOS: IpoItem[] = [
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 25.5,
-    "totalOfferingAmount": 295,
-    "marketCapAtIpo": 1850,
+    "totalOfferingAmount": 225,
+    "marketCapAtIpo": 1020,
     "aiSummary": {
       "headline": "13년 연속 흑자 안전 AI 딥테크 인텔리빅스, 10월 21일~22일 일반 청약",
       "bulletPoints": [
@@ -734,28 +741,29 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "IBK투자증권",
-        "allocatedShares": 500000,
+        "allocatedShares": 300000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 1676.3,
-    "lockupCommitmentRate": 18.2,
+    "lockupCommitmentRate": 85.39,
     "circulatingSupplyRate": 23.5,
-    "totalOfferingAmount": 290,
+    "totalOfferingAmount": 234,
     "marketCapAtIpo": 1450,
     "aiSummary": {
-      "headline": "협동로봇 기반 맞춤형 표준 로봇 자동화 솔루션, 밴드 상단 초과 흥행",
+      "headline": "10월 10일 코스닥 상장 완료! 일반 경쟁률 1,676:1 (비례 3,353:1), 증거금 4.9조원 기록",
       "bulletPoints": [
-        "제조·물류 현장 투입용 모듈형 협동로봇 솔루션 플랫폼 소프트웨어 공급",
-        "수요예측 경쟁률 1,676:1 기록, 공모가 상단 19,500원 확정",
-        "상장일 유통물량 23.5%로 매우 가벼운 수급으로 시초가 상승 기대"
+        "공모가 19,500원 확정 & 최종 의무보유확약 85.4%로 대폭 상승",
+        "일반 청약 경쟁률 1,676.26:1 기록하며 증거금 4.90조원 결집",
+        "표준 로봇 자동화 플랫폼 원천기술 바탕 제조 로봇 시장 안착"
       ],
       "positivePoints": [
-        "로봇 섹터 수급 호조와 가벼운 공모 규모",
-        "의무보유확약 18.2%로 기관 보호예수 물량 풍부"
+        "최종 의무보유확약 85.4%로 유통물량 부담 극적 완화",
+        "다양한 산업군 맞춤형 표준화 로봇 라인업 보유"
       ],
       "riskPoints": [
-        "소형 로봇 테마주 특성상 상장 초기 높은 일중 변동성"
+        "로봇 자동화 산업 설비투자 사이클 변동성",
+        "초기 원가 및 연구개발비 비중"
       ]
     },
     "sentimentConsensus": {
@@ -765,7 +773,13 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 89,
-    "scoreGrade": "S"
+    "scoreGrade": "S",
+    "generalCompetitionRate": 1676.26,
+    "subscriptionResults": {
+      "totalAccounts": 113800,
+      "totalDepositAmount": 4.9,
+      "proportionalCompetitionRate": 3352.52
+    }
   },
   {
     "id": "duksan-nepcores",
@@ -783,28 +797,29 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "대신증권",
-        "allocatedShares": 650000,
+        "allocatedShares": 750000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 914.8,
-    "lockupCommitmentRate": 15.3,
+    "lockupCommitmentRate": 57.26,
     "circulatingSupplyRate": 27.8,
-    "totalOfferingAmount": 370,
+    "totalOfferingAmount": 438,
     "marketCapAtIpo": 2400,
     "aiSummary": {
-      "headline": "K-방산 유도무기 및 우주항공 정밀 PNT 항법 솔루션 독점적 지위",
+      "headline": "10월 14일 코스닥 상장 완료! 일반 청약 경쟁률 333:1 (비례 666:1), 증거금 3.64조원",
       "bulletPoints": [
-        "항재밍(Anti-Jamming) 및 위성항법 복합 항법장치 국산화 완료",
-        "K-방산 수출 호조로 한화에어로, LIG넥스원향 장기 수주 잔고 급증",
-        "수요예측 흥행으로 확정공모가 14,600원 밴드 상단 확정"
+        "공모가 14,600원 확정 & 최종 의무보유확약 57.3% 달성",
+        "일반 청약 증거금 3.64조원 유입, 비례경쟁률 665.64:1 마감",
+        "K-방산 유도무기 및 우주항공 항법 PNT 기술 독점적 수혜"
       ],
       "positivePoints": [
-        "방산/우주항공 확실한 실적 기반과 국가 안보 필수 국산화 부품",
-        "대신증권 단독 주관으로 깔끔한 배정 구조"
+        "방산 수출 호조에 따른 정밀 유도무기 부품 주문 증가",
+        "최종 확약 57.3%로 상장 초기 출회 물량 제한"
       ],
       "riskPoints": [
-        "방산 프로젝트 계약 일정에 따른 매출 인식 시점 지연 가능성"
+        "방위사업청 예산 집행 주기에 따른 실적 계절성",
+        "원자재 가격 변동 위험"
       ]
     },
     "sentimentConsensus": {
@@ -814,7 +829,13 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 86,
-    "scoreGrade": "S"
+    "scoreGrade": "S",
+    "generalCompetitionRate": 332.82,
+    "subscriptionResults": {
+      "totalAccounts": 132911,
+      "totalDepositAmount": 3.64,
+      "proportionalCompetitionRate": 665.64
+    }
   },
   {
     "id": "bigwave-robotics",
@@ -832,33 +853,34 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "유진투자증권",
-        "allocatedShares": 300000,
+        "allocatedShares": 266667,
         "fee": 2000
       },
       {
         "name": "미래에셋증권",
-        "allocatedShares": 150000,
+        "allocatedShares": 133333,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 885.2,
-    "lockupCommitmentRate": 13.9,
+    "lockupCommitmentRate": 78.39,
     "circulatingSupplyRate": 29.1,
-    "totalOfferingAmount": 210,
+    "totalOfferingAmount": 288,
     "marketCapAtIpo": 1380,
     "aiSummary": {
-      "headline": "로봇 자동화 매칭 플랫폼 마로솔(마이로봇솔루션) 운영사",
+      "headline": "10월 16일 코스닥 상장 완료! 일반 경쟁률 1,308:1 (비례 2,616:1), 증거금 9.42조원",
       "bulletPoints": [
-        "기업 고객의 제조 공정에 최적화된 로봇 솔루션 추천 및 사후관리 RaaS 제공",
-        "물류센터 AGV/AMR 이송로봇 통합 관제 소프트웨어 솔루션 개발",
-        "기관 경쟁률 885:1, 공모가 상단 초과 14,000원에 확정"
+        "공모가 18,000원 확정 & 최종 의무보유확약 78.4% 기록",
+        "청약 건수 24.8만건, 증거금 9.42조원 몰리며 대흥행",
+        "로봇 플랫폼 마로솔(마이로봇솔루션) AI 매칭 독보적 데이터"
       ],
       "positivePoints": [
-        "공모 규모 210억원대 소형주 메리트와 로봇 테마 수급 호재",
-        "단순 로봇 제조사가 아닌 소프트웨어 플랫폼형 비즈니스 모델"
+        "최종 의무보유확약 78.4%로 유통가능물량 급감",
+        "로봇 도입 컨설팅부터 사후 관리까지 원스톱 플랫폼 모델"
       ],
       "riskPoints": [
-        "중소기업 스마트공장 정부 보조금 예산 변동에 따른 민감도"
+        "플랫폼 거래액 대비 수익 전환율 제고 과제",
+        "로봇 제조사와의 수수료 협상력"
       ]
     },
     "sentimentConsensus": {
@@ -868,7 +890,13 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 77,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 1307.78,
+    "subscriptionResults": {
+      "totalAccounts": 248338,
+      "totalDepositAmount": 9.42,
+      "proportionalCompetitionRate": 2615.56
+    }
   },
   {
     "id": "kbank",
@@ -1030,7 +1058,12 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 83,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 772.8,
+    "subscriptionResults": {
+      "totalDepositAmount": 11.82,
+      "proportionalCompetitionRate": 1545.6
+    }
   },
   {
     "id": "clobot",
@@ -1088,7 +1121,12 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 81,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 1037.0,
+    "subscriptionResults": {
+      "totalDepositAmount": 5.06,
+      "proportionalCompetitionRate": 2074.0
+    }
   },
   {
     "id": "inspien",
@@ -1141,7 +1179,12 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 90,
-    "scoreGrade": "S"
+    "scoreGrade": "S",
+    "generalCompetitionRate": 1538.44,
+    "subscriptionResults": {
+      "totalDepositAmount": 5.19,
+      "proportionalCompetitionRate": 3076.88
+    }
   },
   {
     "id": "toprun-total",
@@ -1194,7 +1237,12 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 81,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 984.39,
+    "subscriptionResults": {
+      "totalDepositAmount": 5.54,
+      "proportionalCompetitionRate": 1968.78
+    }
   },
   {
     "id": "tomocube",
@@ -1247,7 +1295,12 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 82,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 39.94,
+    "subscriptionResults": {
+      "totalDepositAmount": 0.16,
+      "proportionalCompetitionRate": 79.88
+    }
   },
   {
     "id": "alux",
@@ -1300,7 +1353,12 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 77,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "generalCompetitionRate": 539.86,
+    "subscriptionResults": {
+      "totalDepositAmount": 1.6,
+      "proportionalCompetitionRate": 1079.72
+    }
   },
   {
     "id": "한화플러스제6호기업인수목적",
@@ -1318,15 +1376,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "한화투자증권",
-        "allocatedShares": 3500000,
+        "allocatedShares": 1500000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 85.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "circulatingSupplyRate": 6.4,
+    "totalOfferingAmount": 120,
+    "marketCapAtIpo": 128,
     "aiScore": 72,
     "scoreGrade": "B",
     "aiSummary": {
@@ -1367,15 +1425,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "대신증권",
-        "allocatedShares": 450000,
+        "allocatedShares": 550000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 26.2,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 273,
+    "marketCapAtIpo": 1550,
     "aiScore": 77,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1416,15 +1474,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "iM증권",
-        "allocatedShares": 3000000,
+        "allocatedShares": 1250000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 85.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "circulatingSupplyRate": 4.58,
+    "totalOfferingAmount": 100,
+    "marketCapAtIpo": 105,
     "aiScore": 71,
     "scoreGrade": "B",
     "aiSummary": {
@@ -1465,15 +1523,15 @@ export const MOCK_IPOS: IpoItem[] = [
     "underwriters": [
       {
         "name": "대신증권",
-        "allocatedShares": 500000,
+        "allocatedShares": 600000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 24.5,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "circulatingSupplyRate": 35.01,
+    "totalOfferingAmount": 422,
+    "marketCapAtIpo": 2121,
     "aiScore": 78,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1521,8 +1579,8 @@ export const MOCK_IPOS: IpoItem[] = [
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 28.5,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 234,
+    "marketCapAtIpo": 1798,
     "aiScore": 75,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1558,20 +1616,20 @@ export const MOCK_IPOS: IpoItem[] = [
     "refundDate": "2026-11-06",
     "listingDate": "2026-11-13",
     "priceBandMin": 10500,
-    "priceBandMax": 12500,
+    "priceBandMax": 13000,
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "KB증권",
-        "allocatedShares": 500000,
-        "fee": 1500
+        "name": "한국투자증권",
+        "allocatedShares": 1250000,
+        "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 25.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 650,
+    "marketCapAtIpo": 5950,
     "aiScore": 75,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1611,16 +1669,16 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "미래에셋증권",
-        "allocatedShares": 500000,
+        "name": "대신증권",
+        "allocatedShares": 575000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 28.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 253,
+    "marketCapAtIpo": 1591,
     "aiScore": 73,
     "scoreGrade": "B",
     "aiSummary": {
@@ -1659,16 +1717,16 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "신한투자증권",
-        "allocatedShares": 450000,
+        "name": "한국투자증권",
+        "allocatedShares": 550000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 27.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 264,
+    "marketCapAtIpo": 1148,
     "aiScore": 74,
     "scoreGrade": "B",
     "aiSummary": {
@@ -1707,16 +1765,16 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "하나증권",
-        "allocatedShares": 700000,
+        "name": "IBK투자증권",
+        "allocatedShares": 1100000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 24.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "circulatingSupplyRate": 30.83,
+    "totalOfferingAmount": 251,
+    "marketCapAtIpo": 1011,
     "aiScore": 76,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1751,20 +1809,20 @@ export const MOCK_IPOS: IpoItem[] = [
     "refundDate": "2026-11-17",
     "listingDate": "2026-11-23",
     "priceBandMin": 13000,
-    "priceBandMax": 15000,
+    "priceBandMax": 16500,
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "NH투자증권",
-        "allocatedShares": 400000,
+        "name": "신영증권",
+        "allocatedShares": 425000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 23.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 281,
+    "marketCapAtIpo": 1749,
     "aiScore": 76,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1799,20 +1857,20 @@ export const MOCK_IPOS: IpoItem[] = [
     "refundDate": "2026-11-17",
     "listingDate": "2026-11-24",
     "priceBandMin": 26400,
-    "priceBandMax": 30000,
+    "priceBandMax": 31900,
     "confirmedPrice": 0,
     "underwriters": [
       {
         "name": "대신증권",
-        "allocatedShares": 500000,
+        "allocatedShares": 1075000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 22.5,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 1372,
+    "marketCapAtIpo": 6035,
     "aiScore": 79,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1847,20 +1905,20 @@ export const MOCK_IPOS: IpoItem[] = [
     "refundDate": "2026-11-17",
     "listingDate": "2026-11-25",
     "priceBandMin": 10000,
-    "priceBandMax": 10000,
-    "confirmedPrice": 10000,
+    "priceBandMax": 13000,
+    "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "KB증권",
-        "allocatedShares": 600000,
-        "fee": 1500
+        "name": "한국투자증권",
+        "allocatedShares": 737500,
+        "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 28.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "circulatingSupplyRate": 36.25,
+    "totalOfferingAmount": 384,
+    "marketCapAtIpo": 2077,
     "aiScore": 75,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1895,20 +1953,25 @@ export const MOCK_IPOS: IpoItem[] = [
     "refundDate": "2026-11-26",
     "listingDate": "2026-12-03",
     "priceBandMin": 18000,
-    "priceBandMax": 21000,
+    "priceBandMax": 25000,
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "한국투자증권",
-        "allocatedShares": 400000,
+        "name": "삼성증권",
+        "allocatedShares": 325500,
+        "fee": 2000
+      },
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 217000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 25.0,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "totalOfferingAmount": 543,
+    "marketCapAtIpo": 5415,
     "aiScore": 78,
     "scoreGrade": "A",
     "aiSummary": {
@@ -1947,16 +2010,16 @@ export const MOCK_IPOS: IpoItem[] = [
     "confirmedPrice": 0,
     "underwriters": [
       {
-        "name": "미래에셋증권",
+        "name": "IBK투자증권",
         "allocatedShares": 500000,
         "fee": 2000
       }
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 24.5,
-    "totalOfferingAmount": 250,
-    "marketCapAtIpo": 1800,
+    "circulatingSupplyRate": 44.56,
+    "totalOfferingAmount": 356,
+    "marketCapAtIpo": 1510,
     "aiScore": 76,
     "scoreGrade": "A",
     "aiSummary": {
