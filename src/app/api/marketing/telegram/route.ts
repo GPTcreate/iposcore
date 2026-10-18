@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllIpos } from '@/lib/ipoStore';
 import { getEffectiveIpo } from '@/lib/ipoUtils';
 import { sendTelegramBroadcast, formatIpoTelegramMessage } from '@/lib/telegramNotifier';
 
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     let textToSend = customMessage;
 
     if (stockCode && !customMessage) {
-      const rawIpo = MOCK_IPOS.find((i) => i.code === stockCode || i.id === stockCode || i.name === stockCode);
+      const rawIpo = getAllIpos().find((i) => i.code === stockCode || i.id === stockCode || i.name === stockCode);
       if (!rawIpo) {
         return NextResponse.json({ error: '해당 종목을 찾을 수 없습니다.' }, { status: 404 });
       }

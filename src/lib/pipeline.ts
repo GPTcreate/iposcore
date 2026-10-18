@@ -1,4 +1,4 @@
-import { MOCK_IPOS } from '@/data/mockIpo';
+import { getAllIpos } from './ipoStore';
 import { IpoItem } from '@/types/ipo';
 import { getEffectiveIpoStatus } from './ipoUtils';
 import { analyzeIpoSentiment, SentimentAnalysisOutput } from './sentimentAnalyzer';
@@ -130,7 +130,7 @@ export async function runMethod2Pipeline(options?: {
   forceStockName?: string;
   allIpos?: IpoItem[];
 }): Promise<PipelineExecutionResult> {
-  const ipoList = options?.allIpos || MOCK_IPOS;
+  const ipoList = options?.allIpos || getAllIpos();
   const executionDate = options?.targetDate || getKstDateString();
 
   const { targets, skipped } = identifyPipelineTargets(ipoList, executionDate, options?.forceStockName);
