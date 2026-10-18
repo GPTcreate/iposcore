@@ -4,7 +4,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "melcon",
     "name": "멜콘",
-    "code": "377480",
+    "code": "179880",
     "market": "KOSDAQ",
     "status": "LISTED",
     "subscriptionStart": "2026-10-01",
@@ -22,30 +22,31 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 1136.8,
-    "generalCompetitionRate": 3482.95,
+    "generalCompetitionRate": 1741.48,
     "lockupCommitmentRate": 33.1,
     "circulatingSupplyRate": 34.6,
     "totalOfferingAmount": 308,
     "marketCapAtIpo": 1550,
     "subscriptionResults": {
+      "proportionalCompetitionRate": 3481.33,
       "totalAccounts": 254009,
       "totalDepositAmount": 6.7,
       "equalAllocationShares": 1.23
     },
     "aiSummary": {
-      "headline": "청약 경쟁률 3,483:1 대흥행 마감! 증거금 6.7조원 운집, 10월 15일 상장 대기",
+      "headline": "10월 15일 코스닥 신규 상장 완료! 일반 경쟁률 1,741:1(비례 3,481:1) 증거금 6.7조원 기록",
       "bulletPoints": [
-        "일반 청약 최종 경쟁률 3,482.95:1 기록, 청약 증거금 약 6조 7,000억원 유입",
-        "균등 배정 1인당 약 1.23주(추첨 2주 확률), 비례 배정 1주당 증거금 약 2,142만원 소요",
-        "기관 수요예측 1,136:1 및 의무보유확약 33.1%에 이어 일반 청약까지 완벽 흥행",
-        "10월 7일(수) 증거금 환불 후 10월 15일(목) 코스닥 신규 상장 예정"
+        "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 179880)",
+        "일반 청약 최종 경쟁률 1,741.48:1(비례 3,481.33:1) 기록, 청약 증거금 약 6조 7,000억원 유입",
+        "균등 배정 1인당 약 1.23주(추첨 2주 확률), 비례 배정 1주당 증거금 약 2,140만원 소요",
+        "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력 확보"
       ],
       "positivePoints": [
-        "일반 청약 3,483:1 초흥행으로 상장일 시초가 수급 유입 기대 극대화",
+        "일반 청약 1,741:1(비례 3,481:1) 초흥행으로 상장일 시초가 수급 유입 기록",
         "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력"
       ],
       "riskPoints": [
-        "10월 7일 증거금 환불 완료 후 10월 15일 상장일까지 일주일간 수급 공백 주의"
+        "상장 직후 유통가능물량 34.6% 출회 가능성 및 시장 수급 변동성 주의"
       ]
     },
     "sentimentConsensus": {
@@ -91,7 +92,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "jincostec",
     "name": "진코스텍",
-    "code": "252540",
+    "code": "250030",
     "market": "KOSDAQ",
     "status": "LISTED",
     "subscriptionStart": "2026-10-02",
@@ -109,28 +110,31 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 1097.6,
-    "generalCompetitionRate": 17220.73,
+    "generalCompetitionRate": 685.83,
     "lockupCommitmentRate": 5.3,
     "circulatingSupplyRate": 58.4,
     "totalOfferingAmount": 200,
     "marketCapAtIpo": 890,
     "subscriptionResults": {
+      "proportionalCompetitionRate": 1371.66,
       "totalAccounts": 147227,
+      "totalDepositAmount": 1.72,
       "equalAllocationShares": 0.72
     },
     "aiSummary": {
-      "headline": "일반 청약 경쟁률 17,220:1 역대급 마감! 10월 8일 환불, 10월 15일 상장",
+      "headline": "10월 15일 코스닥 상장 완료! 일반 경쟁률 686:1(비례 1,372:1) 증거금 1.72조원 마감",
       "bulletPoints": [
-        "10월 6일 마감된 일반 청약 결과 17,220.73:1의 기록적인 청약 경쟁률 기록",
-        "청약 건수 14.7만건, 균등배정 0.72주(추첨 확률 72%), 비례 경쟁률 1,370:1 집계",
-        "확정 공모가 23,500원(상단), 10월 8일 납입/환불 후 10월 15일 멜콘과 동시 상장 예정"
+        "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 250030)",
+        "일반 청약 최종 경쟁률 685.83:1(비례 1,371.66:1) 기록, 청약 증거금 약 1조 7,200억원 유입",
+        "청약 건수 14.7만건, 균등배정 0.72주(추첨 확률 72%), 확정 공모가 23,500원(상단)",
+        "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
       ],
       "positivePoints": [
         "소형주 수급 메리트 및 청약 계좌 14.7만 건 이상 참여로 뜨거운 시장 관심",
         "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
       ],
       "riskPoints": [
-        "코넥스 이전상장 특성상 상장 직후 유통가능물량 58.4%로 기존 주주 차익 매물 소화 필요"
+        "상장 직후 유통가능물량 58.4% 출회 가능성 및 기존 주주 차익 매물 소화 필요"
       ]
     },
     "sentimentConsensus": {
@@ -371,7 +375,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "ck-solution",
     "name": "씨케이솔루션",
-    "code": "381980",
+    "code": "480370",
     "market": "KOSPI",
     "status": "LISTED",
     "subscriptionStart": "2025-03-04",
@@ -717,7 +721,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "brills",
     "name": "브릴스",
-    "code": "471900",
+    "code": "468670",
     "market": "KOSDAQ",
     "status": "LISTED",
     "subscriptionStart": "2026-09-22",
@@ -766,7 +770,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "duksan-nepcores",
     "name": "덕산넵코어스",
-    "code": "461230",
+    "code": "266690",
     "market": "KOSDAQ",
     "status": "LISTED",
     "subscriptionStart": "2026-09-23",
@@ -924,7 +928,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "hanul-semi",
     "name": "한울반도체",
-    "code": "389200",
+    "code": "320000",
     "market": "KOSDAQ",
     "status": "LISTED",
     "isCancelled": true,

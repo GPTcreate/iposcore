@@ -107,7 +107,7 @@ export default function AdminPage() {
   const [weeklyCronResult, setWeeklyCronResult] = useState<string | null>(null);
 
   // 마케팅 & 바이럴 도구 상태
-  const [marketingStock, setMarketingStock] = useState('377480'); // 기본값: 멜콘
+  const [marketingStock, setMarketingStock] = useState('179880'); // 기본값: 멜콘
   const [marketingPlatform, setMarketingPlatform] = useState<'TISTORY' | 'CAFE' | 'KAKAO' | 'SNS'>('TISTORY');
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [telegramStatus, setTelegramStatus] = useState<{ configured: boolean } | null>(null);

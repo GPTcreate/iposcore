@@ -40,9 +40,22 @@ export function getAllIpos(): IpoItem[] {
 }
 
 /**
- * ID 또는 종목코드로 IPO 검색
+ * 이전 임시 종목코드 호환용 별칭 맵 (이전 북마크나 외부 링크 유입 시 정상 접근 보장)
+ */
+const LEGACY_CODE_ALIASES: Record<string, string> = {
+  '377480': '179880', // 멜콘
+  '252540': '250030', // 진코스텍
+  '381980': '480370', // 씨케이솔루션
+  '471900': '468670', // 브릴스
+  '461230': '266690', // 덕산넵코어스
+  '389200': '320000', // 한울반도체
+};
+
+/**
+ * ID 또는 종목코드로 IPO 검색 (구코드 호환 지원)
  */
 export function getIpoByIdOrCode(idOrCode: string): IpoItem | undefined {
+  const target = LEGACY_CODE_ALIASES[idOrCode] || idOrCode;
   const all = getAllIpos();
-  return all.find((i) => i.code === idOrCode || i.id === idOrCode);
+  return all.find((i) => i.code === target || i.id === target || i.code === idOrCode || i.id === idOrCode);
 }
