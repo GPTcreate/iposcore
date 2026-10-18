@@ -8,6 +8,7 @@ export default function NewsletterBanner() {
   const [frequency, setFrequency] = useState<'WEEKLY' | 'ALL'>('ALL');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [emailConfigured, setEmailConfigured] = useState<boolean>(true);
   const [suggestedCorrection, setSuggestedCorrection] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +33,8 @@ export default function NewsletterBanner() {
       const data = await res.json();
       if (res.ok) {
         setStatus('success');
-        setMessage(data.message || '인증 메일을 발송했습니다. 메일함의 [구독 동의] 링크를 눌러주세요.');
+        setEmailConfigured(data.emailConfigured !== false);
+        setMessage(data.message || '뉴스레터 구독 신청이 완료되었습니다.');
         setEmail('');
       } else {
         setStatus('error');
@@ -73,15 +75,23 @@ export default function NewsletterBanner() {
         {status === 'success' ? (
           <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 flex flex-col items-center gap-2 max-w-lg mx-auto text-left sm:text-center">
             <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 mb-1">
-              <Mail className="w-6 h-6" />
+              {emailConfigured ? <Mail className="w-6 h-6" /> : <ShieldCheck className="w-6 h-6" />}
             </div>
-            <span className="font-bold text-base text-gray-900">수신 동의 확인 메일 발송 완료</span>
+            <span className="font-bold text-base text-gray-900">
+              {emailConfigured ? '수신 동의 확인 메일 발송 완료' : '뉴스레터 구독 신청 완료'}
+            </span>
             <p className="text-xs text-gray-700 leading-relaxed">
               {message}
             </p>
-            <p className="text-[11px] text-gray-500 pt-1">
-              * 메일이 오지 않았다면 스팸 메일함도 함께 확인해주세요.
-            </p>
+            {emailConfigured ? (
+              <p className="text-[11px] text-gray-500 pt-1">
+                * 메일이 오지 않았다면 스팸 메일함도 함께 확인해주세요.
+              </p>
+            ) : (
+              <p className="text-[11px] text-gray-500 pt-1">
+                * 언제든지 사이트 하단 또는 수신 메일에서 언제든 구독 취소하실 수 있습니다.
+              </p>
+            )}
             <button
               type="button"
               onClick={() => { setStatus('idle'); setMessage(''); }}

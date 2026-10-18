@@ -14,6 +14,13 @@ export interface SendMailOptions {
 }
 
 /**
+ * 실제 외부 이메일 발송 서비스(Resend API 또는 SMTP)가 설정되어 있는지 여부
+ */
+export function isEmailConfigured(): boolean {
+  return !!(process.env.RESEND_API_KEY || (process.env.SMTP_USER && process.env.SMTP_PASS));
+}
+
+/**
  * 이메일 전송 발송기 (Resend API -> SMTP -> 시뮬레이션 콘솔 순 자동 처리)
  */
 export async function sendEmail({ to, subject, html, text }: SendMailOptions): Promise<{ success: boolean; id?: string; mode: string }> {
