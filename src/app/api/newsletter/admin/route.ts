@@ -85,14 +85,14 @@ export async function POST(request: NextRequest) {
     if (action === 'TEST_SHEETS_SYNC') {
       const dummySub = {
         id: 'test_sync',
-        email: email || 'test@iposcore.kr',
-        status: 'ACTIVE' as const,
+        email: email || 'test_sync_dummy@iposcore.kr',
+        status: 'CANCELLED' as const,
         frequency: 'ALL' as const,
         verificationToken: 'test_token',
         unsubscribeToken: 'test_unsub',
         subscribedAt: new Date().toISOString(),
       };
-      const synced = await syncToGoogleSheet('SUBSCRIBE', dummySub);
+      const synced = await syncToGoogleSheet('UNSUBSCRIBE', dummySub);
       return NextResponse.json({
         success: synced,
         message: synced

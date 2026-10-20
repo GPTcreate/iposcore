@@ -24,7 +24,15 @@ export async function GET(request: Request) {
     }
 
     const allSubscribers = await getAllSubscribersAsync();
-    const activeSubscribers = allSubscribers.filter((s) => s.status === 'ACTIVE');
+    const activeSubscribers = allSubscribers.filter(
+      (s) =>
+        s.status === 'ACTIVE' &&
+        !s.email.endsWith('@iposcore.kr') &&
+        !s.email.endsWith('@example.com') &&
+        !s.email.startsWith('test_') &&
+        !s.email.startsWith('testuser') &&
+        s.email !== 'test@test.com'
+    );
 
     const executionTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
 

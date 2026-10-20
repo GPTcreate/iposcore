@@ -24,6 +24,18 @@ export function isEmailConfigured(): boolean {
  * 이메일 전송 발송기 (Resend API -> SMTP -> 시뮬레이션 콘솔 순 자동 처리)
  */
 export async function sendEmail({ to, subject, html, text }: SendMailOptions): Promise<{ success: boolean; id?: string; mode: string }> {
+  // 테스트 더미 도메인 안전 차단 (실제 메일 발송 방지)
+  const toLower = to.toLowerCase().trim();
+  if (
+    toLower.endsWith('@iposcore.kr') ||
+    toLower.endsWith('@example.com') ||
+    toLower === 'test@test.com' ||
+    toLower.startsWith('dummy')
+  ) {
+    console.log(`[EmailSender] 테스트 더미 이메일(${to}) 발송이 안전하게 차단되었습니다.`);
+    return { success: true, id: `blocked_test_${Date.now()}`, mode: 'blocked_test' };
+  }
+
   // 1. Resend API 방식 (RESEND_API_KEY 존재 시)
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
