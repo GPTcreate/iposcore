@@ -531,14 +531,14 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "크리에이츠",
     "code": "462900",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
     "listingDate": "2026-10-30",
     "priceBandMin": 15000,
     "priceBandMax": 18000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 15000,
     "underwriters": [
       {
         "name": "삼성증권",
@@ -546,35 +546,35 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 29.8,
-    "totalOfferingAmount": 252,
-    "marketCapAtIpo": 2361,
+    "institutionalCompetitionRate": 240.46,
+    "lockupCommitmentRate": 0.0,
+    "circulatingSupplyRate": 39.43,
+    "totalOfferingAmount": 210,
+    "marketCapAtIpo": 1969,
     "aiSummary": {
-      "headline": "글로벌 골프 론치모니터(UNEEKOR) 10월 20일~21일 일반 청약 개시",
+      "headline": "글로벌 골프 론치모니터(UNEEKOR) 공모가 15,000원 확정, 10월 20일~21일 일반 청약 진행",
       "bulletPoints": [
-        "초고속 비전 센서 기반 미국 골프 시뮬레이터 시장 점유율 최상위권",
-        "희망 공모가 15,000 ~ 18,000원, 청약 기간: 10월 20일(화) ~ 10월 21일(수)",
-        "환불일: 10월 23일(금), 대표 주관사: 삼성증권",
-        "구독형 골프 시뮬레이션 SaaS 매출 확대로 북미 시장 고성장 지속"
+        "기관 수요예측 경쟁률 240.46:1 기록, 공모가 희망 밴드 하단인 15,000원 확정",
+        "상장일 유통가능물량 39.43%(5,176,832주), 의무보유확약 0.0%로 수급 부담 주의",
+        "초고속 비전 센서 기반 미국 골프 시뮬레이터 시장 점유율 최상위권 강소기업",
+        "환불일: 10월 23일(금), 상장예정일: 10월 30일(금), 대표 주관사: 삼성증권"
       ],
       "positivePoints": [
-        "미국 시장 내 프리미엄 브랜드 인지도 확립 및 높은 재구매율",
-        "구독형 소프트웨어(SaaS) 시뮬레이션 서비스 도입으로 반복 수익 창출"
+        "희망 공모가 밴드 하단(15,000원) 확정으로 가격 밸류에이션 매력 확보",
+        "미국 골프 시장 내 UNEEKOR 론치모니터 및 구독형 시뮬레이션 SaaS 인지도 보유"
       ],
       "riskPoints": [
-        "미국 등 주요 수출국의 경기 둔화 시 레저용품 소비 위축 가능성"
+        "상장 직후 유통가능물량 비율 39.43% 및 기관 의무보유확약 사실상 0%로 상장일 매도 압력 주의"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 71,
-      "neutralRatio": 22,
-      "cautionRatio": 7
+      "positiveRatio": 55,
+      "neutralRatio": 30,
+      "cautionRatio": 15
     },
     "expertReviews": [],
-    "aiScore": 79,
-    "scoreGrade": "A"
+    "aiScore": 68,
+    "scoreGrade": "B"
   },
   {
     "id": "tne-korea",
