@@ -83,15 +83,23 @@ export default function IpoCard({ ipo }: IpoCardProps) {
         {/* 핵심 스펙 표 (정갈한 테이블 형태) */}
         <div className="rounded-lg border border-gray-200 bg-gray-50/60 p-3 text-xs space-y-2 mb-3">
           <div className="flex justify-between items-center py-0.5 border-b border-gray-200/80 pb-1.5">
-            <span className="text-gray-500 font-medium">확정 공모가</span>
+            <span className="text-gray-500 font-medium">
+              {ipo.confirmedPrice > 0 ? '확정 공모가' : '희망 공모가 (미확정)'}
+            </span>
             <span className="font-extrabold text-sm text-gray-900">
               {ipo.isCancelled ? (
                 <span className="text-rose-600 font-bold text-xs">공모 취소 (철회)</span>
               ) : ipo.confirmedPrice > 0 ? (
-                `${ipo.confirmedPrice.toLocaleString()}원`
+                <span className="flex items-center gap-1.5">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">확정</span>
+                  <span>{ipo.confirmedPrice.toLocaleString()}원</span>
+                </span>
               ) : (
-                <span className="text-gray-600 font-semibold text-xs">
-                  {ipo.priceBandMin.toLocaleString()} ~ {ipo.priceBandMax.toLocaleString()}원
+                <span className="flex items-center gap-1.5">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">미확정</span>
+                  <span className="text-gray-700 font-semibold text-xs">
+                    {ipo.priceBandMin.toLocaleString()} ~ {ipo.priceBandMax.toLocaleString()}원
+                  </span>
                 </span>
               )}
             </span>
@@ -122,10 +130,12 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             <span className="font-bold text-gray-900">
               {ipo.isCancelled ? (
                 <span className="text-gray-400 font-normal">철회로 미실시/미공개</span>
-              ) : ipo.institutionalCompetitionRate > 0 ? (
+              ) : ipo.confirmedPrice > 0 && ipo.institutionalCompetitionRate > 0 ? (
                 `${ipo.institutionalCompetitionRate.toLocaleString()} : 1`
               ) : (
-                <span className="text-gray-400 font-normal">수요예측 발표 전</span>
+                <span className="text-amber-700 font-medium text-xs bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                  수요예측 전 (미확정)
+                </span>
               )}
             </span>
           </div>

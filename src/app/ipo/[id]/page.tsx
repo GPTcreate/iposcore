@@ -269,14 +269,18 @@ export default async function IpoDetailPage({ params }: PageProps) {
               </span>
             </div>
             <div>
-              <span className="text-gray-500 block mb-0.5 font-medium">확정 공모가</span>
+              <span className="text-gray-500 block mb-0.5 font-medium">
+                {ipo.confirmedPrice > 0 ? '확정 공모가' : '희망 공모가 (미확정)'}
+              </span>
               <span className="font-black text-gray-900 text-sm">
                 {ipo.isCancelled ? (
                   <span className="text-rose-700 font-bold">공모 취소</span>
                 ) : ipo.confirmedPrice > 0 ? (
-                  `${ipo.confirmedPrice.toLocaleString()}원`
+                  <span className="text-emerald-700 font-black">{ipo.confirmedPrice.toLocaleString()}원</span>
                 ) : (
-                  '수요예측 대기'
+                  <span className="text-amber-700 font-bold text-xs">
+                    {ipo.priceBandMin.toLocaleString()} ~ {ipo.priceBandMax.toLocaleString()}원 (수요예측 전)
+                  </span>
                 )}
               </span>
             </div>
@@ -512,25 +516,51 @@ export default async function IpoDetailPage({ params }: PageProps) {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="text-gray-500 block mb-1">기관 수요예측 경쟁률</span>
+              <span className="text-gray-500 block mb-1">
+                기관 수요예측 경쟁률 {ipo.confirmedPrice === 0 && <span className="text-amber-600 font-bold">(미확정)</span>}
+              </span>
               <span className="text-base font-black text-gray-900">
-                {ipo.institutionalCompetitionRate > 0 ? `${ipo.institutionalCompetitionRate}:1` : '발표 전'}
+                {ipo.institutionalCompetitionRate > 0 ? (
+                  `${ipo.institutionalCompetitionRate.toLocaleString()} : 1`
+                ) : (
+                  <span className="text-xs text-amber-700 font-bold">수요예측 전 (공시 예정)</span>
+                )}
               </span>
             </div>
             <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="text-gray-500 block mb-1">의무보유확약 비율</span>
+              <span className="text-gray-500 block mb-1">
+                의무보유확약 비율 {ipo.confirmedPrice === 0 && <span className="text-amber-600 font-bold">(미확정)</span>}
+              </span>
               <span className="text-base font-black text-gray-900">
-                {ipo.lockupCommitmentRate > 0 ? `${ipo.lockupCommitmentRate}%` : '발표 전'}
+                {ipo.confirmedPrice > 0 ? (
+                  `${ipo.lockupCommitmentRate}%`
+                ) : (
+                  <span className="text-xs text-amber-700 font-bold">수요예측 전 (공시 예정)</span>
+                )}
               </span>
             </div>
             <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="text-gray-500 block mb-1">상장일 유통가능비율</span>
+              <span className="text-gray-500 block mb-1">
+                상장일 유통가능비율 {ipo.confirmedPrice === 0 && <span className="text-amber-600 font-bold">(예정)</span>}
+              </span>
               <span className="text-base font-black text-gray-900">
-                {ipo.circulatingSupplyRate}%
+                {ipo.confirmedPrice > 0 ? (
+                  <span className="flex items-center gap-1.5">
+                    <span>{ipo.circulatingSupplyRate}%</span>
+                    <span className="text-[10px] font-bold text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">DART 확정</span>
+                  </span>
+                ) : (
+                  <span className="flex flex-col">
+                    <span>약 {ipo.circulatingSupplyRate}%</span>
+                    <span className="text-[10px] font-medium text-amber-700">신고서 기준 (확정 전)</span>
+                  </span>
+                )}
               </span>
             </div>
             <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="text-gray-500 block mb-1">상장 시 시가총액</span>
+              <span className="text-gray-500 block mb-1">
+                상장 시 시가총액 {ipo.confirmedPrice === 0 && <span className="text-amber-600 font-bold">(예상)</span>}
+              </span>
               <span className="text-base font-black text-gray-900">
                 약 {ipo.marketCapAtIpo.toLocaleString()}억원
               </span>

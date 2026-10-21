@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { runMethod2Pipeline, getKstDateString } from '@/lib/pipeline';
 import { syncNewIposFromDart } from '@/lib/ipoServerStore';
+import { syncExistingIposWithDartFilings } from '@/lib/dartFilingSync';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 
 export const dynamic = 'force-dynamic';
@@ -25,7 +26,10 @@ export async function GET(request: Request) {
     // 1. DART 전자공시 오픈 API 실시간 조회 및 신규 공모주 카드 자동 감지/생성
     const dartSync = await syncNewIposFromDart({ days: 30, limit: 10 });
 
-    // 2. '방법 2' 정책에 따른 선별적 파이프라인 실행
+    // 2. 기존 청약예정/진행 종목의 DART 확정공시(발행조건확정/투자설명서) 자동 대조 및 수치(공모가, 유통비율 등) 갱신
+    const confirmedSync = await syncExistingIposWithDartFilings({ days: 14 });
+
+    // 3. '방법 2' 정책에 따른 선별적 파이프라인 실행
     const allIpos = getAllEffectiveIpos();
     const pipelineResult = await runMethod2Pipeline({
       targetDate: testDate || getKstDateString(),
@@ -38,10 +42,12 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       timestamp: now,
-      policy: '방법 2 (DART 신규 접수 카드 자동생성 + D-1 수요예측 확정 시 1회 분석)',
+      policy: '방법 2 (DART 신규 접수 카드 자동생성 + 기존 종목 DART 확정공시 자동갱신 + D-1 분석)',
       dartFilingsCount: dartSync.filingsCount,
       dartNewCardsCreated: dartSync.newCount,
       dartSyncMessage: dartSync.message,
+      confirmedUpdatedCount: confirmedSync.updatedCount,
+      confirmedUpdatedStocks: confirmedSync.updatedStocks,
       newlyCreatedIpos: dartSync.newIpos.map((i) => ({ name: i.name, code: i.code, status: i.status })),
       ...pipelineResult,
     });
