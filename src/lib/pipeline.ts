@@ -92,7 +92,18 @@ export function identifyPipelineTargets(
       continue;
     }
 
-    // 조건 1: 청약 시작일 D-1 (내일이 청약 시작일인 오늘)
+    // 조건 1: 미확정(공모가 0 또는 경쟁률 0) 상태인 청약 임박 및 진행 중 종목 (D-2 ~ 청약 마감일까지 매일 추적)
+    const isNearOrActive = (todayStr >= ipo.subscriptionStart || tomorrowStr >= ipo.subscriptionStart) && todayStr <= ipo.subscriptionEnd;
+    if (isNearOrActive && (ipo.confirmedPrice === 0 || ipo.institutionalCompetitionRate === 0)) {
+      targets.push({
+        ipo,
+        triggerType: 'DAY_BEFORE_SUBSCRIPTION',
+        reason: `청약 임박/진행 중이나 수요예측 미확정 상태! DART 확정 수치(공모가/경쟁률/유통비율) 필수 추적 및 갱신 (청약 기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd})`,
+      });
+      continue;
+    }
+
+    // 조건 2: 청약 시작일 D-1 (내일이 청약 시작일인 오늘)
     if (ipo.subscriptionStart === tomorrowStr) {
       targets.push({
         ipo,
@@ -102,7 +113,7 @@ export function identifyPipelineTargets(
       continue;
     }
 
-    // 조건 2: 청약 예정 최초 등록 시점 (신규 등록 및 분석 대기)
+    // 조건 3: 청약 예정 최초 등록 시점 (신규 등록 및 분석 대기)
     if (ipo.status === 'UPCOMING' && (!ipo.expertReviews || ipo.expertReviews.length === 0)) {
       targets.push({
         ipo,
