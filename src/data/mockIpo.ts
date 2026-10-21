@@ -680,14 +680,14 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "인텔리빅스",
     "code": "372100",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-10-21",
     "subscriptionEnd": "2026-10-22",
     "refundDate": "2026-10-26",
-    "listingDate": "2026-10-31",
+    "listingDate": "2026-10-30",
     "priceBandMin": 7600,
     "priceBandMax": 9000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 9000,
     "underwriters": [
       {
         "name": "미래에셋증권",
@@ -695,35 +695,36 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 25.5,
+    "institutionalCompetitionRate": 1234.3,
+    "lockupCommitmentRate": 6.14,
+    "circulatingSupplyRate": 23.95,
     "totalOfferingAmount": 225,
     "marketCapAtIpo": 1020,
     "aiSummary": {
-      "headline": "13년 연속 흑자 안전 AI 딥테크 인텔리빅스, 10월 21일~22일 일반 청약",
+      "headline": "13년 연속 흑자 AI 비전 테크 인텔리빅스, 공모가 9,000원 상단 확정 및 청약 진행 중",
       "bulletPoints": [
-        "지능형 영상관제(Vizion AI) 및 생성형 AI 플랫폼 보유한 알짜 흑자 테크기업",
-        "희망 공모가 7,600 ~ 9,000원, 청약 기간: 10월 21일(수) ~ 10월 22일(목)",
-        "환불일: 10월 26일(월), 대표 주관사: 미래에셋증권",
-        "스마트시티·산재예방 관제 시장 개화로 공공 및 대기업 수주 확대"
+        "기관 수요예측 1,234.3:1 대흥행 기록, 희망 밴드 최상단인 9,000원에 최종 확정",
+        "상장일 유통가능물량 23.95%로 오버행 리스크 매우 낮음 (최대주주 지분 60% 3년 락업)",
+        "AI 기술특례가 아닌 일반 상장으로 코스닥 입성, 13년 연속 영업이익 흑자 달성",
+        "환불일: 10월 26일(월), 상장예정일: 10월 30일(금), 대표 주관사: 미래에셋증권"
       ],
       "positivePoints": [
-        "공공 안전 및 중대재해처벌법 강화에 따른 B2B 영상관제 수요 폭증",
-        "10년 이상 축적된 압도적인 영상 데이터베이스와 높은 감지 정확도"
+        "공모가 희망 밴드 상단(9,000원) 초과 수요 집중으로 기관 러브콜 확인",
+        "상장 직후 유통가능비율 23.95%로 매우 안정적인 수급 구조 보유",
+        "공공 및 스마트시티 안전 관제 시장 점유율 1위와 검증된 흑자 경영 실적"
       ],
       "riskPoints": [
-        "공공 프로젝트 발주 시기에 따른 계절적 분기 매출 편차"
+        "공공 안전 프로젝트 발주 시기에 따른 계절적 분기 매출 편차"
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 74,
-      "neutralRatio": 20,
-      "cautionRatio": 6
+      "positiveRatio": 86,
+      "neutralRatio": 11,
+      "cautionRatio": 3
     },
     "expertReviews": [],
-    "aiScore": 81,
-    "scoreGrade": "A"
+    "aiScore": 88,
+    "scoreGrade": "S"
   },
   {
     "id": "brills",
