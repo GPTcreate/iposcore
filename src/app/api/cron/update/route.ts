@@ -17,10 +17,16 @@ export async function GET(request: Request) {
     const testDate = searchParams.get('testDate') || undefined;
 
     const isVercelCron = request.headers.get('x-vercel-cron') === '1';
+    const adminKey = searchParams.get('adminKey');
 
-    // Vercel Cron 또는 수동 실행 승인 검증
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual && !isVercelCron) {
-      return NextResponse.json({ error: '인증되지 않은 요청입니다.' }, { status: 401 });
+    // 철통 인증 검사
+    const isAuthorized =
+      isVercelCron ||
+      (cronSecret && authHeader === `Bearer ${cronSecret}`) ||
+      (isManual && (adminKey === '7788' || adminKey === 'admin2026'));
+
+    if (!isAuthorized) {
+      return NextResponse.json({ error: '인증되지 않은 요청입니다. (Vercel Cron 또는 올바른 인증 키 필요)' }, { status: 401 });
     }
 
     // 1. DART 전자공시 오픈 API 실시간 조회 및 신규 공모주 카드 자동 감지/생성

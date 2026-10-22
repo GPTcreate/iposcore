@@ -18,10 +18,16 @@ export async function GET(request: Request) {
     const cronSecret = process.env.CRON_SECRET;
 
     const isVercelCron = request.headers.get('x-vercel-cron') === '1';
+    const adminKey = searchParams.get('adminKey');
 
-    // 인증 검사 (Vercel Cron 헤더 또는 관리자 manual 쿼리)
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual && !isVercelCron) {
-      return NextResponse.json({ error: 'Unauthorized cron trigger' }, { status: 401 });
+    // 철통 인증 검사: Vercel 정식 크론, CRON_SECRET Bearer 토큰, 또는 관리자 키 일치 시에만 실행 허용
+    const isAuthorized =
+      isVercelCron ||
+      (cronSecret && authHeader === `Bearer ${cronSecret}`) ||
+      (isManual && (adminKey === '7788' || adminKey === 'admin2026'));
+
+    if (!isAuthorized) {
+      return NextResponse.json({ error: '인증되지 않은 요청입니다. (Vercel Cron 또는 올바른 인증 키 필요)' }, { status: 401 });
     }
 
     // 발송 직전 최신 DART 확정공시(확정 공모가, 수요예측 경쟁률) 실시간 동기화

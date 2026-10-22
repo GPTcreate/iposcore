@@ -331,7 +331,7 @@ export default function AdminPage() {
     setWeeklyCronLoading(true);
     setWeeklyCronResult(null);
     try {
-      const res = await fetch('/api/cron/newsletter?manual=true');
+      const res = await fetch('/api/cron/newsletter?manual=true&adminKey=7788');
       const data = await res.json();
       if (data.success) {
         setWeeklyCronResult(`✅ 성공: ${data.message} (${data.sentCount}건 발송)`);
@@ -568,7 +568,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
   const handleTriggerMethod2Check = async () => {
     setIsCrawling(true);
     try {
-      const res = await fetch('/api/cron/update?manual=true');
+      const res = await fetch('/api/cron/update?manual=true&adminKey=7788');
       const data = await res.json();
 
       const newLog: CrawlJobLog = {
@@ -594,7 +594,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
   const handleTriggerCrawl = async () => {
     setIsCrawling(true);
     try {
-      const res = await fetch(`/api/cron/update?manual=true&stock=${encodeURIComponent(selectedStock)}`);
+      const res = await fetch(`/api/cron/update?manual=true&adminKey=7788&stock=${encodeURIComponent(selectedStock)}`);
       const data = await res.json();
 
       const newLog: CrawlJobLog = {
