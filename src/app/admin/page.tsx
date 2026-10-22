@@ -163,6 +163,8 @@ export default function AdminPage() {
   const [adminIpoList, setAdminIpoList] = useState<IpoItem[]>(allIpos);
   const [dartSyncLoading, setDartSyncLoading] = useState(false);
   const [dartSyncResult, setDartSyncResult] = useState<string | null>(null);
+  const [priceSyncLoading, setPriceSyncLoading] = useState(false);
+  const [priceSyncResult, setPriceSyncResult] = useState<string | null>(null);
   const [isAddingIpo, setIsAddingIpo] = useState(false);
   const [manualIpoLoading, setManualIpoLoading] = useState(false);
   const [manualIpoForm, setManualIpoForm] = useState({
@@ -208,6 +210,29 @@ export default function AdminPage() {
       setDartSyncResult('❌ 네트워크 요청 실패');
     } finally {
       setDartSyncLoading(false);
+    }
+  };
+
+  const handleSyncPrices = async (forceAll = false, targetCode?: string) => {
+    setPriceSyncLoading(true);
+    setPriceSyncResult(null);
+    try {
+      const res = await authFetch('/api/ipo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'sync-prices', forceAll, targetCode }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPriceSyncResult(`📈 거래소(KRX) 실전거래 시세 크롤링 완료: ${data.updatedCount}건 갱신 (대상 ${data.totalCandidates}건, 건너뜀 ${data.skippedCount}건)`);
+        fetchIpos();
+      } else {
+        setPriceSyncResult(`❌ 크롤링 실패: ${data.error || '오류'}`);
+      }
+    } catch {
+      setPriceSyncResult('❌ 네트워크 요청 실패');
+    } finally {
+      setPriceSyncLoading(false);
     }
   };
 
@@ -877,6 +902,17 @@ https://iposcore.kr/ipo/${ipo.code}`;
 
               <button
                 type="button"
+                onClick={() => handleSyncPrices(false)}
+                disabled={priceSyncLoading}
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+                title="상장 완료 종목의 시초가/종가를 한국거래소(KRX) 공식 시세에서 실시간 자동 크롤링합니다"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${priceSyncLoading ? 'animate-spin' : ''}`} />
+                <span>{priceSyncLoading ? '거래소 실전거래 시세 크롤링 중...' : '📈 거래소 시초가·종가 자동 크롤링'}</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setIsAddingIpo(!isAddingIpo)}
                 className="px-3.5 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
@@ -891,6 +927,16 @@ https://iposcore.kr/ipo/${ipo.code}`;
             <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 font-bold text-xs flex items-center justify-between">
               <span>{dartSyncResult}</span>
               <button onClick={() => setDartSyncResult(null)} className="text-gray-400 hover:text-gray-700 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* 시세 크롤링 결과 메시지 */}
+          {priceSyncResult && (
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 font-bold text-xs flex items-center justify-between">
+              <span>{priceSyncResult}</span>
+              <button onClick={() => setPriceSyncResult(null)} className="text-gray-400 hover:text-gray-700 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -1023,7 +1069,8 @@ https://iposcore.kr/ipo/${ipo.code}`;
                     <th className="px-3 py-2.5">종목명 (코드)</th>
                     <th className="px-3 py-2.5">시장</th>
                     <th className="px-3 py-2.5">공모가 (밴드/확정)</th>
-                    <th className="px-3 py-2.5">청약 기간</th>
+                    <th className="px-3 py-2.5">청약/상장일</th>
+                    <th className="px-3 py-2.5">실전 체결가 (시초가/종가)</th>
                     <th className="px-3 py-2.5">주관사</th>
                     <th className="px-3 py-2.5 text-right">관리</th>
                   </tr>
@@ -1056,7 +1103,42 @@ https://iposcore.kr/ipo/${ipo.code}`;
                           : `${ipo.priceBandMin.toLocaleString()}~${ipo.priceBandMax.toLocaleString()}원`}
                       </td>
                       <td className="px-3 py-2.5 text-gray-600">
-                        {ipo.subscriptionStart} ~ {ipo.subscriptionEnd?.slice(5) || ''}
+                        <div>{ipo.subscriptionStart} ~ {ipo.subscriptionEnd?.slice(5) || ''}</div>
+                        {ipo.listingDate && <div className="text-[10px] text-blue-700 font-bold">상장: {ipo.listingDate}</div>}
+                      </td>
+                      <td className="px-3 py-2.5 text-xs">
+                        {ipo.status === 'LISTED' ? (
+                          ipo.openingPrice && ipo.closingPrice ? (
+                            <div className="space-y-0.5 whitespace-nowrap">
+                              <span className="block font-bold text-gray-900">
+                                시초: {ipo.openingPrice.toLocaleString()}원{' '}
+                                <span className={ipo.openingReturnRate && ipo.openingReturnRate > 0 ? 'text-rose-600' : ipo.openingReturnRate && ipo.openingReturnRate < 0 ? 'text-blue-600' : 'text-gray-500'}>
+                                  ({ipo.openingReturnRate && ipo.openingReturnRate > 0 ? '+' : ''}{ipo.openingReturnRate}%)
+                                </span>
+                              </span>
+                              <span className="block font-bold text-gray-900">
+                                종가: {ipo.closingPrice.toLocaleString()}원{' '}
+                                <span className={ipo.closingReturnRate && ipo.closingReturnRate > 0 ? 'text-rose-600' : ipo.closingReturnRate && ipo.closingReturnRate < 0 ? 'text-blue-600' : 'text-gray-500'}>
+                                  ({ipo.closingReturnRate && ipo.closingReturnRate > 0 ? '+' : ''}{ipo.closingReturnRate}%)
+                                </span>
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">집계 대기</span>
+                              <button
+                                type="button"
+                                onClick={() => handleSyncPrices(false, ipo.code)}
+                                disabled={priceSyncLoading}
+                                className="px-1.5 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded hover:bg-blue-600 hover:text-white transition-colors cursor-pointer"
+                              >
+                                크롤링
+                              </button>
+                            </div>
+                          )
+                        ) : (
+                          <span className="text-gray-400 text-[11px]">- (상장 전)</span>
+                        )}
                       </td>
                       <td className="px-3 py-2.5 text-gray-600 truncate max-w-[140px]">
                         {ipo.underwriters.map((u: { name: string }) => u.name).join(', ')}

@@ -6,6 +6,7 @@ import {
   deleteCustomIpo,
   loadServerCustomIpos,
 } from '@/lib/ipoServerStore';
+import { syncListingReturnsForIpos } from '@/lib/stockPriceCrawler';
 import { IpoItem } from '@/types/ipo';
 import { verifyAdminRequest } from '@/lib/adminAuth';
 
@@ -25,11 +26,15 @@ export async function GET(request: Request) {
     const now = Date.now();
     if (forceSync) {
       await syncNewIposFromDart({ days: 30, limit: 15 });
+      await syncListingReturnsForIpos();
     } else if (now - lastAutoSyncTime > AUTO_SYNC_INTERVAL_MS) {
       lastAutoSyncTime = now;
       // 사용자 브라우저 응답 렉이 전혀 발생하지 않도록 논블로킹 백그라운드 비동기 처리
-      syncNewIposFromDart({ days: 30, limit: 15 }).catch((err) => {
-        console.warn('[AutoSync] 백그라운드 DART 자동 수집 경고:', err);
+      Promise.all([
+        syncNewIposFromDart({ days: 30, limit: 15 }),
+        syncListingReturnsForIpos(),
+      ]).catch((err) => {
+        console.warn('[AutoSync] 백그라운드 DART 및 시세 자동 수집 경고:', err);
       });
     }
 
@@ -58,6 +63,57 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { action } = body;
+
+    // 1-1. 상장일 실전 체결가(시초가/종가) 거래소 자동 크롤링 동기화
+    if (action === 'sync-prices') {
+      const forceAll = Boolean(body.forceAll);
+      const targetCode = body.targetCode ? String(body.targetCode).trim() : undefined;
+      const result = await syncListingReturnsForIpos({ forceAll, targetCode });
+      return NextResponse.json(result);
+    }
+
+    // 1-2. 개별 종목 실전 시초가·종가 수동 수정/입력
+    if (action === 'update-returns') {
+      const { code, openingPrice, closingPrice } = body;
+      if (!code) {
+        return NextResponse.json({ error: '종목코드를 입력해주세요.' }, { status: 400 });
+      }
+
+      const all = getAllEffectiveIpos();
+      const target = all.find((i) => i.code === code || i.id === code);
+      if (!target) {
+        return NextResponse.json({ error: '해당 종목을 찾을 수 없습니다.' }, { status: 404 });
+      }
+
+      const open = Number(openingPrice) || 0;
+      const close = Number(closingPrice) || 0;
+      const confirmed = target.confirmedPrice || 1;
+
+      const openRate = Number((((open - confirmed) / confirmed) * 100).toFixed(1));
+      const closeRate = Number((((close - confirmed) / confirmed) * 100).toFixed(1));
+
+      const updated: IpoItem = {
+        ...target,
+        status: 'LISTED',
+        openingPrice: open,
+        openingReturnRate: openRate,
+        closingPrice: close,
+        closingReturnRate: closeRate,
+      };
+
+      if (updated.aiSummary) {
+        const signOpen = openRate > 0 ? `+${openRate}%` : `${openRate}%`;
+        const signClose = closeRate > 0 ? `+${closeRate}%` : `${closeRate}%`;
+        updated.aiSummary.headline = `${target.name} 상장 완료! 시초가 ${open.toLocaleString()}원(${signOpen}), 종가 ${close.toLocaleString()}원(${signClose}) 기록`;
+      }
+
+      const result = addOrUpdateIpo(updated);
+      return NextResponse.json({
+        success: true,
+        ipo: result.ipo,
+        message: `${target.name} (${code}) 실전 시초가/종가 데이터가 저장되었습니다.`,
+      });
+    }
 
     // 1. DART 전자공시 실시간 자동 동기화 (신규 공모주 감지 & 카드 자동 생성)
     if (action === 'sync-dart') {
