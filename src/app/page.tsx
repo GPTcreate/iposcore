@@ -184,7 +184,7 @@ export default function Home() {
                       { key: 'SUBSCRIPTION' as const, label: '청약 진행 중', count: 0 },
                     ]),
                 { key: 'WAITING_LISTING', label: '상장 대기', count: allIpos.filter((i) => i.status === 'WAITING_LISTING').length },
-                { key: 'LISTED', label: '지난 공모주', count: allIpos.filter((i) => i.status === 'LISTED').length },
+                { key: 'LISTED', label: '상장 완료 (실전 수익률)', count: allIpos.filter((i) => i.status === 'LISTED').length },
               ];
 
               return tabs.map((tab) => (
@@ -210,7 +210,7 @@ export default function Home() {
                 filter === 'ALL' ? '전체 일정 (지난 공모주 제외)' :
                 filter === 'SUBSCRIPTION' ? '청약 진행 중' :
                 filter === 'UPCOMING' ? '청약 예정' :
-                filter === 'WAITING_LISTING' ? '상장 대기' : '지난 공모주 (상장 완료)'
+                filter === 'WAITING_LISTING' ? '상장 대기' : '상장 완료 (실전 수익률)'
               }</strong> ({filteredIpos.length}개 종목)
             </span>
             <span className="hidden sm:inline">* 매 영업일 최신 공시 기준 업데이트</span>

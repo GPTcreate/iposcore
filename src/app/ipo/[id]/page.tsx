@@ -210,7 +210,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
                     : ipo.status === 'SUBSCRIPTION'
                     ? 'bg-red-600 text-white'
                     : ipo.status === 'LISTED'
-                    ? 'bg-gray-500 text-white'
+                    ? 'bg-emerald-700 text-white font-bold'
                     : 'bg-blue-700 text-white'
                 }`}>
                   {ipo.isCancelled
@@ -247,44 +247,104 @@ export default async function IpoDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* 주요 일정 요약 바 */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-gray-200 text-xs">
-            <div>
-              <span className="text-gray-500 block mb-0.5 font-medium">청약 기간</span>
-              <span className="font-bold text-gray-900 text-sm flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-blue-700" />
-                {ipo.subscriptionStart} ~ {ipo.subscriptionEnd.slice(5)}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-500 block mb-0.5 font-medium">환불일</span>
-              <span className="font-bold text-gray-900 text-sm">
-                {ipo.refundDate}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-500 block mb-0.5 font-medium">상장일</span>
-              <span className={`font-bold text-sm ${ipo.isCancelled ? 'text-rose-700' : 'text-blue-700'}`}>
-                {ipo.isCancelled ? '공모 철회 (취소)' : ipo.listingDate || '추후 공시 예정'}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-500 block mb-0.5 font-medium">
-                {ipo.confirmedPrice > 0 ? '확정 공모가' : '희망 공모가 (미확정)'}
-              </span>
-              <span className="font-black text-gray-900 text-sm">
-                {ipo.isCancelled ? (
-                  <span className="text-rose-700 font-bold">공모 취소</span>
-                ) : ipo.confirmedPrice > 0 ? (
-                  <span className="text-emerald-700 font-black">{ipo.confirmedPrice.toLocaleString()}원</span>
-                ) : (
-                  <span className="text-amber-700 font-bold text-xs">
-                    {ipo.priceBandMin.toLocaleString()} ~ {ipo.priceBandMax.toLocaleString()}원 (수요예측 전)
+          {/* 주요 일정 요약 바 (상장 완료 종목은 실전 시초가·종가 수익률로 즉시 대체 표시) */}
+          {!ipo.isCancelled && ipo.status === 'LISTED' ? (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-gray-200 text-xs">
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">확정 공모가</span>
+                <span className="font-black text-emerald-700 text-sm">
+                  {ipo.confirmedPrice.toLocaleString()}원
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">상장일</span>
+                <span className="font-bold text-gray-900 text-sm flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-blue-700" />
+                  {ipo.listingDate || '-'}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">상장일 시초가</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-black text-gray-900 text-sm">
+                    {ipo.openingPrice ? `${ipo.openingPrice.toLocaleString()}원` : '-'}
                   </span>
-                )}
-              </span>
+                  {ipo.openingReturnRate !== undefined && (
+                    <span
+                      className={`text-[11px] font-black px-1.5 py-0.5 rounded border ${
+                        ipo.openingReturnRate > 0
+                          ? 'text-rose-700 bg-rose-50 border-rose-200'
+                          : ipo.openingReturnRate < 0
+                          ? 'text-blue-700 bg-blue-50 border-blue-200'
+                          : 'text-gray-700 bg-gray-100 border-gray-200'
+                      }`}
+                    >
+                      {ipo.openingReturnRate > 0 ? `+${ipo.openingReturnRate.toFixed(1)}%` : `${ipo.openingReturnRate.toFixed(1)}%`}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">상장일 종가</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-black text-gray-900 text-sm">
+                    {ipo.closingPrice ? `${ipo.closingPrice.toLocaleString()}원` : '-'}
+                  </span>
+                  {ipo.closingReturnRate !== undefined && (
+                    <span
+                      className={`text-[11px] font-black px-1.5 py-0.5 rounded border ${
+                        ipo.closingReturnRate > 0
+                          ? 'text-rose-700 bg-rose-50 border-rose-200'
+                          : ipo.closingReturnRate < 0
+                          ? 'text-blue-700 bg-blue-50 border-blue-200'
+                          : 'text-gray-700 bg-gray-100 border-gray-200'
+                      }`}
+                    >
+                      {ipo.closingReturnRate > 0 ? `+${ipo.closingReturnRate.toFixed(1)}%` : `${ipo.closingReturnRate.toFixed(1)}%`}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-gray-200 text-xs">
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">청약 기간</span>
+                <span className="font-bold text-gray-900 text-sm flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-blue-700" />
+                  {ipo.subscriptionStart} ~ {ipo.subscriptionEnd.slice(5)}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">환불일</span>
+                <span className="font-bold text-gray-900 text-sm">
+                  {ipo.refundDate}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">상장일</span>
+                <span className={`font-bold text-sm ${ipo.isCancelled ? 'text-rose-700' : 'text-blue-700'}`}>
+                  {ipo.isCancelled ? '공모 철회 (취소)' : ipo.listingDate || '추후 공시 예정'}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-0.5 font-medium">
+                  {ipo.confirmedPrice > 0 ? '확정 공모가' : '희망 공모가 (미확정)'}
+                </span>
+                <span className="font-black text-gray-900 text-sm">
+                  {ipo.isCancelled ? (
+                    <span className="text-rose-700 font-bold">공모 취소</span>
+                  ) : ipo.confirmedPrice > 0 ? (
+                    <span className="text-emerald-700 font-black">{ipo.confirmedPrice.toLocaleString()}원</span>
+                  ) : (
+                    <span className="text-amber-700 font-bold text-xs">
+                      {ipo.priceBandMin.toLocaleString()} ~ {ipo.priceBandMax.toLocaleString()}원 (수요예측 전)
+                    </span>
+                  )}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 공모 취소/철회 종목 사유 안내 배너 */}
@@ -301,45 +361,144 @@ export default async function IpoDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* 상장 완료 종목 실전 수익률 배너 (시초가 & 종가, 정상 상장 종목만) */}
-        {!ipo.isCancelled && ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (
-          <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-300 shadow-2xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
+        {/* 상장 완료 종목 실전 수익률 상세 카드 (시초가 & 종가 손익 분석) */}
+        {!ipo.isCancelled && ipo.status === 'LISTED' && (ipo.openingReturnRate !== undefined || ipo.closingReturnRate !== undefined) && (() => {
+          const openingProfit = ipo.openingPrice && ipo.confirmedPrice ? ipo.openingPrice - ipo.confirmedPrice : null;
+          const closingProfit = ipo.closingPrice && ipo.confirmedPrice ? ipo.closingPrice - ipo.confirmedPrice : null;
+          const openToCloseDiff = ipo.openingPrice && ipo.closingPrice ? ipo.closingPrice - ipo.openingPrice : null;
+          const openToCloseRate = ipo.openingPrice && ipo.closingPrice ? ((ipo.closingPrice - ipo.openingPrice) / ipo.openingPrice) * 100 : null;
+
+          return (
+            <div className="p-5 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-50/90 via-teal-50/50 to-blue-50/60 border border-emerald-300 shadow-2xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-200/80 pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-extrabold bg-emerald-600 text-white">상장 완료</span>
-                  <span className="text-xs font-semibold text-gray-600">확정 공모가 {ipo.confirmedPrice.toLocaleString()}원 기준</span>
+                  <span className="px-2.5 py-1 rounded-md text-xs font-black bg-emerald-700 text-white shadow-xs">
+                    상장일 실전 수익률 결과
+                  </span>
+                  <span className="text-xs font-semibold text-gray-700">
+                    확정 공모가 <strong>{ipo.confirmedPrice.toLocaleString()}원</strong> 대비 청약 실현 수익률
+                  </span>
                 </div>
-                <h3 className="text-base font-bold text-gray-900 mt-1">상장 당일 실전 수익률 결과</h3>
-              </div>
-              <div className="flex items-center gap-6 sm:gap-8 bg-white/90 py-2.5 px-5 rounded-lg border border-emerald-200">
-                <div>
-                  <span className="text-xs text-gray-500 block font-medium">시초가 수익률</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className={`text-xl font-black ${ipo.openingReturnRate && ipo.openingReturnRate > 0 ? 'text-rose-600' : ipo.openingReturnRate && ipo.openingReturnRate < 0 ? 'text-blue-600' : 'text-gray-900'}`}>
-                      {ipo.openingReturnRate && ipo.openingReturnRate > 0 ? `+${ipo.openingReturnRate.toFixed(1)}%` : `${ipo.openingReturnRate?.toFixed(1)}%`}
-                    </span>
-                    {ipo.openingPrice && (
-                      <span className="text-xs text-gray-500 font-medium">({ipo.openingPrice.toLocaleString()}원)</span>
-                    )}
+                {ipo.listingDate && (
+                  <div className="text-xs text-gray-600 font-medium flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                    <span>상장일: <strong>{ipo.listingDate}</strong></span>
                   </div>
-                </div>
-                <div className="h-8 w-px bg-gray-200" />
-                <div>
-                  <span className="text-xs text-gray-500 block font-medium">종가 수익률</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className={`text-xl font-black ${ipo.closingReturnRate && ipo.closingReturnRate > 0 ? 'text-rose-600' : ipo.closingReturnRate && ipo.closingReturnRate < 0 ? 'text-blue-600' : 'text-gray-900'}`}>
-                      {ipo.closingReturnRate && ipo.closingReturnRate > 0 ? `+${ipo.closingReturnRate.toFixed(1)}%` : `${ipo.closingReturnRate?.toFixed(1)}%`}
+                )}
+              </div>
+
+              {/* 시초가 & 종가 2단 핵심 성과 카드 */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* 1. 상장일 시초가 */}
+                <div className="p-4 rounded-xl bg-white/95 border border-emerald-200 shadow-2xs space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                      <span>상장일 시초가 (09:00 체결가)</span>
                     </span>
-                    {ipo.closingPrice && (
-                      <span className="text-xs text-gray-500 font-medium">({ipo.closingPrice.toLocaleString()}원)</span>
-                    )}
+                    <span className="text-[11px] text-gray-500 font-medium">공모가 대비</span>
                   </div>
+                  <div className="flex items-baseline justify-between pt-1">
+                    <span className="text-2xl font-black text-gray-900">
+                      {ipo.openingPrice ? `${ipo.openingPrice.toLocaleString()}원` : '-'}
+                    </span>
+                    <span
+                      className={`text-lg sm:text-xl font-black px-2.5 py-0.5 rounded-lg border ${
+                        ipo.openingReturnRate && ipo.openingReturnRate > 0
+                          ? 'text-rose-600 bg-rose-50 border-rose-200'
+                          : ipo.openingReturnRate && ipo.openingReturnRate < 0
+                          ? 'text-blue-600 bg-blue-50 border-blue-200'
+                          : 'text-gray-900 bg-gray-50 border-gray-200'
+                      }`}
+                    >
+                      {ipo.openingReturnRate !== undefined
+                        ? (ipo.openingReturnRate > 0 ? `+${ipo.openingReturnRate.toFixed(1)}%` : `${ipo.openingReturnRate.toFixed(1)}%`)
+                        : '-'}
+                    </span>
+                  </div>
+                  {openingProfit !== null && (
+                    <div className="pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
+                      <span className="text-gray-500 font-medium">1주당 실현 손익</span>
+                      <span
+                        className={`font-black ${
+                          openingProfit > 0 ? 'text-rose-600' : openingProfit < 0 ? 'text-blue-600' : 'text-gray-700'
+                        }`}
+                      >
+                        {openingProfit > 0 ? `+${openingProfit.toLocaleString()}원` : `${openingProfit.toLocaleString()}원`} / 주
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. 상장일 종가 */}
+                <div className="p-4 rounded-xl bg-white/95 border border-emerald-200 shadow-2xs space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-blue-600" />
+                      <span>상장일 종가 (15:30 마감가)</span>
+                    </span>
+                    <span className="text-[11px] text-gray-500 font-medium">공모가 대비</span>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-1">
+                    <span className="text-2xl font-black text-gray-900">
+                      {ipo.closingPrice ? `${ipo.closingPrice.toLocaleString()}원` : '-'}
+                    </span>
+                    <span
+                      className={`text-lg sm:text-xl font-black px-2.5 py-0.5 rounded-lg border ${
+                        ipo.closingReturnRate && ipo.closingReturnRate > 0
+                          ? 'text-rose-600 bg-rose-50 border-rose-200'
+                          : ipo.closingReturnRate && ipo.closingReturnRate < 0
+                          ? 'text-blue-600 bg-blue-50 border-blue-200'
+                          : 'text-gray-900 bg-gray-50 border-gray-200'
+                      }`}
+                    >
+                      {ipo.closingReturnRate !== undefined
+                        ? (ipo.closingReturnRate > 0 ? `+${ipo.closingReturnRate.toFixed(1)}%` : `${ipo.closingReturnRate.toFixed(1)}%`)
+                        : '-'}
+                    </span>
+                  </div>
+                  {closingProfit !== null && (
+                    <div className="pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
+                      <span className="text-gray-500 font-medium">1주당 실현 손익</span>
+                      <span
+                        className={`font-black ${
+                          closingProfit > 0 ? 'text-rose-600' : closingProfit < 0 ? 'text-blue-600' : 'text-gray-700'
+                        }`}
+                      >
+                        {closingProfit > 0 ? `+${closingProfit.toLocaleString()}원` : `${closingProfit.toLocaleString()}원`} / 주
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
+
+              {/* 하단 인사이트: 장중 시초가 대비 종가 등락 비교 & 매도 전략 요약 */}
+              {openToCloseDiff !== null && openToCloseRate !== null && (
+                <div className="p-3 rounded-lg bg-white/90 border border-emerald-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <span className="text-gray-800 font-medium">
+                      {openToCloseDiff > 0 ? (
+                        <>
+                          시초가 대비 장중 <strong className="text-rose-600 font-bold">+{openToCloseRate.toFixed(1)}% (+{openToCloseDiff.toLocaleString()}원)</strong> 추가 상승 마감하여 종가 매도가 더 유리했습니다.
+                        </>
+                      ) : openToCloseDiff < 0 ? (
+                        <>
+                          시초가 대비 장중 <strong className="text-blue-600 font-bold">{openToCloseRate.toFixed(1)}% ({openToCloseDiff.toLocaleString()}원)</strong> 하락하여 시초가 즉시 매도가 더 유리했습니다.
+                        </>
+                      ) : (
+                        <>시초가와 동일한 가격으로 첫날 장을 마감했습니다.</>
+                      )}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-gray-500 shrink-0">
+                    * 단순 수익률 기준 (증권사 거래수수료 및 제세금 별도)
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* 일반 청약 마감 결과 배너 (상장 대기 또는 상장 완료 종목 중 일반 경쟁률 데이터가 있는 경우) */}
         {!ipo.isCancelled && ipo.generalCompetitionRate && (

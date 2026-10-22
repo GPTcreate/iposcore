@@ -87,7 +87,11 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "aiScore": 94,
-    "scoreGrade": "S"
+    "scoreGrade": "S",
+    "openingPrice": 24600,
+    "openingReturnRate": 100,
+    "closingPrice": 22100,
+    "closingReturnRate": 79.7
   },
   {
     "id": "jincostec",
@@ -165,7 +169,11 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "aiScore": 82,
-    "scoreGrade": "A"
+    "scoreGrade": "A",
+    "openingPrice": 38200,
+    "openingReturnRate": 62.6,
+    "closingPrice": 35400,
+    "closingReturnRate": 50.6
   },
   {
     "id": "elice-group",
@@ -334,9 +342,9 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 1042.0,
+    "institutionalCompetitionRate": 1042,
     "generalCompetitionRate": 986.89,
-    "lockupCommitmentRate": 61.0,
+    "lockupCommitmentRate": 61,
     "circulatingSupplyRate": 28.2,
     "totalOfferingAmount": 412,
     "marketCapAtIpo": 2338,
@@ -394,7 +402,7 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 1020.35,
     "lockupCommitmentRate": 5.46,
-    "circulatingSupplyRate": 25.0,
+    "circulatingSupplyRate": 25,
     "totalOfferingAmount": 472,
     "marketCapAtIpo": 3420,
     "aiSummary": {
@@ -426,7 +434,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalAccounts": 153400,
       "totalDepositAmount": 3.71,
       "proportionalCompetitionRate": 2641.36
-    }
+    },
+    "openingPrice": 18600,
+    "openingReturnRate": 24,
+    "closingPrice": 16800,
+    "closingReturnRate": 12
   },
   {
     "id": "barofarm",
@@ -547,7 +559,7 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 240.46,
-    "lockupCommitmentRate": 0.0,
+    "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 39.43,
     "totalOfferingAmount": 210,
     "marketCapAtIpo": 1969,
@@ -780,7 +792,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalAccounts": 113800,
       "totalDepositAmount": 4.9,
       "proportionalCompetitionRate": 3352.52
-    }
+    },
+    "openingPrice": 29250,
+    "openingReturnRate": 50,
+    "closingPrice": 27900,
+    "closingReturnRate": 43.1
   },
   {
     "id": "duksan-nepcores",
@@ -836,7 +852,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalAccounts": 132911,
       "totalDepositAmount": 3.64,
       "proportionalCompetitionRate": 665.64
-    }
+    },
+    "openingPrice": 21900,
+    "openingReturnRate": 50,
+    "closingPrice": 20400,
+    "closingReturnRate": 39.7
   },
   {
     "id": "bigwave-robotics",
@@ -897,7 +917,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalAccounts": 248338,
       "totalDepositAmount": 9.42,
       "proportionalCompetitionRate": 2615.56
-    }
+    },
+    "openingPrice": 25200,
+    "openingReturnRate": 40,
+    "closingPrice": 23400,
+    "closingReturnRate": 30
   },
   {
     "id": "kbank",
@@ -1123,10 +1147,10 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": [],
     "aiScore": 81,
     "scoreGrade": "A",
-    "generalCompetitionRate": 1037.0,
+    "generalCompetitionRate": 1037,
     "subscriptionResults": {
       "totalDepositAmount": 5.06,
-      "proportionalCompetitionRate": 2074.0
+      "proportionalCompetitionRate": 2074
     }
   },
   {
@@ -1628,7 +1652,7 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 25.0,
+    "circulatingSupplyRate": 25,
     "totalOfferingAmount": 650,
     "marketCapAtIpo": 5950,
     "aiScore": 75,
@@ -1677,7 +1701,7 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 28.0,
+    "circulatingSupplyRate": 28,
     "totalOfferingAmount": 253,
     "marketCapAtIpo": 1591,
     "aiScore": 73,
@@ -1725,7 +1749,7 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 27.0,
+    "circulatingSupplyRate": 27,
     "totalOfferingAmount": 264,
     "marketCapAtIpo": 1148,
     "aiScore": 74,
@@ -1821,7 +1845,7 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 23.0,
+    "circulatingSupplyRate": 23,
     "totalOfferingAmount": 281,
     "marketCapAtIpo": 1749,
     "aiScore": 76,
@@ -1970,7 +1994,7 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 25.0,
+    "circulatingSupplyRate": 25,
     "totalOfferingAmount": 543,
     "marketCapAtIpo": 5415,
     "aiScore": 78,
