@@ -179,10 +179,13 @@ export async function syncListingReturnsForIpos(options?: {
   const allIpos = getAllEffectiveIpos();
   const todayStr = getKstDateString();
 
+  let skippedCount = 0;
+
   // 크롤링 대상 종목 필터링:
   // 1) 상장 완료(LISTED) 또는 오늘 상장일 도래 종목
   // 2) 공모 취소(isCancelled) 종목 제외
-  // 3) forceAll 옵션이 아니면 시초가/종가가 비어있거나 0원인 건만 선별
+  // 3) [영구 불변 정책]: 이미 시초가와 종가가 최종 등록된 종목은 영구 불변(Frozen) 데이터로 간주하여
+  //    추가 네트워크 요청, 불필요한 재크롤링, 재검증(크로스체크)을 100% 차단하고 즉시 건너뜁니다.
   const candidates = allIpos.filter((ipo) => {
     if (ipo.isCancelled) return false;
     if (options?.targetCode && ipo.code !== options.targetCode) return false;
@@ -190,14 +193,35 @@ export async function syncListingReturnsForIpos(options?: {
     const isListed = ipo.status === 'LISTED' || (ipo.listingDate && todayStr >= ipo.listingDate);
     if (!isListed) return false;
 
-    if (options?.forceAll) return true;
-    const isMissing = !ipo.openingPrice || !ipo.closingPrice || ipo.openingPrice <= 0 || ipo.closingPrice <= 0;
-    return isMissing;
+    // 이미 시초가와 종가가 모두 확정 등록된 종목 여부
+    const isAlreadyFinalized =
+      Boolean(ipo.openingPrice && ipo.openingPrice > 0 && ipo.closingPrice && ipo.closingPrice > 0);
+
+    // 관리자가 특정 종목 코드를 명시하여 강제 갱신을 요청한 경우가 아니라면,
+    // 최종 등록 완료된 종목은 일체 다시 보거나 크롤링하지 않음!
+    if (isAlreadyFinalized && (!options?.targetCode || options.targetCode !== ipo.code)) {
+      skippedCount++;
+      return false;
+    }
+
+    return true;
   });
 
   const updatedStocks: SyncPriceResult['updatedStocks'] = [];
   const errors: SyncPriceResult['errors'] = [];
-  let skippedCount = 0;
+
+  // 대기 중인 대상 종목이 없으면(모두 등록 완료 상태) 네트워크 호출 없이 0ms 즉시 반환
+  if (candidates.length === 0) {
+    return {
+      success: true,
+      totalCandidates: 0,
+      updatedCount: 0,
+      updatedStocks: [],
+      skippedCount,
+      errors: [],
+      timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+    };
+  }
 
   for (const ipo of candidates) {
     // 6자리 정상 코드가 없는 경우 건너뜀
