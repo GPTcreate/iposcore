@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAllSubscribersAsync } from '@/lib/subscriberStore';
 import { sendWeeklyReportEmail } from '@/lib/emailSender';
+import { syncExistingIposWithDartFilings } from '@/lib/dartFilingSync';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,13 @@ export async function GET(request: Request) {
     // 인증 검사 (Vercel Cron 헤더 또는 관리자 manual 쿼리)
     if (cronSecret && authHeader !== `Bearer ${cronSecret}` && !isManual && !isVercelCron) {
       return NextResponse.json({ error: 'Unauthorized cron trigger' }, { status: 401 });
+    }
+
+    // 발송 직전 최신 DART 확정공시(확정 공모가, 수요예측 경쟁률) 실시간 동기화
+    try {
+      await syncExistingIposWithDartFilings({ days: 7 });
+    } catch (syncErr) {
+      console.warn('[Cron:Newsletter] 발송 전 DART 동기화 경고 (기존 데이터로 계속 진행):', syncErr);
     }
 
     const allSubscribers = await getAllSubscribersAsync();
