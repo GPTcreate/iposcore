@@ -34,7 +34,7 @@ export const MOCK_IPOS: IpoItem[] = [
       "equalAllocationShares": 1.23
     },
     "aiSummary": {
-      "headline": "10월 15일 코스닥 신규 상장 완료! 일반 경쟁률 1,741:1(비례 3,481:1) 증거금 6.7조원 기록",
+      "headline": "10월 15일 코스닥 신규 상장! 시초가 22,750원(+85.0%), 종가 17,470원(+42.0%) 마감",
       "bulletPoints": [
         "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 179880)",
         "일반 청약 최종 경쟁률 1,741.48:1(비례 3,481.33:1) 기록, 청약 증거금 약 6조 7,000억원 유입",
@@ -88,10 +88,10 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "aiScore": 94,
     "scoreGrade": "S",
-    "openingPrice": 24600,
-    "openingReturnRate": 100,
-    "closingPrice": 22100,
-    "closingReturnRate": 79.7
+    "openingPrice": 22750,
+    "openingReturnRate": 85,
+    "closingPrice": 17470,
+    "closingReturnRate": 42
   },
   {
     "id": "jincostec",
@@ -126,7 +126,7 @@ export const MOCK_IPOS: IpoItem[] = [
       "equalAllocationShares": 0.72
     },
     "aiSummary": {
-      "headline": "10월 15일 코스닥 상장 완료! 일반 경쟁률 686:1(비례 1,372:1) 증거금 1.72조원 마감",
+      "headline": "10월 15일 코스닥 신규 상장! 시초가 24,000원(+2.1%), 첫날 종가 14,940원(-36.4%) 마감",
       "bulletPoints": [
         "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 250030)",
         "일반 청약 최종 경쟁률 685.83:1(비례 1,371.66:1) 기록, 청약 증거금 약 1조 7,200억원 유입",
@@ -170,10 +170,10 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "aiScore": 82,
     "scoreGrade": "A",
-    "openingPrice": 38200,
-    "openingReturnRate": 62.6,
-    "closingPrice": 35400,
-    "closingReturnRate": 50.6
+    "openingPrice": 24000,
+    "openingReturnRate": 2.1,
+    "closingPrice": 14940,
+    "closingReturnRate": -36.4
   },
   {
     "id": "elice-group",
@@ -213,11 +213,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "proportionalCompetitionRate": 816.34
     },
     "aiSummary": {
-      "headline": "10월 20일 코스닥 신규 상장 완료! 시초가 +69.1%, 종가 165,000원(+82.3%) 기록",
+      "headline": "10월 20일 코스닥 신규 상장! 시초가 75,700원(-16.4%), 첫날 종가 61,500원(-32.0%) 기록",
       "bulletPoints": [
         "일반 청약 최종 경쟁률 408.17:1 (비례배정 경쟁률 816.34:1) 기록, 청약 증거금 10조 2,598억원 운집",
         "확정 공모가 90,500원 (상단 확정), 상장 후 시총 1조 54억원으로 하반기 코스닥 최대어 등극",
-        "균등 배정 1인당 약 0.96주 (추첨 1주 또는 0주), 10월 20일(화) 코스닥 신규 상장 완료",
+        "상장 첫날 공모가(90,500원) 대비 시초가 75,700원(-16.4%), 종가 61,500원(-32.0%) 기록 (이후 저가 매수세 유입)",
         "상장 직후 유통가능물량 20.81%로 대형 테크주 중 매우 타이트한 품절주 수급 구조"
       ],
       "positivePoints": [
@@ -258,10 +258,10 @@ export const MOCK_IPOS: IpoItem[] = [
     ],
     "aiScore": 88,
     "scoreGrade": "S",
-    "openingPrice": 153000,
-    "openingReturnRate": 69.1,
-    "closingPrice": 165000,
-    "closingReturnRate": 82.3
+    "openingPrice": 75700,
+    "openingReturnRate": -16.4,
+    "closingPrice": 61500,
+    "closingReturnRate": -32
   },
   {
     "id": "ms-bio",
@@ -296,12 +296,12 @@ export const MOCK_IPOS: IpoItem[] = [
       "proportionalCompetitionRate": 3076.02
     },
     "aiSummary": {
-      "headline": "10월 22일 코스닥 신규 상장 완료! 시초가 15,600원(+100% 따블), 종가 +120.5% 대흥행 마감",
+      "headline": "10월 22일 코스닥 신규 상장! 시초가 16,000원(+105.1% 따블 초과), 종가 13,440원(+72.3%) 마감",
       "bulletPoints": [
         "일반 청약 최종 경쟁률 1,538.51:1 (비례배정 경쟁률 3,076.02:1) 기록, 청약 증거금 약 6조 151억원 유입",
         "확정 공모가 7,800원 (희망밴드 6,800~7,800원 상단 확정), 총 공모금액 312억원",
         "기관 수요예측 경쟁률 1,096.56:1 및 최종 의무보유확약 비율 82.52% 배정으로 기관 신뢰도 입증",
-        "균등배정 1인당 약 1.75주 (1주 기본 + 75% 추첨 2주 배정), 10월 22일(목) 코스닥 신규 상장 완료"
+        "상장 첫날 공모가(7,800원) 대비 시초가 16,000원(+105.1% 따블 돌파), 종가 13,440원(+72.3%) 마감"
       ],
       "positivePoints": [
         "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 및 천연물 건강기능식품 고성장 지속",
@@ -320,10 +320,10 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": [],
     "aiScore": 94,
     "scoreGrade": "S",
-    "openingPrice": 15600,
-    "openingReturnRate": 100,
-    "closingPrice": 17200,
-    "closingReturnRate": 120.5
+    "openingPrice": 16000,
+    "openingReturnRate": 105.1,
+    "closingPrice": 13440,
+    "closingReturnRate": 72.3
   },
   {
     "id": "dts-tech",
@@ -414,7 +414,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 472,
     "marketCapAtIpo": 3420,
     "aiSummary": {
-      "headline": "2차전지 드라이룸 선도 씨케이솔루션, 일반 경쟁률 1,321:1 흥행 성공 및 상장 완료",
+      "headline": "3월 17일 코스피 신규 상장! 시초가 27,650원(+84.3%), 첫날 종가 18,760원(+25.1%) 기록",
       "bulletPoints": [
         "공모가 15,000원(희망밴드 상단) 확정 및 기관 경쟁률 1,020.35:1",
         "일반 청약 증거금 3.71조원 몰리며 경쟁률 1,320.68:1(비례 2,641:1) 기록",
@@ -443,10 +443,10 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalDepositAmount": 3.71,
       "proportionalCompetitionRate": 2641.36
     },
-    "openingPrice": 18600,
-    "openingReturnRate": 24,
-    "closingPrice": 16800,
-    "closingReturnRate": 12
+    "openingPrice": 27650,
+    "openingReturnRate": 84.3,
+    "closingPrice": 18760,
+    "closingReturnRate": 25.1
   },
   {
     "id": "barofarm",
@@ -551,7 +551,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "크리에이츠",
     "code": "462900",
     "market": "KOSDAQ",
-    "status": "SUBSCRIPTION",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
@@ -601,7 +601,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "티앤이코리아",
     "code": "382010",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
@@ -651,7 +651,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "래블업",
     "code": "481020",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-10-22",
     "subscriptionEnd": "2026-10-23",
     "refundDate": "2026-10-27",
@@ -700,7 +700,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "인텔리빅스",
     "code": "372100",
     "market": "KOSDAQ",
-    "status": "SUBSCRIPTION",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-21",
     "subscriptionEnd": "2026-10-22",
     "refundDate": "2026-10-26",
@@ -772,7 +772,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 234,
     "marketCapAtIpo": 1450,
     "aiSummary": {
-      "headline": "10월 10일 코스닥 상장 완료! 일반 경쟁률 1,676:1 (비례 3,353:1), 증거금 4.9조원 기록",
+      "headline": "10월 1일 코스닥 신규 상장! 시초가 61,800원(+216.9%), 첫날 종가 30,450원(+56.2%) 마감",
       "bulletPoints": [
         "공모가 19,500원 확정 & 최종 의무보유확약 85.4%로 대폭 상승",
         "일반 청약 경쟁률 1,676.26:1 기록하며 증거금 4.90조원 결집",
@@ -801,10 +801,10 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalDepositAmount": 4.9,
       "proportionalCompetitionRate": 3352.52
     },
-    "openingPrice": 29250,
-    "openingReturnRate": 50,
-    "closingPrice": 27900,
-    "closingReturnRate": 43.1
+    "openingPrice": 61800,
+    "openingReturnRate": 216.9,
+    "closingPrice": 30450,
+    "closingReturnRate": 56.2
   },
   {
     "id": "duksan-nepcores",
@@ -832,7 +832,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 438,
     "marketCapAtIpo": 2400,
     "aiSummary": {
-      "headline": "10월 14일 코스닥 상장 완료! 일반 청약 경쟁률 333:1 (비례 666:1), 증거금 3.64조원",
+      "headline": "9월 30일 코스닥 신규 상장! 시초가 27,100원(+85.6%), 첫날 종가 17,980원(+23.2%) 마감",
       "bulletPoints": [
         "공모가 14,600원 확정 & 최종 의무보유확약 57.3% 달성",
         "일반 청약 증거금 3.64조원 유입, 비례경쟁률 665.64:1 마감",
@@ -861,10 +861,10 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalDepositAmount": 3.64,
       "proportionalCompetitionRate": 665.64
     },
-    "openingPrice": 21900,
-    "openingReturnRate": 50,
-    "closingPrice": 20400,
-    "closingReturnRate": 39.7
+    "openingPrice": 27100,
+    "openingReturnRate": 85.6,
+    "closingPrice": 17980,
+    "closingReturnRate": 23.2
   },
   {
     "id": "bigwave-robotics",
@@ -897,7 +897,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "totalOfferingAmount": 288,
     "marketCapAtIpo": 1380,
     "aiSummary": {
-      "headline": "10월 16일 코스닥 상장 완료! 일반 경쟁률 1,308:1 (비례 2,616:1), 증거금 9.42조원",
+      "headline": "9월 29일 코스닥 신규 상장! 시초가 56,000원(+211.1%), 첫날 종가 29,900원(+66.1%) 마감",
       "bulletPoints": [
         "공모가 18,000원 확정 & 최종 의무보유확약 78.4% 기록",
         "청약 건수 24.8만건, 증거금 9.42조원 몰리며 대흥행",
@@ -926,10 +926,10 @@ export const MOCK_IPOS: IpoItem[] = [
       "totalDepositAmount": 9.42,
       "proportionalCompetitionRate": 2615.56
     },
-    "openingPrice": 25200,
-    "openingReturnRate": 40,
-    "closingPrice": 23400,
-    "closingReturnRate": 30
+    "openingPrice": 56000,
+    "openingReturnRate": 211.1,
+    "closingPrice": 29900,
+    "closingReturnRate": 66.1
   },
   {
     "id": "kbank",
@@ -1128,12 +1128,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "circulatingSupplyRate": 28.5,
     "totalOfferingAmount": 411,
     "marketCapAtIpo": 3100,
-    "openingPrice": 14500,
-    "openingReturnRate": 11.5,
-    "closingPrice": 11800,
-    "closingReturnRate": -9.2,
+    "openingPrice": 12500,
+    "openingReturnRate": -3.8,
+    "closingPrice": 10070,
+    "closingReturnRate": -22.5,
     "aiSummary": {
-      "headline": "지능형 실내 자율주행 로봇 서비스(크롬/카멜레온) 플랫폼 강자",
+      "headline": "10월 28일 코스닥 상장! 시초가 12,500원(-3.8%), 첫날 종가 10,070원(-22.5%) 마감",
       "bulletPoints": [
         "현대차그룹 제로원, 보스턴다이내믹스 파트너십 구축",
         "기관 경쟁률 933:1로 공모가 13,000원에 상단 초과 확정",
@@ -1186,12 +1186,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "circulatingSupplyRate": 23.2,
     "totalOfferingAmount": 270,
     "marketCapAtIpo": 1230,
-    "openingPrice": 24000,
-    "openingReturnRate": 100,
-    "closingPrice": 21300,
-    "closingReturnRate": 77.5,
+    "openingPrice": 20000,
+    "openingReturnRate": 66.7,
+    "closingPrice": 15820,
+    "closingReturnRate": 31.8,
     "aiSummary": {
-      "headline": "SAP 보안 솔루션 독점적 1위, 상장일 시초가 더블(+100%) 대박 기록",
+      "headline": "10월 18일 코스닥 신규 상장! 시초가 20,000원(+66.7%), 첫날 종가 15,820원(+31.8%) 마감",
       "bulletPoints": [
         "기관 경쟁률 1,069:1 기록, 공모가 상단 20% 초과 확정",
         "상장일 시초가 24,000원(+100%) 형성, 종가 21,300원으로 흥행",
@@ -1244,12 +1244,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "circulatingSupplyRate": 29.8,
     "totalOfferingAmount": 450,
     "marketCapAtIpo": 3500,
-    "openingPrice": 16500,
-    "openingReturnRate": -8.3,
-    "closingPrice": 13750,
-    "closingReturnRate": -23.6,
+    "openingPrice": 15120,
+    "openingReturnRate": -16,
+    "closingPrice": 13740,
+    "closingReturnRate": -23.7,
     "aiSummary": {
-      "headline": "차량용 OLED 디스플레이 전장 부품 핵심 공급사, 연 매출 5,000억 중견기업",
+      "headline": "11월 1일 코스닥 상장! 시초가 15,120원(-16.0%), 첫날 종가 13,740원(-23.7%) 마감",
       "bulletPoints": [
         "LG전자, LG디스플레이 핵심 협력사로 전장 부품 수주 확대",
         "기관 경쟁률 841:1에 공모가 18,000원으로 상단 28% 초과 확정",
@@ -1302,12 +1302,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "circulatingSupplyRate": 32.1,
     "totalOfferingAmount": 320,
     "marketCapAtIpo": 2030,
-    "openingPrice": 15100,
-    "openingReturnRate": -5.6,
-    "closingPrice": 11800,
-    "closingReturnRate": -26.3,
+    "openingPrice": 12250,
+    "openingReturnRate": -23.4,
+    "closingPrice": 10070,
+    "closingReturnRate": -37.1,
     "aiSummary": {
-      "headline": "3D 홀로토모그래피 글로벌 원천기술 보유, 하버드/MIT 납품 레퍼런스",
+      "headline": "11월 7일 코스닥 상장! 시초가 12,250원(-23.4%), 첫날 종가 10,070원(-37.1%) 마감",
       "bulletPoints": [
         "살아있는 세포를 염색 없이 실시간 3차원으로 관찰하는 혁신 현미경 기술",
         "기관 수요예측 967:1 기록으로 공모가 16,000원에 확정",
@@ -1360,12 +1360,12 @@ export const MOCK_IPOS: IpoItem[] = [
     "circulatingSupplyRate": 34.6,
     "totalOfferingAmount": 240,
     "marketCapAtIpo": 2110,
-    "openingPrice": 19000,
-    "openingReturnRate": 18.8,
-    "closingPrice": 14500,
-    "closingReturnRate": -9.4,
+    "openingPrice": 12460,
+    "openingReturnRate": -22.1,
+    "closingPrice": 9880,
+    "closingReturnRate": -38.3,
     "aiSummary": {
-      "headline": "경량 드론 및 교육용 AI 로봇 플랫폼 제조사, 북미 수출 가시화",
+      "headline": "11월 1일 코스닥 상장! 시초가 12,460원(-22.1%), 첫날 종가 9,880원(-38.3%) 마감",
       "bulletPoints": [
         "자체 조립형 코딩 로봇 및 비행 제어 드론 기술력 확보",
         "기관 경쟁률 973:1로 공모가 16,000원 상단 초과 확정",
@@ -1398,7 +1398,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "한화플러스제6호기업인수목적",
     "code": "450043",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
@@ -1447,7 +1447,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "이에스티",
     "code": "412170",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-10-22",
     "subscriptionEnd": "2026-10-23",
     "refundDate": "2026-10-27",
