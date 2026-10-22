@@ -267,7 +267,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
                 <span className="text-gray-500 block mb-0.5 font-medium">상장일 시초가</span>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="font-black text-gray-900 text-sm">
-                    {ipo.openingPrice ? `${ipo.openingPrice.toLocaleString()}원` : '-'}
+                    {ipo.openingPrice ? `${ipo.openingPrice.toLocaleString()}원` : '상장일 집계 중'}
                   </span>
                   {ipo.openingReturnRate !== undefined && (
                     <span
@@ -288,7 +288,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
                 <span className="text-gray-500 block mb-0.5 font-medium">상장일 종가</span>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="font-black text-gray-900 text-sm">
-                    {ipo.closingPrice ? `${ipo.closingPrice.toLocaleString()}원` : '-'}
+                    {ipo.closingPrice ? `${ipo.closingPrice.toLocaleString()}원` : '장 마감 후 집계'}
                   </span>
                   {ipo.closingReturnRate !== undefined && (
                     <span

@@ -180,7 +180,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "name": "엘리스그룹",
     "code": "459100",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-07",
     "subscriptionEnd": "2026-10-08",
     "refundDate": "2026-10-12",
@@ -213,11 +213,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "proportionalCompetitionRate": 816.34
     },
     "aiSummary": {
-      "headline": "일반 청약 경쟁률 408:1 (비례 816:1) 흥행! 증거금 10.26조원 돌파, 10월 20일 코스닥 상장",
+      "headline": "10월 20일 코스닥 신규 상장 완료! 시초가 +69.1%, 종가 165,000원(+82.3%) 기록",
       "bulletPoints": [
         "일반 청약 최종 경쟁률 408.17:1 (비례배정 경쟁률 816.34:1) 기록, 청약 증거금 10조 2,598억원 운집",
         "확정 공모가 90,500원 (상단 확정), 상장 후 시총 1조 54억원으로 하반기 코스닥 최대어 등극",
-        "균등 배정 1인당 약 0.96주 (추첨 1주 또는 0주), 10월 12일 환불 완료 후 10월 20일(화) 코스닥 신규 상장 대기",
+        "균등 배정 1인당 약 0.96주 (추첨 1주 또는 0주), 10월 20일(화) 코스닥 신규 상장 완료",
         "상장 직후 유통가능물량 20.81%로 대형 테크주 중 매우 타이트한 품절주 수급 구조"
       ],
       "positivePoints": [
@@ -257,14 +257,18 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "aiScore": 88,
-    "scoreGrade": "S"
+    "scoreGrade": "S",
+    "openingPrice": 153000,
+    "openingReturnRate": 69.1,
+    "closingPrice": 165000,
+    "closingReturnRate": 82.3
   },
   {
     "id": "ms-bio",
     "name": "엠에스바이오",
     "code": "391020",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-12",
     "subscriptionEnd": "2026-10-13",
     "refundDate": "2026-10-15",
@@ -292,12 +296,12 @@ export const MOCK_IPOS: IpoItem[] = [
       "proportionalCompetitionRate": 3076.02
     },
     "aiSummary": {
-      "headline": "일반 경쟁률 1,539:1 (비례 3,076:1) 대흥행 마감! 확정공모가 7,800원, 10월 22일 코스닥 상장",
+      "headline": "10월 22일 코스닥 신규 상장 완료! 시초가 15,600원(+100% 따블), 종가 +120.5% 대흥행 마감",
       "bulletPoints": [
         "일반 청약 최종 경쟁률 1,538.51:1 (비례배정 경쟁률 3,076.02:1) 기록, 청약 증거금 약 6조 151억원 유입",
         "확정 공모가 7,800원 (희망밴드 6,800~7,800원 상단 확정), 총 공모금액 312억원",
         "기관 수요예측 경쟁률 1,096.56:1 및 최종 의무보유확약 비율 82.52% 배정으로 기관 신뢰도 입증",
-        "균등배정 1인당 약 1.75주 (1주 기본 + 75% 추첨 2주 배정), 10월 15일 환불 완료 후 10월 22일(목) 코스닥 신규 상장 대기"
+        "균등배정 1인당 약 1.75주 (1주 기본 + 75% 추첨 2주 배정), 10월 22일(목) 코스닥 신규 상장 완료"
       ],
       "positivePoints": [
         "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 및 천연물 건강기능식품 고성장 지속",
@@ -315,7 +319,11 @@ export const MOCK_IPOS: IpoItem[] = [
     },
     "expertReviews": [],
     "aiScore": 94,
-    "scoreGrade": "S"
+    "scoreGrade": "S",
+    "openingPrice": 15600,
+    "openingReturnRate": 100,
+    "closingPrice": 17200,
+    "closingReturnRate": 120.5
   },
   {
     "id": "dts-tech",

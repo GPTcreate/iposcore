@@ -112,11 +112,11 @@ export default function IpoCard({ ipo }: IpoCardProps) {
                   >
                     {ipo.openingReturnRate !== undefined
                       ? (ipo.openingReturnRate > 0 ? `+${ipo.openingReturnRate.toFixed(1)}%` : `${ipo.openingReturnRate.toFixed(1)}%`)
-                      : '-'}
+                      : '집계 중'}
                   </span>
                 </div>
                 <div className="text-base font-black text-gray-900">
-                  {ipo.openingPrice ? `${ipo.openingPrice.toLocaleString()}원` : '-'}
+                  {ipo.openingPrice ? `${ipo.openingPrice.toLocaleString()}원` : '상장일 집계 중'}
                 </div>
                 {ipo.openingPrice && ipo.confirmedPrice > 0 && (
                   <div
@@ -145,11 +145,11 @@ export default function IpoCard({ ipo }: IpoCardProps) {
                   >
                     {ipo.closingReturnRate !== undefined
                       ? (ipo.closingReturnRate > 0 ? `+${ipo.closingReturnRate.toFixed(1)}%` : `${ipo.closingReturnRate.toFixed(1)}%`)
-                      : '-'}
+                      : '집계 중'}
                   </span>
                 </div>
                 <div className="text-base font-black text-gray-900">
-                  {ipo.closingPrice ? `${ipo.closingPrice.toLocaleString()}원` : '-'}
+                  {ipo.closingPrice ? `${ipo.closingPrice.toLocaleString()}원` : '장 마감 후 집계'}
                 </div>
                 {ipo.closingPrice && ipo.confirmedPrice > 0 && (
                   <div
