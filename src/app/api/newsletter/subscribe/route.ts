@@ -2,9 +2,22 @@ import { NextResponse } from 'next/server';
 import { validateEmail } from '@/lib/emailValidator';
 import { registerSubscriber } from '@/lib/subscriberStore';
 import { sendVerificationEmail, isEmailConfigured } from '@/lib/emailSender';
+import { checkRateLimit, getClientIp } from '@/lib/rateLimiter';
 
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request);
+    // 스팸 및 이메일 폭탄 방지: 10분당 동일 IP 최대 5회 구독 요청 허용
+    const rateLimit = checkRateLimit(`subscribe:${ip}`, 5, 10 * 60 * 1000);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: `단시간 내 너무 많은 구독 요청이 발생했습니다. ${rateLimit.retryAfterSec}초 후 다시 시도해주세요.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { email, frequency = 'ALL' } = body;
 

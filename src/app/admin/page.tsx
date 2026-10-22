@@ -36,33 +36,75 @@ import {
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminKey, setAdminKey] = useState('');
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  const [pinErrorMessage, setPinErrorMessage] = useState('');
+  const [pinLoading, setPinLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const auth = sessionStorage.getItem('iposcore_admin_auth');
-      if (auth === 'true') {
-        setTimeout(() => setIsAuthenticated(true), 0);
+      const storedKey = sessionStorage.getItem('iposcore_admin_key');
+      if (storedKey) {
+        setAdminKey(storedKey);
+        setIsAuthenticated(true);
       }
     }
   }, []);
 
-  const handleAuthSubmit = (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput.trim() === '7788' || pinInput.trim() === 'admin2026') {
-      setIsAuthenticated(true);
-      setPinError(false);
-      sessionStorage.setItem('iposcore_admin_auth', 'true');
-    } else {
+    if (!pinInput.trim()) return;
+    setPinLoading(true);
+    setPinError(false);
+    setPinErrorMessage('');
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: pinInput }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setIsAuthenticated(true);
+        setAdminKey(data.adminKey);
+        sessionStorage.setItem('iposcore_admin_key', data.adminKey);
+      } else {
+        setPinError(true);
+        setPinErrorMessage(data.error || '관리자 인증 암호가 일치하지 않습니다.');
+      }
+    } catch {
       setPinError(true);
+      setPinErrorMessage('인증 서버 연결 중 오류가 발생했습니다.');
+    } finally {
+      setPinLoading(false);
     }
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem('iposcore_admin_auth');
+    setAdminKey('');
+    sessionStorage.removeItem('iposcore_admin_key');
   };
+
+  // 관리자 인증 헤더가 자동으로 주입되는 보안 fetch 래퍼
+  const authFetch = React.useCallback(
+    async (url: string, init?: RequestInit) => {
+      const key = adminKey || (typeof window !== 'undefined' ? sessionStorage.getItem('iposcore_admin_key') || '' : '');
+      const headers = new Headers(init?.headers || {});
+      if (key) {
+        headers.set('x-admin-key', key);
+      }
+      const res = await fetch(url, { ...init, headers });
+      if (res.status === 401) {
+        handleLogout();
+        alert('관리자 인증 세션이 만료되었습니다. 다시 로그인해주세요.');
+      }
+      return res;
+    },
+    [adminKey]
+  );
 
   const [channels, setChannels] = useState<CrawlChannel[]>(INITIAL_CHANNELS);
   const [logs, setLogs] = useState<CrawlJobLog[]>(INITIAL_LOGS);
@@ -136,7 +178,7 @@ export default function AdminPage() {
 
   const fetchIpos = async () => {
     try {
-      const res = await fetch('/api/ipo');
+      const res = await authFetch('/api/ipo');
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data.ipos)) {
@@ -150,7 +192,7 @@ export default function AdminPage() {
     setDartSyncLoading(true);
     setDartSyncResult(null);
     try {
-      const res = await fetch('/api/ipo', {
+      const res = await authFetch('/api/ipo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'sync-dart', days: 30, limit: 10 }),
@@ -174,7 +216,7 @@ export default function AdminPage() {
     if (!manualIpoForm.name) return;
     setManualIpoLoading(true);
     try {
-      const res = await fetch('/api/ipo', {
+      const res = await authFetch('/api/ipo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'create', ...manualIpoForm }),
@@ -207,7 +249,7 @@ export default function AdminPage() {
   const handleDeleteIpo = async (codeOrId: string, name: string) => {
     if (!confirm(`'${name}' 공모주 카드를 삭제하시겠습니까?`)) return;
     try {
-      const res = await fetch(`/api/ipo?code=${codeOrId}`, { method: 'DELETE' });
+      const res = await authFetch(`/api/ipo?code=${codeOrId}`, { method: 'DELETE' });
       if (res.ok) {
         fetchIpos();
       } else {
@@ -235,7 +277,7 @@ export default function AdminPage() {
 
   const fetchSubscribers = async () => {
     try {
-      const res = await fetch('/api/newsletter/admin');
+      const res = await authFetch('/api/newsletter/admin');
       if (res.ok) {
         const data = await res.json();
         setSubscribers(data.subscribers || []);
@@ -253,7 +295,7 @@ export default function AdminPage() {
 
   const fetchTelegramStatus = async () => {
     try {
-      const res = await fetch('/api/marketing/telegram');
+      const res = await authFetch('/api/marketing/telegram');
       if (res.ok) {
         const data = await res.json();
         setTelegramStatus(data);
@@ -275,7 +317,7 @@ export default function AdminPage() {
   const handleCancelSubscriber = async (email: string) => {
     if (!confirm(`[${email}] 님의 구독을 수동으로 수신 취소(거부) 처리하시겠습니까?`)) return;
     try {
-      const res = await fetch('/api/newsletter/admin', {
+      const res = await authFetch('/api/newsletter/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'MANUAL_UNSUBSCRIBE', email }),
@@ -292,7 +334,7 @@ export default function AdminPage() {
   const handleVerifySubscriber = async (email: string) => {
     if (!confirm(`[${email}] 님을 수동으로 구독 승인(활성화) 처리하시겠습니까?`)) return;
     try {
-      const res = await fetch('/api/newsletter/admin', {
+      const res = await authFetch('/api/newsletter/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'MANUAL_VERIFY', email }),
@@ -312,7 +354,7 @@ export default function AdminPage() {
     setTestEmailLoading(true);
     setTestEmailResult(null);
     try {
-      const res = await fetch('/api/newsletter/admin', {
+      const res = await authFetch('/api/newsletter/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'SEND_TEST_EMAIL', testTo: testEmailAddress }),
@@ -331,7 +373,7 @@ export default function AdminPage() {
     setWeeklyCronLoading(true);
     setWeeklyCronResult(null);
     try {
-      const res = await fetch('/api/cron/newsletter?manual=true&adminKey=7788');
+      const res = await authFetch('/api/cron/newsletter?manual=true');
       const data = await res.json();
       if (data.success) {
         setWeeklyCronResult(`✅ 성공: ${data.message} (${data.sentCount}건 발송)`);
@@ -349,7 +391,7 @@ export default function AdminPage() {
     setTelegramLoading(true);
     setTelegramResult(null);
     try {
-      const res = await fetch('/api/marketing/telegram', {
+      const res = await authFetch('/api/marketing/telegram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ stockCode: marketingStock }),
@@ -487,7 +529,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
     setSheetsSyncLoading(true);
     setSheetsSyncResult(null);
     try {
-      const res = await fetch('/api/newsletter/admin', {
+      const res = await authFetch('/api/newsletter/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'TEST_SHEETS_SYNC' }),
@@ -568,7 +610,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
   const handleTriggerMethod2Check = async () => {
     setIsCrawling(true);
     try {
-      const res = await fetch('/api/cron/update?manual=true&adminKey=7788');
+      const res = await authFetch('/api/cron/update?manual=true');
       const data = await res.json();
 
       const newLog: CrawlJobLog = {
@@ -594,7 +636,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
   const handleTriggerCrawl = async () => {
     setIsCrawling(true);
     try {
-      const res = await fetch(`/api/cron/update?manual=true&adminKey=7788&stock=${encodeURIComponent(selectedStock)}`);
+      const res = await authFetch(`/api/cron/update?manual=true&stock=${encodeURIComponent(selectedStock)}`);
       const data = await res.json();
 
       const newLog: CrawlJobLog = {
@@ -643,19 +685,21 @@ https://iposcore.kr/ipo/${ipo.code}`;
                     if (pinError) setPinError(false);
                   }}
                   autoFocus
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-hidden focus:ring-2 focus:ring-blue-600 text-center text-base font-bold tracking-widest"
+                  disabled={pinLoading}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-hidden focus:ring-2 focus:ring-blue-600 text-center text-base font-bold tracking-widest disabled:opacity-50"
                 />
                 {pinError && (
                   <p className="text-xs text-rose-600 mt-2 font-medium">
-                    인증 암호가 일치하지 않습니다. 다시 입력해주세요.
+                    {pinErrorMessage || '인증 암호가 일치하지 않습니다. 다시 입력해주세요.'}
                   </p>
                 )}
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-xs transition-colors cursor-pointer"
+                disabled={pinLoading}
+                className="w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                관리자 제어판 접속
+                {pinLoading ? '보안 인증 확인 중...' : '관리자 제어판 접속'}
               </button>
             </form>
           </div>

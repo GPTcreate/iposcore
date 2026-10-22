@@ -7,6 +7,7 @@ import {
   loadServerCustomIpos,
 } from '@/lib/ipoServerStore';
 import { IpoItem } from '@/types/ipo';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -49,6 +50,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const auth = verifyAdminRequest(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { action } = body;
@@ -176,6 +182,11 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const auth = verifyAdminRequest(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const idOrCode = searchParams.get('id') || searchParams.get('code');

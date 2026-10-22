@@ -3,31 +3,22 @@ import { runMethod2Pipeline, getKstDateString } from '@/lib/pipeline';
 import { syncNewIposFromDart } from '@/lib/ipoServerStore';
 import { syncExistingIposWithDartFilings } from '@/lib/dartFilingSync';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const authHeader = request.headers.get('authorization');
-    const cronSecret = process.env.CRON_SECRET;
-    const isManual = searchParams.get('manual') === 'true';
-    const forceStock = searchParams.get('stock') || undefined;
-    const testDate = searchParams.get('testDate') || undefined;
-
-    const isVercelCron = request.headers.get('x-vercel-cron') === '1';
-    const adminKey = searchParams.get('adminKey');
-
-    // 철통 인증 검사
-    const isAuthorized =
-      isVercelCron ||
-      (cronSecret && authHeader === `Bearer ${cronSecret}`) ||
-      (isManual && (adminKey === '7788' || adminKey === 'admin2026'));
-
-    if (!isAuthorized) {
+    // 철통 인증 검사: Vercel 정식 크론, CRON_SECRET Bearer 토큰, 또는 관리자 키 일치 시에만 실행 허용
+    const auth = verifyAdminRequest(request);
+    if (!auth.authorized) {
       return NextResponse.json({ error: '인증되지 않은 요청입니다. (Vercel Cron 또는 올바른 인증 키 필요)' }, { status: 401 });
     }
+
+    const { searchParams } = new URL(request.url);
+    const forceStock = searchParams.get('stock') || undefined;
+    const testDate = searchParams.get('testDate') || undefined;
 
     // 1. DART 전자공시 오픈 API 실시간 조회 및 신규 공모주 카드 자동 감지/생성
     const dartSync = await syncNewIposFromDart({ days: 30, limit: 10 });

@@ -9,8 +9,16 @@ import {
   Subscriber,
 } from '@/lib/subscriberStore';
 import { sendEmail, sendVerificationEmail } from '@/lib/emailSender';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request) {
+  const auth = verifyAdminRequest(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
+  }
+
   const subscribers: Subscriber[] = await getAllSubscribersAsync();
 
   const stats = {
@@ -33,12 +41,17 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = verifyAdminRequest(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { action, email, token, testTo } = body;
 
     if (action === 'MANUAL_UNSUBSCRIBE') {
-      const updated = await unsubscribeSubscriber(token || email);
+      const updated = await unsubscribeSubscriber(token || email, { allowEmailMatch: true });
       return NextResponse.json({
         success: !!updated,
         subscriber: updated ? sanitizeSubscriber(updated) : null,

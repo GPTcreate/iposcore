@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { unsubscribeSubscriber } from '@/lib/subscriberStore';
 import { sendUnsubscribeConfirmationEmail } from '@/lib/emailSender';
+import { verifyAdminRequest } from '@/lib/adminAuth';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const token = searchParams.get('token') || searchParams.get('email');
+  const token = searchParams.get('token');
+  const emailParam = searchParams.get('email');
+  const auth = verifyAdminRequest(request);
 
-  if (!token) {
+  // 일반 사용자는 오직 메일의 고유 보안 토큰(token)으로만 수신 거부 가능
+  // 관리자 권한이 있는 경우에만 plain email 기반 수신 거부 허용
+  const identifier = token || (auth.authorized ? emailParam : null);
+
+  if (!identifier) {
     return new NextResponse(renderHtml({
-      title: '수신 거부 대상을 찾을 수 없습니다',
-      description: '요청 정보가 올바르지 않습니다. 메일 하단의 수신거부 링크를 다시 확인해주세요.',
+      title: '수신 거부 보안 토큰이 필요합니다',
+      description: '보안을 위해 수신 거부는 메일 하단 전용 링크(보안 토큰)를 통해서만 처리하실 수 있습니다.',
       isSuccess: false,
     }), {
       status: 400,
@@ -19,7 +26,7 @@ export async function GET(request: NextRequest) {
 
   let subscriber = null;
   try {
-    subscriber = await unsubscribeSubscriber(token);
+    subscriber = await unsubscribeSubscriber(identifier, { allowEmailMatch: auth.authorized });
   } catch (err) {
     console.error('[Unsubscribe GET] 영속 저장소 처리 에러:', err instanceof Error ? err.message : err);
     return new NextResponse(renderHtml({
@@ -62,14 +69,22 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const token = body.token || body.email;
+    const auth = verifyAdminRequest(request);
+    const body = await request.json().catch(() => ({}));
+    const token = body.token;
+    const emailParam = body.email;
 
-    if (!token) {
-      return NextResponse.json({ error: '토큰 또는 이메일이 필요합니다.' }, { status: 400 });
+    // 일반 사용자는 고유 보안 토큰(token) 필수
+    const identifier = token || (auth.authorized ? emailParam : null);
+
+    if (!identifier) {
+      return NextResponse.json(
+        { error: '보안을 위해 수신 거부 보안 토큰(token)이 필요합니다.' },
+        { status: 400 }
+      );
     }
 
-    const subscriber = await unsubscribeSubscriber(token);
+    const subscriber = await unsubscribeSubscriber(identifier, { allowEmailMatch: auth.authorized });
 
     if (!subscriber) {
       return NextResponse.json({ error: '해당 구독자를 찾을 수 없거나 이미 취소되었습니다.' }, { status: 404 });

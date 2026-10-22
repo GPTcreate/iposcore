@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "validate:data": "node scripts/validate-ipo-data.mjs",
-    "audit:dart": "node scripts/audit-dart-disclosures.mjs"
+    "audit:dart": "node scripts/audit-dart-disclosures.mjs",
+    "test:security": "node scripts/test-security.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.49.0",

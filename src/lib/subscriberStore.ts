@@ -366,16 +366,21 @@ export async function verifySubscriberByEmail(email: string): Promise<Subscriber
 }
 
 /**
- * 수신 거부 / 구독 취소 처리 (토큰 또는 이메일 기반)
+ * 수신 거부 / 구독 취소 처리 (토큰 또는 관리자 허용 시 이메일 기반)
  */
-export async function unsubscribeSubscriber(identifier: string): Promise<Subscriber | null> {
+export async function unsubscribeSubscriber(
+  identifier: string,
+  options?: { allowEmailMatch?: boolean }
+): Promise<Subscriber | null> {
   await ensureStoreLoaded();
   const trimmed = identifier.trim();
+  const allowEmail = options?.allowEmailMatch ?? false;
+
   let target = memoryStore.find(
     (s) =>
       s.unsubscribeToken === trimmed ||
       s.verificationToken === trimmed ||
-      s.email === trimmed.toLowerCase()
+      (allowEmail && s.email === trimmed.toLowerCase())
   );
 
   // 메모리에 없으면 원격 강제 동기화 시도
@@ -385,7 +390,7 @@ export async function unsubscribeSubscriber(identifier: string): Promise<Subscri
       (s) =>
         s.unsubscribeToken === trimmed ||
         s.verificationToken === trimmed ||
-        s.email === trimmed.toLowerCase()
+        (allowEmail && s.email === trimmed.toLowerCase())
     );
   }
 
