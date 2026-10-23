@@ -655,7 +655,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionStart": "2026-10-22",
     "subscriptionEnd": "2026-10-23",
     "refundDate": "2026-10-27",
-    "listingDate": "2026-11-04",
+    "listingDate": "2026-11-03",
     "priceBandMin": 19000,
     "priceBandMax": 22000,
     "confirmedPrice": 19000,

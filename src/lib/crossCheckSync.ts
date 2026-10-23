@@ -107,11 +107,15 @@ export async function fetch38IpoDetail(detailUrl: string): Promise<PortalIpoDeta
       result.listingDate = `${listDateMatch[1]}-${listDateMatch[2]}-${listDateMatch[3]}`;
     }
 
-    // 2. 확정공모가 추출
-    const priceMatch = text.match(/확정\s*공모가[^\d]{0,20}([0-9,]+)\s*원/i);
+    // 2. 확정공모가 추출 (단, 액면가나 '-'는 제외하고 엄격하게 1,000원 이상 공모가만 추출)
+    const priceMatch = text.match(/확정\s*공모가\s*:\s*([0-9,]+)\s*원/i)
+      || text.match(/확정\s*공모가\s+([0-9,]+)\s*원/i);
     if (priceMatch) {
-      const price = parseInt(priceMatch[1].replace(/,/g, ''), 10);
-      if (!isNaN(price) && price > 0) result.confirmedPrice = price;
+      const priceVal = (priceMatch[1] || priceMatch[2] || '').replace(/,/g, '');
+      const price = parseInt(priceVal, 10);
+      if (!isNaN(price) && price >= 1000) {
+        result.confirmedPrice = price;
+      }
     }
 
     // 3. 기관경쟁률 추출 (예: 630.10:1)
@@ -185,8 +189,13 @@ export async function crossCheckAndSyncIpos(): Promise<{
       ipo.listingDate = detail.listingDate;
     }
 
-    // 2) 확정 공모가 보정
-    if (detail.confirmedPrice && detail.confirmedPrice > 0 && ipo.confirmedPrice !== detail.confirmedPrice) {
+    // 2) 확정 공모가 보정 (희망밴드 하단의 50% 이상이며 최소 1,000원 이상인 정상적인 공모가만 수용)
+    const minReasonablePrice = ipo.priceBandMin ? Math.floor(ipo.priceBandMin * 0.5) : 1000;
+    if (
+      detail.confirmedPrice &&
+      detail.confirmedPrice >= minReasonablePrice &&
+      ipo.confirmedPrice !== detail.confirmedPrice
+    ) {
       changes.push(`공모가 확정: ${ipo.confirmedPrice ? ipo.confirmedPrice.toLocaleString() + '원' : '미정'} ➔ ${detail.confirmedPrice.toLocaleString()}원`);
       ipo.confirmedPrice = detail.confirmedPrice;
     }
