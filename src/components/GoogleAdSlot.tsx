@@ -19,17 +19,33 @@ export default function GoogleAdSlot({
 }: GoogleAdSlotProps) {
   // 실제 애드센스 클라이언트 ID (환경변수 또는 등록된 퍼블리셔 ID)
   const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-4909665367366825';
+  const [isNativeApp, setIsNativeApp] = React.useState(false);
 
   useEffect(() => {
-    if (adClient && typeof window !== 'undefined') {
-      try {
-        // @ts-expect-error adsbygoogle is added by external adsense script
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (err) {
-        console.error('AdSense push error:', err);
+    if (typeof window !== 'undefined') {
+      const isCapacitor = Boolean(
+        (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.()
+      );
+      if (isCapacitor) {
+        setIsNativeApp(true);
+        return; // 앱(네이티브 웹뷰) 환경에서는 웹 애드센스 호출 억제 (구글 정책 보호)
+      }
+
+      if (adClient) {
+        try {
+          // @ts-expect-error adsbygoogle is added by external adsense script
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (err) {
+          console.error('AdSense push error:', err);
+        }
       }
     }
   }, [adClient]);
+
+  if (isNativeApp) {
+    // 네이티브 앱 환경에서는 인앱 배너 전용 자리 표시
+    return null;
+  }
 
   if (!adClient) {
     // 애드센스 승인 전/개발 환경용 세련된 플레이스홀더

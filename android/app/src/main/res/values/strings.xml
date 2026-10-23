@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">IPOScore - 공모주 알리미</string>
+    <string name="title_activity_main">IPOScore</string>
+    <string name="package_name">kr.iposcore.app</string>
+    <string name="custom_url_scheme">kr.iposcore.app</string>
+</resources>
