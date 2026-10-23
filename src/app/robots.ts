@@ -11,6 +11,10 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api/'],
       },
       {
+        userAgent: 'Mediapartners-Google', // 구글 애드센스 크롤러 전용
+        allow: '/',
+      },
+      {
         userAgent: 'Yeti', // 네이버 검색로봇
         allow: '/',
         disallow: ['/admin', '/api/'],
