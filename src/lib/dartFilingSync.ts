@@ -17,7 +17,7 @@ export interface DartFilingParseResult {
  */
 export async function parseConfirmedFilingDetails(rcpNo: string): Promise<DartFilingParseResult | null> {
   try {
-    // 1. 메인 뷰어 페이지에서 dcmNo 추출
+    // 1. 메인 뷰어 페이지에서 메인 문서 node1['dcmNo'] 우선 추출 (첨부/계약서 등 option 태그 오매칭 방지)
     const mainUrl = `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${rcpNo}`;
     const mainRes = await fetch(mainUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
@@ -25,13 +25,19 @@ export async function parseConfirmedFilingDetails(rcpNo: string): Promise<DartFi
     if (!mainRes.ok) return null;
     const mainHtml = await mainRes.text();
 
-    const dcmMatch = mainHtml.match(/dcmNo['"]?\s*[:=]\s*['"]?(\d+)['"]?/i)
-      || mainHtml.match(/node1\['dcmNo'\]\s*=\s*['"](\d+)['"]/i);
-    const dcmNo = dcmMatch ? dcmMatch[1] : null;
+    const node1DcmMatch = mainHtml.match(/node1\['dcmNo'\]\s*=\s*['"](\d+)['"]/i);
+    const node1EleMatch = mainHtml.match(/node1\['eleId'\]\s*=\s*['"](\d+)['"]/i);
+    const node1OffsetMatch = mainHtml.match(/node1\['offset'\]\s*=\s*['"](\d+)['"]/i);
+    const node1LengthMatch = mainHtml.match(/node1\['length'\]\s*=\s*['"](\d+)['"]/i);
+
+    const dcmNo = node1DcmMatch ? node1DcmMatch[1] : (mainHtml.match(/dcmNo['"]?\s*[:=]\s*['"]?(\d+)['"]?/i)?.[1]);
+    const eleId = node1EleMatch ? node1EleMatch[1] : '1';
+    const offset = node1OffsetMatch ? node1OffsetMatch[1] : '0';
+    const length = node1LengthMatch ? node1LengthMatch[1] : '0';
     if (!dcmNo) return null;
 
-    // 2. 문서 서브 뷰어 HTML 가져오기
-    const viewerUrl = `https://dart.fss.or.kr/report/viewer.do?rcpNo=${rcpNo}&dcmNo=${dcmNo}&eleId=1&offset=0&length=0&dtd=dart4.xsd`;
+    // 2. 문서 서브 뷰어 HTML 가져오기 (정확한 오프셋 및 길이 지정)
+    const viewerUrl = `https://dart.fss.or.kr/report/viewer.do?rcpNo=${rcpNo}&dcmNo=${dcmNo}&eleId=${eleId}&offset=${offset}&length=${length}&dtd=dart4.xsd`;
     const viewerRes = await fetch(viewerUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
     });
@@ -49,26 +55,38 @@ export async function parseConfirmedFilingDetails(rcpNo: string): Promise<DartFi
       result.confirmedPrice = parseInt(priceMatch[1].replace(/,/g, ''), 10);
     }
 
-    // 2) 상장일 유통가능물량 비율 파싱 (테이블 또는 본문)
-    const circMatch = text.match(/상장\s*(?:직후|일)?\s*(?:시장에서\s*)?유통가능한?\s*물량[^\d%]{0,60}([\d.]+)\s*%/i)
-      || text.match(/유통가능\s*주식수비율[^\d%]{0,60}([\d.]+)\s*%/i)
-      || text.match(/유통가능물량[^\d%]{0,40}([\d.]+)\s*%/i);
-    if (circMatch) {
-      const parsedCirc = parseFloat(circMatch[1]);
-      if (parsedCirc > 0 && parsedCirc <= 100) {
-        result.circulatingSupplyRate = parsedCirc;
+    // 2) 상장일 유통가능물량 비율 파싱 (정정신고서의 경우 [정정 전] 뒤에 [정정 후]가 위치하므로 마지막 일치값 취득)
+    const circMatches = [
+      ...text.matchAll(/([\d.]+)\s*%\s*\)?[^\d%]{0,30}(?:는\s*)?상장\s*직후[^\d%]{0,30}유통가능/gi),
+      ...text.matchAll(/상장일\s*유통가능[^\d%]{0,60}([\d.]+)\s*%/gi),
+      ...text.matchAll(/상장\s*(?:직후|일)?\s*(?:시장에서\s*)?유통가능한?\s*물량[^\d%]{0,60}([\d.]+)\s*%/gi),
+      ...text.matchAll(/유통가능\s*주식수비율[^\d%]{0,60}([\d.]+)\s*%/gi),
+      ...text.matchAll(/유통가능물량[^\d%]{0,40}([\d.]+)\s*%/gi),
+    ];
+    if (circMatches.length > 0) {
+      const validMatches = circMatches
+        .map((m) => parseFloat(m[1]))
+        .filter((val) => !isNaN(val) && val > 0 && val <= 100);
+      if (validMatches.length > 0) {
+        // 정정 후 최종 수치 선택 (마지막 유효 값)
+        result.circulatingSupplyRate = validMatches[validMatches.length - 1];
       }
     }
 
     // 3) 기관 수요예측 경쟁률 파싱 (테이블의 마지막 합계 TD)
-    const compRowMatch = html.match(/<TR[^>]*>[\s\S]*?<TD[^>]*>\s*경쟁률\s*<\/TD>[\s\S]*?<\/TR>/i);
+    const compRowMatch = text.match(/합\s*계[^\d]{0,200}?경쟁률[^\d]{0,40}([\d.]+)/i)
+      || html.match(/<TR[^>]*>[\s\S]*?<TD[^>]*>\s*경쟁률\s*<\/TD>[\s\S]*?<\/TR>/i);
     if (compRowMatch) {
-      const tds = [...compRowMatch[0].matchAll(/<TD[^>]*>([\s\S]*?)<\/TD>/gi)]
-        .map((m) => m[1].replace(/<[^>]+>/g, '').trim());
-      const lastTd = tds[tds.length - 1];
-      const parsedRate = parseFloat(lastTd.replace(/,/g, ''));
-      if (!isNaN(parsedRate) && parsedRate > 0) {
-        result.institutionalCompetitionRate = parsedRate;
+      if (compRowMatch[1]) {
+        result.institutionalCompetitionRate = parseFloat(compRowMatch[1]);
+      } else {
+        const tds = [...compRowMatch[0].matchAll(/<TD[^>]*>([\s\S]*?)<\/TD>/gi)]
+          .map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+        const lastTd = tds[tds.length - 1];
+        const parsedRate = parseFloat(lastTd.replace(/,/g, ''));
+        if (!isNaN(parsedRate) && parsedRate > 0) {
+          result.institutionalCompetitionRate = parsedRate;
+        }
       }
     }
 

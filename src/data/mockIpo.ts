@@ -658,7 +658,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "listingDate": "2026-11-04",
     "priceBandMin": 19000,
     "priceBandMax": 22000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 19000,
     "underwriters": [
       {
         "name": "NH투자증권",
@@ -666,16 +666,17 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 24.8,
-    "totalOfferingAmount": 480,
-    "marketCapAtIpo": 3199,
+    "institutionalCompetitionRate": 284.53,
+    "lockupCommitmentRate": 2.09,
+    "circulatingSupplyRate": 35.51,
+    "totalOfferingAmount": 414,
+    "marketCapAtIpo": 2768,
     "aiSummary": {
-      "headline": "엔비디아 파트너사 AI GPU 가상화 솔루션 래블업, 10월 22일~23일 청약",
+      "headline": "엔비디아 파트너사 AI GPU 솔루션 래블업, 공모가 19,000원 확정 및 일반 청약",
       "bulletPoints": [
-        "정정 공시 완료: 청약 일정이 10월 22일(목) ~ 10월 23일(금)로 확정",
-        "희망 공모가 19,000 ~ 22,000원, 환불일: 10월 27일(화), 주관사: NH투자증권",
+        "공모가 19,000원(희망 밴드 하단) 확정, 기관 수요예측 경쟁률 284.53:1 기록",
+        "상장 직후 유통가능물량 35.51% (10월 21일 DART 정정 증권신고서 최종 확정)",
+        "청약 일정: 10월 22일(목) ~ 10월 23일(금), 환불일: 10월 27일(화), 대표 주관사: NH투자증권",
         "고가 GPU 인프라 분산 효율화 Backend.AI 플랫폼 글로벌 도입 가속"
       ],
       "positivePoints": [
@@ -1451,10 +1452,10 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionStart": "2026-10-22",
     "subscriptionEnd": "2026-10-23",
     "refundDate": "2026-10-27",
-    "listingDate": "2026-11-05",
+    "listingDate": "2026-11-04",
     "priceBandMin": 10600,
     "priceBandMax": 12400,
-    "confirmedPrice": 0,
+    "confirmedPrice": 12400,
     "underwriters": [
       {
         "name": "대신증권",
@@ -1462,26 +1463,27 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 26.2,
+    "institutionalCompetitionRate": 630.1,
+    "lockupCommitmentRate": 0.24,
+    "circulatingSupplyRate": 37.7,
     "totalOfferingAmount": 273,
     "marketCapAtIpo": 1550,
     "aiScore": 77,
     "scoreGrade": "A",
     "aiSummary": {
-      "headline": "반도체 정전척(ESC) 국산화 선도기업 이에스티, 10월 22일~23일 일반 청약",
+      "headline": "반도체 정전척(ESC) 국산화 선도기업 이에스티, 공모가 12,400원 상단 확정",
       "bulletPoints": [
+        "공모가 12,400원(희망 밴드 상단) 최종 확정, 기관 경쟁률 630.1:1 기록",
+        "상장 예정일: 11월 4일(수)로 확정 (대신증권 공식 공고 기준, 기존 11월 5일에서 조정)",
         "웨이퍼 초정밀 고정 핵심 정전척 원천기술 보유 소부장 특례상장",
-        "희망 공모가: 10,600 ~ 12,400원, 청약일: 10월 22일(목) ~ 10월 23일(금)",
-        "환불일: 10월 27일(화), 대표 주관사: 대신증권"
+        "청약일: 10월 22일(목) ~ 10월 23일(금), 환불일: 10월 27일(화), 대표 주관사: 대신증권"
       ],
       "positivePoints": [
         "DART 증권신고서 정식 공시 및 효력 발생 완료",
         "우수한 펀더멘털과 안정적인 공모 구조"
       ],
       "riskPoints": [
-        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+        "의무보유확약 비율(0.24%) 및 상장일 유통가능비율(37.7%) 오버행 점검 필요"
       ]
     },
     "sentimentConsensus": {
