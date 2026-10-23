@@ -165,6 +165,8 @@ export default function AdminPage() {
   const [dartSyncResult, setDartSyncResult] = useState<string | null>(null);
   const [priceSyncLoading, setPriceSyncLoading] = useState(false);
   const [priceSyncResult, setPriceSyncResult] = useState<string | null>(null);
+  const [crossCheckLoading, setCrossCheckLoading] = useState(false);
+  const [crossCheckResult, setCrossCheckResult] = useState<string | null>(null);
   const [isAddingIpo, setIsAddingIpo] = useState(false);
   const [manualIpoLoading, setManualIpoLoading] = useState(false);
   const [manualIpoForm, setManualIpoForm] = useState({
@@ -233,6 +235,29 @@ export default function AdminPage() {
       setPriceSyncResult('❌ 네트워크 요청 실패');
     } finally {
       setPriceSyncLoading(false);
+    }
+  };
+
+  const handleSyncCrossCheck = async () => {
+    setCrossCheckLoading(true);
+    setCrossCheckResult(null);
+    try {
+      const res = await authFetch('/api/ipo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'sync-crosscheck' }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setCrossCheckResult(`🔄 ${data.message} (${data.updatedCount}건 자동 보정)`);
+        fetchIpos();
+      } else {
+        setCrossCheckResult(`❌ 교차 검증 실패: ${data.error || '오류'}`);
+      }
+    } catch {
+      setCrossCheckResult('❌ 네트워크 요청 실패');
+    } finally {
+      setCrossCheckLoading(false);
     }
   };
 
@@ -897,7 +922,18 @@ https://iposcore.kr/ipo/${ipo.code}`;
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${dartSyncLoading ? 'animate-spin' : ''}`} />
-                <span>{dartSyncLoading ? 'DART 공시 감지 & 카드 생성 중...' : '🚀 DART 신규 공모주 자동 감지 & 카드 생성'}</span>
+                <span>{dartSyncLoading ? 'DART 공시 감지 & 카드 생성 중...' : '🚀 DART 신규 공모주 감지'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSyncCrossCheck}
+                disabled={crossCheckLoading}
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+                title="DART 공시뿐만 아니라 38커뮤니케이션 등 외부 포털과 공모가, 상장일, 경쟁률, 확약비율을 2중 교차 대조하여 자동 보정합니다"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${crossCheckLoading ? 'animate-spin' : ''}`} />
+                <span>{crossCheckLoading ? '포털 2중 교차 대조 중...' : '🔄 포털 2중 교차 검증 (DART + 38)'}</span>
               </button>
 
               <button
@@ -908,7 +944,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
                 title="상장 완료 종목의 시초가/종가를 한국거래소(KRX) 공식 시세에서 실시간 자동 크롤링합니다"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${priceSyncLoading ? 'animate-spin' : ''}`} />
-                <span>{priceSyncLoading ? '거래소 실전거래 시세 크롤링 중...' : '📈 거래소 시초가·종가 자동 크롤링'}</span>
+                <span>{priceSyncLoading ? '거래소 실전거래 시세 크롤링 중...' : '📈 거래소 시초가·종가 크롤링'}</span>
               </button>
 
               <button
@@ -927,6 +963,16 @@ https://iposcore.kr/ipo/${ipo.code}`;
             <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 font-bold text-xs flex items-center justify-between">
               <span>{dartSyncResult}</span>
               <button onClick={() => setDartSyncResult(null)} className="text-gray-400 hover:text-gray-700 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* 포털 2중 교차 검증 결과 메시지 */}
+          {crossCheckResult && (
+            <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 font-bold text-xs flex items-center justify-between">
+              <span>{crossCheckResult}</span>
+              <button onClick={() => setCrossCheckResult(null)} className="text-gray-400 hover:text-gray-700 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>

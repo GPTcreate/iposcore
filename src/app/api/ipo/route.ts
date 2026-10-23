@@ -7,6 +7,7 @@ import {
   loadServerCustomIpos,
 } from '@/lib/ipoServerStore';
 import { syncListingReturnsForIpos } from '@/lib/stockPriceCrawler';
+import { crossCheckAndSyncIpos } from '@/lib/crossCheckSync';
 import { IpoItem } from '@/types/ipo';
 import { verifyAdminRequest } from '@/lib/adminAuth';
 
@@ -27,14 +28,16 @@ export async function GET(request: Request) {
     if (forceSync) {
       await syncNewIposFromDart({ days: 30, limit: 15 });
       await syncListingReturnsForIpos();
+      await crossCheckAndSyncIpos();
     } else if (now - lastAutoSyncTime > AUTO_SYNC_INTERVAL_MS) {
       lastAutoSyncTime = now;
       // 사용자 브라우저 응답 렉이 전혀 발생하지 않도록 논블로킹 백그라운드 비동기 처리
       Promise.all([
         syncNewIposFromDart({ days: 30, limit: 15 }),
         syncListingReturnsForIpos(),
+        crossCheckAndSyncIpos(),
       ]).catch((err) => {
-        console.warn('[AutoSync] 백그라운드 DART 및 시세 자동 수집 경고:', err);
+        console.warn('[AutoSync] 백그라운드 DART, 시세 및 2중 교차 검증 자동 수집 경고:', err);
       });
     }
 
@@ -69,6 +72,12 @@ export async function POST(request: Request) {
       const forceAll = Boolean(body.forceAll);
       const targetCode = body.targetCode ? String(body.targetCode).trim() : undefined;
       const result = await syncListingReturnsForIpos({ forceAll, targetCode });
+      return NextResponse.json(result);
+    }
+
+    // 1-2. 외부 포털 2중 교차 검증 (DART + 38커뮤니케이션) 자가 치유 동기화
+    if (action === 'sync-crosscheck') {
+      const result = await crossCheckAndSyncIpos();
       return NextResponse.json(result);
     }
 

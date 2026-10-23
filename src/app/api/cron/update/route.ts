@@ -3,6 +3,7 @@ import { runMethod2Pipeline, getKstDateString } from '@/lib/pipeline';
 import { syncNewIposFromDart } from '@/lib/ipoServerStore';
 import { syncExistingIposWithDartFilings } from '@/lib/dartFilingSync';
 import { syncListingReturnsForIpos } from '@/lib/stockPriceCrawler';
+import { crossCheckAndSyncIpos } from '@/lib/crossCheckSync';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { verifyAdminRequest } from '@/lib/adminAuth';
 
@@ -28,6 +29,10 @@ export async function GET(request: Request) {
     // 2. 기존 청약예정/진행 종목의 DART 확정공시(발행조건확정/투자설명서) 자동 대조 및 수치(공모가, 유통비율 등) 갱신
     const confirmedSync = await syncExistingIposWithDartFilings({ days: 14 });
 
+    // 2-1. 38커뮤니케이션/외부 포털 2중 교차 검증 및 자가 치유(Self-Healing Diff Audit)
+    // 주관사의 상장일 변경(11/5 -> 11/4 등), 확정공모가, 기관경쟁률, 의무확약의 DART 누락/지연을 원천 방지
+    const crossCheckSync = await crossCheckAndSyncIpos();
+
     // 3. 상장 완료 및 상장일 도래 종목의 실제 한국거래소(KRX) 실전 시초가·종가 자동 크롤링 동기화
     const priceSync = await syncListingReturnsForIpos({ forceAll: forcePrices });
 
@@ -50,6 +55,11 @@ export async function GET(request: Request) {
       dartSyncMessage: dartSync.message,
       confirmedUpdatedCount: confirmedSync.updatedCount,
       confirmedUpdatedStocks: confirmedSync.updatedStocks,
+      crossCheck: {
+        updatedCount: crossCheckSync.updatedCount,
+        updatedStocks: crossCheckSync.updatedStocks,
+        message: crossCheckSync.message,
+      },
       priceCrawler: {
         totalCandidates: priceSync.totalCandidates,
         updatedCount: priceSync.updatedCount,
