@@ -1,0 +1,14 @@
+{
+  "appId": "kr.iposcore.app",
+  "appName": "IPOScore",
+  "webDir": "public",
+  "server": {
+    "url": "https://iposcore.kr",
+    "cleartext": false
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}
