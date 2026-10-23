@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Calendar, Calculator, Bell, BookOpen } from 'lucide-react';
+import InstallAppButton from './InstallAppButton';
 
 export default function Header() {
   return (
@@ -57,8 +58,11 @@ export default function Header() {
           >
             <Bell className="w-3.5 h-3.5 shrink-0" />
             <span className="hidden sm:inline">청약 알림 신청</span>
-            <span className="sm:hidden">알림 신청</span>
+            <span className="sm:hidden">알림</span>
           </Link>
+
+          {/* 비침해적 헤더 원클릭 앱 설치 버튼 (방안 A) */}
+          <InstallAppButton />
         </nav>
       </div>
     </header>
