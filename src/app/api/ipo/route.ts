@@ -14,31 +14,16 @@ import { verifyAdminRequest } from '@/lib/adminAuth';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// 백그라운드 자동 동기화 상태 관리 (30분 주기 스케줄링)
-let lastAutoSyncTime = 0;
-const AUTO_SYNC_INTERVAL_MS = 30 * 60 * 1000;
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const forceSync = searchParams.get('forceSync') === 'true';
 
-    // 0클릭 자동화: 30분 이상 경과 시 또는 명시적 요청 시 논블로킹 백그라운드 자동 동기화 실행
-    const now = Date.now();
+    // 명시적 forceSync 요청 시에만 실행 (정기 동기화는 일 1회 Vercel Cron /api/cron/update 에서 전담)
     if (forceSync) {
       await syncNewIposFromDart({ days: 30, limit: 15 });
       await syncListingReturnsForIpos();
       await crossCheckAndSyncIpos();
-    } else if (now - lastAutoSyncTime > AUTO_SYNC_INTERVAL_MS) {
-      lastAutoSyncTime = now;
-      // 사용자 브라우저 응답 렉이 전혀 발생하지 않도록 논블로킹 백그라운드 비동기 처리
-      Promise.all([
-        syncNewIposFromDart({ days: 30, limit: 15 }),
-        syncListingReturnsForIpos(),
-        crossCheckAndSyncIpos(),
-      ]).catch((err) => {
-        console.warn('[AutoSync] 백그라운드 DART, 시세 및 2중 교차 검증 자동 수집 경고:', err);
-      });
     }
 
     const ipos = getAllEffectiveIpos();
