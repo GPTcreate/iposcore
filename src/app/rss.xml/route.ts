@@ -25,8 +25,8 @@ export async function GET() {
     return `
     <item>
       <title><![CDATA[[공모주 분석] ${ipo.name} (${ipo.market}) - ${ipo.scoreGrade}등급 (${ipo.aiScore}점)]]></title>
-      <link>${siteUrl}/ipo/${ipo.code}</link>
-      <guid>${siteUrl}/ipo/${ipo.code}</guid>
+      <link>${siteUrl}/ipo/${ipo.id}</link>
+      <guid>${siteUrl}/ipo/${ipo.id}</guid>
       <pubDate>${pubDate}</pubDate>
       <description><![CDATA[${ipo.aiSummary.headline} | 확정공모가: ${ipo.confirmedPrice ? ipo.confirmedPrice.toLocaleString() + '원' : '미정'} | 청약기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd} | 주관사: ${ipo.underwriters.map(u => u.name).join(', ')}]]></description>
       <category>공모주</category>

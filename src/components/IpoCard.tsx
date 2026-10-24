@@ -70,7 +70,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
 
         {/* 종목명 및 코드 (큰 글씨) */}
         <div className="mb-4">
-          <Link href={`/ipo/${ipo.code}`}>
+          <Link href={`/ipo/${ipo.id}`}>
             <h3 className="text-xl font-bold text-gray-900 hover:text-blue-700 transition-colors flex items-center gap-2">
               <span>{ipo.name}</span>
               <span className="text-xs font-normal text-gray-500">({ipo.code})</span>
@@ -290,7 +290,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
 
       {/* 하단 상세 리포트 버튼 */}
       <Link
-        href={`/ipo/${ipo.code}`}
+        href={`/ipo/${ipo.id}`}
         className="w-full py-2.5 px-4 rounded-lg text-sm font-bold text-center bg-blue-50 hover:bg-blue-700 hover:text-white text-blue-700 border border-blue-200 transition-colors flex items-center justify-center gap-1"
       >
         <span>

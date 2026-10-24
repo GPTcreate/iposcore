@@ -1402,7 +1402,7 @@ export const MOCK_IPOS: IpoItem[] = [
     }
   },
   {
-    "id": "한화플러스제6호기업인수목적",
+    "id": "hanwha-plus-spac6",
     "name": "한화플러스제6호기업인수목적",
     "code": "450043",
     "market": "KOSDAQ",
@@ -1451,7 +1451,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "이에스티",
+    "id": "est",
     "name": "이에스티",
     "code": "412170",
     "market": "KOSDAQ",
@@ -1501,7 +1501,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "아이엠기업인수목적1호",
+    "id": "iam-spac1",
     "name": "아이엠기업인수목적1호",
     "code": "469272",
     "market": "KOSDAQ",
@@ -1550,7 +1550,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "에이엘로봇",
+    "id": "al-robot",
     "name": "에이엘로봇",
     "code": "417970",
     "market": "KOSDAQ",
@@ -1599,7 +1599,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "엠비디",
+    "id": "mbd",
     "name": "엠비디",
     "code": "417050",
     "market": "KOSDAQ",
@@ -1648,7 +1648,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "넥스아이",
+    "id": "nex-i",
     "name": "넥스아이",
     "code": "447253",
     "market": "KOSDAQ",
@@ -1697,7 +1697,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "영광와이케이엠씨",
+    "id": "yky-mc",
     "name": "영광와이케이엠씨",
     "code": "409600",
     "market": "KOSDAQ",
@@ -1745,7 +1745,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "옵토닉스",
+    "id": "optronics",
     "name": "옵토닉스",
     "code": "485424",
     "market": "KOSDAQ",
@@ -1793,7 +1793,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "하나에어로다이내믹스",
+    "id": "hana-aerodynamics",
     "name": "하나에어로다이내믹스",
     "code": "410250",
     "market": "KOSDAQ",
@@ -1841,7 +1841,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "엔키화이트햇",
+    "id": "enki-whitehat",
     "name": "엔키화이트햇",
     "code": "417950",
     "market": "KOSDAQ",
@@ -1889,7 +1889,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "제이앤티지",
+    "id": "jntg",
     "name": "제이앤티지",
     "code": "414030",
     "market": "KOSDAQ",
@@ -1937,7 +1937,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "씨앤엠",
+    "id": "cnm",
     "name": "씨앤엠",
     "code": "406180",
     "market": "KOSDAQ",
@@ -1985,7 +1985,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "아델",
+    "id": "adel",
     "name": "아델",
     "code": "463510",
     "market": "KOSDAQ",
@@ -2038,7 +2038,7 @@ export const MOCK_IPOS: IpoItem[] = [
     "expertReviews": []
   },
   {
-    "id": "케이엠에프",
+    "id": "kmf",
     "name": "케이엠에프",
     "code": "454392",
     "market": "KOSDAQ",

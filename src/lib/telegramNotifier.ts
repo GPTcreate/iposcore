@@ -84,7 +84,7 @@ ${ipo.aiSummary.headline}
 ${scheduleText}
 🏦 <b>주관사:</b> ${ipo.underwriters.map(u => u.name).join(', ')}
 
-👉 <a href="${SITE_URL}/ipo/${ipo.code}"><b>[AI 심층 리포트 & 실전 결과 전문 보기]</b></a>
+👉 <a href="${SITE_URL}/ipo/${ipo.id}"><b>[AI 심층 리포트 & 실전 결과 전문 보기]</b></a>
 👉 <a href="${SITE_URL}/calculator"><b>[내 투자금 비례 배정 계산기 돌려보기]</b></a>
 `.trim();
 }

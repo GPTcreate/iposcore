@@ -295,7 +295,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
             </div>
 
             <div style="text-align: center;">
-              <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
+              <a href="${SITE_URL}/ipo/${ipo.id}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
                 👉 ${ipo.name} AI 심층 분석 & 전문가 여론 리포트 전문 보기
               </a>
             </div>
@@ -324,7 +324,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
         ${ipo.subscriptionResults?.proportionalCompetitionRate ? `<span style="color: #059669; font-weight: bold; margin-left: 6px;">(비례 ${ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()} : 1)</span>` : ''}
       </div>
       <div style="margin-top: 8px; text-align: right;">
-        <a href="${SITE_URL}/ipo/${ipo.code}" target="_blank" style="font-size: 12px; color: #1d4ed8; text-decoration: none; font-weight: bold;">
+        <a href="${SITE_URL}/ipo/${ipo.id}" target="_blank" style="font-size: 12px; color: #1d4ed8; text-decoration: none; font-weight: bold;">
           상세 실전 결과 보기 →
         </a>
       </div>

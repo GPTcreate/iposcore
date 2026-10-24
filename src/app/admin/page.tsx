@@ -477,7 +477,7 @@ AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
 증거금별 비례 몇 주 배정받을지는 아래 계산기에서 바로 무료로 돌려볼 수 있더라고요.
 배정 수량 미리 체크해보실 분들 참고하세요!
 
-👉 상세 리포트: https://iposcore.kr/ipo/${ipo.code}
+👉 상세 리포트: https://iposcore.kr/ipo/${ipo.id}
 👉 비례 배정 계산기: https://iposcore.kr/calculator`;
     }
 
@@ -491,7 +491,7 @@ AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
 • 주관사: ${ipo.underwriters.map(u => u.name).join(', ')}
 
 💡 1초 비례 배정 계산기 & 전문가 여론 리포트:
-👉 https://iposcore.kr/ipo/${ipo.code}`;
+👉 https://iposcore.kr/ipo/${ipo.id}`;
     }
 
     if (marketingPlatform === 'TISTORY') {
@@ -551,7 +551,7 @@ AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
 
 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 16px; border-radius: 8px; margin: 20px 0;">
   <p style="margin: 0 0 8px 0; font-weight: bold; color: #166534;">💡 ${ipo.name} 실시간 리포트 바로가기</p>
-  <p style="margin: 0;"><a href="https://iposcore.kr/ipo/${ipo.code}" target="_blank" rel="noopener noreferrer" style="color: #15803d; font-weight: bold; text-decoration: underline;">👉 ${ipo.name} DART 상세 공시 & AI 점수 리포트 보기 (클릭)</a></p>
+  <p style="margin: 0;"><a href="https://iposcore.kr/ipo/${ipo.id}" target="_blank" rel="noopener noreferrer" style="color: #15803d; font-weight: bold; text-decoration: underline;">👉 ${ipo.name} DART 상세 공시 & AI 점수 리포트 보기 (클릭)</a></p>
   <p style="margin: 6px 0 0 0;"><a href="https://iposcore.kr/calculator" target="_blank" rel="noopener noreferrer" style="color: #15803d; font-weight: bold; text-decoration: underline;">👉 내 증거금 맞춤 비례배정 주수 실시간 계산기 (클릭)</a></p>
 </div>
 
@@ -565,7 +565,7 @@ AI 종합 분석 점수는 ${ipo.scoreGrade}등급 (${ipo.aiScore}점)이네요.
 3. AI 종합 매력도: ${ipo.scoreGrade}등급 (${ipo.aiScore}점)
 
 상장일 유통물량 분석과 비례 배정 예상 주수 계산기는 아래 링크에서 확인하세요 👇
-https://iposcore.kr/ipo/${ipo.code}`;
+https://iposcore.kr/ipo/${ipo.id}`;
   };
 
   const handleCopyMarketingText = () => {
@@ -1136,7 +1136,7 @@ https://iposcore.kr/ipo/${ipo.code}`;
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-bold text-gray-900">
-                        <a href={`/ipo/${ipo.code}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 flex items-center gap-1">
+                        <a href={`/ipo/${ipo.id}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 flex items-center gap-1">
                           <span>{ipo.name}</span>
                           <span className="text-gray-400 font-normal">({ipo.code})</span>
                           <ExternalLink className="w-3 h-3 text-gray-400" />

@@ -56,9 +56,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  // 공모주별 상세 페이지 (표준 6자리 증권코드 기준)
+  // 공모주별 상세 페이지 (불변 영문 고유 슬러그 기준)
   const ipoRoutes: MetadataRoute.Sitemap = getAllEffectiveIpos().map((ipo) => ({
-    url: `${baseUrl}/ipo/${ipo.code}`,
+    url: `${baseUrl}/ipo/${ipo.id}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
     priority: 0.8,

@@ -66,12 +66,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ...ipo.underwriters.map((u) => u.name),
     ],
     alternates: {
-      canonical: `https://iposcore.kr/ipo/${ipo.code}`,
+      canonical: `https://iposcore.kr/ipo/${ipo.id}`,
     },
     openGraph: {
       title: `${ipo.name} (${ipo.code}) 공모주 청약 분석 리포트 | IPOScore`,
       description,
-      url: `https://iposcore.kr/ipo/${ipo.code}`,
+      url: `https://iposcore.kr/ipo/${ipo.id}`,
       type: 'article',
       images: [
         {
@@ -94,14 +94,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export async function generateStaticParams() {
   const params: { id: string }[] = [];
   for (const ipo of getAllEffectiveIpos()) {
-    // 1. 증권코드(6자리 숫자) 우선 표준 라우팅 (예: /ipo/179880)
-    params.push({ id: ipo.code });
-    // 2. 기존 영문 슬러그 호환성 유지 (예: /ipo/melcon)
-    if (ipo.id !== ipo.code) {
-      params.push({ id: ipo.id });
+    // 1. 불변 영문 슬러그 우선 표준 라우팅 (예: /ipo/intellivix, /ipo/melcon)
+    params.push({ id: ipo.id });
+    // 2. 증권코드(6자리 숫자) 호환성 유지 (예: /ipo/420610, /ipo/179880)
+    if (ipo.code && ipo.code !== ipo.id) {
+      params.push({ id: ipo.code });
     }
   }
-  // 3. 기존 레거시 코드 별칭(Alias) 사전 정적 생성 (예: /ipo/377480, /ipo/252540)
+  // 3. 기존 레거시 코드 별칭(Alias) 사전 정적 생성 (예: /ipo/372100, /ipo/377480)
   for (const alias of Object.keys(LEGACY_CODE_ALIASES)) {
     params.push({ id: alias });
   }
@@ -138,7 +138,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
         },
       },
       image: 'https://iposcore.kr/og-image.png',
-      mainEntityOfPage: `https://iposcore.kr/ipo/${ipo.code}`,
+      mainEntityOfPage: `https://iposcore.kr/ipo/${ipo.id}`,
     },
     {
       '@context': 'https://schema.org',
@@ -176,7 +176,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
           '@type': 'ListItem',
           position: 3,
           name: `${ipo.name} (${ipo.code})`,
-          item: `https://iposcore.kr/ipo/${ipo.code}`,
+          item: `https://iposcore.kr/ipo/${ipo.id}`,
         },
       ],
     },

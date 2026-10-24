@@ -408,8 +408,8 @@ export default function Home() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-xs">
             {initialIpos.map((ipo) => (
               <Link
-                key={ipo.code}
-                href={`/ipo/${ipo.code}`}
+                key={ipo.id || ipo.code}
+                href={`/ipo/${ipo.id}`}
                 className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all flex flex-col justify-between group"
               >
                 <div className="flex items-center justify-between gap-1 mb-1">
