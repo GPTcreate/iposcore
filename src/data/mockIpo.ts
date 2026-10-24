@@ -699,7 +699,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "intellivix",
     "name": "인텔리빅스",
-    "code": "372100",
+    "code": "420610",
     "market": "KOSDAQ",
     "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-21",
@@ -717,22 +717,29 @@ export const MOCK_IPOS: IpoItem[] = [
       }
     ],
     "institutionalCompetitionRate": 1234.3,
+    "generalCompetitionRate": 1410.9,
     "lockupCommitmentRate": 6.14,
     "circulatingSupplyRate": 23.95,
     "totalOfferingAmount": 225,
     "marketCapAtIpo": 1020,
+    "subscriptionResults": {
+      "totalAccounts": 237353,
+      "totalDepositAmount": 3.97,
+      "equalAllocationShares": 1.32,
+      "proportionalCompetitionRate": 2821.75
+    },
     "aiSummary": {
-      "headline": "13년 연속 흑자 AI 비전 테크 인텔리빅스, 공모가 9,000원 상단 확정 및 청약 진행 중",
+      "headline": "13년 연속 흑자 AI 비전 테크 인텔리빅스, 공모가 9,000원 상단 확정 및 청약 흥행 마감",
       "bulletPoints": [
+        "일반 청약 최종 경쟁률 1,410.9:1, 증거금 약 3.97조 원 몰리며 흥행 성료",
         "기관 수요예측 1,234.3:1 대흥행 기록, 희망 밴드 최상단인 9,000원에 최종 확정",
         "상장일 유통가능물량 23.95%로 오버행 리스크 매우 낮음 (최대주주 지분 60% 3년 락업)",
-        "AI 기술특례가 아닌 일반 상장으로 코스닥 입성, 13년 연속 영업이익 흑자 달성",
         "환불일: 10월 26일(월), 상장예정일: 10월 30일(금), 대표 주관사: 미래에셋증권"
       ],
       "positivePoints": [
-        "공모가 희망 밴드 상단(9,000원) 초과 수요 집중으로 기관 러브콜 확인",
+        "공모가 희망 밴드 상단(9,000원) 초과 수요 집중 및 일반 청약 증거금 약 4조 원 달성",
         "상장 직후 유통가능비율 23.95%로 매우 안정적인 수급 구조 보유",
-        "공공 및 스마트시티 안전 관제 시장 점유율 1위와 검증된 흑자 경영 실적"
+        "공공 및 스마트시티 안전 관제 시장 점유율 1위와 검증된 13년 연속 흑자 경영 실적"
       ],
       "riskPoints": [
         "공공 안전 프로젝트 발주 시기에 따른 계절적 분기 매출 편차"
