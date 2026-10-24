@@ -7,9 +7,10 @@ import IpoCard from '@/components/IpoCard';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { isReviewedIpo } from '@/lib/contentQuality';
 import { GUIDE_ARTICLES } from '@/data/guidesData';
 import { IpoStatus } from '@/types/ipo';
-import { ShieldCheck, CheckCircle2, TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
+import { TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
 
 // 청약 진행 중이 0건이면 청약 예정을 기본 탭으로, 아니면 청약 진행 중으로 설정
 function getDefaultTab(ipos: { status: IpoStatus }[]): 'ALL' | IpoStatus {
@@ -22,7 +23,7 @@ export default function Home() {
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   // KST 현재 일자 및 시각 기준 실시간 상태 동적 전이 적용
-  const initialIpos = React.useMemo(() => getAllEffectiveIpos(), []);
+  const initialIpos = React.useMemo(() => getAllEffectiveIpos().filter(isReviewedIpo), []);
   const [allIpos, setAllIpos] = useState(initialIpos);
 
   const [filter, setFilter] = useState<'ALL' | IpoStatus>(() => getDefaultTab(initialIpos));
@@ -31,15 +32,16 @@ export default function Home() {
     fetch('/api/ipo')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data && Array.isArray(data.ipos) && data.ipos.length > 0) {
-          setAllIpos(data.ipos);
+        if (data && Array.isArray(data.ipos)) {
+          const reviewed = data.ipos.filter(isReviewedIpo);
+          setAllIpos(reviewed);
           // API 응답 기준으로 탭 재결정 (URL/세션에 저장된 탭이 없을 때만)
           const hasStoredTab =
             typeof window !== 'undefined' &&
             (new URLSearchParams(window.location.search).get('tab') ||
               sessionStorage.getItem('iposcore_active_tab'));
           if (!hasStoredTab) {
-            setFilter(getDefaultTab(data.ipos));
+            setFilter(getDefaultTab(reviewed));
           }
         }
       })
@@ -147,25 +149,31 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md mb-2 border border-blue-200">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>실시간 공모주 청약 안내</span>
+                <span>공시 확인 · 배정 계산 · 청약 가이드</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                공모주 청약 일정 & 전문가 분석 요약
+                공모주 청약, 숫자의 근거부터 확인하세요
               </h1>
               <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
-                전자공시(DART) 기관 수요예측 결과와 공모주 전문 분석가들의 의견을 종합 분석하여 핵심만 요약해 드립니다.
+                공시를 읽는 방법과 청약 비용을 직접 계산하는 도구를 제공합니다. 종목별 수치는 원문과 확인 기록이 있는 경우에만 공개합니다.
               </p>
             </div>
 
-            <div className="text-left md:text-right shrink-0">
-              <span className="text-xs text-gray-500 block">이번 주 청약 가능 종목</span>
-              <span className="text-2xl font-black text-blue-700">
-                총 {allIpos.filter(i => i.status === 'SUBSCRIPTION').length}건 진행 중
-              </span>
+            <div className="text-left md:text-right shrink-0 flex flex-wrap md:flex-col gap-3">
+              <Link href="/calculator" className="px-4 py-3 bg-blue-700 text-white rounded-lg text-sm font-bold text-center">배정·손익 계산하기</Link>
+              <Link href="/guides" className="px-4 py-2 text-blue-700 font-semibold text-sm underline">공시 읽는 순서 보기</Link>
             </div>
           </div>
         </div>
 
+        <section className="mb-6 rounded-xl border border-blue-200 bg-white p-5 sm:p-7 space-y-3">
+          <p className="text-xs font-bold text-blue-700">공시 읽기 사례 · 2026-10-25</p>
+          <h2 className="text-lg sm:text-xl font-bold">4.58%와 95.42%, 공시의 어느 열을 읽었나요?</h2>
+          <p className="text-sm leading-relaxed text-gray-700">아이엠1호스팩의 공시에서 보호예수와 유통가능 물량을 구분하고, 주식 수와 공모가로 유통가능 금액을 다시 계산했습니다. 같은 표의 두 비율을 뒤집어 읽으면 위험 해석이 크게 달라집니다.</p>
+          <Link href="/research/iam-spac1-float" className="inline-block text-sm text-blue-700 font-bold underline">원문과 계산 과정 확인하기 →</Link>
+        </section>
+
+        {allIpos.length > 0 && <>
         {/* 필터 탭 (청약 진행 중이 0건일 때는 청약 예정을 앞으로 배치 & 모바일 가로 스크롤 최적화) */}
         <div className="mb-5 space-y-2">
           <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-gray-200/90 text-xs sm:text-sm font-bold overflow-x-auto scrollbar-none touch-pan-x">
@@ -213,15 +221,20 @@ export default function Home() {
                 filter === 'WAITING_LISTING' ? '상장 대기' : '상장 완료 (실전 수익률)'
               }</strong> ({filteredIpos.length}개 종목)
             </span>
-            <span className="hidden sm:inline">* 매 영업일 최신 공시 기준 업데이트</span>
+            <Link href="/methodology" className="text-blue-700 underline">출처·갱신 기준</Link>
           </div>
         </div>
 
         {/* 공모주 카드 목록 (페이징 & 점진적 로딩으로 렉 방지) */}
         {displayedIpos.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-300 p-10 text-center text-gray-500 shadow-2xs">
-            <p className="text-base font-semibold text-gray-700">현재 해당하는 공모주 일정이 없습니다.</p>
-            <p className="text-xs text-gray-500 mt-1">새로운 공시 및 청약 일정이 발표되면 신속하게 반영됩니다.</p>
+            <p className="text-base font-semibold text-gray-700">이 분류에 원문 확인을 마친 종목이 없습니다.</p>
+            <p className="text-sm text-gray-600 mt-2">실제 시장에 청약 종목이 없다는 뜻은 아닙니다. 청약 신청 전 DART 투자설명서와 주관사의 공고를 확인하세요.</p>
+            <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm font-bold text-blue-700">
+              <a href="https://dart.fss.or.kr/" target="_blank" rel="noopener noreferrer" className="underline">DART 공시 확인</a>
+              <Link href="/guides/dart-prospectus-reading-top-3-risk-factors" className="underline">공시 읽는 순서</Link>
+              <Link href="/calculator" className="underline">내 자금으로 비용 계산</Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -243,49 +256,25 @@ export default function Home() {
           </div>
         )}
 
+        </>}
+
         {/* 광고 영역 - 페이지당 딱 1개만 단정하게 배치 */}
         <GoogleAdSlot label="스폰서 안내" className="my-8" />
 
-        {/* 평가 기준 안내 섹션 (신뢰도 확보 및 애드센스 심사용) */}
         <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
-          <h3 className="text-base font-bold text-gray-900 mb-2">
-            공모주 투자 매력도 점수 산출 기준 안내
-          </h3>
-          <p className="text-xs text-gray-600 mb-4">
-            단순 의견 취합이 아닌 금융감독원 공시 정량 지표(70%)와 전문가 여론 분석(30%)을 종합하여 100점 만점으로 표기합니다.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="font-bold text-gray-900 block mb-1 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                <span>1. 기관 수요예측 결과 (40점)</span>
-              </span>
-              <p className="text-gray-600">
-                기관 투자자 경쟁률 및 공모가 밴드 상단 초과 여부를 백분위로 객관 반영합니다.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="font-bold text-gray-900 block mb-1 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                <span>2. 의무확약 및 유통물량 (30점)</span>
-              </span>
-              <p className="text-gray-600">
-                상장 당일 쏟아질 수 있는 매도 물량과 의무보유확약 비율을 바탕으로 안전성을 평가합니다.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-lg border border-gray-200 bg-gray-50">
-              <span className="font-bold text-gray-900 block mb-1 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                <span>3. 전문가 여론 컨센서스 (30점)</span>
-              </span>
-              <p className="text-gray-600">
-                공모주 전문 유튜브 및 블로그 분석가들의 긍정/신중 의견 비율을 종합 가산합니다.
-              </p>
-            </div>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">같은 경쟁률, 다른 청약 비용</h2>
+          <p className="text-sm text-gray-600 leading-relaxed mb-4">비례 경쟁률만 보고 필요한 자금을 판단하기는 어렵습니다. 공모가와 증거금률을 함께 곱해야 합니다. 아래는 실제 종목과 무관한 계산 예시입니다.</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left min-w-[420px]">
+              <caption className="sr-only">공모가에 따른 비례 1주 이론 증거금 비교</caption>
+              <thead className="bg-gray-50"><tr><th className="p-3">가정</th><th className="p-3">공모가</th><th className="p-3">비례 경쟁률</th><th className="p-3">1주 이론 증거금</th></tr></thead>
+              <tbody><tr className="border-t border-gray-200"><td className="p-3">사례 A</td><td className="p-3">10,000원</td><td className="p-3">1,000 : 1</td><td className="p-3 font-bold">500만원</td></tr>
+              <tr className="border-t border-gray-200"><td className="p-3">사례 B</td><td className="p-3">30,000원</td><td className="p-3">1,000 : 1</td><td className="p-3 font-bold">1,500만원</td></tr></tbody>
+            </table>
           </div>
+          <p className="text-xs text-gray-600 mt-3 leading-relaxed">증거금률 50% 가정: 공모가 × 비례 경쟁률 × 0.5. 배정 보장 금액이 아니며 청약 단위·한도·잔여주 처리에 따라 실제 배정은 달라집니다. 기관 수요예측 경쟁률을 여기에 넣으면 계산이 맞지 않습니다.</p>
+          <p className="text-sm text-gray-700 mt-3 leading-relaxed">사례 B의 1,500만원을 연 5%로 4일 빌리면 이자는 약 8,219원입니다. 1주 배정, 주가 10% 상승(차익 3,000원), 청약 수수료 2,000원을 가정하면 매도 비용 전에도 약 7,219원 손실입니다. 주가 상승과 순이익은 다를 수 있습니다.</p>
+          <Link href="/calculator" className="inline-block mt-4 text-sm font-bold text-blue-700 underline">내 증거금·대출금으로 손익 비교하기 →</Link>
         </section>
 
         {/* 신규: 공모주 투자 가이드 & 심층 분석 칼럼 추천 섹션 */}
@@ -307,7 +296,7 @@ export default function Home() {
           </div>
 
           <p className="text-xs text-gray-600 mb-5 leading-relaxed">
-            공모주 청약이 처음이거나 실전 투자 수익률을 극대화하고 싶으신가요? 초보자 입문부터 DART 공시 해석, 비례 5사6입 법칙, 마이너스통장 대출이자 계산까지 검증된 실전 전략을 확인해 보세요.
+            계좌 준비, 공시의 위험요소, 배정 방식, 환불일의 자금 공백을 주제별로 살펴보세요. 각 글은 공식 자료와 직접 따라 계산할 수 있는 예시를 함께 제공합니다.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
@@ -355,7 +344,7 @@ export default function Home() {
                 2026년 공모주 청약 일정 및 수요예측 결과는 언제 업데이트되나요?
               </h3>
               <p className="text-gray-600 leading-relaxed pl-5">
-                금융감독원 전자공시시스템(DART)에 증권신고서 및 투자설명서, 수요예측 결과 보고서가 제출되는 즉시 실시간으로 데이터가 연동됩니다. 공모가 확정, 기관 경쟁률, 의무보유확약 비율 및 상장일 확정 일정까지 빠짐없이 갱신됩니다.
+                IPOScore는 공시 즉시 갱신을 보장하지 않습니다. 종목별 원문과 확인일이 있는 정보만 공개하며, 확인 기록이 없는 기존 정보는 검증 대기로 분리합니다. 신청 당일의 최종 일정은 주관사 공고에서 다시 확인하세요.
               </p>
             </div>
 
@@ -365,7 +354,7 @@ export default function Home() {
                 기관 수요예측 경쟁률과 의무보유확약 비율은 왜 중요한가요?
               </h3>
               <p className="text-gray-600 leading-relaxed pl-5">
-                기관 경쟁률은 국내외 기관 투자자들의 수요 강도를 객관적으로 증명하는 지표입니다. 통상 <strong>500:1 이상</strong>이면 흥행 성공으로 판단하며, <strong>의무보유확약 비율</strong>(기관이 상장 후 15일~6개월간 팔지 않기로 약속한 물량)이 높을수록 상장 첫날 유통 가능 물량이 급감하여 주가 급등 가능성이 높아집니다.
+                기관 경쟁률은 신청 수요를, 의무보유확약은 일정 기간 매도 제한 약정을 나타냅니다. 신청 기준인지 최종 배정 기준인지와 기간별 비중을 구분해야 합니다. 어느 한 비율만으로 흥행 성공이나 상장일 상승을 판단할 수 없습니다.
               </p>
             </div>
 
@@ -375,7 +364,7 @@ export default function Home() {
                 공모주 비례배정 5사6입 법칙과 계산기 활용법은?
               </h3>
               <p className="text-gray-600 leading-relaxed pl-5">
-                비례 배정 시 소수점 자리가 <strong>0.6 이상이면 1주 추가 배정(올림)</strong>, <strong>0.5 이하이면 절사(버림)</strong>되는 배정 방식입니다. 상단 메뉴의 <Link href="/calculator" className="text-blue-700 font-bold underline">공모주 비례배정 계산기</Link>를 활용하시면 투자금액별 예상 배정 주수와 마이너스통장 대출이자 비용을 감안한 실질 순수익을 1초 만에 무료로 시뮬레이션하실 수 있습니다.
+                5사6입은 일부 배정 공고에 사용되는 소수점 처리 방식으로 모든 청약에 적용되는 보장 규칙이 아닙니다. <Link href="/calculator" className="text-blue-700 font-bold underline">비례배정 계산기</Link>에서 가정한 배정 방식과 비용을 바꾸어 비교하고, 실제 잔여주 처리 방식은 증권사 배정 공고를 확인하세요.
               </p>
             </div>
 
@@ -385,74 +374,30 @@ export default function Home() {
                 공모주 상장일 주가 변동 범위(가격제한폭)는 어떻게 되나요?
               </h3>
               <p className="text-gray-600 leading-relaxed pl-5">
-                신규 상장일 첫날 가격제한폭은 공모가 기준 <strong>60% ~ 400% (따따블)</strong>까지 변동 가능합니다. 예를 들어 확정 공모가가 10,000원인 종목은 상장 당일 최저 6,000원에서 최고 40,000원까지 거래될 수 있습니다.
+                일반적인 신규 공모 상장 주식은 첫날 공모가의 60~400% 범위가 적용됩니다. 이는 가능한 호가 범위이며 해당 가격에 거래되거나 매도된다는 뜻은 아닙니다. 재상장 등 예외와 주문·체결 위험은 <Link href="/guides/listing-day-price-limits-and-selling-timing" className="text-blue-700 underline">상장일 주문 가이드</Link>에서 확인하세요.
               </p>
             </div>
           </div>
         </section>
 
-        {/* 검색엔진 색인 및 크롤링을 위한 전체 공모주 바로가기 허브 (Internal Linking Hub) */}
         <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-blue-700" />
-              <h2 className="text-lg font-bold text-gray-900">
-                2026 공모주 청약 종목별 상세 분석 리포트 색인 ({initialIpos.length}개 종목)
-              </h2>
-            </div>
-            <span className="text-xs text-gray-500 hidden sm:inline">
-              * 종목명을 클릭하시면 기관 경쟁률·확약·AI 점수 상세 페이지로 이동합니다.
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-xs">
-            {initialIpos.map((ipo) => (
-              <Link
-                key={ipo.id || ipo.code}
-                href={`/ipo/${ipo.id}`}
-                className="p-2.5 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all flex flex-col justify-between group"
-              >
-                <div className="flex items-center justify-between gap-1 mb-1">
-                  <span className="font-bold text-gray-900 group-hover:text-blue-700 truncate">
-                    {ipo.name}
-                  </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-semibold shrink-0">
-                    {ipo.market}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-gray-500">
-                  <span>{ipo.code}</span>
-                  <span className="font-bold text-blue-700">{ipo.aiScore}점</span>
-                </div>
-              </Link>
-            ))}
+          <h2 className="text-lg font-bold text-gray-900 mb-3">청약 전에 남겨둘 네 가지 기록</h2>
+          <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700 leading-relaxed">
+            <li>최종 투자설명서의 접수번호와 정정 여부: 처음 본 신고서가 현재 유효한 문서인지 확인합니다.</li>
+            <li>기관 수요예측과 일반 청약의 구분: 비례 계산에는 해당 증권사의 비례 경쟁률이 필요합니다.</li>
+            <li>환불일 전후의 자금 잔액: 아직 환불되지 않은 증거금을 다음 청약에 중복 배정하지 않습니다.</li>
+            <li>내가 감당할 손실: 배정 주수, 가격 하락, 이자와 수수료를 함께 계산합니다.</li>
+          </ol>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold text-blue-700">
+            <Link href="/guides/dart-prospectus-reading-top-3-risk-factors" className="underline">투자설명서 읽기</Link>
+            <Link href="/guides/ipo-refund-period-and-capital-rotation-tips" className="underline">환불일 자금표 만들기</Link>
+            <Link href="/methodology" className="underline">출처와 분석 기준</Link>
           </div>
         </section>
 
         {/* 주간 리포트 이메일 알림 신청 */}
         <NewsletterBanner />
 
-        {/* 하단 투자 유의사항 및 법적 면책 조항 */}
-        <footer className="mt-12 pt-6 border-t border-gray-300 text-xs text-gray-500 space-y-1.5">
-          <div className="flex items-center gap-1 font-bold text-gray-700">
-            <ShieldCheck className="w-4 h-4 text-blue-700" />
-            <span>투자 유의사항</span>
-          </div>
-          <p className="leading-relaxed">
-            본 사이트에서 제공하는 모든 수치 및 요약 정보는 공시 자료와 공개된 전문가 의견을 종합한 단순 참고용 자료입니다. 종목 추천이나 매수 권유가 아니며, 청약에 따른 최종 투자 책임은 투자자 본인에게 있습니다.
-          </p>
-          <div className="flex flex-wrap gap-4 pt-2 text-xs font-semibold text-gray-600">
-            <Link href="/guides" className="hover:text-blue-700 underline text-blue-700 font-bold">공모주 투자 가이드</Link>
-            <Link href="/calculator" className="hover:text-blue-700 underline">비례배정 계산기</Link>
-            <Link href="/about" className="hover:text-blue-700 underline">서비스 소개</Link>
-            <Link href="/privacy" className="hover:text-blue-700 underline">개인정보처리방침</Link>
-            <Link href="/terms" className="hover:text-blue-700 underline">이용약관</Link>
-            <a href="mailto:hanmanju88@gmail.com" className="hover:text-blue-700 underline">문의: hanmanju88@gmail.com</a>
-          </div>
-          <p className="text-[11px] text-gray-400 pt-1">
-            © 2026 공모주 알리미 리포트. All rights reserved.
-          </p>
-        </footer>
       </main>
     </div>
   );

@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   title: '서비스 이용약관',
   description: '공모주 알리미 리포트(IPOScore) 서비스 이용약관 및 투자 유의사항 안내입니다.',
   alternates: {
-    canonical: 'https://iposcore.kr/terms',
+    canonical: 'https://www.iposcore.kr/terms',
   },
   openGraph: {
     title: '서비스 이용약관 | IPOScore',
     description: '공모주 알리미 리포트(IPOScore) 서비스 이용약관 및 투자 유의사항',
-    url: 'https://iposcore.kr/terms',
-    images: ['https://iposcore.kr/og-image.png'],
+    url: 'https://www.iposcore.kr/terms',
+    images: ['https://www.iposcore.kr/og-image.png'],
   },
 };
 

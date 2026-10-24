@@ -10,6 +10,7 @@ import { syncListingReturnsForIpos } from '@/lib/stockPriceCrawler';
 import { crossCheckAndSyncIpos } from '@/lib/crossCheckSync';
 import { IpoItem } from '@/types/ipo';
 import { verifyAdminRequest } from '@/lib/adminAuth';
+import { isReviewedIpo } from '@/lib/contentQuality';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -20,18 +21,23 @@ export async function GET(request: Request) {
     const forceSync = searchParams.get('forceSync') === 'true';
 
     // 명시적 forceSync 요청 시에만 실행 (정기 동기화는 일 1회 Vercel Cron /api/cron/update 에서 전담)
+    const auth = verifyAdminRequest(request);
+    if (forceSync && !auth.authorized) {
+      return NextResponse.json({ error: '동기화에는 관리자 권한이 필요합니다.' }, { status: 401 });
+    }
     if (forceSync) {
       await syncNewIposFromDart({ days: 30, limit: 15 });
       await syncListingReturnsForIpos();
       await crossCheckAndSyncIpos();
     }
 
-    const ipos = getAllEffectiveIpos();
     const custom = loadServerCustomIpos();
+    const allIpos = getAllEffectiveIpos();
+    const ipos = auth.authorized ? allIpos : allIpos.filter(isReviewedIpo);
     return NextResponse.json({
       success: true,
       total: ipos.length,
-      customCount: custom.length,
+      ...(auth.authorized ? { customCount: custom.length } : {}),
       ipos,
     });
   } catch (error) {
@@ -129,43 +135,40 @@ export async function POST(request: Request) {
       const {
         name,
         code,
-        market = 'KOSDAQ',
+        market,
         priceBandMin,
         priceBandMax,
         subscriptionStart,
         subscriptionEnd,
         refundDate,
         listingDate,
-        underwriterName = '한국투자증권',
-        fee = 2000,
+        underwriterName,
+        fee,
       } = body;
 
-      if (!name) {
-        return NextResponse.json({ error: '종목명을 입력해주세요.' }, { status: 400 });
+      const validDate = (value: unknown): value is string => typeof value === 'string'
+        && /^\d{4}-\d{2}-\d{2}$/.test(value)
+        && Number.isFinite(Date.parse(value))
+        && new Date(value).toISOString().slice(0, 10) === value;
+      if (typeof name !== 'string' || !name.trim() || typeof code !== 'string' || !/^\d{6}$/.test(code)
+        || !['KOSPI', 'KOSDAQ'].includes(market)
+        || typeof underwriterName !== 'string' || !underwriterName.trim()
+        || !Number.isFinite(Number(priceBandMin)) || Number(priceBandMin) <= 0
+        || !Number.isFinite(Number(priceBandMax)) || Number(priceBandMax) < Number(priceBandMin)
+        || fee === undefined || !Number.isFinite(Number(fee)) || Number(fee) < 0
+        || !validDate(subscriptionStart) || !validDate(subscriptionEnd) || !validDate(refundDate)
+        || subscriptionStart > subscriptionEnd || subscriptionEnd > refundDate
+        || (listingDate && (!validDate(listingDate) || listingDate < refundDate))) {
+        return NextResponse.json({ error: '확인된 종목명·6자리 코드·시장·공모밴드·주관사·수수료·청약/환불일을 입력하세요. 없는 값은 자동 생성하지 않습니다.' }, { status: 400 });
       }
-
-      const cleanName = String(name).replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '').trim();
-      const stockCode = code && String(code).trim().length === 6 ? String(code).trim() : `4${Math.floor(10000 + Math.random() * 90000)}`;
-
-      const pMin = Number(priceBandMin) || 15000;
-      const pMax = Number(priceBandMax) || 18000;
-
-      const now = new Date();
-      const defaultStart = subscriptionStart || new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-      const defaultEnd = subscriptionEnd || new Date(new Date(defaultStart).getTime() + 1 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-      const defaultRefund = refundDate || new Date(new Date(defaultEnd).getTime() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-      const defaultListing = listingDate || new Date(new Date(defaultRefund).getTime() + 8 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-
-      const headline = `[신규 등록] ${cleanName} (${market}) 공모주 청약 핵심 요약 및 DART 공시 체크`;
-      const bulletPoints = [
-        `금융감독원 증권신고서 접수 기준 신규 공모주 일정 등록 (${market})`,
-        `희망 공모가 밴드: ${pMin.toLocaleString()} ~ ${pMax.toLocaleString()}원`,
-        `청약 예정 기간: ${defaultStart} ~ ${defaultEnd}, 주관사: ${underwriterName}`,
-        `향후 기관 수요예측 경쟁률 및 확정 공모가 발표 시 실시간 업데이트 예정`,
-      ];
-
-      const initialScore = 74;
-      const scoreGrade = 'A';
+      const cleanName = name.replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '').trim();
+      const stockCode = code;
+      const pMin = Number(priceBandMin);
+      const pMax = Number(priceBandMax);
+      const defaultStart = subscriptionStart;
+      const defaultEnd = subscriptionEnd;
+      const defaultRefund = refundDate;
+      const defaultListing = listingDate || undefined;
 
       const newIpo: IpoItem = {
         id: cleanName.toLowerCase().replace(/[^a-z0-9]/g, '') || `ipo-${stockCode}`,
@@ -183,33 +186,25 @@ export async function POST(request: Request) {
         underwriters: [
           {
             name: underwriterName,
-            allocatedShares: 500000,
-            fee: Number(fee) || 2000,
+            allocatedShares: 0,
+            fee: Number(fee),
           },
         ],
         institutionalCompetitionRate: 0,
         lockupCommitmentRate: 0,
-        circulatingSupplyRate: 26.5,
-        totalOfferingAmount: 300,
-        marketCapAtIpo: 1800,
-        aiScore: initialScore,
-        scoreGrade,
+        circulatingSupplyRate: 0,
+        totalOfferingAmount: 0,
+        marketCapAtIpo: 0,
+        aiScore: 0,
+        scoreGrade: 'C',
+        dataQuality: { status: 'unverified' },
         aiSummary: {
-          headline,
-          bulletPoints,
-          positivePoints: [
-            '신규 공모주 시장 상장 관심 및 수급 유입 기대',
-            '기관 수요예측 진행 후 확정 공모가 및 의무보유확약 공개 예정',
-          ],
-          riskPoints: [
-            '수요예측 발표 전으로 기관 경쟁률 결과 확인 후 청약 권장',
-          ],
+          headline: '원문 확인 대기',
+          bulletPoints: [],
+          positivePoints: [],
+          riskPoints: ['공식 원문과 수치 검토를 마치기 전에는 공개하지 않습니다.'],
         },
-        sentimentConsensus: {
-          positiveRatio: 72,
-          neutralRatio: 22,
-          cautionRatio: 6,
-        },
+        sentimentConsensus: { positiveRatio: 0, neutralRatio: 0, cautionRatio: 0 },
         expertReviews: [],
       };
 
@@ -218,7 +213,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         success: true,
         ipo: result.ipo,
-        message: `${cleanName} (${stockCode}) 공모주 카드가 성공적으로 등록되었습니다.`,
+        message: `${cleanName} (${stockCode}) 검증 대기 자료로 저장되었습니다. 공개 전 원문과 수치를 검토해야 합니다.`,
       });
     }
 

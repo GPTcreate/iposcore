@@ -3,6 +3,7 @@ import { getAllIpos } from '@/lib/ipoStore';
 import { getEffectiveIpo } from '@/lib/ipoUtils';
 import { sendTelegramBroadcast, formatIpoTelegramMessage } from '@/lib/telegramNotifier';
 import { verifyAdminRequest } from '@/lib/adminAuth';
+import { isReviewedIpo } from '@/lib/contentQuality';
 
 export async function POST(request: Request) {
   const auth = verifyAdminRequest(request);
@@ -21,6 +22,7 @@ export async function POST(request: Request) {
       if (!rawIpo) {
         return NextResponse.json({ error: '해당 종목을 찾을 수 없습니다.' }, { status: 404 });
       }
+      if (!isReviewedIpo(rawIpo)) return NextResponse.json({ error: '공식 원문 검토 전 종목은 배포할 수 없습니다.' }, { status: 409 });
       const ipo = getEffectiveIpo(rawIpo);
       textToSend = formatIpoTelegramMessage(ipo);
     }

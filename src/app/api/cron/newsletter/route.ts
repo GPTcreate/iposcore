@@ -3,6 +3,8 @@ import { getAllSubscribersAsync } from '@/lib/subscriberStore';
 import { sendWeeklyReportEmail } from '@/lib/emailSender';
 import { syncExistingIposWithDartFilings } from '@/lib/dartFilingSync';
 import { verifyAdminRequest } from '@/lib/adminAuth';
+import { getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { isReviewedIpo } from '@/lib/contentQuality';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +26,10 @@ export async function GET(request: Request) {
       await syncExistingIposWithDartFilings({ days: 7 });
     } catch (syncErr) {
       console.warn('[Cron:Newsletter] 발송 전 DART 동기화 경고 (기존 데이터로 계속 진행):', syncErr);
+    }
+
+    if (!getAllEffectiveIpos().some((ipo) => isReviewedIpo(ipo) && !ipo.isCancelled && ipo.status !== 'LISTED')) {
+      return NextResponse.json({ success: true, sentCount: 0, message: '원문 확인을 마친 청약 자료가 없어 발송을 보류합니다.' });
     }
 
     const allSubscribers = await getAllSubscribersAsync();

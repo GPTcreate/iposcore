@@ -69,7 +69,7 @@ export default function NewsletterBanner() {
         </h2>
 
         <p className="text-xs sm:text-sm text-gray-600 max-w-lg mx-auto leading-relaxed">
-          전자공시(DART) 기관 수요예측 결과와 공모주 전문 유튜버들의 의견을 정리한 요약본을 보내드립니다.
+          원문 확인을 마친 청약 정보와 공시 읽기 가이드를 보내드립니다. 발송 내용과 일정은 확인된 자료에 따라 달라질 수 있습니다.
         </p>
 
         {status === 'success' ? (

@@ -17,6 +17,12 @@ export interface IpoItem {
   code: string;
   market: 'KOSPI' | 'KOSDAQ';
   status: IpoStatus;
+  // Absence means unverified. Review requires checking the linked official document.
+  dataQuality?: {
+    status: 'reviewed' | 'unverified';
+    reviewedAt?: string;
+    sources?: { title: string; url: string }[];
+  };
   
   // 일정
   subscriptionStart: string; // YYYY-MM-DD
@@ -51,8 +57,8 @@ export interface IpoItem {
   };
 
   // AI 분석 & 점수
-  aiScore: number;                      // 1 ~ 100점
-  scoreGrade: 'S' | 'A' | 'B' | 'C';    // 적극추천, 추천, 중립, 패스권장
+  aiScore: number;                      // 0 ~ 100점 (미검토/지표 누락 시 공개 산출 보류)
+  scoreGrade: 'S' | 'A' | 'B' | 'C';    // 정량 지표 구간. 투자 추천 등급이 아님
   aiSummary: {
     headline: string;
     bulletPoints: string[];

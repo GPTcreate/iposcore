@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { IpoItem } from '@/types/ipo';
 import { getEffectiveIpoStatus } from '@/lib/ipoUtils';
 import ScoreBadge from './ScoreBadge';
+import { hasVerifiedForecast } from '@/lib/contentQuality';
 import { Calendar, ChevronRight } from 'lucide-react';
 
 interface IpoCardProps {
@@ -64,7 +65,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             score={ipo.aiScore}
             grade={ipo.scoreGrade}
             size="sm"
-            isPendingForecast={effectiveStatus === 'UPCOMING'}
+            isVerified={hasVerifiedForecast(ipo)}
           />
         </div>
 

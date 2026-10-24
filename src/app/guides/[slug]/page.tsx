@@ -14,6 +14,7 @@ import {
   Info,
   ChevronRight,
   BookOpen,
+  ExternalLink,
 } from 'lucide-react';
 
 interface PageProps {
@@ -50,20 +51,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       'IPOScore',
     ],
     alternates: {
-      canonical: `https://iposcore.kr/guides/${guide.slug}`,
+      canonical: `https://www.iposcore.kr/guides/${guide.slug}`,
     },
     openGraph: {
       title,
       description,
-      url: `https://iposcore.kr/guides/${guide.slug}`,
+      url: `https://www.iposcore.kr/guides/${guide.slug}`,
       type: 'article',
-      images: ['https://iposcore.kr/og-image.png'],
+      images: ['https://www.iposcore.kr/og-image.png'],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://iposcore.kr/og-image.png'],
+      images: ['https://www.iposcore.kr/og-image.png'],
     },
   };
 }
@@ -77,7 +78,10 @@ export default async function GuideDetailPage({ params }: PageProps) {
   }
 
   const allGuides = getAllGuides();
-  const relatedGuides = allGuides.filter((g) => g.slug !== guide.slug).slice(0, 3);
+  const relatedGuides = allGuides
+    .filter((g) => g.slug !== guide.slug)
+    .sort((a, b) => Number(b.category === guide.category) - Number(a.category === guide.category))
+    .slice(0, 3);
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -89,18 +93,20 @@ export default async function GuideDetailPage({ params }: PageProps) {
     author: {
       '@type': 'Organization',
       name: guide.author,
-      url: 'https://iposcore.kr',
+      url: 'https://www.iposcore.kr/about',
     },
     publisher: {
       '@type': 'Organization',
       name: 'IPOScore',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://iposcore.kr/og-image.png',
+        url: 'https://www.iposcore.kr/og-image.png',
       },
     },
-    image: 'https://iposcore.kr/og-image.png',
-    mainEntityOfPage: `https://iposcore.kr/guides/${guide.slug}`,
+    image: 'https://www.iposcore.kr/og-image.png',
+    mainEntityOfPage: `https://www.iposcore.kr/guides/${guide.slug}`,
+    citation: guide.sources.map((source) => source.url),
+    inLanguage: 'ko-KR',
   };
 
   const breadcrumbJsonLd = {
@@ -111,19 +117,19 @@ export default async function GuideDetailPage({ params }: PageProps) {
         '@type': 'ListItem',
         position: 1,
         name: '홈',
-        item: 'https://iposcore.kr',
+        item: 'https://www.iposcore.kr',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: '공모주 투자 가이드',
-        item: 'https://iposcore.kr/guides',
+        item: 'https://www.iposcore.kr/guides',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: guide.title,
-        item: `https://iposcore.kr/guides/${guide.slug}`,
+        item: `https://www.iposcore.kr/guides/${guide.slug}`,
       },
     ],
   };
@@ -142,13 +148,13 @@ export default async function GuideDetailPage({ params }: PageProps) {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* 상단 네비게이션 & 뒤로가기 */}
-        <div className="flex items-center justify-between text-xs font-semibold text-gray-600">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-gray-600">
           <Link
             href="/guides"
             className="inline-flex items-center gap-1.5 hover:text-blue-700 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>← 가이드 목록으로 돌아가기</span>
+            <span>가이드 목록으로 돌아가기</span>
           </Link>
           <div className="flex items-center gap-2 text-gray-400">
             <span>홈</span>
@@ -174,7 +180,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
               <span className="text-gray-300">•</span>
               <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
                 <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                <span>최종 검수 {guide.updatedAt}</span>
+                <span>내용 수정 <time dateTime={guide.updatedAt}>{guide.updatedAt}</time></span>
               </div>
             </div>
 
@@ -185,12 +191,12 @@ export default async function GuideDetailPage({ params }: PageProps) {
               {guide.subtitle}
             </p>
 
-            <div className="flex items-center justify-between pt-2 text-xs text-gray-500">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs text-gray-500">
               <div className="flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5 text-blue-700" />
-                <span>작성 및 감수: <strong>{guide.author}</strong></span>
+                <span>작성: <Link href="/about" className="font-semibold text-blue-700 underline underline-offset-2">{guide.author}</Link></span>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-1">
                 {guide.tags.map((tag, idx) => (
                   <span key={idx} className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[11px] font-medium">
                     #{tag}
@@ -204,13 +210,14 @@ export default async function GuideDetailPage({ params }: PageProps) {
           <div className="p-4 sm:p-5 rounded-xl bg-blue-50/80 border border-blue-200 text-xs sm:text-sm text-blue-900 leading-relaxed">
             <span className="font-bold block mb-1 flex items-center gap-1.5 text-blue-950">
               <BookOpen className="w-4 h-4 text-blue-700" />
-              <span>핵심 요약 (Executive Summary)</span>
+              <span>이 글에서 확인할 내용</span>
             </span>
             <p>{guide.excerpt}</p>
+            <p className="mt-2 text-xs text-blue-800">본문의 계산 사례는 별도 명시가 없으면 가정한 수치입니다. 실제 종목의 가격·배정 결과나 수익 예측이 아닙니다.</p>
           </div>
 
           {/* 목차 (Table of Contents) */}
-          <nav className="p-4 sm:p-5 rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm">
+          <nav aria-label="본문 목차" className="p-4 sm:p-5 rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm">
             <span className="font-bold text-gray-900 block mb-2">📌 본문 목차</span>
             <ul className="space-y-1.5 text-gray-700 font-medium">
               {guide.content.map((sec, idx) => (
@@ -219,15 +226,16 @@ export default async function GuideDetailPage({ params }: PageProps) {
                   <a href={`#sec-${idx}`}>{sec.sectionTitle.replace(/^\d+\.\s*/, '')}</a>
                 </li>
               ))}
+              <li><a href="#sources" className="text-blue-700 underline underline-offset-2">공식 출처와 확인 범위</a></li>
             </ul>
           </nav>
 
           {/* 본문 섹션 반복 */}
           <div className="space-y-10 text-sm sm:text-base text-gray-800 leading-relaxed">
             {guide.content.map((sec, idx) => (
-              <section key={idx} id={`sec-${idx}`} className="space-y-4 pt-2">
+              <section key={idx} id={`sec-${idx}`} className="space-y-4 pt-2 scroll-mt-6">
                 <h2 className="text-xl sm:text-2xl font-black text-gray-900 border-b border-gray-200 pb-2.5 flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-blue-700" />
+                  <span className="w-3 h-3 rounded-full bg-blue-700 shrink-0" />
                   <span>{sec.sectionTitle}</span>
                 </h2>
 
@@ -269,7 +277,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
                       <thead className="bg-gray-100 text-gray-900 font-bold border-b border-gray-200">
                         <tr>
                           {sec.table.headers.map((h, hIdx) => (
-                            <th key={hIdx} className="p-3 whitespace-nowrap">
+                            <th key={hIdx} scope="col" className="p-3 whitespace-nowrap">
                               {h}
                             </th>
                           ))}
@@ -298,11 +306,27 @@ export default async function GuideDetailPage({ params }: PageProps) {
             ))}
           </div>
 
-          {/* 아티클 하단 면책 및 제휴 안내 */}
+          <section id="sources" className="border-t border-gray-200 pt-6 space-y-4 scroll-mt-6">
+            <h2 className="text-lg font-bold text-gray-900">공식 출처와 확인 범위</h2>
+            <p className="text-xs text-gray-500 leading-relaxed">아래 자료의 제도·업무 안내를 참고해 IPOScore 편집이 설명과 계산 예시를 작성했습니다. 과거 공고 사례는 해당 공모의 조건이며, 현재 신청할 종목의 최신 공시와 증권사 공고를 우선 확인하세요.</p>
+            <ul className="space-y-4">
+              {guide.sources.map((source) => (
+                <li key={source.url} className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-start gap-2 font-semibold text-blue-700 underline underline-offset-2 break-words">
+                    <span>{source.title}</span><ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  </a>
+                  <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">{source.description}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-gray-500 leading-relaxed">출처 확인 및 내용 수정: <time dateTime={guide.updatedAt}>{guide.updatedAt}</time> · 오류 제보: <a href={`mailto:hanmanju88@gmail.com?subject=${encodeURIComponent(`[가이드 수정] ${guide.title}`)}`} className="text-blue-700 underline break-all">hanmanju88@gmail.com</a></p>
+          </section>
+
+          {/* 아티클 하단 이용 안내 */}
           <div className="mt-10 pt-6 border-t border-gray-200 text-xs text-gray-500 space-y-1.5 bg-gray-50/50 p-4 rounded-xl">
-            <span className="font-bold text-gray-700 block">투자 유의사항 및 지적재산권 안내</span>
+            <span className="font-bold text-gray-700 block">가이드 이용 안내</span>
             <p>
-              본 가이드 아티클은 공모주 투자자의 이해를 돕기 위해 금융감독원 공시 및 증권거래소 규정을 바탕으로 작성된 교육용 콘텐츠입니다. 특정 종목에 대한 투자 권유가 아니며, 청약에 따른 최종 책임은 투자자 본인에게 있습니다.
+              청약 절차와 공시를 이해하기 위한 교육용 설명입니다. 배정·환불·권리 행사 조건은 종목과 증권사에 따라 다르며, 주가 하락과 자금 비용으로 손실이 발생할 수 있습니다. 특정 종목의 청약이나 매매 시점을 권하는 자료가 아닙니다.
             </p>
           </div>
         </article>

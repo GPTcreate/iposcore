@@ -1,4 +1,5 @@
 import { IpoItem } from '@/types/ipo';
+import { hasVerifiedForecast, isReviewedIpo } from './contentQuality';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 
@@ -53,6 +54,7 @@ export async function sendTelegramBroadcast(text: string): Promise<TelegramSendR
  * 특정 종목에 대한 실전 브리핑 메시지 포맷터
  */
 export function formatIpoTelegramMessage(ipo: IpoItem): string {
+  if (!isReviewedIpo(ipo)) throw new Error('공식 원문 검토 전 종목은 배포할 수 없습니다.');
   const isClosed = ipo.status === 'WAITING_LISTING' || ipo.status === 'LISTED';
   const priceText = ipo.confirmedPrice > 0 
     ? `<b>확정 공모가:</b> ${ipo.confirmedPrice.toLocaleString()}원` 
@@ -60,7 +62,7 @@ export function formatIpoTelegramMessage(ipo: IpoItem): string {
 
   const compText = ipo.institutionalCompetitionRate > 0
     ? `<b>기관 경쟁률:</b> ${ipo.institutionalCompetitionRate.toLocaleString()}:1 (확약: ${ipo.lockupCommitmentRate}%)`
-    : `<b>수요예측:</b> 결과 발표 대기 중 (D-1 공시 예정)`;
+    : `<b>수요예측:</b> 확인 전`;
 
   const scheduleText = isClosed
     ? `📅 <b>환불일:</b> ${ipo.refundDate} · <b>상장 예정:</b> ${ipo.listingDate || '미정'}`
@@ -70,7 +72,7 @@ export function formatIpoTelegramMessage(ipo: IpoItem): string {
 📢 <b>[공모주 알리미] ${isClosed ? '청약 마감 종목 브리핑' : '핵심 분석 브리핑'}</b>
 
 🏢 <b>${ipo.name}</b> (${ipo.market} · ${ipo.code})
-⭐ <b>AI 종합 매력도:</b> ${ipo.scoreGrade}등급 (${ipo.aiScore}점)
+⭐ <b>정량 참고 점수:</b> ${hasVerifiedForecast(ipo) ? `${ipo.aiScore}점` : '산출 보류'}
 
 📌 <b>핵심 요약:</b>
 ${ipo.aiSummary.headline}
@@ -80,7 +82,7 @@ ${ipo.aiSummary.headline}
 ${scheduleText}
 🏦 <b>주관사:</b> ${ipo.underwriters.map(u => u.name).join(', ')}
 
-👉 <a href="${SITE_URL}/ipo/${ipo.id}"><b>[AI 심층 리포트 보기]</b></a>
+👉 <a href="${SITE_URL}/ipo/${ipo.id}"><b>[공시 출처와 청약 조건 보기]</b></a>
 👉 <a href="${SITE_URL}/calculator"><b>[내 투자금 비례 배정 계산기 돌려보기]</b></a>
 `.trim();
 }

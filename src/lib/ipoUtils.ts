@@ -1,5 +1,6 @@
 import { IpoItem, IpoStatus } from '@/types/ipo';
 import { getAllIpos, getIpoByIdOrCode } from './ipoStore';
+import { calculateIpoScore } from './scoring';
 
 /**
  * 한국 시간(KST, UTC+9) 현재 Date 객체 반환
@@ -86,13 +87,12 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
  * 개별 IPO 아이템에 실시간 동적 상태(status)를 반영하여 반환
  */
 export function getEffectiveIpo(ipo: IpoItem, now = new Date()): IpoItem {
-  const dynamicStatus = getEffectiveIpoStatus(ipo, now);
-  if (dynamicStatus === ipo.status) {
-    return ipo;
-  }
+  const scoring = calculateIpoScore(ipo);
   return {
     ...ipo,
-    status: dynamicStatus,
+    status: getEffectiveIpoStatus(ipo, now),
+    aiScore: scoring.score,
+    scoreGrade: scoring.scoreGrade,
   };
 }
 

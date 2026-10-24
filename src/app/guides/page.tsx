@@ -3,31 +3,31 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { getAllGuides } from '@/data/guidesData';
-import { BookOpen, Clock, Tag, ChevronRight, CheckCircle2, TrendingUp, ShieldAlert, Sparkles } from 'lucide-react';
+import { BookOpen, Clock, Tag, ChevronRight, CheckCircle2, Calculator, ShieldAlert, Sparkles } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: '공모주 실전 투자 가이드 & 분석 칼럼 라이브러리',
+  title: '공모주 청약 가이드: 공시 읽기·배정 계산·자금 관리',
   description:
-    '초보자를 위한 계좌 개설법부터 기관 수요예측·의무보유확약 분석, 비례배정 5사6입 법칙, 마이너스통장 대출이자 계산까지 공모주 투자의 모든 노하우를 무료로 확인하세요.',
+    '공모주 신청부터 배정·환불, DART 공시 읽기, 대출이자와 상장일 주문까지. 공식 출처와 가상 계산 사례를 함께 제공하는 IPOScore 청약 가이드입니다.',
   keywords: [
     '공모주 가이드',
     '공모주 투자 방법',
     '수요예측 분석법',
     '의무보유확약',
-    '비례배정 5사6입',
+    '비례배정 계산',
     '스팩주 투자',
     '공모주 상장일 매도',
   ],
   alternates: {
-    canonical: 'https://iposcore.kr/guides',
+    canonical: 'https://www.iposcore.kr/guides',
   },
   openGraph: {
-    title: '공모주 실전 투자 가이드 & 분석 칼럼 라이브러리 | IPOScore',
+    title: '공모주 청약 가이드: 공시 읽기·배정 계산·자금 관리 | IPOScore',
     description:
-      '초보자 가이드부터 기관 경쟁률·확약 분석, 비례 5사6입, 대출이자 계산까지 공모주 투자의 모든 노하우 총정리',
-    url: 'https://iposcore.kr/guides',
+      '공식 출처와 계산 사례로 청약 절차, 배정 추정의 한계와 투자 위험을 확인합니다.',
+    url: 'https://www.iposcore.kr/guides',
     type: 'website',
-    images: ['https://iposcore.kr/og-image.png'],
+    images: ['https://www.iposcore.kr/og-image.png'],
   },
 };
 
@@ -37,15 +37,15 @@ export default function GuidesPage() {
   const guidesJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: '공모주 실전 투자 가이드 & 분석 칼럼 라이브러리 | IPOScore',
-    description: '공모주 청약의 기초부터 고급 전략까지 체계적으로 정리한 실전 투자 지식 센터',
-    url: 'https://iposcore.kr/guides',
+    name: '공모주 청약 가이드 | IPOScore',
+    description: '공식 출처와 계산 사례를 바탕으로 청약 절차와 공시 확인 방법을 설명합니다.',
+    url: 'https://www.iposcore.kr/guides',
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: guides.map((guide, idx) => ({
         '@type': 'ListItem',
         position: idx + 1,
-        url: `https://iposcore.kr/guides/${guide.slug}`,
+        url: `https://www.iposcore.kr/guides/${guide.slug}`,
         name: guide.title,
       })),
     },
@@ -64,33 +64,43 @@ export default function GuidesPage() {
         <div className="p-6 sm:p-8 rounded-xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-sm border border-blue-800">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-700/60 text-blue-200 text-xs font-bold mb-3 border border-blue-500/30">
             <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-            <span>IPOScore 투자 아카데미 & 지식 센터</span>
+            <span>IPOScore 청약 가이드</span>
           </div>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
-            공모주 실전 투자 가이드 & 분석 칼럼
+            청약 전에 이해하고, 숫자는 직접 확인하세요
           </h1>
           <p className="text-sm sm:text-base text-blue-100/90 mt-2 max-w-2xl leading-relaxed">
-            공시 용어가 어렵거나 청약 전략이 막막하셨나요? 계좌 개설부터 DART 전자공시 팩트체크, 비례 5사6입 최적 배분, 상장일 최고가 매도 타이밍까지 검증된 실전 노하우를 엄선하여 제공합니다.
+            신청·배정·환불의 차이부터 공시를 읽는 순서와 비용 계산까지, 실제로 확인할 항목을 정리했습니다. 각 글의 공식 출처와 가상 계산 사례를 함께 읽어보세요.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-blue-700/50 text-xs">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>100% 무료 공모주 가이드</span>
+              <span>글별 공식 출처 제공</span>
             </div>
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-blue-400 shrink-0" />
-              <span>실전 데이터 기반 분석</span>
+              <Calculator className="w-4 h-4 text-blue-400 shrink-0" />
+              <span>계산 과정이 있는 예시</span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>리스크 팩트체크 중심</span>
+              <span>조건과 한계 함께 확인</span>
             </div>
             <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-indigo-400 shrink-0" />
-              <span>총 {guides.length}편의 심층 칼럼</span>
+              <span>주제별 {guides.length}편의 가이드</span>
             </div>
           </div>
+        </div>
+
+        <div className="rounded-xl border border-gray-300 bg-white p-5 text-sm text-gray-700 space-y-3">
+          <h2 className="font-bold text-gray-900">어디서 시작하면 될까요?</h2>
+          <p className="leading-relaxed">
+            처음 청약한다면 <Link href="/guides/ipo-beginner-complete-guide" className="font-semibold text-blue-700 underline underline-offset-2">신청부터 환불까지</Link>를,
+            배정이 궁금하다면 <Link href="/guides/proportional-allocation-and-5-down-6-up-strategy" className="font-semibold text-blue-700 underline underline-offset-2">균등·비례 계산법</Link>을 먼저 읽어보세요.
+            신청할 기업을 살펴볼 때는 <Link href="/guides/dart-prospectus-reading-top-3-risk-factors" className="font-semibold text-blue-700 underline underline-offset-2">DART 공시 확인표</Link>를 이용할 수 있습니다.
+          </p>
+          <p className="text-xs text-gray-500 leading-relaxed">작성: IPOScore 편집 · 최근 개정 2026-10-25. 예시의 기업·금리·배정수량은 별도 명시가 없으면 설명을 위한 가정입니다.</p>
         </div>
 
         {/* 아티클 카드 그리드 */}
@@ -125,7 +135,7 @@ export default function GuidesPage() {
               </div>
 
               <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 min-w-0">
                   {guide.tags.slice(0, 3).map((tag, idx) => (
                     <span key={idx} className="inline-flex items-center gap-0.5 text-gray-500">
                       <Tag className="w-3 h-3 text-gray-400" />
@@ -133,7 +143,7 @@ export default function GuidesPage() {
                     </span>
                   ))}
                 </div>
-                <span className="font-bold text-blue-700 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                <span className="font-bold text-blue-700 inline-flex items-center gap-1 shrink-0 group-hover:translate-x-0.5 transition-transform">
                   <span>자세히 읽기</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </span>
@@ -149,7 +159,8 @@ export default function GuidesPage() {
             <span>원하는 공모주 분석 정보를 찾지 못하셨나요?</span>
           </h3>
           <p className="text-gray-600 leading-relaxed">
-            IPOScore는 매주 업데이트되는 신규 공시 및 시장 트렌드에 발맞추어 최신 투자 가이드를 지속적으로 연재하고 있습니다. 궁금한 공모주 용어나 추가 분석을 원하시는 주제가 있으시면 언제든지 <a href="mailto:hanmanju88@gmail.com" className="text-blue-700 underline font-semibold">hanmanju88@gmail.com</a>으로 의견을 남겨주세요.
+            내용의 오류나 설명이 부족한 부분은 해당 가이드 제목과 함께 <a href="mailto:hanmanju88@gmail.com" className="text-blue-700 underline font-semibold break-all">hanmanju88@gmail.com</a>으로 알려주세요.
+            작성 방식과 수정 기준은 <Link href="/about" className="text-blue-700 underline font-semibold">서비스 소개</Link>에서 확인할 수 있습니다.
           </p>
         </div>
       </main>

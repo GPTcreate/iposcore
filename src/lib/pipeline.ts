@@ -2,8 +2,7 @@ import { getAllIpos } from './ipoStore';
 import { IpoItem } from '@/types/ipo';
 import { getEffectiveIpoStatus } from './ipoUtils';
 import { analyzeIpoSentiment, SentimentAnalysisOutput } from './sentimentAnalyzer';
-import { addOrUpdateIpo } from './ipoServerStore';
-import { sendTelegramBroadcast, formatIpoTelegramMessage } from './telegramNotifier';
+import { hasVerifiedForecast, isReviewedIpo } from './contentQuality';
 
 export interface PipelineTarget {
   ipo: IpoItem;
@@ -52,8 +51,8 @@ export function getKstDateString(date = new Date()): string {
  * 특정 기준 날짜(기본 오늘)를 바탕으로 '방법 2' 정책에 부합하는 타겟 종목 추출
  * 정책:
  *  ① 청약 예정 신규 등록 시점 (NEW_SCHEDULE): 예정 상태이면서 분석 이력이 없는 종목 1회
- *  ② 청약 전날 시점 (DAY_BEFORE_SUBSCRIPTION): 청약 시작일 D-1 인 종목 1회 (수요예측 확정 및 유튜브/블로그 최종 분석)
- *  * 그 외 날짜는 100% 스킵하여 불필요한 LLM 비용 및 크롤링 낭비 방지
+ *  ② 청약 전날 시점 (DAY_BEFORE_SUBSCRIPTION): 청약 시작일 D-1 인 종목
+ *  공식 공시 검토와 필수 지표 확인을 마친 종목에만 적용합니다.
  */
 export function identifyPipelineTargets(
   ipos: IpoItem[],
@@ -71,6 +70,10 @@ export function identifyPipelineTargets(
   const skipped: { stock: IpoItem; reason: string }[] = [];
 
   for (const ipo of ipos) {
+    if (!isReviewedIpo(ipo) || !hasVerifiedForecast(ipo)) {
+      skipped.push({ stock: ipo, reason: '공식 공시 검토 또는 필수 수요예측 지표 확인 전 자동 분석 보류' });
+      continue;
+    }
     const effectiveStatus = getEffectiveIpoStatus(ipo, todayObj);
     // 취소 또는 이미 상장된 종목은 스킵
     if (ipo.isCancelled || effectiveStatus === 'LISTED') {
@@ -108,7 +111,7 @@ export function identifyPipelineTargets(
       targets.push({
         ipo,
         triggerType: 'DAY_BEFORE_SUBSCRIPTION',
-        reason: `청약 전날(D-1) 도래! 수요예측 결과 확정 및 유튜브/블로그 최종 분석 반영 (청약 시작일: ${ipo.subscriptionStart})`,
+        reason: `청약 전날(D-1) 검토된 수요예측 정량 지표 재계산 (청약 시작일: ${ipo.subscriptionStart})`,
       });
       continue;
     }
@@ -151,27 +154,14 @@ export async function runMethod2Pipeline(options?: {
   for (const item of targets) {
     const beforeScore = item.ipo.aiScore;
 
-    // 감성 분석 & 종합 점수 산출
+    // 검토된 정량 자료만 요약. 외부 리뷰와 여론은 생성하지 않습니다.
     const analysisResult: SentimentAnalysisOutput = await analyzeIpoSentiment(item.ipo, item.triggerType);
-
-    // 업데이트된 분석 결과 영구 저장 (0클릭 자동 반영)
-    const updatedIpo: IpoItem = {
-      ...item.ipo,
-      aiScore: analysisResult.aiScore,
-      scoreGrade: analysisResult.scoreGrade,
-      aiSummary: analysisResult.aiSummary,
-      sentimentConsensus: analysisResult.sentimentConsensus,
-      expertReviews: analysisResult.expertReviews,
-    };
-    addOrUpdateIpo(updatedIpo);
-
-    // D-1 청약 전날인 경우 텔레그램 채널 자동 브리핑 송출
-    if (item.triggerType === 'DAY_BEFORE_SUBSCRIPTION' && process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
-      sendTelegramBroadcast(formatIpoTelegramMessage(updatedIpo)).catch((err) => {
-        console.warn('[Pipeline:Telegram] 자동 브리핑 전송 실패:', err);
-      });
+    if (!analysisResult.publishable) {
+      skipped.push({ stock: item.ipo, reason: analysisResult.holdReason || '근거 자료 확인 전 자동 분석 보류' });
+      continue;
     }
 
+    // 계산 결과만 반환합니다. 검토된 본문·출처를 덮어쓰거나 외부로 발송하지 않습니다.
     processedTargets.push({
       stockName: item.ipo.name,
       stockCode: item.ipo.code,
@@ -188,8 +178,8 @@ export async function runMethod2Pipeline(options?: {
 
   const message =
     processedTargets.length > 0
-      ? `[방법 2 파이프라인] 총 ${processedTargets.length}개 종목 실행 완료 (청약 예정 등록 및 D-1 전날 대상 종목 선별 처리)`
-      : `[방법 2 파이프라인] 오늘 청약 예정 등록(최초) 또는 청약 전날(D-1) 대상 종목이 없어 불필요한 LLM 호출을 건너뛰었습니다 (비용 $0 절감).`;
+      ? `[방법 2 파이프라인] 검토된 지표 ${processedTargets.length}개 종목의 참고 계산을 반환했습니다. 저장과 외부 발송은 하지 않았습니다.`
+      : '[방법 2 파이프라인] 검토 이력과 필수 지표를 갖춘 대상이 없어 자동 분석을 보류했습니다.';
 
   return {
     executionDate,

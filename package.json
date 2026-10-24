@@ -10,7 +10,8 @@
     "lint": "eslint",
     "validate:data": "node scripts/validate-ipo-data.mjs",
     "audit:dart": "node scripts/audit-dart-disclosures.mjs",
-    "test:security": "node scripts/test-security.mjs"
+    "test:security": "node scripts/test-security.mjs",
+    "test:content": "node scripts/test-content.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",

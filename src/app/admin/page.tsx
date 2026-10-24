@@ -163,6 +163,7 @@ export default function AdminPage() {
   const [adminIpoList, setAdminIpoList] = useState<IpoItem[]>(allIpos);
   const [dartSyncLoading, setDartSyncLoading] = useState(false);
   const [dartSyncResult, setDartSyncResult] = useState<string | null>(null);
+  const [pendingDartFilings, setPendingDartFilings] = useState<{ companyName: string; reportName: string; receivedAt: string; receiptNo: string; sourceUrl: string }[]>([]);
   const [priceSyncLoading, setPriceSyncLoading] = useState(false);
   const [priceSyncResult, setPriceSyncResult] = useState<string | null>(null);
   const [crossCheckLoading, setCrossCheckLoading] = useState(false);
@@ -172,12 +173,14 @@ export default function AdminPage() {
   const [manualIpoForm, setManualIpoForm] = useState({
     name: '',
     code: '',
-    market: 'KOSDAQ',
-    priceBandMin: 15000,
-    priceBandMax: 18000,
+    market: '',
+    priceBandMin: '',
+    priceBandMax: '',
     subscriptionStart: '',
     subscriptionEnd: '',
-    underwriterName: '한국투자증권',
+    refundDate: '',
+    underwriterName: '',
+    fee: '',
   });
 
   const fetchIpos = async () => {
@@ -195,6 +198,7 @@ export default function AdminPage() {
   const handleSyncDart = async () => {
     setDartSyncLoading(true);
     setDartSyncResult(null);
+    setPendingDartFilings([]);
     try {
       const res = await authFetch('/api/ipo', {
         method: 'POST',
@@ -203,7 +207,8 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setDartSyncResult(`🎉 ${data.message} (현재 총 ${data.totalIposCount || adminIpoList.length}개 운영 중)`);
+        setDartSyncResult(data.message || '공시 목록 조회를 마쳤습니다. 원문 검토 전에는 공개하지 않습니다.');
+        setPendingDartFilings(Array.isArray(data.pendingFilings) ? data.pendingFilings : []);
         fetchIpos();
       } else {
         setDartSyncResult(`❌ 동기화 실패: ${data.error || '오류'}`);
@@ -273,17 +278,19 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setDartSyncResult(`✨ ${data.ipo.name} (${data.ipo.code}) 카드가 생성되었습니다!`);
+        setDartSyncResult(data.message || `${data.ipo.name} (${data.ipo.code}) 자료가 검증 대기로 저장되었습니다.`);
         setIsAddingIpo(false);
         setManualIpoForm({
           name: '',
           code: '',
-          market: 'KOSDAQ',
-          priceBandMin: 15000,
-          priceBandMax: 18000,
+          market: '',
+          priceBandMin: '',
+          priceBandMax: '',
           subscriptionStart: '',
           subscriptionEnd: '',
-          underwriterName: '한국투자증권',
+          refundDate: '',
+          underwriterName: '',
+          fee: '',
         });
         fetchIpos();
       } else {
@@ -721,14 +728,14 @@ https://iposcore.kr/ipo/${ipo.id}`;
             <h1 className="text-xl font-bold text-gray-900 mb-1">관리자 보안 인증</h1>
             <p className="text-xs text-gray-500 mb-6">
               공모주 알리미 리포트 관리자 전용 제어 센터입니다.<br />
-              관리자 보안 PIN 번호를 입력해 주세요.
+              설정한 관리자 비밀번호를 입력해 주세요.
             </p>
 
             <form onSubmit={handleAuthSubmit} className="space-y-4">
               <div>
                 <input
                   type="password"
-                  placeholder="보안 암호 (PIN)"
+                  placeholder="관리자 비밀번호"
                   value={pinInput}
                   onChange={(e) => {
                     setPinInput(e.target.value);
@@ -922,7 +929,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${dartSyncLoading ? 'animate-spin' : ''}`} />
-                <span>{dartSyncLoading ? 'DART 공시 감지 & 카드 생성 중...' : '🚀 DART 신규 공모주 감지'}</span>
+                <span>{dartSyncLoading ? 'DART 검토 대상 조회 중...' : 'DART 공시 검토 대상 조회'}</span>
               </button>
 
               <button
@@ -967,6 +974,13 @@ https://iposcore.kr/ipo/${ipo.id}`;
               </button>
             </div>
           )}
+          {pendingDartFilings.length > 0 && (
+            <section className="p-4 rounded-xl bg-white border border-amber-200 space-y-3">
+              <h3 className="text-sm font-bold text-gray-900">원문 검토 대기 ({pendingDartFilings.length}건)</h3>
+              <p className="text-xs text-gray-600">공시 접수만 확인한 목록입니다. 공모 해당 여부와 일정·가격·주관사를 원문에서 확인한 뒤 등록하고, 저장소의 검토 절차를 마쳐야 공개됩니다.</p>
+              <ul className="space-y-2 text-xs text-blue-700">{pendingDartFilings.map((filing) => <li key={filing.receiptNo}><a className="underline break-words" href={filing.sourceUrl} target="_blank" rel="noopener noreferrer">{filing.companyName} · {filing.reportName} · {filing.receivedAt}</a></li>)}</ul>
+            </section>
+          )}
 
           {/* 포털 2중 교차 검증 결과 메시지 */}
           {crossCheckResult && (
@@ -996,7 +1010,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   <Plus className="w-4 h-4 text-indigo-600" />
                   <span>새로운 공모주 수동 등록</span>
                 </span>
-                <span className="text-[11px] text-gray-500">* 등록 즉시 메인 페이지 및 분석 리포트에 자동 반영됩니다.</span>
+                <span className="text-[11px] text-gray-500">등록 자료는 검증 대기로 보관됩니다. 공식 원문과 수치 검토 후에만 공개합니다.</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
@@ -1012,10 +1026,13 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">종목코드 (6자리, 비워두면 자동부여)</label>
+                  <label className="block text-gray-700 font-bold mb-1">확인한 종목코드 (6자리) *</label>
                   <input
                     type="text"
                     maxLength={6}
+                    pattern="[0-9]{6}"
+                    inputMode="numeric"
+                    required
                     placeholder="예: 474170"
                     value={manualIpoForm.code}
                     onChange={(e) => setManualIpoForm({ ...manualIpoForm, code: e.target.value })}
@@ -1023,61 +1040,76 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">상장 시장</label>
+                  <label className="block text-gray-700 font-bold mb-1">상장 시장 *</label>
                   <select
+                    required
                     value={manualIpoForm.market}
                     onChange={(e) => setManualIpoForm({ ...manualIpoForm, market: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   >
+                    <option value="">시장 선택</option>
                     <option value="KOSDAQ">KOSDAQ</option>
                     <option value="KOSPI">KOSPI</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">대표 주관사</label>
+                  <label className="block text-gray-700 font-bold mb-1">대표 주관사 *</label>
                   <input
                     type="text"
                     placeholder="예: 한국투자증권"
+                    required
                     value={manualIpoForm.underwriterName}
                     onChange={(e) => setManualIpoForm({ ...manualIpoForm, underwriterName: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">희망 공모가 최소 (원)</label>
+                  <label className="block text-gray-700 font-bold mb-1">희망 공모가 최소 (원) *</label>
                   <input
                     type="number"
+                    required min="1"
                     value={manualIpoForm.priceBandMin}
-                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, priceBandMin: Number(e.target.value) })}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, priceBandMin: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">희망 공모가 최대 (원)</label>
+                  <label className="block text-gray-700 font-bold mb-1">희망 공모가 최대 (원) *</label>
                   <input
                     type="number"
+                    required min={manualIpoForm.priceBandMin || '1'}
                     value={manualIpoForm.priceBandMax}
-                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, priceBandMax: Number(e.target.value) })}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, priceBandMax: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">청약 시작일 (선택)</label>
+                  <label className="block text-gray-700 font-bold mb-1">청약 시작일 *</label>
                   <input
                     type="date"
+                    required
                     value={manualIpoForm.subscriptionStart}
                     onChange={(e) => setManualIpoForm({ ...manualIpoForm, subscriptionStart: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">청약 마감일 (선택)</label>
+                  <label className="block text-gray-700 font-bold mb-1">청약 마감일 *</label>
                   <input
                     type="date"
+                    required min={manualIpoForm.subscriptionStart || undefined}
                     value={manualIpoForm.subscriptionEnd}
                     onChange={(e) => setManualIpoForm({ ...manualIpoForm, subscriptionEnd: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">환불일 *</label>
+                  <input type="date" required min={manualIpoForm.subscriptionEnd || undefined} value={manualIpoForm.refundDate} onChange={(e) => setManualIpoForm({ ...manualIpoForm, refundDate: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden" />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-bold mb-1">확인한 청약 수수료 (원) *</label>
+                  <input type="number" required min="0" step="1" placeholder="면제 조건이면 0" value={manualIpoForm.fee} onChange={(e) => setManualIpoForm({ ...manualIpoForm, fee: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden" />
                 </div>
               </div>
 
@@ -1094,7 +1126,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   disabled={manualIpoLoading}
                   className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  {manualIpoLoading ? '카드 생성 중...' : '카드 즉시 생성'}
+                  {manualIpoLoading ? '검증 대기 자료 저장 중...' : '검증 대기로 저장'}
                 </button>
               </div>
             </form>

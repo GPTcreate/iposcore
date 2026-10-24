@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { getAllGuides } from '@/data/guidesData';
+import { isReviewedIpo } from '@/lib/contentQuality';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
+  const siteUrl = 'https://www.iposcore.kr';
   
   const guideRssItems = getAllGuides().map((guide) => {
     const pubDate = new Date(guide.publishedAt).toUTCString();
@@ -20,11 +21,11 @@ export async function GET() {
     </item>`;
   }).join('');
 
-  const ipoRssItems = getAllEffectiveIpos().map((ipo) => {
-    const pubDate = new Date(ipo.subscriptionStart).toUTCString();
+  const ipoRssItems = getAllEffectiveIpos().filter(isReviewedIpo).map((ipo) => {
+    const pubDate = new Date(ipo.dataQuality!.reviewedAt!).toUTCString();
     return `
     <item>
-      <title><![CDATA[[공모주 분석] ${ipo.name} (${ipo.market}) - ${ipo.scoreGrade}등급 (${ipo.aiScore}점)]]></title>
+      <title><![CDATA[[공모주 분석] ${ipo.name} (${ipo.market}) 공시 확인]]></title>
       <link>${siteUrl}/ipo/${ipo.id}</link>
       <guid>${siteUrl}/ipo/${ipo.id}</guid>
       <pubDate>${pubDate}</pubDate>
@@ -40,7 +41,7 @@ export async function GET() {
   <channel>
     <title>공모주 알리미 리포트 (iposcore.kr)</title>
     <link>${siteUrl}</link>
-    <description>실시간 공모주 청약 일정, 기관 수요예측 경쟁률, 의무보유확약 및 AI 종합 점수 리포트</description>
+    <description>공모주 공시 읽기 가이드, 원문 확인 자료와 배정·비용 계산 도구</description>
     <language>ko</language>
     <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/>
     ${rssItems}

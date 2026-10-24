@@ -36,7 +36,7 @@ export function getAllIpos(): IpoItem[] {
     map.set(key, item);
   }
 
-  return Array.from(map.values());
+  return Array.from(map.values(), (item) => structuredClone(item));
 }
 
 /**

@@ -1,278 +1,150 @@
 'use client';
 
-import React, { useState, useId } from 'react';
+import React, { useId, useState } from 'react';
 import { Calculator, HelpCircle } from 'lucide-react';
+import { calculateIpoScenario, type AllocationAssumption, type IpoCalculationInput } from '@/lib/ipoCalculation';
 
 interface IpoCalculatorProps {
   initialPrice?: number;
-  initialCompetitionRate?: number;
+  initialProportionalCompetitionRate?: number;
   initialRefundDays?: number;
   stockName?: string;
 }
 
+type NumericField = Exclude<keyof IpoCalculationInput, 'allocationAssumption'>;
+const fieldClassName = 'w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-100';
+const numberFormat = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
+const won = (amount: number) => `${numberFormat.format(amount)}원`;
+const signedWon = (amount: number) => `${amount > 0 ? '+' : ''}${won(amount)}`;
+const percent = (amount: number) => `${amount > 0 ? '+' : ''}${amount.toFixed(2)}%`;
+
 export default function IpoCalculator({
   initialPrice = 20000,
-  initialCompetitionRate = 1200,
+  initialProportionalCompetitionRate = 1000,
   initialRefundDays = 2,
-  stockName = '공모주'
+  stockName = '공모주',
 }: IpoCalculatorProps) {
-  const depositInputId = useId();
-  const priceInputId = useId();
-  const compInputId = useId();
-  const daysInputId = useId();
-  const loanInputId = useId();
-  const feeInputId = useId();
-  const returnInputId = useId();
+  const inputPrefix = useId();
+  // Keep text while editing: clearing a field must not silently turn it into zero.
+  const [fields, setFields] = useState<Record<NumericField, string>>({
+    depositAmount: '10000000',
+    offerPrice: String(initialPrice),
+    proportionalCompetitionRate: String(initialProportionalCompetitionRate),
+    depositRatePercent: '50',
+    equalShares: '0',
+    borrowedAmount: '0',
+    annualInterestRatePercent: '5',
+    lockedDays: String(initialRefundDays),
+    subscriptionFee: '2000',
+    sellingCostRatePercent: '0',
+    returnRatePercent: '20',
+  });
+  const [allocationAssumption, setAllocationAssumption] = useState<AllocationAssumption>('floor');
+  const setField = (name: NumericField, value: string) => setFields((current) => ({ ...current, [name]: value }));
+  const valueOf = (name: NumericField) => fields[name].trim() === '' ? Number.NaN : Number(fields[name]);
+  const result = calculateIpoScenario({
+    depositAmount: valueOf('depositAmount'), offerPrice: valueOf('offerPrice'),
+    proportionalCompetitionRate: valueOf('proportionalCompetitionRate'), depositRatePercent: valueOf('depositRatePercent'),
+    equalShares: valueOf('equalShares'), borrowedAmount: valueOf('borrowedAmount'),
+    annualInterestRatePercent: valueOf('annualInterestRatePercent'), lockedDays: valueOf('lockedDays'),
+    subscriptionFee: valueOf('subscriptionFee'), sellingCostRatePercent: valueOf('sellingCostRatePercent'),
+    returnRatePercent: valueOf('returnRatePercent'), allocationAssumption,
+  });
 
-  // 사용자 입력 상태
-  const [depositAmount, setDepositAmount] = useState<number>(30000000); // 3,000만원 기본
-  const [targetPrice, setTargetPrice] = useState<number>(initialPrice || 25000);
-  const [expectedCompetition, setExpectedCompetition] = useState<number>(
-    initialCompetitionRate > 0 ? Math.round(initialCompetitionRate * 2) : 2000
+  const numericInput = (name: NumericField, label: string, options: { min?: number; max?: number; step?: string; hint?: string } = {}) => (
+    <div className="min-w-0">
+      <label htmlFor={`${inputPrefix}-${name}`} className="mb-1 block text-xs font-semibold text-gray-700">{label}</label>
+      <input id={`${inputPrefix}-${name}`} type="number" inputMode="decimal" value={fields[name]} onChange={(event) => setField(name, event.target.value)} min={options.min ?? 0} max={options.max} step={options.step ?? 'any'} className={fieldClassName} aria-describedby={options.hint ? `${inputPrefix}-${name}-hint` : undefined} />
+      {options.hint && <p id={`${inputPrefix}-${name}-hint`} className="mt-1 text-xs leading-relaxed text-gray-500">{options.hint}</p>}
+    </div>
   );
-  const [refundDays, setRefundDays] = useState<number>(initialRefundDays);
-  const [loanInterestRate, setLoanInterestRate] = useState<number>(5.5);
-  const [applicationFee, setApplicationFee] = useState<number>(2000);
-  const [expectedReturnRate, setExpectedReturnRate] = useState<number>(80);
-
-  // 계산 로직 (0원 입력, 음수 방지 및 엣지 케이스 가드)
-  const safeDeposit = Math.max(0, depositAmount || 0);
-  const safeTargetPrice = Math.max(0, targetPrice || 0);
-  const safeCompetition = Math.max(1, expectedCompetition || 1);
-  const safeRefundDays = Math.max(0, refundDays || 0);
-  const safeLoanRate = Math.max(0, loanInterestRate || 0);
-  const safeFee = safeDeposit > 0 ? Math.max(0, applicationFee || 0) : 0;
-
-  const minEqualDeposit = Math.round(safeTargetPrice * 10 * 0.5);
-  const estimatedEqualShares = safeDeposit >= minEqualDeposit ? 1 : (safeDeposit > 0 ? 1 : 0);
-  const oneShareDeposit = Math.round(safeTargetPrice * safeCompetition * 0.5);
-  const calculatedProportionalShares = oneShareDeposit > 0 ? safeDeposit / oneShareDeposit : 0;
-  const guaranteedProportionalShares = Math.floor(calculatedProportionalShares);
-  const fiveDownSixUpProbability = calculatedProportionalShares - guaranteedProportionalShares;
-
-  const proportionalShares = guaranteedProportionalShares + (fiveDownSixUpProbability >= 0.6 ? 1 : 0);
-  const totalEstimatedShares = safeDeposit > 0 ? (proportionalShares + estimatedEqualShares) : 0;
-
-  const loanInterestCost = Math.round((safeDeposit * (safeLoanRate / 100) / 365) * safeRefundDays);
-  const totalCost = safeDeposit > 0 ? (loanInterestCost + safeFee) : 0;
-  const profitPerShare = Math.round(safeTargetPrice * (expectedReturnRate / 100));
-  const grossProfit = totalEstimatedShares * profitPerShare;
-  const netProfit = grossProfit - totalCost;
-
-  const handleQuickAmount = (amount: number) => {
-    setDepositAmount(amount);
-  };
 
   return (
-    <div className="rounded-xl border border-gray-300 bg-white p-5 sm:p-6 shadow-2xs">
-      <div className="flex items-center gap-2 mb-2 pb-3 border-b border-gray-200">
-        <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
-          <Calculator className="w-4 h-4" />
-        </div>
+    <section className="rounded-xl border border-gray-300 bg-white p-5 shadow-2xs sm:p-6" aria-labelledby={`${inputPrefix}-heading`}>
+      <div className="mb-4 flex items-start gap-2 border-b border-gray-200 pb-4">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-800"><Calculator className="h-4 w-4" /></div>
         <div>
-          <h3 className="text-lg font-bold text-gray-900">
-            {stockName} 공모주 비례 청약 계산기
-          </h3>
-          <p className="text-xs text-gray-500">
-            투자 금액을 입력하시면 예상 배정 주수와 대출 이자를 제외한 실제 순수익을 계산해 드립니다.
-          </p>
+          <h2 id={`${inputPrefix}-heading`} className="text-lg font-bold text-gray-900">{stockName} 비례 배정·손익 계산기</h2>
+          <p className="mt-1 text-xs leading-relaxed text-gray-600">미리 입력된 금액·경쟁률·수익률은 계산 예시입니다. 종목의 확정 수치와 증권사 조건으로 바꿔 비교해 보세요.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-        {/* 입력 영역 */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="space-y-4">
-          <div>
-            <label htmlFor={depositInputId} className="block text-xs font-bold text-gray-700 mb-1">
-              청약 증거금 (투자 금액)
-            </label>
-            <div className="relative">
-              <input
-                id={depositInputId}
-                type="number"
-                step="1000000"
-                value={depositAmount}
-                onChange={(e) => setDepositAmount(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-bold text-base focus:border-blue-600 focus:outline-hidden"
-              />
-              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-500">
-                원
-              </span>
-            </div>
-            {/* 금액 빠른 선택 */}
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {[5000000, 10000000, 30000000, 50000000, 100000000].map((amt) => (
-                <button
-                  key={amt}
-                  type="button"
-                  onClick={() => handleQuickAmount(amt)}
-                  className={`text-xs px-2.5 py-1 rounded border transition-colors cursor-pointer ${
-                    depositAmount === amt
-                      ? 'bg-blue-700 text-white border-blue-700 font-bold'
-                      : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
-                  }`}
-                >
-                  {(amt / 10000).toLocaleString()}만원
-                </button>
-              ))}
-            </div>
+          {numericInput('depositAmount', '청약 증거금 (원)', { min: 1, step: '10000' })}
+          <div className="flex flex-wrap gap-1.5">
+            {[5000000, 10000000, 30000000, 50000000, 100000000].map((amount) => (
+              <button key={amount} type="button" onClick={() => setField('depositAmount', String(amount))} className={`cursor-pointer rounded border px-2.5 py-1.5 text-xs ${Number(fields.depositAmount) === amount ? 'border-blue-700 bg-blue-700 font-bold text-white' : 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100'}`}>{numberFormat.format(amount / 10000)}만원</button>
+            ))}
           </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label htmlFor={priceInputId} className="block text-xs font-semibold text-gray-600 mb-1">
-                확정 공모가 (원)
-              </label>
-              <input
-                id={priceInputId}
-                type="number"
-                value={targetPrice}
-                onChange={(e) => setTargetPrice(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm font-semibold"
-              />
-            </div>
-            <div>
-              <label htmlFor={compInputId} className="block text-xs font-semibold text-gray-600 mb-1">
-                예상 청약 경쟁률 (:1)
-              </label>
-              <input
-                id={compInputId}
-                type="number"
-                value={expectedCompetition}
-                onChange={(e) => setExpectedCompetition(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm font-semibold"
-              />
-            </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {numericInput('offerPrice', '공모가 (원)', { min: 1 })}
+            {numericInput('depositRatePercent', '청약 증거금률 (%)', { min: 0.01, max: 100, hint: '50%는 예시입니다. 종목별 조건을 확인하세요.' })}
           </div>
-
-          <div className="grid grid-cols-3 gap-2 text-xs">
+          {numericInput('proportionalCompetitionRate', '비례 배정 경쟁률 (:1)', { min: 0.01, hint: '주관사가 공개한 일반 청약의 비례 경쟁률 또는 직접 정한 시나리오입니다. 기관 수요예측 경쟁률과 다릅니다.' })}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {numericInput('equalShares', '균등 배정 가정 (주)', { step: '1', hint: '기본 0주. 추첨 결과 또는 직접 가정한 주수를 입력합니다.' })}
             <div>
-              <label htmlFor={daysInputId} className="block text-gray-600 mb-1 font-semibold">환불일수</label>
-              <select
-                id={daysInputId}
-                value={refundDays}
-                onChange={(e) => setRefundDays(Number(e.target.value))}
-                className="w-full p-2 rounded-lg border border-gray-300 bg-white font-medium"
-              >
-                <option value={2}>2일 (평일)</option>
-                <option value={4}>4일 (주말포함)</option>
+              <label htmlFor={`${inputPrefix}-allocation`} className="mb-1 block text-xs font-semibold text-gray-700">비례 소수점 처리 가정</label>
+              <select id={`${inputPrefix}-allocation`} value={allocationAssumption} onChange={(event) => setAllocationAssumption(event.target.value as AllocationAssumption)} className={fieldClassName}>
+                <option value="floor">절사 (기본 가정)</option>
+                <option value="five-down-six-up">5사6입 (0.6 이상 올림 가정)</option>
               </select>
-            </div>
-            <div>
-              <label htmlFor={loanInputId} className="block text-gray-600 mb-1 font-semibold">마통 금리 (연%)</label>
-              <input
-                id={loanInputId}
-                type="number"
-                step="0.1"
-                value={loanInterestRate}
-                onChange={(e) => setLoanInterestRate(Number(e.target.value))}
-                className="w-full p-2 rounded-lg border border-gray-300 bg-white font-medium"
-              />
-            </div>
-            <div>
-              <label htmlFor={feeInputId} className="block text-gray-600 mb-1 font-semibold">청약 수수료</label>
-              <input
-                id={feeInputId}
-                type="number"
-                step="500"
-                value={applicationFee}
-                onChange={(e) => setApplicationFee(Number(e.target.value))}
-                className="w-full p-2 rounded-lg border border-gray-300 bg-white font-medium"
-              />
+              <p className="mt-1 text-xs leading-relaxed text-gray-500">두 방식 모두 실제 배정을 보장하지 않습니다. 단수주 처리·추첨은 주관사 공지를 따릅니다.</p>
             </div>
           </div>
-
+          <fieldset className="space-y-3 rounded-lg border border-gray-200 p-3">
+            <legend className="px-1 text-xs font-bold text-gray-800">대출과 거래 비용</legend>
+            {numericInput('borrowedAmount', '증거금 중 대출 원금 (원)', { hint: '자기자금이면 0원입니다. 증거금 전체에 자동으로 이자를 매기지 않습니다.' })}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {numericInput('annualInterestRatePercent', '대출 연이율 (%)')}
+              {numericInput('lockedDays', '대출 사용 일수 (달력일)', { step: '1' })}
+              {numericInput('subscriptionFee', '적용할 청약 수수료 (원)', { hint: '미배정 시 면제 등 실제 조건에 따라 0원도 입력할 수 있습니다.' })}
+              {numericInput('sellingCostRatePercent', '매도 수수료·세금 합계 (%)', { max: 100, hint: '매도대금에 곱할 합산 비율. 기본 0%는 비용 미반영 예시입니다.' })}
+            </div>
+          </fieldset>
           <div>
-            <div className="flex justify-between text-xs text-gray-700 font-semibold mb-1">
-              <label htmlFor={returnInputId}>상장 당일 기대 수익률</label>
-              <span className="font-bold text-blue-700">+{expectedReturnRate}%</span>
-            </div>
-            <input
-              id={returnInputId}
-              type="range"
-              min="0"
-              max="300"
-              step="10"
-              value={expectedReturnRate}
-              onChange={(e) => setExpectedReturnRate(Number(e.target.value))}
-              className="w-full accent-blue-700"
-            />
-            <div className="flex justify-between text-[11px] text-gray-500">
-              <span>0% (본전)</span>
-              <span>100% (따블)</span>
-              <span>200%</span>
-              <span>300% (따따블)</span>
-            </div>
+            {numericInput('returnRatePercent', '공모가 대비 매도 수익률 시나리오 (%)', { min: -100, max: 300, hint: '예측값이 아닙니다. -100%는 전액 손실 가정이며 일일 가격제한폭과 다릅니다.' })}
+            <input type="range" aria-label="매도 수익률 시나리오 조절" min="-100" max="300" step="1" value={Number.isFinite(valueOf('returnRatePercent')) ? valueOf('returnRatePercent') : 0} onChange={(event) => setField('returnRatePercent', event.target.value)} className="mt-3 w-full accent-blue-700" />
+            <div className="flex justify-between text-[11px] text-gray-500"><span>-100% 손실</span><span>0%</span><span>+300%</span></div>
           </div>
         </div>
 
-        {/* 결과 영역 (차분하고 정돈된 회색/흰색 박스) */}
-        <div className="rounded-lg border border-gray-300 bg-gray-50 p-5 flex flex-col justify-between">
-          <div className="space-y-3">
-            <div className="border-b border-gray-300 pb-3">
-              <span className="text-xs text-gray-500 font-bold block mb-1">
-                계산 결과 요약
-              </span>
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm font-bold text-gray-800">
-                  총 예상 배정 주수
-                </span>
-                <span className="text-2xl font-black text-blue-800">
-                  약 {totalEstimatedShares}주
-                </span>
-              </div>
-              <p className="text-[11px] text-gray-500 mt-1">
-                (균등 {estimatedEqualShares}주 + 비례 {guaranteedProportionalShares}주 {fiveDownSixUpProbability >= 0.6 ? '+ 5사6입 1주 추가' : ''})
-              </p>
+        <div className="min-w-0 rounded-lg border border-gray-300 bg-gray-50 p-4 sm:p-5">
+          {!result.valid ? (
+            <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+              <p className="font-bold">입력값을 확인하면 계산 결과가 표시됩니다.</p>
+              <ul className="mt-2 list-disc space-y-1 pl-4">{result.errors.map((error) => <li key={error}>{error}</li>)}</ul>
             </div>
-
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between text-gray-600">
-                <span>비례 1주 청약 필요 금액</span>
-                <span className="font-bold text-gray-900">
-                  약 {(oneShareDeposit / 10000).toFixed(1)}만원
-                </span>
+          ) : (
+            <div className="space-y-4" aria-live="polite" aria-atomic="true">
+              <div className="border-b border-gray-300 pb-4">
+                <p className="text-xs font-bold text-gray-500">입력한 조건으로 계산한 시나리오</p>
+                <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2"><span className="text-sm font-bold text-gray-800">배정 주수 가정</span><strong className="text-2xl text-blue-800">{numberFormat.format(result.scenario.totalShares)}주</strong></div>
+                <p className="mt-1 text-xs text-gray-600">균등 {fields.equalShares}주 + 비례 {numberFormat.format(result.scenario.proportionalShares)}주 ({allocationAssumption === 'floor' ? '절사' : '5사6입'} 가정)</p>
+                <p className="mt-2 text-xs leading-relaxed text-gray-600">비례 이론값 {result.scenario.theoreticalProportionalShares.toLocaleString('ko-KR', { maximumFractionDigits: 4 })}주입니다. 청약 한도·청약 단위·최종 경쟁률·단수주 처리에 따라 실제 결과는 달라집니다.</p>
               </div>
-
-              <div className="flex justify-between text-gray-600">
-                <span>마이너스통장 대출 이자 ({refundDays}일치)</span>
-                <span className="font-bold text-red-600">
-                  -{loanInterestCost.toLocaleString()}원
-                </span>
+              <dl className="space-y-3 text-sm">
+                {([
+                  ['비례 1주 이론상 필요 증거금', won(result.scenario.oneProportionalShareDeposit)],
+                  ['배정 주식 취득대금', won(result.scenario.acquisitionAmount)],
+                  ['가정한 매도대금', won(result.scenario.saleProceeds)],
+                  ['매매 차익 (비용 차감 전)', signedWon(result.scenario.grossProfit)],
+                  [`대출 이자 (${fields.lockedDays}일·365일 단리)`, `−${won(result.scenario.loanInterest)}`],
+                  ['입력한 청약 수수료', `−${won(Number(fields.subscriptionFee))}`],
+                  ['매도 수수료·세금', `−${won(result.scenario.sellingCosts)}`],
+                ] as const).map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-x-4 gap-y-1"><dt className="text-gray-600">{label}</dt><dd className="font-semibold text-gray-900">{value}</dd></div>)}
+              </dl>
+              <div className="space-y-3 border-t border-gray-300 pt-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2"><span className="text-sm font-bold text-gray-900">가정 비용 차감 후 손익</span><strong className={`text-xl ${result.scenario.netProfit >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>{signedWon(result.scenario.netProfit)}</strong></div>
+                <div className="flex flex-wrap justify-between gap-2 text-sm"><span className="font-semibold text-gray-700">공모가 대비 손익분기 수익률</span><strong className="text-blue-800">{result.scenario.breakEvenReturnRatePercent === null ? '산출 불가' : percent(result.scenario.breakEvenReturnRatePercent)}</strong></div>
+                {result.scenario.breakEvenReturnRatePercent === null && <p className="text-xs text-gray-600">배정 가정이 0주이거나 매도비용률이 100%이면 유한한 손익분기 매도가를 계산할 수 없습니다.</p>}
               </div>
-
-              <div className="flex justify-between text-gray-600">
-                <span>청약 수수료</span>
-                <span className="font-bold text-red-600">
-                  -{applicationFee.toLocaleString()}원
-                </span>
-              </div>
-
-              <div className="flex justify-between text-gray-600">
-                <span>상장일 매도 기대 차익 (+{expectedReturnRate}%)</span>
-                <span className="font-bold text-emerald-700">
-                  +{grossProfit.toLocaleString()}원
-                </span>
-              </div>
+              <div className="flex items-start gap-2 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-gray-700"><HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-blue-700" /><p>입력한 대출 이자·청약 수수료·매도 수수료·세금률만 반영합니다. 매도비용률 {fields.sellingCostRatePercent}%{Number(fields.sellingCostRatePercent) === 0 ? '이므로 매도 수수료·세금은 제외되어 있습니다.' : '를 매도대금에 적용했습니다.'} 기회비용과 별도 고정 비용은 제외합니다. 금액은 원 단위 반올림 표시이며 실제 금융기관의 이자·세금 계산과 다를 수 있습니다.</p></div>
             </div>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-gray-300">
-            <div className="flex items-baseline justify-between">
-              <span className="text-sm font-bold text-gray-900">
-                최종 예상 순수익 (이자 차감 후)
-              </span>
-              <span className={`text-xl font-black ${netProfit >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
-                {netProfit >= 0 ? `+${netProfit.toLocaleString()}원` : `${netProfit.toLocaleString()}원`}
-              </span>
-            </div>
-            <div className="mt-2 text-[10px] text-gray-500 flex items-center gap-1">
-              <HelpCircle className="w-3 h-3 shrink-0" />
-              <span>실제 배정수량과 시초가는 당일 시장 상황에 따라 달라질 수 있습니다.</span>
-            </div>
-          </div>
+          )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

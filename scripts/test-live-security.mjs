@@ -21,12 +21,15 @@ async function test() {
   }
 
   // 관리자 인증 통과 테스트
-  const authRes = await fetch('https://iposcore.kr/api/newsletter/admin', {
-    headers: { 'x-admin-key': '7788' },
-  });
-  console.log(`\nAUTH   https://iposcore.kr/api/newsletter/admin (x-admin-key: 7788) -> ${authRes.status} [${authRes.ok ? '정상 승인 (200 OK) ✅' : '실패 ❌'}]`);
+  if (process.env.ADMIN_SECRET) {
+    const authRes = await fetch('https://www.iposcore.kr/api/ipo', {
+      headers: { 'x-admin-key': process.env.ADMIN_SECRET },
+    });
+    console.log(`AUTH configured credential -> ${authRes.status}`);
+  } else {
+    console.log('AUTH credential check skipped: ADMIN_SECRET is not configured.');
+  }
 
-  // 공개 API 정상 조회 테스트
   const publicRes = await fetch('https://iposcore.kr/api/ipo');
   console.log(`PUBLIC https://iposcore.kr/api/ipo -> ${publicRes.status} [${publicRes.ok ? '정상 제공 (200 OK) ✅' : '실패 ❌'}]`);
 }

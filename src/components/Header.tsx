@@ -21,7 +21,7 @@ export default function Header() {
               </span>
             </div>
             <p className="text-[11px] text-gray-500 hidden sm:block">
-              전문가 분석 요약 & 청약 일정 안내
+              공시 확인 · 배정과 비용 계산
             </p>
           </div>
         </Link>
@@ -31,7 +31,7 @@ export default function Header() {
           <Link
             href="/"
             className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
-            title="청약 일정"
+            title="공모주 홈" aria-label="공모주 홈"
           >
             <Calendar className="w-4 h-4 text-gray-600 shrink-0" />
             <span className="hidden sm:inline">청약 일정</span>
@@ -39,7 +39,7 @@ export default function Header() {
           <Link
             href="/guides"
             className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
-            title="투자 가이드"
+            title="투자 가이드" aria-label="투자 가이드"
           >
             <BookOpen className="w-4 h-4 text-gray-600 shrink-0" />
             <span className="hidden sm:inline">투자 가이드</span>
@@ -47,7 +47,7 @@ export default function Header() {
           <Link
             href="/calculator"
             className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors"
-            title="비례 계산기"
+            title="비례 계산기" aria-label="비례 계산기"
           >
             <Calculator className="w-4 h-4 text-gray-600 shrink-0" />
             <span className="hidden sm:inline">비례 계산기</span>

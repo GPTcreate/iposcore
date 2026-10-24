@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   title: '개인정보처리방침',
   description: '공모주 알리미 리포트(IPOScore)의 개인정보처리방침 안내입니다.',
   alternates: {
-    canonical: 'https://iposcore.kr/privacy',
+    canonical: 'https://www.iposcore.kr/privacy',
   },
   openGraph: {
     title: '개인정보처리방침 | IPOScore',
     description: '공모주 알리미 리포트(IPOScore)의 개인정보처리방침 안내',
-    url: 'https://iposcore.kr/privacy',
-    images: ['https://iposcore.kr/og-image.png'],
+    url: 'https://www.iposcore.kr/privacy',
+    images: ['https://www.iposcore.kr/og-image.png'],
   },
 };
 

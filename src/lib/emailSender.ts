@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { Subscriber } from './subscriberStore';
 import { getAllEffectiveIpos } from './ipoUtils';
+import { isReviewedIpo, hasVerifiedForecast } from './contentQuality';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'newsletter@iposcore.kr';
@@ -238,7 +239,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
   const calculatorUrl = `${SITE_URL}/calculator`;
   const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 & 실전 배정 공략`;
 
-  const allIpos = getAllEffectiveIpos();
+  const allIpos = getAllEffectiveIpos().filter(isReviewedIpo);
 
   // 1. 이번 주 청약 진행 또는 시작 임박 종목 (우선순위: SUBSCRIPTION -> 시작일 가장 빠른 UPCOMING)
   let activeIpos = allIpos.filter((i) => i.status === 'SUBSCRIPTION' && !i.isCancelled);
@@ -281,7 +282,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
                 ${ipo.name} <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${ipo.market} · ${ipo.code})</span>
               </span>
               <span style="display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 800; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">
-                ${ipo.scoreGrade}등급 · ${ipo.aiScore}점
+                ${hasVerifiedForecast(ipo) ? `참고 점수 ${ipo.aiScore}점` : '점수 산출 보류'}
               </span>
             </div>
 
@@ -296,7 +297,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
 
             <div style="text-align: center;">
               <a href="${SITE_URL}/ipo/${ipo.id}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
-                👉 ${ipo.name} AI 심층 분석 & 전문가 여론 리포트 전문 보기
+                👉 ${ipo.name} 공시 출처와 청약 조건 보기
               </a>
             </div>
           </div>
@@ -304,7 +305,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
       }).join('')
     : `
       <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 18px; text-align: center; color: #475569; font-size: 13px;">
-        📢 이번 주는 신규 청약이 쉬어가는 주간입니다. 다가오는 청약 일정과 상장 대기 종목의 실전 결과를 확인해 보세요.
+        현재 원문 확인을 마친 청약 진행 자료가 없습니다. 시장에 청약 종목이 없다는 의미는 아닙니다. 신청 전 주관사의 최종 공고를 확인하세요.
       </div>
     `;
 
@@ -334,7 +335,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
     <li style="margin-bottom: 10px; font-size: 13px; color: #334155; line-height: 1.5;">
       <strong>${ipo.name}</strong> (${ipo.subscriptionStart} 청약 예정)
       <span style="display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; background-color: #f1f5f9; color: #475569; font-weight: bold; margin-left: 4px;">
-        ${ipo.scoreGrade}등급
+        ${hasVerifiedForecast(ipo) ? `참고 구간 ${ipo.scoreGrade}` : '산출 보류'}
       </span>
       <br/>
       <span style="color: #64748b; font-size: 12px;">${ipo.aiSummary.headline.slice(0, 45)}...</span>
