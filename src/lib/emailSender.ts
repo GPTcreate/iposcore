@@ -320,8 +320,7 @@ export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubs
       </div>
       <div style="font-size: 12px; color: #475569; line-height: 1.6;">
         • 확정 공모가: <strong>${ipo.confirmedPrice.toLocaleString()}원</strong><br/>
-        • 일반 최종 경쟁률: <strong style="color: #1d4ed8;">${ipo.generalCompetitionRate ? ipo.generalCompetitionRate.toLocaleString() + ' : 1' : '집계 중'}</strong>
-        ${ipo.subscriptionResults?.proportionalCompetitionRate ? `<span style="color: #059669; font-weight: bold; margin-left: 6px;">(비례 ${ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()} : 1)</span>` : ''}
+        • 기관 수요예측: <strong style="color: #1d4ed8;">${ipo.institutionalCompetitionRate > 0 ? ipo.institutionalCompetitionRate.toLocaleString() + ' : 1' : '결과 대기'}</strong> (확약: ${ipo.lockupCommitmentRate}%)
       </div>
       <div style="margin-top: 8px; text-align: right;">
         <a href="${SITE_URL}/ipo/${ipo.id}" target="_blank" style="font-size: 12px; color: #1d4ed8; text-decoration: none; font-weight: bold;">

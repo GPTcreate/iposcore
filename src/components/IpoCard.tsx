@@ -164,21 +164,8 @@ export default function IpoCard({ ipo }: IpoCardProps) {
               </div>
             </div>
 
-            {/* 청약 당시 일반 경쟁률 & 상장일 */}
+            {/* 상장일 */}
             <div className="pt-2 border-t border-emerald-200/80 text-xs space-y-1 text-gray-700">
-              {ipo.generalCompetitionRate ? (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 font-medium">일반 최종 경쟁률</span>
-                  <span className="font-bold text-blue-800">
-                    {ipo.generalCompetitionRate.toLocaleString()} : 1
-                    {ipo.subscriptionResults?.proportionalCompetitionRate && (
-                      <span className="ml-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-300 px-1 py-0.5 rounded">
-                        비례 {ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()}:1
-                      </span>
-                    )}
-                  </span>
-                </div>
-              ) : null}
               <div className="flex justify-between items-center">
                 <span className="text-gray-500 font-medium">상장일</span>
                 <span className="font-semibold text-gray-900 flex items-center gap-1">
@@ -213,26 +200,6 @@ export default function IpoCard({ ipo }: IpoCardProps) {
                 )}
               </span>
             </div>
-
-            {/* 일반 청약 마감 후 최종 경쟁률 (상장 대기 종목) */}
-            {ipo.generalCompetitionRate && effectiveStatus === 'WAITING_LISTING' && (
-              <div className="flex justify-between items-center py-1 border-b border-blue-200/90 pb-1.5 bg-blue-50/80 -mx-3 px-3">
-                <span className="text-blue-900 font-bold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                  <span>일반 경쟁률</span>
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-black text-blue-700 text-sm">
-                    {ipo.generalCompetitionRate.toLocaleString()} : 1
-                  </span>
-                  {ipo.subscriptionResults?.proportionalCompetitionRate && (
-                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100/80 border border-emerald-300 px-1.5 py-0.5 rounded">
-                      비례 {ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()}:1
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
 
             <div className="flex justify-between items-center py-0.5 border-b border-gray-200/80 pb-1.5">
               <span className="text-gray-500 font-medium">기관 경쟁률</span>

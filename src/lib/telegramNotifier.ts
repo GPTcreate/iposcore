@@ -62,16 +62,12 @@ export function formatIpoTelegramMessage(ipo: IpoItem): string {
     ? `<b>기관 경쟁률:</b> ${ipo.institutionalCompetitionRate.toLocaleString()}:1 (확약: ${ipo.lockupCommitmentRate}%)`
     : `<b>수요예측:</b> 결과 발표 대기 중 (D-1 공시 예정)`;
 
-  const generalCompText = ipo.generalCompetitionRate 
-    ? `\n🔥 <b>일반 최종 경쟁률:</b> ${ipo.generalCompetitionRate.toLocaleString()}:1${ipo.subscriptionResults?.proportionalCompetitionRate ? ` (비례: ${ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()}:1)` : ''}` 
-    : '';
-
   const scheduleText = isClosed
     ? `📅 <b>환불일:</b> ${ipo.refundDate} · <b>상장 예정:</b> ${ipo.listingDate || '미정'}`
     : `📅 <b>청약 기간:</b> ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}`;
 
   return `
-📢 <b>[공모주 알리미] ${isClosed ? '청약 마감 결과 브리핑' : '핵심 분석 브리핑'}</b>
+📢 <b>[공모주 알리미] ${isClosed ? '청약 마감 종목 브리핑' : '핵심 분석 브리핑'}</b>
 
 🏢 <b>${ipo.name}</b> (${ipo.market} · ${ipo.code})
 ⭐ <b>AI 종합 매력도:</b> ${ipo.scoreGrade}등급 (${ipo.aiScore}점)
@@ -80,11 +76,11 @@ export function formatIpoTelegramMessage(ipo: IpoItem): string {
 ${ipo.aiSummary.headline}
 
 💰 ${priceText}
-📊 ${compText}${generalCompText}
+📊 ${compText}
 ${scheduleText}
 🏦 <b>주관사:</b> ${ipo.underwriters.map(u => u.name).join(', ')}
 
-👉 <a href="${SITE_URL}/ipo/${ipo.id}"><b>[AI 심층 리포트 & 실전 결과 전문 보기]</b></a>
+👉 <a href="${SITE_URL}/ipo/${ipo.id}"><b>[AI 심층 리포트 보기]</b></a>
 👉 <a href="${SITE_URL}/calculator"><b>[내 투자금 비례 배정 계산기 돌려보기]</b></a>
 `.trim();
 }

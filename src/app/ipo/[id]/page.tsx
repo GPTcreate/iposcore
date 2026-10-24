@@ -500,66 +500,6 @@ export default async function IpoDetailPage({ params }: PageProps) {
           );
         })()}
 
-        {/* 일반 청약 마감 결과 배너 (상장 대기 또는 상장 완료 종목 중 일반 경쟁률 데이터가 있는 경우) */}
-        {!ipo.isCancelled && ipo.generalCompetitionRate && (
-          <div className="p-5 sm:p-6 rounded-xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 shadow-2xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-blue-200/60 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded text-xs font-black bg-blue-700 text-white">
-                  {ipo.status === 'WAITING_LISTING' ? '청약 마감 · 최종 실전 결과' : '일반 청약 최종 결과'}
-                </span>
-                <span className="text-sm font-bold text-blue-900">
-                  {ipo.status === 'WAITING_LISTING' ? `${ipo.listingDate ? ipo.listingDate.slice(5) + ' ' : ''}코스닥 상장 대기 중` : '상장 완료 종목'}
-                </span>
-              </div>
-              <div className="text-xs text-gray-600 font-medium">
-                납입·환불일: <strong className="text-gray-900">{ipo.refundDate}</strong>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              <div className="p-3.5 bg-white/95 rounded-lg border border-blue-200 shadow-xs">
-                <span className="text-gray-500 block text-xs font-medium">일반 최종 경쟁률</span>
-                <span className="text-lg sm:text-xl font-black text-blue-700">
-                  {ipo.generalCompetitionRate.toLocaleString()} : 1
-                </span>
-              </div>
-              {ipo.subscriptionResults?.proportionalCompetitionRate && (
-                <div className="p-3.5 bg-white/95 rounded-lg border border-emerald-200 shadow-xs">
-                  <span className="text-gray-500 block text-xs font-medium">비례배정 경쟁률</span>
-                  <span className="text-lg sm:text-xl font-black text-emerald-700">
-                    {ipo.subscriptionResults.proportionalCompetitionRate.toLocaleString()} : 1
-                  </span>
-                </div>
-              )}
-              {ipo.subscriptionResults?.totalDepositAmount && (
-                <div className="p-3.5 bg-white/95 rounded-lg border border-indigo-200 shadow-xs">
-                  <span className="text-gray-500 block text-xs font-medium">총 청약 증거금</span>
-                  <span className="text-lg sm:text-xl font-black text-indigo-700">
-                    약 {ipo.subscriptionResults.totalDepositAmount}조원
-                  </span>
-                </div>
-              )}
-              {ipo.subscriptionResults?.equalAllocationShares !== undefined && (
-                <div className="p-3.5 bg-white/95 rounded-lg border border-purple-200 shadow-xs">
-                  <span className="text-gray-500 block text-xs font-medium">균등 배정 예상 주수</span>
-                  <span className="text-lg sm:text-xl font-black text-purple-700">
-                    약 {ipo.subscriptionResults.equalAllocationShares}주
-                  </span>
-                </div>
-              )}
-              {ipo.subscriptionResults?.totalAccounts && (
-                <div className="p-3.5 bg-white/95 rounded-lg border border-gray-200 shadow-xs">
-                  <span className="text-gray-500 block text-xs font-medium">총 청약 계좌 수</span>
-                  <span className="text-lg sm:text-xl font-black text-gray-900">
-                    {ipo.subscriptionResults.totalAccounts.toLocaleString()}건
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* 1. 핵심 요약 3가지 & 호재 vs 리스크 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 p-6 rounded-xl bg-white border border-gray-300 shadow-2xs space-y-4">
