@@ -78,7 +78,6 @@ export default function ScoreBadge({
       <span className={`inline-flex flex-wrap items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold border ${info.bgColor} ${info.textColor} ${info.borderColor}`}>
         {!isHeld && <><span>{basisLabel} {score}점</span><span className="opacity-70">|</span></>}
         <span>{isHeld ? info.label : grade + ' 구간'}</span>
-        {!isHeld && <span className="text-[10px] font-medium opacity-80">{isVerified ? '공시 확인' : '검토전'}</span>}
       </span>
     );
   }
@@ -105,7 +104,6 @@ export default function ScoreBadge({
     <span className={`inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold border ${info.bgColor} ${info.textColor} ${info.borderColor}`}>
       <span>{isHeld ? '발표 대기' : `${basisLabel} ${score}점`}</span>
       {!isHeld && <span>({info.label})</span>}
-      {!isHeld && <span className="text-xs font-medium">{isVerified ? '공시 확인' : '검토전'}</span>}
     </span>
   );
 }

@@ -121,7 +121,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap items-center gap-2 text-xs font-bold"><span className={`rounded px-2.5 py-1 text-white ${ipo.isCancelled ? 'bg-rose-700' : statusStyles[ipo.status]}`}>{ipo.isCancelled ? '공모 철회' : statusLabels[ipo.status]}</span><span className="rounded border border-gray-200 bg-gray-100 px-2 py-1">{ipo.market === 'UNCONFIRMED' ? '시장 미확인' : ipo.market}</span>{ipo.code && <span className="text-gray-500">종목코드 {ipo.code}</span>}</div>
               <h1 className="text-2xl sm:text-3xl font-black break-words">{ipo.name} 공모주 분석</h1>
               <p className="text-sm text-gray-700 leading-relaxed">{memoText(ipo.aiSummary.headline)}</p>
-              <p className={`text-xs ${reviewed ? 'text-blue-700' : 'text-gray-500'}`}>{reviewed ? `공시 원문 확인 · ${ipo.dataQuality?.reviewedAt?.slice(0, 10)}` : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료 · 원문 재확인 중'}</p>
+              <p className={`text-xs ${reviewed ? 'text-blue-700' : 'text-gray-500'}`}>{reviewed ? `공시 원문 확인 · ${ipo.dataQuality?.reviewedAt?.slice(0, 10)}` : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료'}</p>
             </div>
             <ScoreBadge score={score.score} grade={score.scoreGrade} isVerified={verifiedScore} size="lg" basis={score.basis} sampleSize={score.sampleSize} />
           </header>
@@ -192,7 +192,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
               <li>일정과 공모 조건은 정정될 수 있습니다. 청약 시간·계좌 조건·최종 일정은 주관사 최신 공고를 확인하세요.</li>
               <li>등록 수수료는 온라인·영업점·고객등급·면제 조건에 따라 달라집니다. 배정 수량의 구분과 실제 비용은 주관사 공고를 따릅니다.</li>
               <li>상장 가격 대비 차이는 배정량·이자·청약 수수료·매도 비용을 반영한 실제 수익과 다릅니다.</li>
-              {!reviewed && <li>분석 메모는 원문 재확인 전의 등록자료입니다. 해석과 전망은 확정 사실이나 청약 추천이 아닙니다.</li>}
+              {!reviewed && <li>분석 메모는 등록자료를 정리한 내용입니다. 해석과 전망은 확정 사실이나 청약 추천이 아닙니다.</li>}
             </ul></section>
           </div>
         </details>

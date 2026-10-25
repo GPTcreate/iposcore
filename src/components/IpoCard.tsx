@@ -88,7 +88,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             {ipo.aiSummary.headline}
           </p>
           <p className={`text-[11px] mt-1.5 ${isReviewedIpo(ipo) ? 'text-blue-700' : 'text-gray-500'}`}>
-            {isReviewedIpo(ipo) ? '공시 원문 확인 자료' : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료 · 원문 재확인 중'}
+            {isReviewedIpo(ipo) ? '공시 원문 확인 자료' : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료'}
           </p>
           {ipo.discovery && <a href={ipo.discovery.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-block text-[11px] text-blue-700 underline mt-1">증권신고서 ↗</a>}
         </div>
