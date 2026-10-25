@@ -1,6 +1,15 @@
 import { IpoItem } from '@/types/ipo';
 import { MOCK_IPOS } from '@/data/mockIpo';
 import customIposData from '@/data/customIpos.json';
+import reviewSnapshotsData from '@/data/reviewSnapshots.json';
+import type { ReviewArchive } from '@/types/reviews';
+import { normalizeReviewArchive, getReviewSnapshot } from './reviewArchive';
+
+let runtimeReviewArchive: ReviewArchive = normalizeReviewArchive(reviewSnapshotsData);
+
+export function setRuntimeReviewArchive(archive: ReviewArchive): void {
+  runtimeReviewArchive = normalizeReviewArchive(archive);
+}
 
 // 런타임 메모리 저장소 (동적으로 추가된 종목 보관)
 let runtimeCustomIpos: IpoItem[] = Array.isArray(customIposData) ? (customIposData as IpoItem[]) : [];
@@ -36,7 +45,11 @@ export function getAllIpos(): IpoItem[] {
     map.set(key, item);
   }
 
-  return Array.from(map.values(), (item) => structuredClone(item));
+  return Array.from(map.values(), (item) => {
+    const copy = structuredClone(item);
+    const reviewCollection = getReviewSnapshot(runtimeReviewArchive, copy);
+    return reviewCollection ? { ...copy, reviewCollection } : copy;
+  });
 }
 
 /**

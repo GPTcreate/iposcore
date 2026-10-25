@@ -7,8 +7,16 @@ export interface ExpertReview {
   title: string;
   url: string;
   publishedAt: string;
-  sentiment: 'POSITIVE' | 'NEUTRAL' | 'CAUTION';
+  sentiment: 'POSITIVE' | 'NEUTRAL' | 'CAUTION' | 'UNCLASSIFIED';
   summary: string;
+  evidence?: {
+    feedUrl: string;
+    fetchedAt: string;
+    contentHash: string;
+    matchedAlias: string;
+    excerpt: string;
+    classification: 'explicit-stance-v1' | 'unclassified';
+  };
 }
 
 export interface IpoItem {
@@ -66,11 +74,11 @@ export interface IpoItem {
     riskPoints: string[];
   };
 
-  // 전문가 여론 통계
+  // 실제 분류 표본 내 의견 비율. 무표본은 null이며 중립 0%와 구분합니다.
   sentimentConsensus: {
-    positiveRatio: number; // %
-    neutralRatio: number;  // %
-    cautionRatio: number;  // %
+    positiveRatio: number | null; // %
+    neutralRatio: number | null;  // %
+    cautionRatio: number | null;  // %
   };
   
   // 상장 결과 지표 (상장 완료 종목)
@@ -84,6 +92,7 @@ export interface IpoItem {
   cancelReason?: string;         // 공모 취소/철회 사유
 
   expertReviews: ExpertReview[];
+  reviewCollection?: import('./reviews').ReviewSnapshot;
 }
 
 export interface NewsletterSubscription {

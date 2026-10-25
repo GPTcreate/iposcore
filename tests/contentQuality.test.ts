@@ -77,6 +77,8 @@ test('disclosed zero lockup is valid and receives no artificial baseline', () =>
   assert.equal(result.isPendingForecast, false);
   assert.equal(result.breakdown.lockupScore, 0);
   assert.equal(result.score, 71);
+  assert.equal(result.basis, 'QUANTITATIVE');
+  assert.equal(result.sampleSize, 0);
 });
 
 test('an upcoming IPO with reviewed forecast results can be scored', () => {
@@ -95,6 +97,7 @@ test('neither uncollected sentiment nor price above the band adds points', () =>
   assert.equal(changed.score, baseline.score);
   assert.equal(changed.breakdown.priceBonus, 0);
   assert.equal(changed.breakdown.sentimentScore, 0);
+  assert.equal(changed.reviewSummary.positiveRatio, null);
 });
 
 test('competition threshold boundary changes only after the disclosed threshold', () => {
@@ -111,8 +114,11 @@ test('missing collected reviews never become attributed reviews or sentiment', a
   assert.deepEqual(unreviewed.expertReviews, []);
   const reviewed = await analyzeIpoSentiment({ ...complete, name: '테스트기업' }, 'MANUAL_FORCE');
   assert.equal(reviewed.publishable, true);
-  assert.deepEqual(reviewed.sentimentConsensus, { positiveRatio: 0, neutralRatio: 0, cautionRatio: 0 });
+  assert.deepEqual(reviewed.sentimentConsensus, { positiveRatio: null, neutralRatio: null, cautionRatio: null });
   assert.deepEqual(reviewed.expertReviews, []);
+  assert.equal(reviewed.sampleSize, 0);
+  assert.equal(reviewed.reviewSummary.neutralRatio, null);
+  assert.equal(reviewed.basis, 'QUANTITATIVE');
   assert.deepEqual(reviewed.aiSummary.positivePoints, []);
   assert.equal(reviewed.aiSummary.bulletPoints.some((point) => point.includes('1200:1')), true);
 });

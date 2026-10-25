@@ -11,12 +11,15 @@
     "validate:data": "node scripts/validate-ipo-data.mjs",
     "audit:dart": "node scripts/audit-dart-disclosures.mjs",
     "test:security": "node scripts/test-security.mjs",
-    "test:content": "node scripts/test-content.mjs"
+    "test:content": "node scripts/test-content.mjs",
+    "collect:reviews": "node scripts/run-collect-reviews.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
     "@capacitor/cli": "^8.5.3",
     "@capacitor/core": "^8.5.3",
+    "cheerio": "1.2.0",
+    "fast-xml-parser": "5.11.2",
     "lucide-react": "^1.49.0",
     "next": "16.3.7",
     "nodemailer": "^10.0.13",

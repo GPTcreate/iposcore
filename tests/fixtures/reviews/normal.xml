@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title><![CDATA[원문에 기록된 테스트 블로그]]></title>
+    <link>https://blog.naver.com/msql</link>
+    <item>
+      <title><![CDATA[아이엠스팩 청약 전 확인]]></title>
+      <link><![CDATA[https://blog.naver.com/msql/1001?fromRss=true]]></link>
+      <pubDate>Sat, 24 Oct 2020 15:00:00 +0900</pubDate>
+      <dc:creator><![CDATA[원문 작성자]]></dc:creator>
+      <description><![CDATA[<p>아이엠스팩의 공모 조건을 확인하는 글입니다.</p>]]></description>
+    </item>
+    <item>
+      <title><![CDATA[같은 아이엠스팩 글의 다른 주소]]></title>
+      <link><![CDATA[https://m.blog.naver.com/PostView.naver?blogId=msql&logNo=1001]]></link>
+      <pubDate>Sat, 24 Oct 2020 15:00:00 +0900</pubDate>
+      <description><![CDATA[아이엠스팩 중복 링크입니다.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[멜콘 수요예측 확인]]></title>
+      <link>https://blog.naver.com/msql/1002</link>
+      <pubDate>Sat, 24 Oct 2020 14:00:00 +0900</pubDate>
+      <description><![CDATA[멜콘의 공모 조건을 확인하는 글입니다.]]></description>
+    </item>
+  </channel>
+</rss>

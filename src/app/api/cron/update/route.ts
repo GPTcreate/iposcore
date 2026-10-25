@@ -12,7 +12,7 @@ export const revalidate = 0;
 
 export async function GET(request: Request) {
   try {
-    // 철통 인증 검사: Vercel 정식 크론, CRON_SECRET Bearer 토큰, 또는 관리자 키 일치 시에만 실행 허용
+    // Configured CRON_SECRET Bearer or ADMIN_SECRET only; platform headers are not credentials.
     const auth = verifyAdminRequest(request);
     if (!auth.authorized) {
       return NextResponse.json({ error: '인증되지 않은 요청입니다. (Vercel Cron 또는 올바른 인증 키 필요)' }, { status: 401 });
@@ -47,9 +47,9 @@ export async function GET(request: Request) {
     const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
 
     return NextResponse.json({
-      success: true,
+      success: pipelineResult.reviewSnapshots.every((snapshot) => snapshot.status !== 'failed'),
       timestamp: now,
-      policy: '방법 2 (DART 신규 접수 카드 자동생성 + 기존 종목 DART 확정공시 자동갱신 + KRX 실전거래 시세 자동 크롤링 + D-1 분석)',
+      policy: '공시 후보·수치 동기화 및 D-1 실제 블로그 점검 (운영 리뷰 저장은 GitHub 스냅샷·배포)',
       dartFilingsCount: dartSync.filingsCount,
       dartNewCardsCreated: dartSync.newCount,
       dartSyncMessage: dartSync.message,

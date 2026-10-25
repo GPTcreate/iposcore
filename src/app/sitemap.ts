@@ -1,12 +1,16 @@
 import { MetadataRoute } from 'next';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { getAllGuides } from '@/data/guidesData';
-import { isReviewedIpo } from '@/lib/contentQuality';
+import { isPublicIpo } from '@/lib/publicIpo';
+import { loadServerCustomIpos } from '@/lib/ipoServerStore';
+import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  loadServerCustomIpos();
+  loadServerReviewArchive();
   const baseUrl = 'https://www.iposcore.kr';
 
   // 정적 페이지
@@ -55,9 +59,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 공모주별 상세 페이지 (불변 영문 고유 슬러그 기준)
-  const ipoRoutes: MetadataRoute.Sitemap = getAllEffectiveIpos().filter(isReviewedIpo).map((ipo) => ({
+  const ipoRoutes: MetadataRoute.Sitemap = getAllEffectiveIpos().filter(isPublicIpo).map((ipo) => ({
     url: `${baseUrl}/ipo/${ipo.id}`,
-    lastModified: new Date(ipo.dataQuality!.reviewedAt!),
+    lastModified: new Date(ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality!.reviewedAt!),
     changeFrequency: 'daily',
     priority: 0.8,
   }));

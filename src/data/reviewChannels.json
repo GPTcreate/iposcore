@@ -1,0 +1,26 @@
+[
+  {
+    "id": "naver-msql",
+    "name": "소유보다 경험을",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/msql",
+    "feedUrl": "https://rss.blog.naver.com/msql.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-luy1978",
+    "name": "이기는 투자자",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/luy1978",
+    "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-kastro83",
+    "name": "티엔의 수익실험실",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/kastro83",
+    "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+    "isActive": true
+  }
+]

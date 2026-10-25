@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 
 export const metadata: Metadata = {
   title: '운영 소개와 정정 문의',
-  description: 'IPOScore의 운영 목적, 작성 책임, 정보 확인 방식과 정정 문의 방법을 안내합니다.',
+  description: 'IPOScore의 공시 확인·블로그 원문 수집·청약 비용 계산 기능, 작성 책임과 의견 표본의 한계 및 정정 문의 방법을 안내합니다.',
   alternates: { canonical: 'https://www.iposcore.kr/about' },
 };
 
@@ -16,8 +16,8 @@ export default function AboutPage() {
         <article className="p-6 sm:p-8 rounded-xl bg-white border border-gray-300 space-y-8 text-sm leading-relaxed">
           <header className="space-y-3">
             <p className="text-xs text-blue-700 font-bold">서비스 소개</p>
-            <h1 className="text-2xl sm:text-3xl font-black">공시를 확인하고, 내 청약 비용을 계산하는 곳</h1>
-            <p>IPOScore(공모주 알리미 리포트)는 개인 투자자가 공모주 청약의 조건과 비용을 스스로 확인할 수 있도록 공시 읽기 가이드와 계산 도구를 제공합니다.</p>
+            <h1 className="text-2xl sm:text-3xl font-black">공시와 원문을 확인하고, 내 청약 비용을 계산하는 곳</h1>
+            <p>IPOScore(공모주 알리미 리포트)는 개인 투자자가 공모주 청약의 조건과 비용을 스스로 확인하도록 공시 읽기 가이드, 블로그 원문 모음과 계산 도구를 제공합니다. 숫자의 출처와 의견의 실제 표본을 구분해 보여주는 것을 목표로 합니다.</p>
           </header>
           <section className="space-y-3">
             <h2 className="text-lg font-bold">이 사이트에서 할 수 있는 일</h2>
@@ -25,18 +25,23 @@ export default function AboutPage() {
               <li>투자설명서에서 일정, 유통가능 물량, 위험요소를 찾는 순서를 배웁니다.</li>
               <li>증거금, 비례 경쟁률, 대출금, 환불일까지의 일수로 배정과 비용의 가정을 비교합니다.</li>
               <li>공식 원문과 확인일이 갖춰진 종목 정보의 근거를 따라 확인합니다.</li>
+              <li>수집 근거를 갖춘 블로그의 제목·작성자·발행일·짧은 발췌를 보고 원문으로 이동합니다.</li>
+              <li>명시적으로 확인된 의견 표본과 미분류 원문을 구분하고 점수에 반영된 표본 수를 확인합니다.</li>
             </ul>
             <div className="flex flex-wrap gap-4 text-blue-700 font-semibold"><Link className="underline" href="/guides">공시·청약 가이드</Link><Link className="underline" href="/calculator">배정·비용 계산기</Link><Link className="underline" href="/methodology">출처와 점수 산식</Link></div>
           </section>
           <section className="space-y-3">
             <h2 className="text-lg font-bold">운영과 작성 책임</h2>
             <p>운영·편집 표기는 IPOScore입니다. 개별 가이드의 작성 표기와 수정일, 참고한 공식 자료를 본문에서 확인할 수 있습니다. 사이트명이나 작성 표기가 금융 자격, 금융기관 소속 또는 외부 전문가의 검수를 뜻하지 않습니다.</p>
-            <p>작성·정리에 자동화 도구를 사용할 수 있습니다. 자동 생성 문장을 공시 사실로 취급하지 않고, 종목 자료에는 원문과 확인 기록을 요구합니다. 실제 검토 기록이 없는 기존 종목은 검증 대기로 구분하며 수치와 점수를 공개하지 않습니다.</p>
+            <p>작성·정리와 원문 수집·분류에 자동화 도구를 사용할 수 있습니다. 자동 생성 문장을 공시 사실로 취급하지 않고, 공시 수치에는 원문과 확인 기록을 요구합니다. 기존 37개 종목의 공시 수치는 이 기록을 갖추기 전까지 공개하지 않으며 점수를 산출하지 않습니다. 해당 종목의 블로그 원문을 실제 수집한 경우 그 원문은 공시 검증과 별도로 공개할 수 있습니다.</p>
+            <p>블로그 작성자의 이름은 원문 출처 표기이며 금융 자격이나 IPOScore와의 제휴를 뜻하지 않습니다. 원문 작성자가 직접 표현한 입장만 자동 분류하며, 인용이나 모호한 표현은 미분류로 남깁니다. 일부 블로그의 표본을 전체 투자자의 여론으로 일반화하지 않습니다.</p>
           </section>
           <section className="space-y-3">
             <h2 className="text-lg font-bold">자료를 다루는 원칙</h2>
-            <p>공시의 사실, 자체 계산, 설명용 가정을 구분합니다. 검색 링크를 원문으로 표시하지 않으며, 수집하지 않은 전문가의 의견이나 표본 없는 여론 비율을 만들지 않습니다. 공시 즉시 갱신이나 특정 기간 내 오류 수정·회신을 보장하지 않습니다.</p>
-            <p>참고 점수는 공개한 구간별 산식으로 계산하는 비교 보조 도구입니다. 과거 5개년 백테스트나 수익 예측 정확도를 입증한 자료는 없으며 그러한 성과를 주장하지 않습니다. 제도와 일정이 바뀔 수 있으므로 실제 청약 전 주관사의 최종 공고를 확인하세요.</p>
+            <p>공시의 사실, 원문 작성자의 의견, 자체 계산과 설명용 가정을 구분합니다. 검색 링크를 개별 원문으로 표시하지 않으며, 수집하지 않은 의견이나 표본 없는 여론 비율을 만들지 않습니다. 동일 블로그 또는 작성자의 최신 글 1건을 의견 표본으로 삼고 미분류를 분모에서 제외합니다. 표본이 없으면 비율은 미산출(null)이며 중립이나 0%로 바꾸지 않습니다.</p>
+            <p>참고 점수는 검토한 공시 지표 최대 85점과 실제 명시 의견의 긍정 비율에 따른 최대 15점으로 계산합니다. 명시 의견 표본이 없으면 공시 85점만 100점으로 환산하고 산출 기준을 다르게 표시합니다. 공시 지표를 확인하지 못하면 원문이 있어도 점수는 보류합니다. 이는 자체 비교 보조 도구이며 수익 예측이나 투자 성과를 검증한 모델이 아닙니다.</p>
+            <p>정기 수집은 청약 시작 하루 전인 종목을 대상으로 한국시간 12:17·18:17에 실행하도록 설정되어 있습니다. 수집 스냅샷은 GitHub에 보관하고 해당 변경의 사이트 배포가 끝난 뒤 반영합니다. 예약 실행은 지연되거나 실패할 수 있습니다. 실패한 채널의 마지막 성공 원문은 시점을 표시해 보존하되 현재 분류 표본과 점수에서는 제외합니다. 일부 채널만 실패한 경우 정상 수집된 채널의 명시 입장은 반영합니다.</p>
+            <p>공시 즉시 갱신이나 특정 기간 내 정정·회신을 보장하지 않습니다. 원문 접근 제한, RSS에 없는 과거 글, 짧은 발췌와 자동 분류의 한계가 있습니다. 화면의 수집 상태와 <Link className="text-blue-700 underline" href="/methodology#review-method">원문 수집·점수 기준</Link>을 함께 확인하고, 실제 청약 전에는 주관사의 최종 공고를 확인하세요.</p>
           </section>
           <section className="space-y-3">
             <h2 className="text-lg font-bold">정정 제보와 문의</h2>

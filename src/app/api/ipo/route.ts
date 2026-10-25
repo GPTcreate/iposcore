@@ -10,7 +10,8 @@ import { syncListingReturnsForIpos } from '@/lib/stockPriceCrawler';
 import { crossCheckAndSyncIpos } from '@/lib/crossCheckSync';
 import { IpoItem } from '@/types/ipo';
 import { verifyAdminRequest } from '@/lib/adminAuth';
-import { isReviewedIpo } from '@/lib/contentQuality';
+import { isPublicIpo, toPublicIpo } from '@/lib/publicIpo';
+import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -32,8 +33,9 @@ export async function GET(request: Request) {
     }
 
     const custom = loadServerCustomIpos();
+    loadServerReviewArchive();
     const allIpos = getAllEffectiveIpos();
-    const ipos = auth.authorized ? allIpos : allIpos.filter(isReviewedIpo);
+    const ipos = auth.authorized ? allIpos : allIpos.filter(isPublicIpo).map(toPublicIpo);
     return NextResponse.json({
       success: true,
       total: ipos.length,

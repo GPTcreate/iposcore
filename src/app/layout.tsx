@@ -11,11 +11,11 @@ const siteUrl = 'https://www.iposcore.kr';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: '공모주 청약 가이드 · 배정과 비용 계산기 | IPOScore',
+    default: '공모주 점수·블로그 여론과 청약 계산기 | IPOScore',
     template: '%s | IPOScore',
   },
   description:
-    '공모주 공시를 읽는 방법과 균등·비례 배정, 증거금·대출이자·손익을 직접 비교하는 계산 도구를 제공합니다.',
+    '확인된 공시 기반 점수와 실제 블로그 원문·표본 내 의견, 공시 읽기 가이드와 배정·비용 계산 도구를 제공합니다.',
   keywords: [
     '공모주',
     '공모주 일정',

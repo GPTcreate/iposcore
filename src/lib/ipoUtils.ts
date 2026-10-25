@@ -1,6 +1,7 @@
 import { IpoItem, IpoStatus } from '@/types/ipo';
 import { getAllIpos, getIpoByIdOrCode } from './ipoStore';
 import { calculateIpoScore } from './scoring';
+import { getCollectedReviews, summarizeReviews } from './reviewEvidence';
 
 /**
  * 한국 시간(KST, UTC+9) 현재 Date 객체 반환
@@ -88,11 +89,14 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
  */
 export function getEffectiveIpo(ipo: IpoItem, now = new Date()): IpoItem {
   const scoring = calculateIpoScore(ipo);
+  const reviews = summarizeReviews(ipo, now);
   return {
     ...ipo,
     status: getEffectiveIpoStatus(ipo, now),
     aiScore: scoring.score,
     scoreGrade: scoring.scoreGrade,
+    expertReviews: getCollectedReviews(ipo, now),
+    sentimentConsensus: { positiveRatio: reviews.positiveRatio, neutralRatio: reviews.neutralRatio, cautionRatio: reviews.cautionRatio },
   };
 }
 

@@ -2,10 +2,16 @@ import { NextResponse } from 'next/server';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { getAllGuides } from '@/data/guidesData';
 import { isReviewedIpo } from '@/lib/contentQuality';
+import { isPublicIpo } from '@/lib/publicIpo';
+import { summarizeReviews } from '@/lib/reviewEvidence';
+import { loadServerCustomIpos } from '@/lib/ipoServerStore';
+import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  loadServerCustomIpos();
+  loadServerReviewArchive();
   const siteUrl = 'https://www.iposcore.kr';
   
   const guideRssItems = getAllGuides().map((guide) => {
@@ -21,15 +27,17 @@ export async function GET() {
     </item>`;
   }).join('');
 
-  const ipoRssItems = getAllEffectiveIpos().filter(isReviewedIpo).map((ipo) => {
-    const pubDate = new Date(ipo.dataQuality!.reviewedAt!).toUTCString();
+  const ipoRssItems = getAllEffectiveIpos().filter(isPublicIpo).map((ipo) => {
+    const pubDate = new Date(ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality!.reviewedAt!).toUTCString();
+    const reviews = summarizeReviews(ipo);
+    const description = `실제 블로그 원문 ${reviews.totalReviews}건 · 의견 분류 표본 ${reviews.sampleSize}건. ${isReviewedIpo(ipo) ? '공시 원문 확인 자료를 함께 제공합니다.' : '공시 수치와 점수는 원문 검토 전입니다.'}`;
     return `
     <item>
-      <title><![CDATA[[공모주 분석] ${ipo.name} (${ipo.market}) 공시 확인]]></title>
+      <title><![CDATA[[공모주 자료] ${ipo.name} 원문과 블로그 리뷰]]></title>
       <link>${siteUrl}/ipo/${ipo.id}</link>
       <guid>${siteUrl}/ipo/${ipo.id}</guid>
       <pubDate>${pubDate}</pubDate>
-      <description><![CDATA[${ipo.aiSummary.headline} | 확정공모가: ${ipo.confirmedPrice ? ipo.confirmedPrice.toLocaleString() + '원' : '미정'} | 청약기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd} | 주관사: ${ipo.underwriters.map(u => u.name).join(', ')}]]></description>
+      <description><![CDATA[${description}]]></description>
       <category>공모주</category>
     </item>`;
   }).join('');

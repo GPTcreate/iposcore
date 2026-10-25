@@ -1,8 +1,11 @@
 import { getAllIpos } from './ipoStore';
-import { IpoItem } from '@/types/ipo';
+import type { IpoItem } from '../types/ipo';
+import type { ReviewArchive, ReviewChannel, ReviewSnapshot } from '../types/reviews';
 import { getEffectiveIpoStatus } from './ipoUtils';
-import { analyzeIpoSentiment, SentimentAnalysisOutput } from './sentimentAnalyzer';
-import { hasVerifiedForecast, isReviewedIpo } from './contentQuality';
+import { analyzeIpoSentiment } from './sentimentAnalyzer';
+import { collectReviewsForIpos } from './reviewCollector';
+import { isReviewDate, mergeReviewSnapshots, normalizeReviewArchive, reviewSnapshotKey } from './reviewArchive';
+import { loadServerReviewArchive, saveServerReviewArchive } from './reviewArchiveServer';
 
 export interface PipelineTarget {
   ipo: IpoItem;
@@ -17,7 +20,7 @@ export interface PipelineExecutionResult {
   processedTargets: {
     stockName: string;
     stockCode: string;
-    triggerType: 'NEW_SCHEDULE' | 'DAY_BEFORE_SUBSCRIPTION' | 'MANUAL_FORCE';
+    triggerType: PipelineTarget['triggerType'];
     reason: string;
     beforeScore: number;
     afterScore: number;
@@ -25,173 +28,107 @@ export interface PipelineExecutionResult {
     llmUsed: boolean;
     llmModel?: string;
     headline: string;
+    collectionStatus: ReviewSnapshot['status'];
+    fetchedCount: number;
+    reviewCount: number;
   }[];
-  skippedStocks: {
-    stockName: string;
-    status: string;
-    subscriptionStart: string;
-    reason: string;
-  }[];
+  skippedStocks: { stockName: string; status: string; subscriptionStart: string; reason: string }[];
+  reviewSnapshots: ReviewSnapshot[];
+  reviewsCollectedCount: number;
+  collectionErrors: { ipoId: string; channelId: string; error: string }[];
+  storageStatus: 'unchanged' | 'preview-only' | 'local-file-written';
   message: string;
 }
 
-/**
- * 한국 시간(KST) 기준 YYYY-MM-DD 날짜 문자열 계산
- */
 export function getKstDateString(date = new Date()): string {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Seoul',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date);
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
 }
 
-/**
- * 특정 기준 날짜(기본 오늘)를 바탕으로 '방법 2' 정책에 부합하는 타겟 종목 추출
- * 정책:
- *  ① 청약 예정 신규 등록 시점 (NEW_SCHEDULE): 예정 상태이면서 분석 이력이 없는 종목 1회
- *  ② 청약 전날 시점 (DAY_BEFORE_SUBSCRIPTION): 청약 시작일 D-1 인 종목
- *  공식 공시 검토와 필수 지표 확인을 마친 종목에만 적용합니다.
- */
+/** Collect blogs on D-1 regardless of whether financial metrics have been reviewed. */
 export function identifyPipelineTargets(
-  ipos: IpoItem[],
-  targetDateStr?: string,
-  forceStockName?: string
+  ipos: IpoItem[], targetDateStr?: string, forceStockName?: string
 ): { targets: PipelineTarget[]; skipped: { stock: IpoItem; reason: string }[] } {
   const todayStr = targetDateStr || getKstDateString();
-
-  // 내일 날짜 계산 (D-1 판정용)
-  const todayObj = new Date(todayStr + 'T00:00:00+09:00');
-  const tomorrowObj = new Date(todayObj.getTime() + 24 * 60 * 60 * 1000);
-  const tomorrowStr = getKstDateString(tomorrowObj);
-
+  if (!isReviewDate(todayStr)) throw new Error('수집 기준 날짜는 YYYY-MM-DD 형식이어야 합니다.');
+  const today = new Date(`${todayStr}T00:00:00+09:00`);
+  const tomorrowStr = getKstDateString(new Date(today.getTime() + 86400000));
   const targets: PipelineTarget[] = [];
   const skipped: { stock: IpoItem; reason: string }[] = [];
-
   for (const ipo of ipos) {
-    if (!isReviewedIpo(ipo) || !hasVerifiedForecast(ipo)) {
-      skipped.push({ stock: ipo, reason: '공식 공시 검토 또는 필수 수요예측 지표 확인 전 자동 분석 보류' });
+    if (ipo.isCancelled || !isReviewDate(ipo.subscriptionStart) || getEffectiveIpoStatus(ipo, today) === 'LISTED') {
+      skipped.push({ stock: ipo, reason: '공모 취소·상장 완료 또는 확인 가능한 청약 일정이 없어 제외' });
       continue;
     }
-    const effectiveStatus = getEffectiveIpoStatus(ipo, todayObj);
-    // 취소 또는 이미 상장된 종목은 스킵
-    if (ipo.isCancelled || effectiveStatus === 'LISTED') {
-      skipped.push({ stock: ipo, reason: '이미 상장 완료되었거나 공모 취소된 종목' });
-      continue;
-    }
-
-    // 관리자 수동 강제 실행인 경우 해당 단일 종목만 집중 처리
     if (forceStockName) {
-      if (ipo.name === forceStockName) {
-        targets.push({
-          ipo,
-          triggerType: 'MANUAL_FORCE',
-          reason: `관리자 수동 즉시 실행 요청 (${ipo.name})`,
-        });
-      } else {
-        skipped.push({ stock: ipo, reason: `특정 종목 수동 지정 실행 중으로 제외 (${forceStockName})` });
-      }
-      continue;
-    }
-
-    // 조건 1: 미확정(공모가 0 또는 경쟁률 0) 상태인 청약 임박 및 진행 중 종목 (D-2 ~ 청약 마감일까지 매일 추적)
-    const isNearOrActive = (todayStr >= ipo.subscriptionStart || tomorrowStr >= ipo.subscriptionStart) && todayStr <= ipo.subscriptionEnd;
-    if (isNearOrActive && (ipo.confirmedPrice === 0 || ipo.institutionalCompetitionRate === 0)) {
-      targets.push({
-        ipo,
-        triggerType: 'DAY_BEFORE_SUBSCRIPTION',
-        reason: `청약 임박/진행 중이나 수요예측 미확정 상태! DART 확정 수치(공모가/경쟁률/유통비율) 필수 추적 및 갱신 (청약 기간: ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd})`,
-      });
-      continue;
-    }
-
-    // 조건 2: 청약 시작일 D-1 (내일이 청약 시작일인 오늘)
-    if (ipo.subscriptionStart === tomorrowStr) {
-      targets.push({
-        ipo,
-        triggerType: 'DAY_BEFORE_SUBSCRIPTION',
-        reason: `청약 전날(D-1) 검토된 수요예측 정량 지표 재계산 (청약 시작일: ${ipo.subscriptionStart})`,
-      });
-      continue;
-    }
-
-    // 조건 3: 청약 예정 최초 등록 시점 (신규 등록 및 분석 대기)
-    if (ipo.status === 'UPCOMING' && (!ipo.expertReviews || ipo.expertReviews.length === 0)) {
-      targets.push({
-        ipo,
-        triggerType: 'NEW_SCHEDULE',
-        reason: `신규 청약 예정 등록! DART 증권신고서 기본 스펙 1차 분석 (청약 시작일: ${ipo.subscriptionStart})`,
-      });
-      continue;
-    }
-
-    // 그 외는 스킵
-    skipped.push({
-      stock: ipo,
-      reason: `청약 예정 등록 시점 또는 청약 전날(D-1)이 아니므로 스킵 (청약 시작일: ${ipo.subscriptionStart})`,
-    });
+      if ([ipo.name, ipo.id, ipo.code].includes(forceStockName)) targets.push({ ipo, triggerType: 'MANUAL_FORCE', reason: '관리자가 지정한 종목의 실제 블로그 원문 수집' });
+      else skipped.push({ stock: ipo, reason: '수동 지정한 종목이 아니므로 제외' });
+    } else if (ipo.subscriptionStart === tomorrowStr) {
+      targets.push({ ipo, triggerType: 'DAY_BEFORE_SUBSCRIPTION', reason: `청약 D-1 실제 블로그 수집 (${ipo.subscriptionStart} 청약 시작)` });
+    } else skipped.push({ stock: ipo, reason: '청약 D-1이 아니므로 제외' });
   }
-
   return { targets, skipped };
 }
 
-/**
- * '방법 2' 파이프라인 실제 실행
- */
 export async function runMethod2Pipeline(options?: {
   targetDate?: string;
   forceStockName?: string;
   allIpos?: IpoItem[];
+  channels?: ReviewChannel[];
+  now?: Date;
+  fetcher?: typeof fetch;
+  persist?: boolean;
+  // Injectable only by code/fixture tests; request payloads cannot supply functions.
+  collector?: typeof collectReviewsForIpos;
+  archive?: ReviewArchive;
 }): Promise<PipelineExecutionResult> {
-  const ipoList = options?.allIpos || getAllIpos();
-  const executionDate = options?.targetDate || getKstDateString();
-
-  const { targets, skipped } = identifyPipelineTargets(ipoList, executionDate, options?.forceStockName);
-
+  const now = options?.now || new Date();
+  const executionDate = options?.targetDate || getKstDateString(now);
+  const { targets, skipped } = identifyPipelineTargets(options?.allIpos || getAllIpos(), executionDate, options?.forceStockName);
   const processedTargets: PipelineExecutionResult['processedTargets'] = [];
-
-  for (const item of targets) {
-    const beforeScore = item.ipo.aiScore;
-
-    // 검토된 정량 자료만 요약. 외부 리뷰와 여론은 생성하지 않습니다.
-    const analysisResult: SentimentAnalysisOutput = await analyzeIpoSentiment(item.ipo, item.triggerType);
-    if (!analysisResult.publishable) {
-      skipped.push({ stock: item.ipo, reason: analysisResult.holdReason || '근거 자료 확인 전 자동 분석 보류' });
-      continue;
+  let storageStatus: PipelineExecutionResult['storageStatus'] = 'unchanged';
+  let snapshots: ReviewSnapshot[] = [];
+  let visibleSnapshots: ReviewSnapshot[] = [];
+  if (targets.length > 0) {
+    const collector = options?.collector || collectReviewsForIpos;
+    snapshots = await collector(targets.map((target) => target.ipo), { channels: options?.channels, now, fetcher: options?.fetcher });
+    const expected = new Set(targets.map((target) => reviewSnapshotKey(target.ipo.id, target.ipo.subscriptionStart)));
+    const received = new Set(snapshots.map((snapshot) => reviewSnapshotKey(snapshot.ipoId, snapshot.subscriptionStart)));
+    if (snapshots.length !== expected.size || received.size !== expected.size || Array.from(received).some((key) => !expected.has(key))) {
+      throw new Error('수집 결과의 종목과 청약 일정이 요청 대상과 일치하지 않습니다.');
     }
+    const previous = options?.archive ? normalizeReviewArchive(options.archive) : loadServerReviewArchive();
+    const merged = mergeReviewSnapshots(previous, snapshots);
+    visibleSnapshots = snapshots.map((snapshot) => merged.snapshots[reviewSnapshotKey(snapshot.ipoId, snapshot.subscriptionStart)]);
+    const persist = options?.persist ?? !process.env.VERCEL;
+    if (persist) {
+      saveServerReviewArchive(merged);
+      storageStatus = 'local-file-written';
+    } else storageStatus = 'preview-only';
 
-    // 계산 결과만 반환합니다. 검토된 본문·출처를 덮어쓰거나 외부로 발송하지 않습니다.
-    processedTargets.push({
-      stockName: item.ipo.name,
-      stockCode: item.ipo.code,
-      triggerType: item.triggerType,
-      reason: item.reason,
-      beforeScore,
-      afterScore: analysisResult.aiScore,
-      scoreGrade: analysisResult.scoreGrade,
-      llmUsed: analysisResult.llmUsed,
-      llmModel: analysisResult.llmModel,
-      headline: analysisResult.aiSummary.headline,
-    });
+    for (const target of targets) {
+      const snapshot = merged.snapshots[reviewSnapshotKey(target.ipo.id, target.ipo.subscriptionStart)];
+      const analysis = await analyzeIpoSentiment({ ...target.ipo, reviewCollection: snapshot }, target.triggerType);
+      processedTargets.push({
+        stockName: target.ipo.name, stockCode: target.ipo.code, triggerType: target.triggerType, reason: target.reason,
+        beforeScore: target.ipo.aiScore, afterScore: analysis.aiScore, scoreGrade: analysis.scoreGrade,
+        llmUsed: analysis.llmUsed, llmModel: analysis.llmModel, headline: analysis.aiSummary.headline,
+        collectionStatus: snapshot.status,
+        fetchedCount: snapshot.channels.reduce((sum, channel) => sum + channel.fetchedCount, 0),
+        reviewCount: snapshots.find((item) => item.ipoId === snapshot.ipoId && item.subscriptionStart === snapshot.subscriptionStart)!.reviews.length,
+      });
+    }
   }
-
-  const message =
-    processedTargets.length > 0
-      ? `[방법 2 파이프라인] 검토된 지표 ${processedTargets.length}개 종목의 참고 계산을 반환했습니다. 저장과 외부 발송은 하지 않았습니다.`
-      : '[방법 2 파이프라인] 검토 이력과 필수 지표를 갖춘 대상이 없어 자동 분석을 보류했습니다.';
-
+  const collectionErrors = snapshots.flatMap((snapshot) => snapshot.channels
+    .filter((channel) => channel.status === 'failed')
+    .map((channel) => ({ ipoId: snapshot.ipoId, channelId: channel.channelId, error: channel.error || '원문 수집 실패' })));
+  const reviewsCollectedCount = snapshots.reduce((sum, snapshot) => sum + (snapshot.status === 'failed' ? 0 : snapshot.reviews.length), 0);
   return {
-    executionDate,
-    processedCount: processedTargets.length,
-    skippedCount: skipped.length,
-    processedTargets,
-    skippedStocks: skipped.map((s) => ({
-      stockName: s.stock.name,
-      status: s.stock.status,
-      subscriptionStart: s.stock.subscriptionStart,
-      reason: s.reason,
-    })),
-    message,
+    executionDate, processedCount: processedTargets.length, skippedCount: skipped.length, processedTargets,
+    skippedStocks: skipped.map(({ stock, reason }) => ({ stockName: stock.name, status: stock.status, subscriptionStart: stock.subscriptionStart, reason })),
+    reviewSnapshots: visibleSnapshots, reviewsCollectedCount, collectionErrors, storageStatus,
+    message: targets.length === 0 ? '청약 D-1 또는 수동 지정 수집 대상이 없습니다.'
+      : storageStatus === 'local-file-written'
+        ? `실제 블로그 ${reviewsCollectedCount}건을 수집하고 로컬 스냅샷을 확인했습니다. 운영 반영에는 저장소 커밋과 배포가 필요합니다.`
+        : `실제 블로그 ${reviewsCollectedCount}건을 미리보기로 반환했습니다. 운영 스냅샷은 GitHub 수집 작업과 배포로 갱신합니다.`,
   };
 }

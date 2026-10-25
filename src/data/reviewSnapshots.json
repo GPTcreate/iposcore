@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-24T23:45:05.201Z",
+  "snapshots": {
+    "[\"al-robot\",\"2026-10-26\"]": {
+      "ipoId": "al-robot",
+      "stockName": "에이엘로봇",
+      "subscriptionStart": "2026-10-26",
+      "collectedAt": "2026-10-24T23:45:05.201Z",
+      "lastSuccessfulAt": "2026-10-24T23:45:05.201Z",
+      "status": "empty",
+      "reviews": [],
+      "channels": [
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        }
+      ]
+    },
+    "[\"iam-spac1\",\"2026-10-26\"]": {
+      "ipoId": "iam-spac1",
+      "stockName": "아이엠기업인수목적1호",
+      "subscriptionStart": "2026-10-26",
+      "collectedAt": "2026-10-24T23:45:05.201Z",
+      "lastSuccessfulAt": "2026-10-24T23:45:05.201Z",
+      "status": "success",
+      "reviews": [
+        {
+          "id": "rss-31a81e3a8ee02ad0df0d",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "2026년 10월 5주차 공모주 일정｜티앤이코리아·인텔리빅스 등 5개 상장과 아이엠스팩 청약",
+          "url": "https://blog.naver.com/kastro83/224452192137",
+          "publishedAt": "2026-10-24T05:50:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-10-24T23:45:05.201Z",
+            "contentHash": "f72ef233a9ee5b330d1cabe8d42ed1c746e1163a36eaf090a68574714dc178f6",
+            "matchedAlias": "아이엠스팩1호",
+            "excerpt": "청약: 아이엠스팩1호(10월 26~27일)",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-82d6500900ff0704f44a",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "래블업, 영광, 이에스티 동시 청약 비교 및 청약 전략",
+          "url": "https://blog.naver.com/msql/224449481546",
+          "publishedAt": "2026-10-21T13:35:57.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-10-24T23:45:05.201Z",
+            "contentHash": "eb40e43f84fc6a6c07a3a2ff861adb70ef24773e99facbfb85a032b8992eb30d",
+            "matchedAlias": "아이엠스팩1호",
+            "excerpt": "다만, 이에스티는 11월 4일(수) 아이엠스팩1호와 동시 상장 예정입니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-6bf90292739b2523a5f7",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "이에스티 수요예측 결과 공모가 확정 12,400원 - [보통 ~ 안 좋은 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+          "url": "https://blog.naver.com/msql/224449169637",
+          "publishedAt": "2026-10-21T08:11:31.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-10-24T23:45:05.201Z",
+            "contentHash": "45789e81f8598f2693e1d79c2bbe2bbeb797f55fe7b67555ff372f037b76d144",
+            "matchedAlias": "아이엠스팩1호",
+            "excerpt": "아이엠스팩1호의 상장예정일이 11월 4일(수)이기에 현재 일정대로는 동시 상장 예정입니다.",
+            "classification": "unclassified"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        }
+      ]
+    }
+  }
+}

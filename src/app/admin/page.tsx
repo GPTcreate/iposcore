@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { CrawlChannel, CrawlJobLog } from '@/types/admin';
 import { IpoItem } from '@/types/ipo';
-import { INITIAL_CHANNELS, INITIAL_LOGS } from '@/data/mockAdmin';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import {
   Settings,
@@ -106,8 +105,9 @@ export default function AdminPage() {
     [adminKey]
   );
 
-  const [channels, setChannels] = useState<CrawlChannel[]>(INITIAL_CHANNELS);
-  const [logs, setLogs] = useState<CrawlJobLog[]>(INITIAL_LOGS);
+  const [channels, setChannels] = useState<CrawlChannel[]>([]);
+  const [channelsEditable, setChannelsEditable] = useState(false);
+  const [logs, setLogs] = useState<CrawlJobLog[]>([]);
   const [isCrawling, setIsCrawling] = useState(false);
   const allIpos = React.useMemo(() => getAllEffectiveIpos(), []);
   const [selectedStock, setSelectedStock] = useState(allIpos[0]?.name || '멜콘');
@@ -115,9 +115,8 @@ export default function AdminPage() {
   // 새 채널 추가 모달 폼 상태
   const [isAddingChannel, setIsAddingChannel] = useState(false);
   const [newChannelName, setNewChannelName] = useState('');
-  const [newChannelType, setNewChannelType] = useState<'YOUTUBE' | 'BLOG'>('YOUTUBE');
+  const [newChannelType, setNewChannelType] = useState<'YOUTUBE' | 'BLOG'>('BLOG');
   const [newChannelUrl, setNewChannelUrl] = useState('');
-  const [newReliability] = useState(5);
 
   // 실제 뉴스레터 구독자 및 동기화 상태
   interface SubscriberItem {
@@ -367,6 +366,7 @@ export default function AdminPage() {
       fetchVisitorStats();
       fetchTelegramStatus();
       fetchIpos();
+      fetchReviewChannels().catch(() => setChannelsEditable(false));
     }, 0);
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
@@ -626,94 +626,56 @@ https://iposcore.kr/ipo/${ipo.id}`;
     document.body.removeChild(link);
   };
 
-  // 채널 활성/비활성 토글
-  const toggleChannelStatus = (id: string) => {
-    setChannels((prev) =>
-      prev.map((ch) => (ch.id === id ? { ...ch, isActive: !ch.isActive } : ch))
-    );
+  const fetchReviewChannels = async () => {
+    const res = await authFetch('/api/reviews/channels');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '채널 설정 조회 실패');
+    setChannels((data.channels || []).map((channel: CrawlChannel) => ({ ...channel, identifier: channel.url, reliabilityScore: 0, lastCrawledAt: channel.lastCrawledAt || '아직 수집 기록 없음', collectedCount: channel.collectedCount || 0 })));
+    setChannelsEditable(data.editable === true);
   };
 
-  // 채널 삭제
-  const deleteChannel = (id: string) => {
-    if (confirm('이 채널을 크롤링 대상 목록에서 삭제하시겠습니까?')) {
-      setChannels((prev) => prev.filter((ch) => ch.id !== id));
-    }
+  const changeReviewChannel = async (payload: object) => {
+    const res = await authFetch('/api/reviews/channels', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '채널 설정 저장 실패');
+    await fetchReviewChannels();
   };
-
-  // 새 채널 등록
-  const handleAddChannel = (e: React.FormEvent) => {
+  const toggleChannelStatus = async (id: string) => {
+    try { await changeReviewChannel({ action: 'toggle', id }); }
+    catch (error) { alert(error instanceof Error ? error.message : '변경 실패'); }
+  };
+  const deleteChannel = async (id: string) => {
+    if (!confirm('이 채널을 수집 설정에서 제외하시겠습니까?')) return;
+    try { await changeReviewChannel({ action: 'delete', id }); }
+    catch (error) { alert(error instanceof Error ? error.message : '변경 실패'); }
+  };
+  const handleAddChannel = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newChannelName || !newChannelUrl) return;
-
-    const newChannel: CrawlChannel = {
-      id: `ch-${Date.now()}`,
-      name: newChannelName,
-      type: newChannelType,
-      identifier: newChannelUrl,
-      url: newChannelUrl,
-      isActive: true,
-      reliabilityScore: newReliability,
-      lastCrawledAt: '방금 등록 (대기중)',
-      collectedCount: 0,
-    };
-
-    setChannels([newChannel, ...channels]);
-    setNewChannelName('');
-    setNewChannelUrl('');
-    setIsAddingChannel(false);
+    if (newChannelType !== 'BLOG') { alert('현재 실제 수집은 네이버/티스토리 RSS를 지원합니다.'); return; }
+    try {
+      await changeReviewChannel({ action: 'add', name: newChannelName, url: newChannelUrl });
+      setNewChannelName(''); setNewChannelUrl(''); setIsAddingChannel(false);
+    } catch (error) { alert(error instanceof Error ? error.message : '등록 실패'); }
   };
 
-  // 방법 2 자동 스케줄러 (D-1 및 신규 예정 종목 선별) 실행 트리거
-  const handleTriggerMethod2Check = async () => {
+  const collectBlogReviews = async (stock?: string) => {
     setIsCrawling(true);
     try {
-      const res = await authFetch('/api/cron/update?manual=true');
+      const res = await authFetch('/api/reviews/collect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(stock ? { stock } : {}) });
       const data = await res.json();
-
-      const newLog: CrawlJobLog = {
-        id: `log-${Date.now()}`,
-        targetStockName: data.processedCount > 0 ? `${data.processedCount}개 종목 선별 처리` : '대상 종목 없음',
-        source: '방법 2 자동 파이프라인 (청약 예정 등록 시 1회 + 청약 전날 D-1 1회)',
-        status: data.success ? 'SUCCESS' : 'FAILED',
-        collectedCount: data.processedCount || 0,
-        timestamp: new Date().toLocaleTimeString(),
-        message: data.message || `처리 ${data.processedCount || 0}건 / 스킵 ${data.skippedCount || 0}건`,
-      };
-      setLogs([newLog, ...logs]);
-      alert(`[방법 2 파이프라인 실행 완료]\n• 선별 처리: ${data.processedCount || 0}건 (청약 전날 D-1 및 신규 등록)\n• 불필요 스킵: ${data.skippedCount || 0}건 (비용 절감)\n• DART 공시 확인: ${data.dartFilingsCount || 0}건`);
-    } catch (err) {
-      console.error(err);
-      alert('방법 2 파이프라인 실행 중 오류가 발생했습니다.');
-    } finally {
-      setIsCrawling(false);
-    }
+      if (!res.ok) throw new Error(data.error || '수집 요청 실패');
+      const sourceCount = (data.processedTargets || []).reduce((sum: number, target: { reviewsCollectedCount?: number }) => sum + (target.reviewsCollectedCount || 0), 0);
+      const count = data.reviewsCollectedCount ?? sourceCount;
+      const message = `${data.message || `수집 원문 ${count}건`} · 채널 오류 ${(data.collectionErrors || []).length}건 · 저장 상태 ${data.storageStatus || '확인 필요'}`;
+      setLogs((previous) => [{ id: `log-${Date.now()}`, targetStockName: stock || '청약 D-1 대상', source: '실제 블로그 RSS·원문 수집', status: data.failedCount > 0 || data.collectionErrors?.length > 0 ? 'FAILED' : 'SUCCESS', collectedCount: count, timestamp: new Date().toLocaleTimeString(), message }, ...previous]);
+      await fetchIpos(); await fetchReviewChannels();
+      alert(message);
+    } catch (error) {
+      setLogs((previous) => [{ id: `log-${Date.now()}`, targetStockName: stock || '청약 D-1 대상', source: '블로그 수집', status: 'FAILED', collectedCount: 0, timestamp: new Date().toLocaleTimeString(), message: error instanceof Error ? error.message : '수집 실패' }, ...previous]);
+    } finally { setIsCrawling(false); }
   };
-
-  // 특정 종목 수동 강제 분석 트리거
-  const handleTriggerCrawl = async () => {
-    setIsCrawling(true);
-    try {
-      const res = await authFetch(`/api/cron/update?manual=true&stock=${encodeURIComponent(selectedStock)}`);
-      const data = await res.json();
-
-      const newLog: CrawlJobLog = {
-        id: `log-${Date.now()}`,
-        targetStockName: selectedStock,
-        source: `DART 공시 및 활성 채널 ${channels.filter((c) => c.isActive).length}곳`,
-        status: data.success ? 'SUCCESS' : 'FAILED',
-        collectedCount: data.dartFilingsCount || 8,
-        timestamp: new Date().toLocaleTimeString(),
-        message: data.message || `DART 실시간 공시 동기화 및 ${selectedStock} AI 점수 재산출 완료!`,
-      };
-      setLogs([newLog, ...logs]);
-      alert(`[${selectedStock}] 수동 즉시 분석 및 AI 점수 재산출이 완료되었습니다!`);
-    } catch (err) {
-      console.error(err);
-      alert('크롤링 파이프라인 동기화 중 오류가 발생했습니다.');
-    } finally {
-      setIsCrawling(false);
-    }
-  };
+  const handleTriggerMethod2Check = () => collectBlogReviews();
+  const handleTriggerCrawl = () => collectBlogReviews(selectedStock);
 
 
   if (!isAuthenticated) {
@@ -791,7 +753,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
               관리자 제어 센터
             </h1>
             <p className="text-xs sm:text-sm text-gray-600">
-              전문가 채널 화이트리스트 관리, 실시간 수동 크롤링, 뉴스레터 발송 제어
+              블로그 수집 채널 관리, 실시간 수동 크롤링, 뉴스레터 발송 제어
             </p>
           </div>
 
@@ -854,10 +816,10 @@ https://iposcore.kr/ipo/${ipo.id}`;
               </div>
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <RotateCw className="w-4 h-4 text-blue-300" />
-                <span>지능형 2단계 자동 실행 정책 (D-1 & 청약 예정)</span>
+                <span>청약 D-1 실제 블로그 수집</span>
               </h2>
               <p className="text-xs text-blue-200 mt-1 max-w-xl leading-relaxed">
-                매일 무차별 실행하지 않고 <strong>① 청약 예정 신규 등록 시 1회</strong>, <strong>② 청약 전날(D-1) 수요예측 확정 시 1회</strong>만 정확히 실행하여 불필요한 LLM API 비용을 $0로 방어합니다.
+                청약 전날 <strong>12:17·18:17 KST</strong>에 GitHub 작업으로 RSS와 원문을 수집합니다. 이 화면에서는 실제 수집을 점검하며 운영 반영은 스냅샷 커밋·배포 후 확인합니다. 유료 LLM은 호출하지 않습니다.
               </p>
             </div>
 
@@ -875,7 +837,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                 ) : (
                   <>
                     <RefreshCw className="w-3.5 h-3.5" />
-                    <span>방법 2 스케줄러 점검</span>
+                    <span>D-1 대상 수집 점검</span>
                   </>
                 )}
               </button>
@@ -886,7 +848,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   onChange={(e) => setSelectedStock(e.target.value)}
                   className="px-2.5 py-1.5 rounded-lg bg-transparent text-white text-xs font-semibold focus:outline-hidden"
                 >
-                  {allIpos.map((ipo) => (
+                  {adminIpoList.map((ipo) => (
                     <option key={ipo.id} value={ipo.name} className="bg-neutral-900 text-white">
                       {ipo.name} ({ipo.market})
                     </option>
@@ -899,7 +861,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all disabled:opacity-50 cursor-pointer"
                 >
                   <Play className="w-3 h-3 fill-current" />
-                  <span>선택 즉시분석</span>
+                  <span>선택 종목 수집</span>
                 </button>
               </div>
             </div>
@@ -1245,15 +1207,16 @@ https://iposcore.kr/ipo/${ipo.id}`;
             <div>
               <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <Database className="w-4 h-4 text-blue-600" />
-                <span>전문가 채널 화이트리스트 관리 ({channels.length}개소)</span>
+                <span>블로그 수집 채널 관리 ({channels.length}개소)</span>
               </h2>
               <p className="text-xs text-gray-500">
-                무차별 크롤링이 아닌 엄선된 전문가 채널만 수집하여 저작권 리스크와 노이즈(어그로 영상)를 차단합니다.
+                등록한 블로그의 실제 RSS와 종목별 문단을 수집합니다. 운영 채널 설정은 저장소에 기록하고 배포하며, 로컬 관리 환경에서는 이 화면의 변경을 파일에 저장합니다.
               </p>
             </div>
 
             <button
               onClick={() => setIsAddingChannel(!isAddingChannel)}
+              disabled={!channelsEditable}
               className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -1283,7 +1246,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                     onChange={(e) => setNewChannelType(e.target.value as 'YOUTUBE' | 'BLOG')}
                     className="w-full p-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                   >
-                    <option value="YOUTUBE">YouTube 영상 자막</option>
+                    <option value="YOUTUBE" disabled>YouTube 자막 (미연결)</option>
                     <option value="BLOG">네이버/티스토리 블로그</option>
                   </select>
                 </div>
@@ -1292,7 +1255,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   <input
                     type="text"
                     required
-                    placeholder="https://youtube.com/@channel_id"
+                    placeholder="https://blog.naver.com/blog_id"
                     value={newChannelUrl}
                     onChange={(e) => setNewChannelUrl(e.target.value)}
                     className="w-full p-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -1324,8 +1287,8 @@ https://iposcore.kr/ipo/${ipo.id}`;
                 <tr>
                   <th className="px-3 py-2.5 rounded-l-lg">유형</th>
                   <th className="px-3 py-2.5">채널명</th>
-                  <th className="px-3 py-2.5">신뢰도</th>
-                  <th className="px-3 py-2.5">누적 수집</th>
+                  <th className="px-3 py-2.5">수집 범위</th>
+                  <th className="px-3 py-2.5">저장된 원문</th>
                   <th className="px-3 py-2.5">최근 수집 시각</th>
                   <th className="px-3 py-2.5">상태</th>
                   <th className="px-3 py-2.5 rounded-r-lg text-right">관리</th>
@@ -1359,13 +1322,14 @@ https://iposcore.kr/ipo/${ipo.id}`;
                       </a>
                     </td>
                     <td className="px-3 py-3 text-amber-500 font-bold">
-                      {'★'.repeat(ch.reliabilityScore)}
+                      RSS·대상 문단
                     </td>
                     <td className="px-3 py-3 font-mono">{ch.collectedCount}건</td>
                     <td className="px-3 py-3 text-gray-400">{ch.lastCrawledAt}</td>
                     <td className="px-3 py-3">
                       <button
                         onClick={() => toggleChannelStatus(ch.id)}
+                        disabled={!channelsEditable}
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold cursor-pointer transition-colors ${
                           ch.isActive
                             ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
@@ -1378,6 +1342,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
                     <td className="px-3 py-3 text-right">
                       <button
                         onClick={() => deleteChannel(ch.id)}
+                        disabled={!channelsEditable}
                         className="p-1 text-gray-400 hover:text-rose-500 transition-colors cursor-pointer"
                         title="채널 삭제"
                       >
@@ -1951,7 +1916,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
         <section className="p-6 rounded-2xl bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 shadow-sm space-y-4">
           <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-500" />
-            <span>크롤링 & AI 엔진 실행 로그 (실시간)</span>
+            <span>블로그 수집 실행 로그 (현재 세션)</span>
           </h2>
 
           <div className="space-y-2 text-xs">

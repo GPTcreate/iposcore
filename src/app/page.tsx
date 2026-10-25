@@ -7,7 +7,7 @@ import IpoCard from '@/components/IpoCard';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
-import { isReviewedIpo } from '@/lib/contentQuality';
+import { isPublicIpo, toPublicIpo } from '@/lib/publicIpo';
 import { GUIDE_ARTICLES } from '@/data/guidesData';
 import { IpoStatus } from '@/types/ipo';
 import { TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
@@ -23,7 +23,7 @@ export default function Home() {
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   // KST 현재 일자 및 시각 기준 실시간 상태 동적 전이 적용
-  const initialIpos = React.useMemo(() => getAllEffectiveIpos().filter(isReviewedIpo), []);
+  const initialIpos = React.useMemo(() => getAllEffectiveIpos().filter(isPublicIpo).map(toPublicIpo), []);
   const [allIpos, setAllIpos] = useState(initialIpos);
 
   const [filter, setFilter] = useState<'ALL' | IpoStatus>(() => getDefaultTab(initialIpos));
@@ -33,7 +33,7 @@ export default function Home() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && Array.isArray(data.ipos)) {
-          const reviewed = data.ipos.filter(isReviewedIpo);
+          const reviewed = data.ipos.filter(isPublicIpo);
           setAllIpos(reviewed);
           // API 응답 기준으로 탭 재결정 (URL/세션에 저장된 탭이 없을 때만)
           const hasStoredTab =
@@ -149,13 +149,13 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md mb-2 border border-blue-200">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>공시 확인 · 배정 계산 · 청약 가이드</span>
+                <span>공시 점수 · 블로그 여론 · 청약 계산</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                공모주 청약, 숫자의 근거부터 확인하세요
+                공모주 점수와 블로그 여론, 근거까지 확인하세요
               </h1>
               <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
-                공시를 읽는 방법과 청약 비용을 직접 계산하는 도구를 제공합니다. 종목별 수치는 원문과 확인 기록이 있는 경우에만 공개합니다.
+                공시 지표 점수와 실제 블로그 리뷰를 함께 확인하고, 내 청약 비용을 계산하세요. 공시 확인과 리뷰 수집 상태를 구분해서 보여드립니다.
               </p>
             </div>
 

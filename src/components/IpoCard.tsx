@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { IpoItem } from '@/types/ipo';
 import { getEffectiveIpoStatus } from '@/lib/ipoUtils';
 import ScoreBadge from './ScoreBadge';
-import { hasVerifiedForecast } from '@/lib/contentQuality';
+import { hasVerifiedForecast, isReviewedIpo } from '@/lib/contentQuality';
+import { summarizeReviews } from '@/lib/reviewEvidence';
+import { calculateIpoScore } from '@/lib/scoring';
 import { Calendar, ChevronRight } from 'lucide-react';
 
 interface IpoCardProps {
@@ -12,6 +14,24 @@ interface IpoCardProps {
 
 export default function IpoCard({ ipo }: IpoCardProps) {
   const effectiveStatus = getEffectiveIpoStatus(ipo);
+  const reviews = summarizeReviews(ipo);
+  const score = calculateIpoScore(ipo);
+
+  if (!isReviewedIpo(ipo)) {
+    return (
+      <article className="rounded-xl border border-gray-300 bg-white p-5 space-y-4 flex flex-col justify-between">
+        <div className="space-y-3">
+          <p className="text-xs font-bold text-blue-700">블로그 원문 수집</p>
+          <h3 className="text-xl font-bold"><Link href={`/ipo/${ipo.id}`} className="hover:text-blue-700">{ipo.name}</Link></h3>
+          <p className="text-sm text-gray-600">원문 {reviews.totalReviews}건 · 의견 분류 {reviews.sampleSize}건</p>
+          <p className="text-xs text-gray-500">{reviews.sampleSize > 0 ? `표본 내 참여 ${reviews.positiveCount} · 관망 ${reviews.neutralCount} · 불참 ${reviews.cautionCount}` : '명시적인 의견이 없는 글은 미분류로 남깁니다.'}</p>
+          <ScoreBadge score={0} grade="C" isVerified={false} size="sm" />
+          <p className="text-xs text-gray-500">공시 수치 확인 전이며, 수집된 리뷰는 따로 볼 수 있습니다.</p>
+        </div>
+        <Link href={`/ipo/${ipo.id}#blog-reviews`} className="block bg-blue-50 border border-blue-200 text-blue-700 font-bold text-sm text-center rounded-lg py-3">블로그 원문과 의견 보기 →</Link>
+      </article>
+    );
+  }
 
   // 상태별 라벨 및 스타일 (단정하고 눈에 잘 띄는 스타일)
   const getStatusBadge = () => {
@@ -66,6 +86,8 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             grade={ipo.scoreGrade}
             size="sm"
             isVerified={hasVerifiedForecast(ipo)}
+            basis={score.basis}
+            sampleSize={score.sampleSize}
           />
         </div>
 
