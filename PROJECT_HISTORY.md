@@ -12,7 +12,8 @@
 
 ## 2. 현재 상태 & 마일스톤
 - [x] 2026-10-25 후속: 실제 D-1 RSS·본문 수집/스냅샷 영속 보관/상세 하단 리뷰, 공시85+실제리뷰15점과 무표본 구분 구현. 실제 D-1 2종목·원문3건 확인, 금융 검토와 독립 공개.
-- [ ] GitHub Actions 수집 커밋 → 기존 Vercel 배포 → 운영 상세의 수집시각 일치까지 실제 운영 검증. 현재 로컬 커밋 단계이며 원격 작업 미실행.
+- [x] 운영 사이트(https://www.iposcore.kr) Vercel 배포 및 라이브 검증 완료: iam-spac1 실제 네이버 블로그 원문 3건, URL, 수집시각, '의견 미분류' 상태 정상 렌더링 확인.
+- [ ] GitHub Actions 수집 워크플로우(.github/workflows/collect-reviews.yml) 원격 푸시: 로컬 커밋 완료, GitHub Classic PAT의 workflow 권한 추가 후 git push origin main 1회 필요.
 - [x] 2026-10-25 애드센스 콘텐츠 보완 소스 구현: 가이드8편 정정, 실제 공시 사례, 비용·손실 계산기, 출처 기반 공개조건, 산식v2, 색인·광고·관리 인증 정리.
 - [ ] 위 보완의 운영 배포 및 실제 AdSense 재심사 결과 확인. 기존 종목37개 금융 수치는 원문 검토 기록 확보 전 보류하되 실제 블로그 원문은 별도 공개.
 - [x] Next.js 16 + Tailwind CSS v4 기반 공모주 일정 대시보드 UI 구축
@@ -33,6 +34,23 @@
 ---
 
 ## 5. 작업 이력 (Change Log)
+
+### [2026-10-25 후속-2] 작업자: Antigravity — Codex 브랜치 통합, 전체 검증 및 운영 배포 확인
+- **작업 내용:**
+  1. fix/adsense-content-quality 브랜치(de97da8, a33863f)를 main 브랜치에 안전하게 병합/통합.
+  2. 신규 의존성(cheerio@1.2.0, fast-xml-parser@5.11.2) 설치 및 로컬 전체 검증:
+     - npm run test:content: 도메인 66 + 계산 10 = 76개 통과.
+     - npm run test:security: 인증 및 속도 제한 26개 통과.
+     - npm run validate:data: 37개 IPO 데이터 무결성 통과.
+     - node scripts/check-content-pages.mjs: 17개 검사 통과.
+     - npm run build: 110개 라우트 컴파일 및 프로덕션 빌드 통과.
+  3. 원격 저장소(origin/main) 푸시 완료 (커밋 fd59772 - 77개 파일 변경).
+  4. 운영 사이트(https://www.iposcore.kr) 라이브 검증 완료:
+     - https://www.iposcore.kr/ipo/iam-spac1: 실제 네이버 블로그 원문 3건(kastro83 1건, msql 2건), 실제 블로그 URL, 발행/수집시각, '의견 미분류' 상태 정상 렌더링 확인.
+     - https://www.iposcore.kr/methodology, https://www.iposcore.kr/research/iam-spac1-float 정상 서빙 확인.
+  5. GitHub Actions 워크플로우 분리 및 푸시 대기:
+     - .github/workflows/collect-reviews.yml 은 GitHub Classic PAT의 workflow scope 누락으로 인해 원격 거부됨.
+     - 토큰에 workflow scope 체크 후 git push origin main 1회 실행 필요.
 
 ### [2026-10-25 후속] 작업자: Codex — 점수·여론 유지와 실제 수집 복구
 - **요청:** 점수·여론은 사이트의 핵심이므로 유지하고, 청약 전날 블로그를 수집해 상세 하단에 넣는 기능을 검증·수정.
