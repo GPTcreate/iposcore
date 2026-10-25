@@ -1509,10 +1509,11 @@ export const MOCK_IPOS: IpoItem[] = [
     "subscriptionStart": "2026-10-26",
     "subscriptionEnd": "2026-10-27",
     "refundDate": "2026-10-29",
-    "listingDate": "2026-11-06",
+    "listingDate": "2026-11-04",
     "priceBandMin": 2000,
     "priceBandMax": 2000,
     "confirmedPrice": 2000,
+    "depositRatePercent": 100,
     "underwriters": [
       {
         "name": "iM증권",
@@ -1520,11 +1521,11 @@ export const MOCK_IPOS: IpoItem[] = [
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
+    "institutionalCompetitionRate": 1266.52,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 4.58,
+    "circulatingSupplyRate": 95.42,
     "totalOfferingAmount": 100,
-    "marketCapAtIpo": 105,
+    "marketCapAtIpo": 104.8,
     "aiScore": 71,
     "scoreGrade": "B",
     "aiSummary": {
@@ -1532,11 +1533,11 @@ export const MOCK_IPOS: IpoItem[] = [
       "bulletPoints": [
         "확정 공모가 2,000원, 청약 일정: 10월 26일(월) ~ 10월 27일(화)",
         "환불일: 10월 29일(목), 주관사: iM증권",
-        "원금 및 연복리 반환예치 이자가 보장되는 저위험 스팩 공모주"
+        "공모 주식 5,000,000주는 상장 직후 유통가능하며 상장예정 보통주의 95.42%입니다."
       ],
       "positivePoints": [
-        "DART 증권신고서 정식 공시 및 효력 발생 완료",
-        "우수한 펀더멘털과 안정적인 공모 구조"
+        "DART 발행조건확정 신고서에서 공모가 2,000원을 확인했습니다.",
+        "기관 수요예측 경쟁률 1,266.52:1, 확약 신청 비율 0% (신청수량 기준)"
       ],
       "riskPoints": [
         "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
@@ -1547,7 +1548,44 @@ export const MOCK_IPOS: IpoItem[] = [
       "neutralRatio": 20,
       "cautionRatio": 5
     },
-    "expertReviews": []
+    "expertReviews": [],
+    "fieldEvidence": {
+      "depositRatePercent": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서 · 일반청약자 증거금률",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:09:21.203Z"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "subscriptionStart": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 2026-10-08 정정 신고서 · 공모 전 주주 보호예수",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000225",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      }
+    }
   },
   {
     "id": "al-robot",

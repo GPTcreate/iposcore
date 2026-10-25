@@ -3,7 +3,6 @@ import { runMethod2Pipeline, getKstDateString } from '@/lib/pipeline';
 import { syncNewIposFromDart } from '@/lib/ipoServerStore';
 import { syncExistingIposWithDartFilings } from '@/lib/dartFilingSync';
 import { syncListingReturnsForIpos } from '@/lib/stockPriceCrawler';
-import { crossCheckAndSyncIpos } from '@/lib/crossCheckSync';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { verifyAdminRequest } from '@/lib/adminAuth';
 
@@ -17,6 +16,10 @@ export async function GET(request: Request) {
     if (!auth.authorized) {
       return NextResponse.json({ error: '인증되지 않은 요청입니다. (Vercel Cron 또는 올바른 인증 키 필요)' }, { status: 401 });
     }
+    if (process.env.VERCEL) {
+      return NextResponse.json({ success: false, storageStatus: 'repository-job-required', reviewsExecuted: false,
+        error: '운영 자동 갱신은 저장소 작업과 배포가 필요합니다. 이 요청에서는 금융 변경과 리뷰 수집을 실행하지 않았습니다.' }, { status: 409 });
+    }
 
     const { searchParams } = new URL(request.url);
     const forceStock = searchParams.get('stock') || undefined;
@@ -29,11 +32,7 @@ export async function GET(request: Request) {
     // 2. 기존 청약예정/진행 종목의 DART 확정공시(발행조건확정/투자설명서) 자동 대조 및 수치(공모가, 유통비율 등) 갱신
     const confirmedSync = await syncExistingIposWithDartFilings({ days: 14 });
 
-    // 2-1. 38커뮤니케이션/외부 포털 2중 교차 검증 및 자가 치유(Self-Healing Diff Audit)
-    // 주관사의 상장일 변경(11/5 -> 11/4 등), 확정공모가, 기관경쟁률, 의무확약의 DART 누락/지연을 원천 방지
-    const crossCheckSync = await crossCheckAndSyncIpos();
-
-    // 3. 상장 완료 및 상장일 도래 종목의 실제 한국거래소(KRX) 실전 시초가·종가 자동 크롤링 동기화
+    // 3. 네이버 시세의 실제 상장일과 일치하는 시초가·종가만 동기화
     const priceSync = await syncListingReturnsForIpos({ forceAll: forcePrices });
 
     // 4. '방법 2' 정책에 따른 선별적 파이프라인 실행
@@ -47,7 +46,9 @@ export async function GET(request: Request) {
     const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
 
     return NextResponse.json({
-      success: pipelineResult.reviewSnapshots.every((snapshot) => snapshot.status !== 'failed'),
+      success: dartSync.success && confirmedSync.success && priceSync.success
+        && pipelineResult.reviewSnapshots.every((snapshot) => snapshot.status !== 'failed'),
+      reviewsExecuted: true,
       timestamp: now,
       policy: '공시 후보·수치 동기화 및 D-1 실제 블로그 점검 (운영 리뷰 저장은 GitHub 스냅샷·배포)',
       dartFilingsCount: dartSync.filingsCount,
@@ -55,16 +56,18 @@ export async function GET(request: Request) {
       dartSyncMessage: dartSync.message,
       confirmedUpdatedCount: confirmedSync.updatedCount,
       confirmedUpdatedStocks: confirmedSync.updatedStocks,
+      confirmedErrors: confirmedSync.errors,
       crossCheck: {
-        updatedCount: crossCheckSync.updatedCount,
-        updatedStocks: crossCheckSync.updatedStocks,
-        message: crossCheckSync.message,
+        updatedCount: 0,
+        updatedStocks: [],
+        message: '자동 단계에서 실행하지 않았습니다. 로컬 관리자에서 별도로 수동 실행할 수 있습니다.',
       },
       priceCrawler: {
         totalCandidates: priceSync.totalCandidates,
         updatedCount: priceSync.updatedCount,
         updatedStocks: priceSync.updatedStocks,
         skippedCount: priceSync.skippedCount,
+        deferredCount: priceSync.deferredCount,
         errorCount: priceSync.errors.length,
       },
       newlyCreatedIpos: dartSync.newIpos.map((i) => ({ name: i.name, code: i.code, status: i.status })),

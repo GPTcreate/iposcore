@@ -1,5 +1,5 @@
 import { calculateIpoScore, type ScoreBasis } from './scoring';
-import { hasVerifiedForecast } from './contentQuality';
+import { hasScorableForecast, hasVerifiedField, hasVerifiedForecast } from './contentQuality';
 import { getCollectedReviews, summarizeReviews, type ReviewSummary } from './reviewEvidence';
 import type { ExpertReview, IpoItem } from '../types/ipo';
 
@@ -10,6 +10,7 @@ export interface SentimentAnalysisOutput {
   expertReviews: ExpertReview[];
   aiScore: number;
   scoreGrade: 'S' | 'A' | 'B' | 'C';
+  isVerified: boolean;
   basis: ScoreBasis;
   sampleSize: number;
   reviewSummary: ReviewSummary;
@@ -36,7 +37,7 @@ export function getCollectedReviewsContext(ipo: Partial<IpoItem> | string): {
 /**
  * Deterministic aggregation of retained source evidence. No paid LLM call,
  * financial-fact-driven opinion classification, or synthetic review fallback.
- * Financial publication still requires the independent official-source gate.
+ * Registered metrics and source-checked metrics retain distinct labels.
  */
 export async function analyzeIpoSentiment(
   ipo: Partial<IpoItem> & { name: string },
@@ -51,14 +52,17 @@ export async function analyzeIpoSentiment(
     cautionRatio: reviewSummary.cautionRatio,
   };
   const forecast = hasVerifiedForecast(ipo);
+  const scorable = hasScorableForecast(ipo);
   const scoring = calculateIpoScore({
     institutionalCompetitionRate: ipo.institutionalCompetitionRate ?? 0,
     lockupCommitmentRate: ipo.lockupCommitmentRate ?? 0,
     circulatingSupplyRate: ipo.circulatingSupplyRate ?? 0,
+    pendingForecastFields: ipo.pendingForecastFields,
     priceBandMin: ipo.priceBandMin ?? 0,
     priceBandMax: ipo.priceBandMax ?? 0,
     confirmedPrice: ipo.confirmedPrice ?? 0,
     dataQuality: ipo.dataQuality,
+    fieldEvidence: ipo.fieldEvidence,
     sentimentConsensus,
     id: ipo.id,
     name: ipo.name,
@@ -71,14 +75,18 @@ export async function analyzeIpoSentiment(
     bulletPoints.push('수집 근거를 확인한 외부 원문 ' + reviewSummary.totalReviews
       + '편, 명시 입장 표본 ' + reviewSummary.sampleSize + '개');
   }
-  if (forecast) {
+  if (scorable) {
+    const sourceLabel = forecast ? '공시 확인' : '등록자료 · 검토전';
     bulletPoints.push(
-      '기관 수요예측 경쟁률 ' + ipo.institutionalCompetitionRate + ':1',
-      '의무보유확약 ' + ipo.lockupCommitmentRate + '%, 상장일 유통가능물량 ' + ipo.circulatingSupplyRate + '%',
-      '확정 공모가 ' + ipo.confirmedPrice!.toLocaleString('ko-KR') + '원',
+      sourceLabel + ': 기관 수요예측 경쟁률 ' + ipo.institutionalCompetitionRate + ':1',
+      sourceLabel + ': 의무보유확약 ' + ipo.lockupCommitmentRate + '%, 상장일 유통가능물량 ' + ipo.circulatingSupplyRate + '%',
     );
   } else {
-    bulletPoints.push('공식 공시 원문과 수요예측 지표는 별도 확인 대기 중입니다.');
+    bulletPoints.push('필수 수요예측 지표 입력 또는 발표 대기 중입니다.');
+  }
+  if (typeof ipo.confirmedPrice === 'number' && Number.isFinite(ipo.confirmedPrice) && ipo.confirmedPrice > 0) {
+    bulletPoints.push((hasVerifiedField(ipo, 'confirmedPrice') ? '공시 확인 공모가 ' : '등록 공모가(검토전) ')
+      + ipo.confirmedPrice.toLocaleString('ko-KR') + '원');
   }
   const riskPoints: string[] = [];
   if (ipo.reviewCollection?.status === 'failed') {
@@ -88,12 +96,13 @@ export async function analyzeIpoSentiment(
   } else if (expertReviews.length > 0 && reviewSummary.sampleSize === 0) {
     riskPoints.push('명시 입장을 확인한 독립 표본이 없어 여론 비율과 리뷰 점수를 산출하지 않았습니다.');
   }
-  if (forecast) riskPoints.push('점수는 사이트 자체 비교 기준이며 상장 후 수익률을 예측하지 않습니다.');
-  const publishable = forecast || expertReviews.length > 0;
+  if (scorable && !forecast) riskPoints.push('등록된 수치로 계산한 참고점수입니다. 점수 지표의 공시 근거는 별도 검토 전입니다.');
+  if (scorable) riskPoints.push('점수는 사이트 자체 비교 기준이며 상장 후 수익률을 예측하지 않습니다.');
+  const publishable = scorable || expertReviews.length > 0;
   return {
     sentimentConsensus,
     aiSummary: {
-      headline: forecast ? ipo.name + ' 공시·수집 자료 확인'
+      headline: scorable ? ipo.name + (forecast ? ' 공시·수집 자료 확인' : ' 등록자료 참고점수 · 검토전')
         : expertReviews.length > 0 ? ipo.name + ' 외부 원문 · 공시 지표 확인 대기'
           : '공식 공시 및 외부 원문 확인 대기',
       bulletPoints,
@@ -103,11 +112,12 @@ export async function analyzeIpoSentiment(
     expertReviews,
     aiScore: scoring.score,
     scoreGrade: scoring.scoreGrade,
+    isVerified: scoring.isVerified,
     basis: scoring.basis,
     sampleSize: reviewSummary.sampleSize,
     reviewSummary,
     llmUsed: false,
     publishable,
-    ...(!publishable ? { holdReason: '공식 공시 검토 이력과 수집 근거를 갖춘 외부 원문이 없어 공개를 보류했습니다.' } : {}),
+    ...(!publishable ? { holdReason: '필수 수요예측 지표와 수집 근거를 갖춘 외부 원문을 확인하지 못했습니다.' } : {}),
   };
 }

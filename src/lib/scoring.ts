@@ -1,21 +1,23 @@
 import type { IpoItem } from '../types/ipo';
-import { hasVerifiedForecast } from './contentQuality';
+import { hasScorableForecast, hasVerifiedForecast, type FieldEvidenceMap } from './contentQuality';
 import { summarizeReviews, type ReviewSummary } from './reviewEvidence';
 
 export interface ScoringInput {
   institutionalCompetitionRate: number;
   lockupCommitmentRate: number;
   circulatingSupplyRate: number;
-  priceBandMin: number;
-  priceBandMax: number;
-  confirmedPrice: number;
-  sentimentConsensus: {
+  pendingForecastFields?: IpoItem['pendingForecastFields'];
+  priceBandMin?: number;
+  priceBandMax?: number;
+  confirmedPrice?: number;
+  sentimentConsensus?: {
     positiveRatio: number | null;
     neutralRatio: number | null;
     cautionRatio: number | null;
   };
   status?: IpoItem['status'];
   dataQuality?: IpoItem['dataQuality'];
+  fieldEvidence?: FieldEvidenceMap;
   id?: IpoItem['id'];
   name?: IpoItem['name'];
   subscriptionStart?: IpoItem['subscriptionStart'];
@@ -29,10 +31,12 @@ export interface ScoringResult {
   score: number;
   scoreGrade: 'S' | 'A' | 'B' | 'C';
   isPendingForecast: boolean;
+  isVerified: boolean;
   basis: ScoreBasis;
   sampleSize: number;
   coverage: {
     quantitative: boolean;
+    verifiedQuantitative: boolean;
     reviews: boolean;
     collectedReviews: number;
     classifiedReviews: number;
@@ -67,18 +71,22 @@ export const SCORING_RULES = {
  */
 export function calculateIpoScore(ipo: ScoringInput): ScoringResult {
   const reviewSummary = summarizeReviews(ipo);
+  const scorable = hasScorableForecast(ipo);
+  const isVerified = hasVerifiedForecast(ipo);
   const coverage = {
-    quantitative: hasVerifiedForecast(ipo),
+    quantitative: scorable,
+    verifiedQuantitative: isVerified,
     reviews: reviewSummary.sampleSize > 0,
     collectedReviews: reviewSummary.totalReviews,
     classifiedReviews: reviewSummary.sampleSize,
     stale: reviewSummary.stale,
   };
-  if (!hasVerifiedForecast(ipo)) {
+  if (!scorable) {
     return {
       score: 0,
       scoreGrade: 'C',
       isPendingForecast: true,
+      isVerified,
       basis: 'PENDING',
       sampleSize: reviewSummary.sampleSize,
       coverage,
@@ -107,6 +115,7 @@ export function calculateIpoScore(ipo: ScoringInput): ScoringResult {
     score,
     scoreGrade,
     isPendingForecast: false,
+    isVerified,
     basis: hasClassifiedReviews ? 'COMBINED' : 'QUANTITATIVE',
     sampleSize: reviewSummary.sampleSize,
     coverage,

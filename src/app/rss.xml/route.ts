@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { getAllGuides } from '@/data/guidesData';
-import { isReviewedIpo } from '@/lib/contentQuality';
-import { isPublicIpo } from '@/lib/publicIpo';
+import { hasVerifiedForecast } from '@/lib/contentQuality';
+import { isIndexableIpo } from '@/lib/publicIpo';
 import { summarizeReviews } from '@/lib/reviewEvidence';
 import { loadServerCustomIpos } from '@/lib/ipoServerStore';
 import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
@@ -27,16 +27,17 @@ export async function GET() {
     </item>`;
   }).join('');
 
-  const ipoRssItems = getAllEffectiveIpos().filter(isPublicIpo).map((ipo) => {
-    const pubDate = new Date(ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality!.reviewedAt!).toUTCString();
+  const ipoRssItems = getAllEffectiveIpos().filter(isIndexableIpo).map((ipo) => {
+    const changedAt = ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality?.reviewedAt || ipo.discovery?.receivedAt;
+    const pubDate = changedAt && Number.isFinite(Date.parse(changedAt)) ? new Date(changedAt).toUTCString() : undefined;
     const reviews = summarizeReviews(ipo);
-    const description = `실제 블로그 원문 ${reviews.totalReviews}건 · 의견 분류 표본 ${reviews.sampleSize}건. ${isReviewedIpo(ipo) ? '공시 원문 확인 자료를 함께 제공합니다.' : '공시 수치와 점수는 원문 검토 전입니다.'}`;
+    const description = `청약 ${ipo.subscriptionStart || '일정 확인 중'} · 실제 블로그 원문 ${reviews.totalReviews}건 · 의견 표본 ${reviews.sampleSize}건. ${hasVerifiedForecast(ipo) ? '점수 지표는 연결된 공시에서 확인했습니다.' : '등록자료와 공시 확인 상태를 구분해 제공합니다.'}`;
     return `
     <item>
       <title><![CDATA[[공모주 자료] ${ipo.name} 원문과 블로그 리뷰]]></title>
       <link>${siteUrl}/ipo/${ipo.id}</link>
       <guid>${siteUrl}/ipo/${ipo.id}</guid>
-      <pubDate>${pubDate}</pubDate>
+      ${pubDate ? `<pubDate>${pubDate}</pubDate>` : ''}
       <description><![CDATA[${description}]]></description>
       <category>공모주</category>
     </item>`;

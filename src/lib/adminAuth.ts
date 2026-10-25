@@ -1,6 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
+import { verifyLegacyCredential } from './legacyCredential';
 
-/** Only configured secrets grant access. A caller-controlled cron header is not authentication. */
+/** Configured secrets take precedence. Platform markers alone are not authentication. */
 function configuredSecret(name: 'ADMIN_SECRET' | 'CRON_SECRET'): string | undefined {
   const value = process.env[name]?.trim();
   return value || undefined;
@@ -20,7 +21,10 @@ export function getValidAdminKeys(): string[] {
 
 /** The scheduler secret cannot log into the administrator UI. */
 export function verifyAdminCredentials(inputPin: string): boolean {
-  return typeof inputPin === 'string' && secretMatches(inputPin.trim(), configuredSecret('ADMIN_SECRET'));
+  if (typeof inputPin !== 'string' || !inputPin.trim()) return false;
+  const input = inputPin.trim();
+  const configured = configuredSecret('ADMIN_SECRET');
+  return configured ? secretMatches(input, configured) : verifyLegacyCredential(input);
 }
 
 export interface AdminAuthResult {
@@ -32,21 +36,21 @@ export interface AdminAuthResult {
 /**
  * Vercel sends Authorization: Bearer <CRON_SECRET> when CRON_SECRET is configured.
  * https://vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs
- * Admin requests may use the configured ADMIN_SECRET as a Bearer or x-admin-key.
+ * Admin requests use the same configured-or-compatibility verifier as the login UI.
  * URL parameters and x-vercel-cron alone never grant access.
  */
 export function verifyAdminRequest(request: Request): AdminAuthResult {
-  const adminSecret = configuredSecret('ADMIN_SECRET');
   const cronSecret = configuredSecret('CRON_SECRET');
   const authorization = request.headers.get('authorization');
   if (authorization?.startsWith('Bearer ')) {
     const token = authorization.slice(7);
-    if (secretMatches(token, adminSecret) || secretMatches(token, cronSecret)) {
+    if (secretMatches(token, cronSecret) || verifyAdminCredentials(token)) {
       return { authorized: true, type: 'BEARER_TOKEN' };
     }
   }
-  if (secretMatches(request.headers.get('x-admin-key'), adminSecret)) {
+  const administratorKey = request.headers.get('x-admin-key');
+  if (administratorKey && verifyAdminCredentials(administratorKey)) {
     return { authorized: true, type: 'ADMIN_KEY' };
   }
-  return { authorized: false, type: 'NONE', reason: '환경변수로 설정한 관리자 또는 스케줄러 인증 토큰이 필요합니다.' };
+  return { authorized: false, type: 'NONE', reason: '관리자 비밀번호 또는 설정한 스케줄러 인증 토큰이 필요합니다.' };
 }

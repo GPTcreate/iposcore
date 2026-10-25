@@ -5,10 +5,11 @@ import { Share2, Check, Copy } from 'lucide-react';
 
 interface ShareButtonsProps {
   stockName: string;
-  aiScore: number;
+  aiScore?: number;
+  scoreVerified?: boolean;
 }
 
-export default function ShareButtons({ stockName, aiScore }: ShareButtonsProps) {
+export default function ShareButtons({ stockName, aiScore, scoreVerified = false }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyLink = () => {
@@ -23,8 +24,8 @@ export default function ShareButtons({ stockName, aiScore }: ShareButtonsProps) 
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
-          title: `[공모주 분석] ${stockName} - 종합 ${aiScore}점`,
-          text: `${stockName} 공모주 기관 수요예측 결과 및 전문가 AI 분석 요약을 확인해보세요.`,
+          title: `[공모주 자료] ${stockName}${aiScore !== undefined && Number.isFinite(aiScore) ? ` · ${scoreVerified ? '공시 확인' : '등록자료'} 참고점수 ${aiScore}점` : ''}`,
+          text: `${stockName}의 청약 조건, 점수 산식과 실제 수집된 블로그 원문을 확인하세요.`,
           url: window.location.href,
         });
       } catch {

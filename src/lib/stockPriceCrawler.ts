@@ -17,9 +17,14 @@ export interface SyncPriceResult {
   updatedCount: number;
   updatedStocks: { code: string; name: string; openingPrice: number; closingPrice: number; source: string }[];
   skippedCount: number;
+  deferredCount: number;
   errors: { code: string; name: string; error: string }[];
   timestamp: string;
 }
+
+type PriceFetcher = (url: string) => Promise<string>;
+const isIsoDay = (value: string | undefined): value is string => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value)
+  && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value);
 
 /**
  * 범용 HTTPS GET 요청 헬퍼
@@ -55,11 +60,12 @@ function httpsGet(url: string, headers: Record<string, string> = {}): Promise<st
 /**
  * 1. 네이버 증권 fchart 일봉 전수 히스토리 조회 (상장 첫날 캔들)
  */
-async function fetchFromFchart(code: string): Promise<CrawledStockPrice | null> {
+async function fetchFromFchart(code: string, listingDate?: string, fetcher: PriceFetcher = httpsGet): Promise<CrawledStockPrice | null> {
   try {
     const url = `https://fchart.stock.naver.com/sise.nhn?symbol=${code}&timeframe=day&count=1000&requestType=0`;
-    const xml = await httpsGet(url);
-    const itemMatch = xml.match(/<item data="([^"]+)"/);
+    const xml = await fetcher(url);
+    const items = [...xml.matchAll(/<item data="([^"]+)"/g)];
+    const itemMatch = listingDate ? items.find((item) => item[1].split('|')[0] === listingDate.replace(/-/g, '')) : items[0];
     if (itemMatch && itemMatch[1]) {
       const parts = itemMatch[1].split('|');
       const dateStr = parts[0]; // YYYYMMDD
@@ -84,18 +90,18 @@ async function fetchFromFchart(code: string): Promise<CrawledStockPrice | null> 
 /**
  * 2. 네이버페이 증권 공식 실시간 폴링 API 조회 (상장 당일 실시간 시초가·종가)
  */
-async function fetchFromRealtimePolling(code: string): Promise<CrawledStockPrice | null> {
+async function fetchFromRealtimePolling(code: string, listingDate?: string, fetcher: PriceFetcher = httpsGet): Promise<CrawledStockPrice | null> {
   try {
     const url = `https://polling.finance.naver.com/api/realtime/domestic/stock/${code}`;
-    const jsonStr = await httpsGet(url);
+    const jsonStr = await fetcher(url);
     const parsed = JSON.parse(jsonStr);
     const item = parsed?.datas?.[0];
     if (item) {
       const open = parseInt(String(item.openPriceRaw || item.openPrice).replace(/[^0-9]/g, ''), 10);
       const close = parseInt(String(item.closePriceRaw || item.closePrice).replace(/[^0-9]/g, ''), 10);
-      const tradeDate = item.localTradedAt ? String(item.localTradedAt).slice(0, 10) : getKstDateString();
+      const tradeDate = item.localTradedAt ? String(item.localTradedAt).slice(0, 10) : '';
 
-      if (open > 0 && close > 0) {
+      if (open > 0 && close > 0 && isIsoDay(tradeDate) && (!listingDate || tradeDate === listingDate)) {
         return {
           code,
           tradeDate,
@@ -114,20 +120,22 @@ async function fetchFromRealtimePolling(code: string): Promise<CrawledStockPrice
 /**
  * 3. 네이버 증권 모바일 최근 거래 세션 API 조회 (최근 상장 종목 백업)
  */
-async function fetchFromRecentPrices(code: string): Promise<CrawledStockPrice | null> {
+async function fetchFromRecentPrices(code: string, listingDate?: string, fetcher: PriceFetcher = httpsGet): Promise<CrawledStockPrice | null> {
   try {
     const url = `https://m.stock.naver.com/api/stock/${code}/price?page=1&pageSize=20`;
-    const jsonStr = await httpsGet(url);
+    const jsonStr = await fetcher(url);
     const list = JSON.parse(jsonStr);
     if (Array.isArray(list) && list.length > 0) {
       // 상장 첫날 세션 탐색 (페이징 데이터의 마지막 세션)
-      const firstSession = list[list.length - 1];
+      const firstSession = listingDate ? list.find((session) => String(session.localTradedAt || '').slice(0, 10) === listingDate) : list[list.length - 1];
+      if (!firstSession) return null;
       const open = parseInt(String(firstSession.openPrice).replace(/[^0-9]/g, ''), 10);
       const close = parseInt(String(firstSession.closePrice).replace(/[^0-9]/g, ''), 10);
-      if (open > 0 && close > 0) {
+      const tradeDate = String(firstSession.localTradedAt || '').slice(0, 10);
+      if (open > 0 && close > 0 && isIsoDay(tradeDate)) {
         return {
           code,
-          tradeDate: firstSession.localTradedAt || getKstDateString(),
+          tradeDate,
           openingPrice: open,
           closingPrice: close,
           source: 'recent_price_history',
@@ -143,7 +151,7 @@ async function fetchFromRecentPrices(code: string): Promise<CrawledStockPrice | 
 /**
  * 특정 종목 코드의 실제 거래소 체결 시세(시초가 & 종가) 크롤링
  */
-export async function fetchStockListingPrices(code: string, listingDate?: string): Promise<CrawledStockPrice | null> {
+export async function fetchStockListingPrices(code: string, listingDate?: string, options?: { fetcher?: PriceFetcher }): Promise<CrawledStockPrice | null> {
   if (!code || code.trim().length !== 6) {
     return null;
   }
@@ -153,20 +161,20 @@ export async function fetchStockListingPrices(code: string, listingDate?: string
 
   // 상장 당일인 경우: 실시간 폴링 API 우선 조회
   if (listingDate && todayStr === listingDate) {
-    const realtime = await fetchFromRealtimePolling(cleanCode);
+    const realtime = await fetchFromRealtimePolling(cleanCode, listingDate, options?.fetcher);
     if (realtime) return realtime;
   }
 
   // 상장일이 과거인 경우: fchart 일봉 원천 데이터(상장 첫날 캔들) 우선 조회
-  const fchart = await fetchFromFchart(cleanCode);
+  const fchart = await fetchFromFchart(cleanCode, listingDate, options?.fetcher);
   if (fchart) return fchart;
 
   // fchart에 아직 반영되지 않은 신규 상장 건: 최근 거래 세션 조회
-  const recent = await fetchFromRecentPrices(cleanCode);
+  const recent = await fetchFromRecentPrices(cleanCode, listingDate, options?.fetcher);
   if (recent) return recent;
 
   // 최종 실시간 폴링 재시도
-  return await fetchFromRealtimePolling(cleanCode);
+  return await fetchFromRealtimePolling(cleanCode, listingDate, options?.fetcher);
 }
 
 /**
@@ -175,11 +183,18 @@ export async function fetchStockListingPrices(code: string, listingDate?: string
 export async function syncListingReturnsForIpos(options?: {
   forceAll?: boolean;
   targetCode?: string;
+  now?: Date;
+  fetchPrices?: (code: string, listingDate?: string) => Promise<CrawledStockPrice | null>;
 }): Promise<SyncPriceResult> {
   const allIpos = getAllEffectiveIpos();
-  const todayStr = getKstDateString();
+  const todayStr = getKstDateString(options?.now);
+  const timeParts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Seoul', hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).formatToParts(options?.now || new Date());
+  const hour = Number(timeParts.find((part) => part.type === 'hour')!.value);
+  const minute = Number(timeParts.find((part) => part.type === 'minute')!.value);
+  const beforeFinalClose = hour * 60 + minute < 15 * 60 + 40;
 
   let skippedCount = 0;
+  let deferredCount = 0;
 
   // 크롤링 대상 종목 필터링:
   // 1) 상장 완료(LISTED) 또는 오늘 상장일 도래 종목
@@ -218,12 +233,24 @@ export async function syncListingReturnsForIpos(options?: {
       updatedCount: 0,
       updatedStocks: [],
       skippedCount,
+      deferredCount,
       errors: [],
       timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
     };
   }
 
   for (const ipo of candidates) {
+    if (!isIsoDay(ipo.listingDate)) {
+      skippedCount++;
+      errors.push({ code: ipo.code, name: ipo.name, error: '상장일이 확인되지 않아 상장일 시세 저장을 보류했습니다.' });
+      continue;
+    }
+    if (ipo.listingDate === todayStr && beforeFinalClose) {
+      // Intraday quotes must never become the permanently frozen listing-day close.
+      skippedCount++;
+      deferredCount++;
+      continue;
+    }
     // 6자리 정상 코드가 없는 경우 건너뜀
     if (!ipo.code || ipo.code.length !== 6 || !ipo.confirmedPrice || ipo.confirmedPrice <= 0) {
       skippedCount++;
@@ -231,14 +258,20 @@ export async function syncListingReturnsForIpos(options?: {
     }
 
     try {
-      const priceData = await fetchStockListingPrices(ipo.code, ipo.listingDate);
+      const priceData = await (options?.fetchPrices || fetchStockListingPrices)(ipo.code, ipo.listingDate);
 
       if (!priceData || priceData.openingPrice <= 0 || priceData.closingPrice <= 0) {
         errors.push({
           code: ipo.code,
           name: ipo.name,
-          error: '거래소 시세 데이터 미수신 (장 시작 전이거나 코드 불일치)',
+          error: '상장일과 날짜가 일치하는 시세를 받지 못했습니다. 기존 상장성과를 유지합니다.',
         });
+        continue;
+      }
+
+      if (priceData.tradeDate !== ipo.listingDate) {
+        skippedCount++;
+        errors.push({ code: ipo.code, name: ipo.name, error: `시세 거래일(${priceData.tradeDate})이 상장일(${ipo.listingDate})과 달라 기존 상장성과를 유지합니다.` });
         continue;
       }
 
@@ -292,6 +325,7 @@ export async function syncListingReturnsForIpos(options?: {
     updatedCount: updatedStocks.length,
     updatedStocks,
     skippedCount,
+    deferredCount,
     errors,
     timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
   };

@@ -4,6 +4,7 @@ import customIposData from '@/data/customIpos.json';
 import reviewSnapshotsData from '@/data/reviewSnapshots.json';
 import type { ReviewArchive } from '@/types/reviews';
 import { normalizeReviewArchive, getReviewSnapshot } from './reviewArchive';
+import { isSameIpoIdentity } from './ipoDiscovery';
 
 let runtimeReviewArchive: ReviewArchive = normalizeReviewArchive(reviewSnapshotsData);
 
@@ -33,19 +34,14 @@ export function getStoredCustomIpos(): IpoItem[] {
  * (코드나 ID가 같으면 신규 등록 건이 우선)
  */
 export function getAllIpos(): IpoItem[] {
-  const map = new Map<string, IpoItem>();
-
-  for (const item of MOCK_IPOS) {
-    const key = item.code || item.id;
-    map.set(key, item);
+  const accumulated: IpoItem[] = [];
+  for (const item of [...MOCK_IPOS, ...runtimeCustomIpos]) {
+    const index = accumulated.findIndex((existing) => isSameIpoIdentity(existing, item));
+    if (index < 0) accumulated.push(item);
+    else accumulated[index] = item;
   }
 
-  for (const item of runtimeCustomIpos) {
-    const key = item.code || item.id;
-    map.set(key, item);
-  }
-
-  return Array.from(map.values(), (item) => {
+  return accumulated.map((item) => {
     const copy = structuredClone(item);
     const reviewCollection = getReviewSnapshot(runtimeReviewArchive, copy);
     return reviewCollection ? { ...copy, reviewCollection } : copy;

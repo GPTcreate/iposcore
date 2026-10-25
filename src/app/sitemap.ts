@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getAllEffectiveIpos } from '@/lib/ipoUtils';
 import { getAllGuides } from '@/data/guidesData';
-import { isPublicIpo } from '@/lib/publicIpo';
+import { isIndexableIpo } from '@/lib/publicIpo';
 import { loadServerCustomIpos } from '@/lib/ipoServerStore';
 import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
 
@@ -59,9 +59,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 공모주별 상세 페이지 (불변 영문 고유 슬러그 기준)
-  const ipoRoutes: MetadataRoute.Sitemap = getAllEffectiveIpos().filter(isPublicIpo).map((ipo) => ({
+  const ipoRoutes: MetadataRoute.Sitemap = getAllEffectiveIpos().filter(isIndexableIpo).map((ipo) => ({
     url: `${baseUrl}/ipo/${ipo.id}`,
-    lastModified: new Date(ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality!.reviewedAt!),
+    ...((ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality?.reviewedAt)
+      ? { lastModified: new Date((ipo.reviewCollection?.lastSuccessfulAt || ipo.dataQuality?.reviewedAt)!) } : {}),
     changeFrequency: 'daily',
     priority: 0.8,
   }));

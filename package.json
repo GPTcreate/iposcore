@@ -12,7 +12,9 @@
     "audit:dart": "node scripts/audit-dart-disclosures.mjs",
     "test:security": "node scripts/test-security.mjs",
     "test:content": "node scripts/test-content.mjs",
-    "collect:reviews": "node scripts/run-collect-reviews.mjs"
+    "collect:reviews": "node scripts/run-collect-reviews.mjs",
+    "sync:ipos": "node scripts/sync-ipo-discovery.mjs",
+    "sync:financials": "node scripts/sync-financials.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",

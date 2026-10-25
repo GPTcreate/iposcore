@@ -8,6 +8,7 @@ interface IpoCalculatorProps {
   initialPrice?: number;
   initialProportionalCompetitionRate?: number;
   initialRefundDays?: number;
+  initialDepositRatePercent?: number;
   stockName?: string;
 }
 
@@ -22,6 +23,7 @@ export default function IpoCalculator({
   initialPrice = 20000,
   initialProportionalCompetitionRate = 1000,
   initialRefundDays = 2,
+  initialDepositRatePercent = 50,
   stockName = '공모주',
 }: IpoCalculatorProps) {
   const inputPrefix = useId();
@@ -30,7 +32,7 @@ export default function IpoCalculator({
     depositAmount: '10000000',
     offerPrice: String(initialPrice),
     proportionalCompetitionRate: String(initialProportionalCompetitionRate),
-    depositRatePercent: '50',
+    depositRatePercent: String(initialDepositRatePercent),
     equalShares: '0',
     borrowedAmount: '0',
     annualInterestRatePercent: '5',
@@ -79,7 +81,7 @@ export default function IpoCalculator({
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {numericInput('offerPrice', '공모가 (원)', { min: 1 })}
-            {numericInput('depositRatePercent', '청약 증거금률 (%)', { min: 0.01, max: 100, hint: '50%는 예시입니다. 종목별 조건을 확인하세요.' })}
+            {numericInput('depositRatePercent', '청약 증거금률 (%)', { min: 0.01, max: 100, hint: '종목별 청약 공고의 증거금률을 적용하세요.' })}
           </div>
           {numericInput('proportionalCompetitionRate', '비례 배정 경쟁률 (:1)', { min: 0.01, hint: '주관사가 공개한 일반 청약의 비례 경쟁률 또는 직접 정한 시나리오입니다. 기관 수요예측 경쟁률과 다릅니다.' })}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

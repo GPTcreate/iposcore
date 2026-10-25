@@ -939,7 +939,7 @@ https://iposcore.kr/ipo/${ipo.id}`;
           {pendingDartFilings.length > 0 && (
             <section className="p-4 rounded-xl bg-white border border-amber-200 space-y-3">
               <h3 className="text-sm font-bold text-gray-900">원문 검토 대기 ({pendingDartFilings.length}건)</h3>
-              <p className="text-xs text-gray-600">공시 접수만 확인한 목록입니다. 공모 해당 여부와 일정·가격·주관사를 원문에서 확인한 뒤 등록하고, 저장소의 검토 절차를 마쳐야 공개됩니다.</p>
+              <p className="text-xs text-gray-600">새 공시를 발견하면 기존 종목을 보존하며 추가합니다. 일정·가격·주관사는 원문으로 보완하고, 등록자료와 공시 확인 상태를 구분합니다.</p>
               <ul className="space-y-2 text-xs text-blue-700">{pendingDartFilings.map((filing) => <li key={filing.receiptNo}><a className="underline break-words" href={filing.sourceUrl} target="_blank" rel="noopener noreferrer">{filing.companyName} · {filing.reportName} · {filing.receivedAt}</a></li>)}</ul>
             </section>
           )}

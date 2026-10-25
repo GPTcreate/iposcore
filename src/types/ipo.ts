@@ -1,5 +1,10 @@
 export type IpoStatus = 'UPCOMING' | 'SUBSCRIPTION' | 'WAITING_LISTING' | 'LISTED';
 
+export type IpoEvidenceField = 'institutionalCompetitionRate' | 'lockupCommitmentRate' | 'circulatingSupplyRate'
+  | 'subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate' | 'confirmedPrice' | 'depositRatePercent';
+export interface IpoFieldEvidence { sourceTitle: string; sourceUrl: string; checkedAt: string }
+export type IpoForecastField = 'institutionalCompetitionRate' | 'lockupCommitmentRate' | 'circulatingSupplyRate';
+
 export interface ExpertReview {
   id: string;
   sourceType: 'YOUTUBE' | 'BLOG';
@@ -23,7 +28,7 @@ export interface IpoItem {
   id: string;
   name: string;
   code: string;
-  market: 'KOSPI' | 'KOSDAQ';
+  market: 'KOSPI' | 'KOSDAQ' | 'UNCONFIRMED';
   status: IpoStatus;
   // Absence means unverified. Review requires checking the linked official document.
   dataQuality?: {
@@ -31,6 +36,11 @@ export interface IpoItem {
     reviewedAt?: string;
     sources?: { title: string; url: string }[];
   };
+  // Field-level checks do not claim that the entire company profile was reviewed.
+  fieldEvidence?: Partial<Record<IpoEvidenceField, IpoFieldEvidence>>;
+  discovery?: { corpCode: string; receiptNo: string; sourceUrl: string; receivedAt: string; reportName: string };
+  // Newly discovered zero placeholders remain unknown until each input is actually parsed.
+  pendingForecastFields?: IpoForecastField[];
   
   // 일정
   subscriptionStart: string; // YYYY-MM-DD
@@ -42,6 +52,7 @@ export interface IpoItem {
   priceBandMin: number;
   priceBandMax: number;
   confirmedPrice: number;    // 확정 공모가 (0이면 미확정)
+  depositRatePercent?: number; // 종목별 일반청약 증거금률. 없으면 계산기 예시값 사용.
   
   // 주관사
   underwriters: {

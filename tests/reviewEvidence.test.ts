@@ -263,13 +263,15 @@ test('partial refresh displays retained failed-channel articles but counts only 
   assert.equal(output.sentimentConsensus.positiveRatio, 100);
 });
 
-test('a real review cannot verify missing financial figures, but remains independently available', async () => {
+test('real reviews do not verify registered metrics, and missing metrics still leave reviews available', async () => {
   const ipo = { ...identity, ...collected([article()]) };
   const result = calculateIpoScore({ ...forecast, ...ipo, dataQuality: undefined });
-  assert.equal(result.basis, 'PENDING');
-  assert.equal(result.score, 0);
+  assert.equal(result.basis, 'COMBINED');
+  assert.equal(result.score, 100);
+  assert.equal(result.isVerified, false);
   assert.equal(result.sampleSize, 1);
-  assert.equal(result.coverage.quantitative, false);
+  assert.equal(result.coverage.quantitative, true);
+  assert.equal(result.coverage.verifiedQuantitative, false);
   assert.equal(result.coverage.reviews, true);
   const output = await analyzeIpoSentiment(ipo, 'MANUAL_FORCE');
   assert.equal(output.publishable, true);
@@ -279,6 +281,10 @@ test('a real review cannot verify missing financial figures, but remains indepen
   assert.equal(output.sentimentConsensus.positiveRatio, 100);
   assert.equal(output.llmUsed, false);
   assert.match(getCollectedReviewsContext(ipo).reviewsText, /https:\/\/blog\.naver\.com\/writer1/);
+  const pending = calculateIpoScore({ ...forecast, ...ipo, institutionalCompetitionRate: 0 });
+  assert.equal(pending.basis, 'PENDING');
+  assert.equal(pending.score, 0);
+  assert.equal(pending.sampleSize, 1);
 });
 
 test('a failed refresh excludes the preserved positive stance from the score', () => {

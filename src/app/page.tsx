@@ -33,15 +33,15 @@ export default function Home() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && Array.isArray(data.ipos)) {
-          const reviewed = data.ipos.filter(isPublicIpo);
-          setAllIpos(reviewed);
+          const registered = data.ipos.filter(isPublicIpo);
+          setAllIpos(registered);
           // API 응답 기준으로 탭 재결정 (URL/세션에 저장된 탭이 없을 때만)
           const hasStoredTab =
             typeof window !== 'undefined' &&
             (new URLSearchParams(window.location.search).get('tab') ||
               sessionStorage.getItem('iposcore_active_tab'));
           if (!hasStoredTab) {
-            setFilter(getDefaultTab(reviewed));
+            setFilter(getDefaultTab(registered));
           }
         }
       })
@@ -70,10 +70,10 @@ export default function Home() {
       }
       // 상장 대기 종목은 상장 임박 순(오름차순) 정렬
       if (a.status === 'WAITING_LISTING') {
-        return (a.listingDate || '').localeCompare(b.listingDate || '');
+        return (a.listingDate || '9999-12-31').localeCompare(b.listingDate || '9999-12-31');
       }
       // 청약 예정 및 진행 종목은 청약일 임박 순(오름차순) 정렬
-      return (a.subscriptionStart || '').localeCompare(b.subscriptionStart || '');
+      return (a.subscriptionStart || '9999-12-31').localeCompare(b.subscriptionStart || '9999-12-31');
     });
 
   // 브라우저 뒤로가기(백스페이스 등) 시 기존에 보던 탭 복원
@@ -152,10 +152,10 @@ export default function Home() {
                 <span>공시 점수 · 블로그 여론 · 청약 계산</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                공모주 점수와 블로그 여론, 근거까지 확인하세요
+                공모주 청약 일정과 분석
               </h1>
               <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
-                공시 지표 점수와 실제 블로그 리뷰를 함께 확인하고, 내 청약 비용을 계산하세요. 공시 확인과 리뷰 수집 상태를 구분해서 보여드립니다.
+                청약 일정과 참고점수, 블로그 의견을 한눈에 확인하세요.
               </p>
             </div>
 
@@ -165,13 +165,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        <section className="mb-6 rounded-xl border border-blue-200 bg-white p-5 sm:p-7 space-y-3">
-          <p className="text-xs font-bold text-blue-700">공시 읽기 사례 · 2026-10-25</p>
-          <h2 className="text-lg sm:text-xl font-bold">4.58%와 95.42%, 공시의 어느 열을 읽었나요?</h2>
-          <p className="text-sm leading-relaxed text-gray-700">아이엠1호스팩의 공시에서 보호예수와 유통가능 물량을 구분하고, 주식 수와 공모가로 유통가능 금액을 다시 계산했습니다. 같은 표의 두 비율을 뒤집어 읽으면 위험 해석이 크게 달라집니다.</p>
-          <Link href="/research/iam-spac1-float" className="inline-block text-sm text-blue-700 font-bold underline">원문과 계산 과정 확인하기 →</Link>
-        </section>
 
         {allIpos.length > 0 && <>
         {/* 필터 탭 (청약 진행 중이 0건일 때는 청약 예정을 앞으로 배치 & 모바일 가로 스크롤 최적화) */}
@@ -228,7 +221,7 @@ export default function Home() {
         {/* 공모주 카드 목록 (페이징 & 점진적 로딩으로 렉 방지) */}
         {displayedIpos.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-300 p-10 text-center text-gray-500 shadow-2xs">
-            <p className="text-base font-semibold text-gray-700">이 분류에 원문 확인을 마친 종목이 없습니다.</p>
+            <p className="text-base font-semibold text-gray-700">현재 이 분류에 등록된 종목이 없습니다.</p>
             <p className="text-sm text-gray-600 mt-2">실제 시장에 청약 종목이 없다는 뜻은 아닙니다. 청약 신청 전 DART 투자설명서와 주관사의 공고를 확인하세요.</p>
             <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm font-bold text-blue-700">
               <a href="https://dart.fss.or.kr/" target="_blank" rel="noopener noreferrer" className="underline">DART 공시 확인</a>
@@ -257,6 +250,15 @@ export default function Home() {
         )}
 
         </>}
+
+        <section className="mb-6 rounded-xl border border-blue-200 bg-white p-5 sm:p-7 space-y-3">
+          <p className="text-xs font-bold text-blue-700">공시 읽기 사례 · 2026-10-25</p>
+          <h2 className="text-lg sm:text-xl font-bold">4.58%와 95.42%, 공시의 어느 열을 읽었나요?</h2>
+          <p className="text-sm leading-relaxed text-gray-700">아이엠1호스팩의 공시에서 보호예수와 유통가능 물량을 구분하고, 주식 수와 공모가로 유통가능 금액을 다시 계산했습니다. 같은 표의 두 비율을 뒤집어 읽으면 위험 해석이 크게 달라집니다.</p>
+          <Link href="/research/iam-spac1-float" className="inline-block text-sm text-blue-700 font-bold underline">원문과 계산 과정 확인하기 →</Link>
+        </section>
+
+
 
         {/* 광고 영역 - 페이지당 딱 1개만 단정하게 배치 */}
         <GoogleAdSlot label="스폰서 안내" className="my-8" />
@@ -328,23 +330,22 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 자주 묻는 질문 (FAQ) - 검색엔진 SEO 최적화 및 스마트블록 대응 */}
-        <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
-          <div className="flex items-center gap-2 mb-4">
+        <details className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
+          <summary className="flex items-center gap-2 cursor-pointer">
             <HelpCircle className="w-5 h-5 text-blue-700" />
             <h2 className="text-lg font-bold text-gray-900">
-              공모주 청약 자주 묻는 질문 (FAQ) & 핵심 투자 가이드
+              자주 묻는 질문
             </h2>
-          </div>
+          </summary>
 
-          <div className="space-y-3.5 text-xs sm:text-sm">
+          <div className="mt-4 space-y-3.5 text-xs sm:text-sm">
             <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
               <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-1.5">
                 <span className="text-blue-700 font-black">Q.</span>
                 2026년 공모주 청약 일정 및 수요예측 결과는 언제 업데이트되나요?
               </h3>
               <p className="text-gray-600 leading-relaxed pl-5">
-                IPOScore는 공시 즉시 갱신을 보장하지 않습니다. 종목별 원문과 확인일이 있는 정보만 공개하며, 확인 기록이 없는 기존 정보는 검증 대기로 분리합니다. 신청 당일의 최종 일정은 주관사 공고에서 다시 확인하세요.
+                신규 공시를 발견하면 기존 종목을 보존하며 목록에 추가하고 일정과 지표를 보완합니다. 등록자료와 공시 확인 상태를 항목별로 표시하며, 신청 당일의 최종 일정은 주관사 공고에서 다시 확인하세요.
               </p>
             </div>
 
@@ -378,7 +379,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </section>
+        </details>
 
         <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
           <h2 className="text-lg font-bold text-gray-900 mb-3">청약 전에 남겨둘 네 가지 기록</h2>

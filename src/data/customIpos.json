@@ -1,1 +1,2022 @@
-[]
+[
+  {
+    "id": "melcon",
+    "name": "멜콘",
+    "code": "179880",
+    "market": "KOSDAQ",
+    "status": "LISTED",
+    "subscriptionStart": "2026-10-01",
+    "subscriptionEnd": "2026-10-02",
+    "refundDate": "2026-10-07",
+    "listingDate": "2026-10-15",
+    "priceBandMin": 10700,
+    "priceBandMax": 12300,
+    "confirmedPrice": 12300,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 625000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 1136.8,
+    "generalCompetitionRate": 1741.48,
+    "lockupCommitmentRate": 33.1,
+    "circulatingSupplyRate": 34.6,
+    "totalOfferingAmount": 308,
+    "marketCapAtIpo": 1550,
+    "subscriptionResults": {
+      "proportionalCompetitionRate": 3481.33,
+      "totalAccounts": 254009,
+      "totalDepositAmount": 6.7,
+      "equalAllocationShares": 1.23
+    },
+    "aiSummary": {
+      "headline": "10월 15일 코스닥 신규 상장! 시초가 22,750원(+85.0%), 종가 17,470원(+42.0%) 마감",
+      "bulletPoints": [
+        "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 179880)",
+        "일반 청약 최종 경쟁률 1,741.48:1(비례 3,481.33:1) 기록, 청약 증거금 약 6조 7,000억원 유입",
+        "균등 배정 1인당 약 1.23주(추첨 2주 확률), 비례 배정 1주당 증거금 약 2,140만원 소요",
+        "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력 확보"
+      ],
+      "positivePoints": [
+        "일반 청약 1,741:1(비례 3,481:1) 초흥행으로 상장일 시초가 수급 유입 기록",
+        "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력"
+      ],
+      "riskPoints": [
+        "상장 직후 유통가능물량 34.6% 출회 가능성 및 시장 수급 변동성 주의"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 90,
+      "neutralRatio": 8,
+      "cautionRatio": 2
+    },
+    "expertReviews": [
+      {
+        "id": "rev-mel-1",
+        "sourceType": "YOUTUBE",
+        "author": "집돈버 구쯔",
+        "title": "멜콘 공모주 청약 최종 경쟁률 3,483:1 마감! 비례 1주 금액 및 상장일 목표가",
+        "url": "https://www.youtube.com/watch?v=PVWW3PbSY5k",
+        "publishedAt": "2026-10-02",
+        "sentiment": "POSITIVE",
+        "summary": "일반 경쟁률 3,482.95대 1 기록, 증거금 6.7조원 몰려 균등 1.23주 및 상장일 대응 전략."
+      },
+      {
+        "id": "rev-mel-2",
+        "sourceType": "YOUTUBE",
+        "author": "주식애소리",
+        "title": "[공모주] 멜콘 최종 결과 & 배정 결과 총정리: 10월 15일 상장일 매도 전략",
+        "url": "https://www.youtube.com/watch?v=tMurBOnBcY0",
+        "publishedAt": "2026-10-02",
+        "sentiment": "POSITIVE",
+        "summary": "대신증권 25.4만건 청약, 기관 확약 33.1% 감안한 상장일 유통물량 및 기대수익률 분석."
+      },
+      {
+        "id": "rev-mel-3",
+        "sourceType": "BLOG",
+        "author": "티엔의 수익실험실 (네이버 블로그)",
+        "title": "멜콘 공모주 청약 최종 결과, 경쟁률 3,482.95대 1과 비례 1주 가성비 분석",
+        "url": "https://blog.naver.com/kastro83/224427206492",
+        "publishedAt": "2026-10-02",
+        "sentiment": "POSITIVE",
+        "summary": "공모가 12,300원, 증거금 6.7조원 돌파, 10월 7일 환불일 체크 및 상장일 시초가 전망."
+      }
+    ],
+    "aiScore": 94,
+    "scoreGrade": "S",
+    "openingPrice": 22750,
+    "openingReturnRate": 85,
+    "closingPrice": 17470,
+    "closingReturnRate": 42,
+    "discovery": {
+      "corpCode": "01028933",
+      "receiptNo": "20260929000191",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+      "receivedAt": "2026-09-29",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "jincostec",
+    "name": "진코스텍",
+    "code": "250030",
+    "market": "KOSDAQ",
+    "status": "LISTED",
+    "subscriptionStart": "2026-10-02",
+    "subscriptionEnd": "2026-10-06",
+    "refundDate": "2026-10-08",
+    "listingDate": "2026-10-15",
+    "priceBandMin": 19500,
+    "priceBandMax": 23500,
+    "confirmedPrice": 23500,
+    "underwriters": [
+      {
+        "name": "하나증권",
+        "allocatedShares": 213000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 1097.6,
+    "generalCompetitionRate": 685.83,
+    "lockupCommitmentRate": 5.3,
+    "circulatingSupplyRate": 58.4,
+    "totalOfferingAmount": 200,
+    "marketCapAtIpo": 890,
+    "subscriptionResults": {
+      "proportionalCompetitionRate": 1371.66,
+      "totalAccounts": 147227,
+      "totalDepositAmount": 1.72,
+      "equalAllocationShares": 0.72
+    },
+    "aiSummary": {
+      "headline": "10월 15일 코스닥 신규 상장! 시초가 24,000원(+2.1%), 첫날 종가 14,940원(-36.4%) 마감",
+      "bulletPoints": [
+        "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 250030)",
+        "일반 청약 최종 경쟁률 685.83:1(비례 1,371.66:1) 기록, 청약 증거금 약 1조 7,200억원 유입",
+        "청약 건수 14.7만건, 균등배정 0.72주(추첨 확률 72%), 확정 공모가 23,500원(상단)",
+        "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
+      ],
+      "positivePoints": [
+        "소형주 수급 메리트 및 청약 계좌 14.7만 건 이상 참여로 뜨거운 시장 관심",
+        "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
+      ],
+      "riskPoints": [
+        "상장 직후 유통가능물량 58.4% 출회 가능성 및 기존 주주 차익 매물 소화 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 78,
+      "neutralRatio": 18,
+      "cautionRatio": 4
+    },
+    "expertReviews": [
+      {
+        "id": "rev-jin-1",
+        "sourceType": "YOUTUBE",
+        "author": "주식애소리",
+        "title": "[공모주] 진코스텍 청약 최종 결과 & 비례 1주 배정 금액 총정리",
+        "url": "https://www.youtube.com/results?search_query=%EC%A7%84%EC%BD%94%EC%8A%A4%ED%85%8D+%EA%B3%B5%EB%AA%A8%EC%A3%BC",
+        "publishedAt": "2026-10-06",
+        "sentiment": "POSITIVE",
+        "summary": "17,220:1 마감, 균등 배정 0.72주 및 10월 15일 멜콘과 동시 상장일 대응 전략."
+      },
+      {
+        "id": "rev-jin-2",
+        "sourceType": "BLOG",
+        "author": "아이언의 공모주 이야기",
+        "title": "진코스텍 공모주 청약 최종 마감 결과 및 배정 수량 분석",
+        "url": "https://blog.naver.com/msql",
+        "publishedAt": "2026-10-06",
+        "sentiment": "POSITIVE",
+        "summary": "하나증권 청약 건수 14.7만건, 비례 배정 계산 및 10월 8일 환불일 체크."
+      }
+    ],
+    "aiScore": 82,
+    "scoreGrade": "A",
+    "openingPrice": 24000,
+    "openingReturnRate": 2.1,
+    "closingPrice": 14940,
+    "closingReturnRate": -36.4,
+    "discovery": {
+      "corpCode": "01158632",
+      "receiptNo": "20261001000586",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000586",
+      "receivedAt": "2026-10-01",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "ms-bio",
+    "name": "엠에스바이오",
+    "code": "391020",
+    "market": "KOSDAQ",
+    "status": "LISTED",
+    "subscriptionStart": "2026-10-12",
+    "subscriptionEnd": "2026-10-13",
+    "refundDate": "2026-10-15",
+    "listingDate": "2026-10-22",
+    "priceBandMin": 6800,
+    "priceBandMax": 7800,
+    "confirmedPrice": 7800,
+    "underwriters": [
+      {
+        "name": "KB증권",
+        "allocatedShares": 1002500,
+        "fee": 1500
+      }
+    ],
+    "institutionalCompetitionRate": 1096.56,
+    "generalCompetitionRate": 1538.51,
+    "lockupCommitmentRate": 82.52,
+    "circulatingSupplyRate": 31.8,
+    "totalOfferingAmount": 312,
+    "marketCapAtIpo": 2122,
+    "subscriptionResults": {
+      "totalAccounts": 286498,
+      "totalDepositAmount": 6.01,
+      "equalAllocationShares": 1.75,
+      "proportionalCompetitionRate": 3076.02
+    },
+    "aiSummary": {
+      "headline": "10월 22일 코스닥 신규 상장! 시초가 16,000원(+105.1% 따블 초과), 종가 13,440원(+72.3%) 마감",
+      "bulletPoints": [
+        "일반 청약 최종 경쟁률 1,538.51:1 (비례배정 경쟁률 3,076.02:1) 기록, 청약 증거금 약 6조 151억원 유입",
+        "확정 공모가 7,800원 (희망밴드 6,800~7,800원 상단 확정), 총 공모금액 312억원",
+        "기관 수요예측 경쟁률 1,096.56:1 및 최종 의무보유확약 비율 82.52% 배정으로 기관 신뢰도 입증",
+        "상장 첫날 공모가(7,800원) 대비 시초가 16,000원(+105.1% 따블 돌파), 종가 13,440원(+72.3%) 마감"
+      ],
+      "positivePoints": [
+        "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 및 천연물 건강기능식품 고성장 지속",
+        "최종 의무보유확약 82.52% 배정으로 상장일 기관 유통 출회 가능 물량 대폭 축소",
+        "공모가 7,800원 상단 확정 및 증거금 6조원 돌파로 상장 첫날 수급 모멘텀 우수"
+      ],
+      "riskPoints": [
+        "상장 당일 유통가능물량 31.8%에 대한 단기 차익 실현 매물 출회 가능성 모니터링 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 78,
+      "neutralRatio": 16,
+      "cautionRatio": 6
+    },
+    "expertReviews": [],
+    "aiScore": 94,
+    "scoreGrade": "S",
+    "openingPrice": 16000,
+    "openingReturnRate": 105.1,
+    "closingPrice": 13440,
+    "closingReturnRate": 72.3,
+    "discovery": {
+      "corpCode": "01749559",
+      "receiptNo": "20261007000327",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
+      "receivedAt": "2026-10-07",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "dts-tech",
+    "name": "디티에스",
+    "code": "284010",
+    "market": "KOSDAQ",
+    "status": "WAITING_LISTING",
+    "subscriptionStart": "2026-10-13",
+    "subscriptionEnd": "2026-10-14",
+    "refundDate": "2026-10-16",
+    "listingDate": "2026-10-23",
+    "priceBandMin": 12000,
+    "priceBandMax": 14000,
+    "confirmedPrice": 18500,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 501507,
+        "fee": 2000
+      },
+      {
+        "name": "유진투자증권",
+        "allocatedShares": 55723,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 983.98,
+    "generalCompetitionRate": 986.89,
+    "lockupCommitmentRate": 61,
+    "circulatingSupplyRate": 15.12,
+    "totalOfferingAmount": 412,
+    "marketCapAtIpo": 2338,
+    "subscriptionResults": {
+      "totalAccounts": 240920,
+      "totalDepositAmount": 5.09,
+      "equalAllocationShares": 1.16,
+      "proportionalCompetitionRate": 1973.78
+    },
+    "aiSummary": {
+      "headline": "공모가 18,500원 확정 & 일반 경쟁률 987:1 (비례 1,974:1) 흥행 마감! 10월 23일 코스닥 상장",
+      "bulletPoints": [
+        "통합 일반 청약 최종 경쟁률 986.89:1 (비례배정 경쟁률 1,973.78:1) 기록, 청약 증거금 약 5조 868억원 유입",
+        "확정 공모가 18,500원 (희망밴드 12,000~14,000원 대폭 초과), 최종 의무보유확약 비율 61.0% 고배정",
+        "균등 배정 1인당 약 1.16주 (기본 1주 + 16% 추첨 2주), 10월 16일 환불 완료 후 10월 23일(금) 코스닥 신규 상장 대기",
+        "주관사별 경쟁률: 대신증권 일반 998.39:1 (비례 1,996.77:1), 유진투자증권 일반 883.39:1 (비례 1,766.81:1)"
+      ],
+      "positivePoints": [
+        "조선 슈퍼사이클 진입에 따른 탄탄한 3년치 일감 확보",
+        "최종 의무보유확약 비율 61.0% 배정으로 상장일 기관 유통 출회 물량 방어",
+        "수익성 높은 특수선용 열교환기 믹스 개선"
+      ],
+      "riskPoints": [
+        "글로벌 원자재(구리, 스테인리스) 가격 변동에 따른 마진 민감도"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 70,
+      "neutralRatio": 23,
+      "cautionRatio": 7
+    },
+    "expertReviews": [],
+    "aiScore": 89,
+    "scoreGrade": "S",
+    "discovery": {
+      "corpCode": "00534729",
+      "receiptNo": "20261012000308",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+      "receivedAt": "2026-10-12",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "barofarm",
+    "name": "바로팜",
+    "code": "488210",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-02",
+    "subscriptionEnd": "2026-11-03",
+    "refundDate": "2026-11-05",
+    "listingDate": "2026-11-12",
+    "priceBandMin": 16400,
+    "priceBandMax": 20200,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 445000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 27.4,
+    "totalOfferingAmount": 360,
+    "marketCapAtIpo": 2413,
+    "aiSummary": {
+      "headline": "전국 약국 80% 점유 의약품 B2B 플랫폼 바로팜, 11월 2일~3일 청약 연기 확정",
+      "bulletPoints": [
+        "정정 공시 반영: 청약 일정이 11월 2일(월) ~ 11월 3일(화)로 최종 확정",
+        "희망 공모가 16,400 ~ 20,200원, 환불일: 11월 5일(목), 주관사: 미래에셋증권",
+        "약국 원스톱 주문 SaaS 락인 효과와 제약 광고·커머스 고성장세"
+      ],
+      "positivePoints": [
+        "강력한 약국 네트워크 락인(Lock-in) 효과와 압도적 시장 점유율",
+        "플랫폼 기반 광고 및 데이터 사업 등 신규 고마진 수익원 가시화"
+      ],
+      "riskPoints": [
+        "온라인 플랫폼 규제 및 기존 도매상과의 이해관계 조율 이슈"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 19,
+      "cautionRatio": 6
+    },
+    "expertReviews": [],
+    "aiScore": 80,
+    "scoreGrade": "A",
+    "discovery": {
+      "corpCode": "01835829",
+      "receiptNo": "20261015000345",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000345",
+      "receivedAt": "2026-10-15",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "dongwon-parts",
+    "name": "동원파츠",
+    "code": "342930",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-02",
+    "subscriptionEnd": "2026-11-03",
+    "refundDate": "2026-11-05",
+    "listingDate": "2026-11-13",
+    "priceBandMin": 23000,
+    "priceBandMax": 26500,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "삼성증권",
+        "allocatedShares": 507500,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 23.8,
+    "totalOfferingAmount": 538,
+    "marketCapAtIpo": 2458,
+    "aiSummary": {
+      "headline": "반도체 식각·증착 부품 선도 동원파츠, 11월 2일~3일 일반 청약",
+      "bulletPoints": [
+        "램리서치·세메스 등 글로벌 톱 반도체 장비사향 초정밀 챔버 부품 직납",
+        "희망 공모가 23,000 ~ 26,500원, 청약일: 11월 2일(월) ~ 11월 3일(화)",
+        "환불일: 11월 5일(목), 주관사: 삼성증권"
+      ],
+      "positivePoints": [
+        "상장일 유통물량 23.8%로 매우 가벼운 수급 모멘텀",
+        "영업이익률 20%를 상회하는 압도적인 제조 원가 경쟁력"
+      ],
+      "riskPoints": [
+        "전방 반도체 설비투자(CAPEX) 집행 시기에 따른 실적 변동성"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 78,
+      "neutralRatio": 17,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "aiScore": 82,
+    "scoreGrade": "A",
+    "discovery": {
+      "corpCode": "00784184",
+      "receiptNo": "20261023000331",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000331",
+      "receivedAt": "2026-10-23",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "creates",
+    "name": "크리에이츠",
+    "code": "462900",
+    "market": "KOSDAQ",
+    "status": "WAITING_LISTING",
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-30",
+    "priceBandMin": 15000,
+    "priceBandMax": 18000,
+    "confirmedPrice": 15000,
+    "underwriters": [
+      {
+        "name": "삼성증권",
+        "allocatedShares": 350000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 240.46,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 39.43,
+    "totalOfferingAmount": 210,
+    "marketCapAtIpo": 1969,
+    "aiSummary": {
+      "headline": "글로벌 골프 론치모니터(UNEEKOR) 공모가 15,000원 확정, 10월 20일~21일 일반 청약 진행",
+      "bulletPoints": [
+        "기관 수요예측 경쟁률 240.46:1 기록, 공모가 희망 밴드 하단인 15,000원 확정",
+        "상장일 유통가능물량 39.43%(5,176,832주), 의무보유확약 0.0%로 수급 부담 주의",
+        "초고속 비전 센서 기반 미국 골프 시뮬레이터 시장 점유율 최상위권 강소기업",
+        "환불일: 10월 23일(금), 상장예정일: 10월 30일(금), 대표 주관사: 삼성증권"
+      ],
+      "positivePoints": [
+        "희망 공모가 밴드 하단(15,000원) 확정으로 가격 밸류에이션 매력 확보",
+        "미국 골프 시장 내 UNEEKOR 론치모니터 및 구독형 시뮬레이션 SaaS 인지도 보유"
+      ],
+      "riskPoints": [
+        "상장 직후 유통가능물량 비율 39.43% 및 기관 의무보유확약 사실상 0%로 상장일 매도 압력 주의"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 55,
+      "neutralRatio": 30,
+      "cautionRatio": 15
+    },
+    "expertReviews": [],
+    "aiScore": 68,
+    "scoreGrade": "B",
+    "discovery": {
+      "corpCode": "01540903",
+      "receiptNo": "20261019000283",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000283",
+      "receivedAt": "2026-10-19",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "tne-korea",
+    "name": "티앤이코리아",
+    "code": "382010",
+    "market": "KOSDAQ",
+    "status": "WAITING_LISTING",
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-29",
+    "priceBandMin": 12600,
+    "priceBandMax": 15300,
+    "confirmedPrice": 15300,
+    "underwriters": [
+      {
+        "name": "신한투자증권",
+        "allocatedShares": 600000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 1041.02,
+    "lockupCommitmentRate": 29.52,
+    "circulatingSupplyRate": 31.29,
+    "totalOfferingAmount": 367.2,
+    "marketCapAtIpo": 1737,
+    "aiSummary": {
+      "headline": "확정 공모가 15,300원(상단) 확정! 기관 경쟁률 1,041:1 & 의무확약 29.5% 흥행",
+      "bulletPoints": [
+        "수요예측 결과 공모 희망밴드(12,600~15,300원) 최상단인 15,300원으로 최종 확정 (공모규모 367.2억원)",
+        "기관 수요예측 경쟁률 1,041.02:1 기록 및 의무보유확약 비율 29.52%(신청수량 기준) 달성",
+        "상장 직후 유통가능물량 31.29%(3,551,856주), 상장 시가총액 약 1,737억원",
+        "청약 일정: 2026년 10월 20일(화) ~ 10월 21일(수), 주관사: 신한투자증권 (환불일: 10월 23일, 상장예정일: 10월 29일)"
+      ],
+      "positivePoints": [
+        "초고속 회전체 원천기술 보유로 높은 기술적 진입장벽",
+        "에너지 절감 탄소중립 트렌드에 부합하는 산업용 블로워 수요 급증"
+      ],
+      "riskPoints": [
+        "수소 산업 생태계 개화 속도에 따른 중장기 수혜 편차"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 73,
+      "neutralRatio": 21,
+      "cautionRatio": 6
+    },
+    "expertReviews": [],
+    "aiScore": 81,
+    "scoreGrade": "A",
+    "discovery": {
+      "corpCode": "01543043",
+      "receiptNo": "20261016000158",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+      "receivedAt": "2026-10-16",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "lablup",
+    "name": "래블업",
+    "code": "481020",
+    "market": "KOSDAQ",
+    "status": "SUBSCRIPTION",
+    "subscriptionStart": "2026-10-22",
+    "subscriptionEnd": "2026-10-23",
+    "refundDate": "2026-10-27",
+    "listingDate": "2026-11-03",
+    "priceBandMin": 19000,
+    "priceBandMax": 22000,
+    "confirmedPrice": 19000,
+    "underwriters": [
+      {
+        "name": "NH투자증권",
+        "allocatedShares": 545000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 284.53,
+    "lockupCommitmentRate": 2.09,
+    "circulatingSupplyRate": 35.51,
+    "totalOfferingAmount": 414,
+    "marketCapAtIpo": 2768,
+    "aiSummary": {
+      "headline": "엔비디아 파트너사 AI GPU 솔루션 래블업, 공모가 19,000원 확정 및 일반 청약",
+      "bulletPoints": [
+        "공모가 19,000원(희망 밴드 하단) 확정, 기관 수요예측 경쟁률 284.53:1 기록",
+        "상장 직후 유통가능물량 35.51% (10월 21일 DART 정정 증권신고서 최종 확정)",
+        "청약 일정: 10월 22일(목) ~ 10월 23일(금), 환불일: 10월 27일(화), 대표 주관사: NH투자증권",
+        "고가 GPU 인프라 분산 효율화 Backend.AI 플랫폼 글로벌 도입 가속"
+      ],
+      "positivePoints": [
+        "AI 인프라 효율화 소프트웨어 분야 독보적인 기술력과 레퍼런스",
+        "구독형 엔터프라이즈 라이선스로 매년 누적되는 ARR(연간반복매출)"
+      ],
+      "riskPoints": [
+        "글로벌 빅테크 오픈소스 기술 등장에 따른 기술 경쟁 지속"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 82,
+      "neutralRatio": 14,
+      "cautionRatio": 4
+    },
+    "expertReviews": [],
+    "aiScore": 83,
+    "scoreGrade": "A",
+    "discovery": {
+      "corpCode": "01956751",
+      "receiptNo": "20261021000334",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000334",
+      "receivedAt": "2026-10-21",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "intellivix",
+    "name": "인텔리빅스",
+    "code": "420610",
+    "market": "KOSDAQ",
+    "status": "WAITING_LISTING",
+    "subscriptionStart": "2026-10-21",
+    "subscriptionEnd": "2026-10-22",
+    "refundDate": "2026-10-26",
+    "listingDate": "2026-10-30",
+    "priceBandMin": 7600,
+    "priceBandMax": 9000,
+    "confirmedPrice": 9000,
+    "underwriters": [
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 625000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 1234.3,
+    "generalCompetitionRate": 1410.9,
+    "lockupCommitmentRate": 6.14,
+    "circulatingSupplyRate": 23.95,
+    "totalOfferingAmount": 225,
+    "marketCapAtIpo": 1020,
+    "subscriptionResults": {
+      "totalAccounts": 237353,
+      "totalDepositAmount": 3.97,
+      "equalAllocationShares": 1.32,
+      "proportionalCompetitionRate": 2821.75
+    },
+    "aiSummary": {
+      "headline": "13년 연속 흑자 AI 비전 테크 인텔리빅스, 공모가 9,000원 상단 확정 및 청약 흥행 마감",
+      "bulletPoints": [
+        "일반 청약 최종 경쟁률 1,410.9:1, 증거금 약 3.97조 원 몰리며 흥행 성료",
+        "기관 수요예측 1,234.3:1 대흥행 기록, 희망 밴드 최상단인 9,000원에 최종 확정",
+        "상장일 유통가능물량 23.95%로 오버행 리스크 매우 낮음 (최대주주 지분 60% 3년 락업)",
+        "환불일: 10월 26일(월), 상장예정일: 10월 30일(금), 대표 주관사: 미래에셋증권"
+      ],
+      "positivePoints": [
+        "공모가 희망 밴드 상단(9,000원) 초과 수요 집중 및 일반 청약 증거금 약 4조 원 달성",
+        "상장 직후 유통가능비율 23.95%로 매우 안정적인 수급 구조 보유",
+        "공공 및 스마트시티 안전 관제 시장 점유율 1위와 검증된 13년 연속 흑자 경영 실적"
+      ],
+      "riskPoints": [
+        "공공 안전 프로젝트 발주 시기에 따른 계절적 분기 매출 편차"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 86,
+      "neutralRatio": 11,
+      "cautionRatio": 3
+    },
+    "expertReviews": [],
+    "aiScore": 88,
+    "scoreGrade": "S",
+    "discovery": {
+      "corpCode": "01649408",
+      "receiptNo": "20261020000360",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000360",
+      "receivedAt": "2026-10-20",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "hanwha-plus-spac6",
+    "name": "한화플러스제6호기업인수목적",
+    "code": "450043",
+    "market": "KOSDAQ",
+    "status": "WAITING_LISTING",
+    "subscriptionStart": "2026-10-20",
+    "subscriptionEnd": "2026-10-21",
+    "refundDate": "2026-10-23",
+    "listingDate": "2026-10-30",
+    "priceBandMin": 2000,
+    "priceBandMax": 2000,
+    "confirmedPrice": 2000,
+    "underwriters": [
+      {
+        "name": "한화투자증권",
+        "allocatedShares": 1500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 1256.48,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 93.6,
+    "totalOfferingAmount": 120,
+    "marketCapAtIpo": 128,
+    "aiScore": 72,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "공모가 2,000원 신규 스팩! 한화플러스제6호스팩 10월 20일~21일 청약",
+      "bulletPoints": [
+        "공모가 2,000원 고정, 청약 기간: 2026년 10월 20일(화) ~ 10월 21일(수)",
+        "환불일: 10월 23일(금), 대표 주관사: 한화투자증권 (일반 청약한도 15만주)",
+        "합병 실패 시에도 원금과 3년치 은행 이자 보장되는 안정적 하방 구조"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01965157",
+      "receiptNo": "20261019000182",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000182",
+      "receivedAt": "2026-10-19",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "est",
+    "name": "이에스티",
+    "code": "412170",
+    "market": "KOSDAQ",
+    "status": "SUBSCRIPTION",
+    "subscriptionStart": "2026-10-22",
+    "subscriptionEnd": "2026-10-23",
+    "refundDate": "2026-10-27",
+    "listingDate": "2026-11-04",
+    "priceBandMin": 10600,
+    "priceBandMax": 12400,
+    "confirmedPrice": 12400,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 550000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 630.1,
+    "lockupCommitmentRate": 0.24,
+    "circulatingSupplyRate": 37.7,
+    "totalOfferingAmount": 273,
+    "marketCapAtIpo": 1550,
+    "aiScore": 77,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "반도체 정전척(ESC) 국산화 선도기업 이에스티, 공모가 12,400원 상단 확정",
+      "bulletPoints": [
+        "공모가 12,400원(희망 밴드 상단) 최종 확정, 기관 경쟁률 630.1:1 기록",
+        "상장 예정일: 11월 4일(수)로 확정 (대신증권 공식 공고 기준, 기존 11월 5일에서 조정)",
+        "웨이퍼 초정밀 고정 핵심 정전척 원천기술 보유 소부장 특례상장",
+        "청약일: 10월 22일(목) ~ 10월 23일(금), 환불일: 10월 27일(화), 대표 주관사: 대신증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "의무보유확약 비율(0.24%) 및 상장일 유통가능비율(37.7%) 오버행 점검 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01378005",
+      "receiptNo": "20261021000363",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000363",
+      "receivedAt": "2026-10-21",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "iam-spac1",
+    "name": "아이엠기업인수목적1호",
+    "code": "469272",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-26",
+    "subscriptionEnd": "2026-10-27",
+    "refundDate": "2026-10-29",
+    "listingDate": "2026-11-04",
+    "priceBandMin": 2000,
+    "priceBandMax": 2000,
+    "confirmedPrice": 2000,
+    "depositRatePercent": 100,
+    "underwriters": [
+      {
+        "name": "iM증권",
+        "allocatedShares": 1250000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 1266.52,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 95.42,
+    "totalOfferingAmount": 100,
+    "marketCapAtIpo": 104.8,
+    "aiScore": 71,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "공모가 2,000원! iM증권 신규 스팩 아이엠1호스팩 10월 26일~27일 청약",
+      "bulletPoints": [
+        "확정 공모가 2,000원, 청약 일정: 10월 26일(월) ~ 10월 27일(화)",
+        "환불일: 10월 29일(목), 주관사: iM증권",
+        "공모 주식 5,000,000주는 상장 직후 유통가능하며 상장예정 보통주의 95.42%입니다."
+      ],
+      "positivePoints": [
+        "DART 발행조건확정 신고서에서 공모가 2,000원을 확인했습니다.",
+        "기관 수요예측 경쟁률 1,266.52:1, 확약 신청 비율 0% (신청수량 기준)"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "fieldEvidence": {
+      "depositRatePercent": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서 · 일반청약자 증거금률",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:09:21.203Z"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "subscriptionStart": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "DART 2026-10-22 발행조건확정 신고서",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 2026-10-08 정정 신고서 · 공모 전 주주 보호예수",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000225",
+        "checkedAt": "2026-10-25T00:05:57.787Z"
+      }
+    },
+    "discovery": {
+      "corpCode": "02036869",
+      "receiptNo": "20261022000373",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000373",
+      "receivedAt": "2026-10-22",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "al-robot",
+    "name": "에이엘로봇",
+    "code": "417970",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-26",
+    "subscriptionEnd": "2026-10-27",
+    "refundDate": "2026-10-29",
+    "listingDate": "2026-11-06",
+    "priceBandMin": 15700,
+    "priceBandMax": 17600,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 600000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 35.01,
+    "totalOfferingAmount": 422,
+    "marketCapAtIpo": 2121,
+    "aiScore": 78,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "로봇 힘·토크 센서 및 제어 솔루션 에이엘로봇, 10월 26일~27일 청약",
+      "bulletPoints": [
+        "협동로봇 및 스마트 팩토리 필수 초정밀 센서 융합 시스템 국산화",
+        "희망 공모가 15,700 ~ 17,600원, 청약일: 10월 26일(월) ~ 10월 27일(화)",
+        "환불일: 10월 29일(목), 대표 주관사: 대신증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01797635",
+      "receiptNo": "20261012000490",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000490",
+      "receivedAt": "2026-10-12",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "mbd",
+    "name": "엠비디",
+    "code": "417050",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-10-28",
+    "subscriptionEnd": "2026-10-29",
+    "refundDate": "2026-11-02",
+    "listingDate": "2026-11-10",
+    "priceBandMin": 9600,
+    "priceBandMax": 11700,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "하나증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28.5,
+    "totalOfferingAmount": 234,
+    "marketCapAtIpo": 1798,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "3D 세포배양 맞춤형 약물 반응 예측 플랫폼 엠비디, 10월 28일~29일 청약",
+      "bulletPoints": [
+        "정정 공시 완료: 10월 28일(수) ~ 10월 29일(목) 청약 진행",
+        "희망 공모가 9,600 ~ 11,700원, 환불일: 11월 2일(월), 주관사: 하나증권",
+        "공모주식 전량 신주 발행으로 연구개발 및 글로벌 임상 확장 자금 유입"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01705740",
+      "receiptNo": "20261015000329",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000329",
+      "receivedAt": "2026-10-15",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "nex-i",
+    "name": "넥스아이",
+    "code": "447253",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-03",
+    "subscriptionEnd": "2026-11-04",
+    "refundDate": "2026-11-06",
+    "listingDate": "2026-11-13",
+    "priceBandMin": 10500,
+    "priceBandMax": 13000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 1250000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 25,
+    "totalOfferingAmount": 650,
+    "marketCapAtIpo": 5950,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "머신비전 3D 검사 솔루션 넥스아이, 11월 3일~4일 일반 청약 개시",
+      "bulletPoints": [
+        "희망 공모가 10,500 ~ 12,500원, 청약일: 11월 3일(화) ~ 11월 4일(수)",
+        "환불일: 11월 6일(금), 대표 주관사: KB증권",
+        "반도체 및 2차전지 불량 자동 검출 비전 AI 장비 수요 확대"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01863318",
+      "receiptNo": "20261016000268",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000268",
+      "receivedAt": "2026-10-16",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "yky-mc",
+    "name": "영광와이케이엠씨",
+    "code": "409600",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-04",
+    "subscriptionEnd": "2026-11-05",
+    "refundDate": "2026-11-09",
+    "listingDate": "2026-11-17",
+    "priceBandMin": 9400,
+    "priceBandMax": 11000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 575000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 28,
+    "totalOfferingAmount": 253,
+    "marketCapAtIpo": 1591,
+    "aiScore": 73,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "정밀 금속 가공 및 알루미늄 아노다이징 영광와이케이엠씨, 11월 4일~5일 청약",
+      "bulletPoints": [
+        "희망 공모가: 9,400 ~ 11,000원, 청약 기간: 11월 4일(수) ~ 11월 5일(목)",
+        "환불일: 11월 9일(월), 주관사: 미래에셋증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "00960234",
+      "receiptNo": "20261008000649",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000649",
+      "receivedAt": "2026-10-08",
+      "reportName": "증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "optronics",
+    "name": "옵토닉스",
+    "code": "485424",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-05",
+    "subscriptionEnd": "2026-11-06",
+    "refundDate": "2026-11-10",
+    "listingDate": "2026-11-18",
+    "priceBandMin": 10000,
+    "priceBandMax": 12000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 550000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 22.71,
+    "totalOfferingAmount": 264,
+    "marketCapAtIpo": 1148,
+    "aiScore": 74,
+    "scoreGrade": "B",
+    "aiSummary": {
+      "headline": "초정밀 광학 렌즈 및 레이저 모듈 전문 옵토닉스, 11월 5일~6일 청약",
+      "bulletPoints": [
+        "희망 공모가: 10,000 ~ 12,000원, 청약 기간: 11월 5일(목) ~ 11월 6일(금)",
+        "환불일: 11월 10일(화), 주관사: 신한투자증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01658035",
+      "receiptNo": "20261021000210",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000210",
+      "receivedAt": "2026-10-21",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "hana-aerodynamics",
+    "name": "하나에어로다이내믹스",
+    "code": "410250",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-10",
+    "subscriptionEnd": "2026-11-11",
+    "refundDate": "2026-11-13",
+    "listingDate": "2026-11-20",
+    "priceBandMin": 4700,
+    "priceBandMax": 5700,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "IBK투자증권",
+        "allocatedShares": 1100000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 30.83,
+    "totalOfferingAmount": 251,
+    "marketCapAtIpo": 1011,
+    "aiScore": 76,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "항공우주 복합재 및 가스터빈 부품사 하나에어로다이내믹스, 11월 10일~11일 청약",
+      "bulletPoints": [
+        "희망 공모가: 4,700 ~ 5,700원, 청약일: 11월 10일(화) ~ 11월 11일(수)",
+        "환불일: 11월 13일(금), 주관사: 하나증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01025617",
+      "receiptNo": "20261016000159",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000159",
+      "receivedAt": "2026-10-16",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "enki-whitehat",
+    "name": "엔키화이트햇",
+    "code": "417950",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-23",
+    "priceBandMin": 13000,
+    "priceBandMax": 16500,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "신영증권",
+        "allocatedShares": 425000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 23,
+    "totalOfferingAmount": 281,
+    "marketCapAtIpo": 1749,
+    "aiScore": 76,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "사이버 보안 및 침해사고 방어 전문 엔키화이트햇, 11월 12일~13일 청약",
+      "bulletPoints": [
+        "희망 공모가: 13,000 ~ 15,000원, 청약일: 11월 12일(목) ~ 11월 13일(금)",
+        "환불일: 11월 17일(화), 주관사: NH투자증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01795859",
+      "receiptNo": "20261008000660",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000660",
+      "receivedAt": "2026-10-08",
+      "reportName": "증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "jntg",
+    "name": "제이앤티지",
+    "code": "414030",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-24",
+    "priceBandMin": 26400,
+    "priceBandMax": 31900,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "대신증권",
+        "allocatedShares": 1075000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 22.5,
+    "totalOfferingAmount": 1372,
+    "marketCapAtIpo": 6035,
+    "aiScore": 79,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "수소연료전지 기체확산층(GDL) 국산화 제이앤티지, 11월 12일~13일 일반 청약",
+      "bulletPoints": [
+        "희망 공모가: 26,400 ~ 30,000원, 청약일: 11월 12일(목) ~ 11월 13일(금)",
+        "환불일: 11월 17일(화), 주관사: 대신증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01403198",
+      "receiptNo": "20261016000426",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000426",
+      "receivedAt": "2026-10-16",
+      "reportName": "증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "cnm",
+    "name": "씨앤엠",
+    "code": "406180",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-25",
+    "priceBandMin": 10000,
+    "priceBandMax": 13000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "한국투자증권",
+        "allocatedShares": 737500,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 36.25,
+    "totalOfferingAmount": 384,
+    "marketCapAtIpo": 2077,
+    "aiScore": 75,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "반도체 패키징 검사 장비 전문 씨앤엠, 11월 12일~13일 공모 청약 개시",
+      "bulletPoints": [
+        "공모가 10,000원, 청약 기간: 11월 12일(목) ~ 11월 13일(금)",
+        "환불일: 11월 17일(화), 대표 주관사: KB증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "00618173",
+      "receiptNo": "20261016000412",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000412",
+      "receivedAt": "2026-10-16",
+      "reportName": "증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "adel",
+    "name": "아델",
+    "code": "463510",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-23",
+    "subscriptionEnd": "2026-11-24",
+    "refundDate": "2026-11-26",
+    "listingDate": "2026-12-03",
+    "priceBandMin": 18000,
+    "priceBandMax": 25000,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "삼성증권",
+        "allocatedShares": 325500,
+        "fee": 2000
+      },
+      {
+        "name": "미래에셋증권",
+        "allocatedShares": 217000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 25,
+    "totalOfferingAmount": 543,
+    "marketCapAtIpo": 5415,
+    "aiScore": 78,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "알츠하이머 타우 단백질 표적 항체 치료제 바이오텍 아델, 11월 23일~24일 청약",
+      "bulletPoints": [
+        "희망 공모가: 18,000 ~ 21,000원, 청약일: 11월 23일(월) ~ 11월 24일(화)",
+        "환불일: 11월 26일(목), 주관사: 한국투자증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01938746",
+      "receiptNo": "20261012000445",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000445",
+      "receivedAt": "2026-10-12",
+      "reportName": "증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "kmf",
+    "name": "케이엠에프",
+    "code": "454392",
+    "market": "KOSDAQ",
+    "status": "UPCOMING",
+    "subscriptionStart": "2026-11-24",
+    "subscriptionEnd": "2026-11-25",
+    "refundDate": "2026-11-27",
+    "listingDate": "2026-12-04",
+    "priceBandMin": 15000,
+    "priceBandMax": 17800,
+    "confirmedPrice": 0,
+    "underwriters": [
+      {
+        "name": "IBK투자증권",
+        "allocatedShares": 500000,
+        "fee": 2000
+      }
+    ],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 44.56,
+    "totalOfferingAmount": 356,
+    "marketCapAtIpo": 1510,
+    "aiScore": 76,
+    "scoreGrade": "A",
+    "aiSummary": {
+      "headline": "원자력 및 수소 플랜트 고압 배관 피팅 케이엠에프, 11월 24일~25일 청약",
+      "bulletPoints": [
+        "희망 공모가: 15,000 ~ 17,800원, 청약 기간: 11월 24일(화) ~ 11월 25일(수)",
+        "환불일: 11월 27일(금), 주관사: 미래에셋증권"
+      ],
+      "positivePoints": [
+        "DART 증권신고서 정식 공시 및 효력 발생 완료",
+        "우수한 펀더멘털과 안정적인 공모 구조"
+      ],
+      "riskPoints": [
+        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+      ]
+    },
+    "sentimentConsensus": {
+      "positiveRatio": 75,
+      "neutralRatio": 20,
+      "cautionRatio": 5
+    },
+    "expertReviews": [],
+    "discovery": {
+      "corpCode": "01880139",
+      "receiptNo": "20261002000390",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261002000390",
+      "receivedAt": "2026-10-02",
+      "reportName": "증권신고서(지분증권)"
+    }
+  },
+  {
+    "id": "dart-01950720",
+    "name": "제논",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01950720",
+      "receiptNo": "20261023000486",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000486",
+      "receivedAt": "2026-10-23",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-01860700",
+    "name": "인터엑스",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01860700",
+      "receiptNo": "20261022000478",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
+      "receivedAt": "2026-10-22",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-01705573",
+    "name": "유캐스트",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01705573",
+      "receiptNo": "20261021000443",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000443",
+      "receivedAt": "2026-10-21",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-00579342",
+    "name": "영광",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "00579342",
+      "receiptNo": "20261021000239",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000239",
+      "receivedAt": "2026-10-21",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 17000,
+    "underwriters": [],
+    "institutionalCompetitionRate": 1000.07,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-01783687",
+    "name": "이노보테라퓨틱스",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01783687",
+      "receiptNo": "20261021000153",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000153",
+      "receivedAt": "2026-10-21",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-01366675",
+    "name": "에이엔에이치스트럭쳐",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01366675",
+      "receiptNo": "20261020000375",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000375",
+      "receivedAt": "2026-10-20",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-00299109",
+    "name": "에스에프씨",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "00299109",
+      "receiptNo": "20261019000368",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
+      "receivedAt": "2026-10-19",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-01077540",
+    "name": "씨아이에스케미칼",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01077540",
+      "receiptNo": "20261019000343",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
+      "receivedAt": "2026-10-19",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-02032951",
+    "name": "에스케이증권제14호기업인수목적",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "02032951",
+      "receiptNo": "20261014000196",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000196",
+      "receivedAt": "2026-10-14",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 2000,
+    "underwriters": [],
+    "institutionalCompetitionRate": 1228.38,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 97.45,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "lockupCommitmentRate"
+    ]
+  },
+  {
+    "id": "dart-02038432",
+    "name": "SimwonAmericaCorp.",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "02038432",
+      "receiptNo": "20261012000149",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000149",
+      "receivedAt": "2026-10-12",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  },
+  {
+    "id": "dart-01706509",
+    "name": "다비오",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01706509",
+      "receiptNo": "20261008000705",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000705",
+      "receivedAt": "2026-10-08",
+      "reportName": "[기재정정]증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ]
+  }
+]

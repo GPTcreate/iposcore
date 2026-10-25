@@ -23,14 +23,15 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
     const { pin } = body;
 
-    if (!pin) {
-      return NextResponse.json({ success: false, error: 'PIN을 입력해주세요.' }, { status: 400 });
+    const credential = typeof pin === 'string' ? pin : typeof pin === 'number' && Number.isFinite(pin) ? String(pin) : '';
+    if (!credential.trim()) {
+      return NextResponse.json({ success: false, error: '관리자 비밀번호를 입력해주세요.' }, { status: 400 });
     }
 
-    const isValid = verifyAdminCredentials(String(pin));
+    const isValid = verifyAdminCredentials(credential);
     if (!isValid) {
       return NextResponse.json(
-        { success: false, error: '관리자 인증 PIN 번호가 일치하지 않습니다.' },
+        { success: false, error: '관리자 비밀번호가 일치하지 않습니다.' },
         { status: 401 }
       );
     }
@@ -38,11 +39,11 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: '관리자 인증 성공',
-      adminKey: String(pin).trim(),
-    });
-  } catch (error) {
+      adminKey: credential.trim(),
+    }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch {
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '인증 처리 실패' },
+      { success: false, error: '관리자 인증을 처리하지 못했습니다.' },
       { status: 500 }
     );
   }

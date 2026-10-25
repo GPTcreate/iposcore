@@ -24,19 +24,19 @@ function loadIposFromMock() {
 
 function loadCustomIpos() {
   if (fs.existsSync(customFilePath)) {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(customFilePath, 'utf-8'));
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
+    const parsed = JSON.parse(fs.readFileSync(customFilePath, 'utf-8'));
+    if (!Array.isArray(parsed)) throw new Error('customIpos.json은 종목 배열이어야 합니다.');
+    return parsed;
   }
   return [];
 }
 
 const mockIpos = loadIposFromMock();
 const customIpos = loadCustomIpos();
-const allIpos = [...mockIpos, ...customIpos];
+// Custom records are updates to existing IDs, or new accumulated discoveries.
+const merged = new Map(mockIpos.map(ipo => [ipo.id, ipo]));
+for (const ipo of customIpos) merged.set(ipo.id, ipo);
+const allIpos = [...merged.values()];
 
 console.log(`📊 검증 대상: 총 ${allIpos.length}개 종목 (기본 ${mockIpos.length}개, 커스텀 ${customIpos.length}개)\n`);
 
@@ -52,10 +52,10 @@ for (const ipo of allIpos) {
     seenIds.set(ipo.id, ipo.name);
   }
 
-  if (seenCodes.has(ipo.code)) {
+  if (ipo.code && seenCodes.has(ipo.code)) {
     console.error(`❌ [중복 종목코드] 코드 '${ipo.code}'가 '${seenCodes.get(ipo.code)}'와 '${ipo.name}'에서 중복 사용되었습니다.`);
     hasErrors = true;
-  } else {
+  } else if (ipo.code) {
     seenCodes.set(ipo.code, ipo.name);
   }
 }

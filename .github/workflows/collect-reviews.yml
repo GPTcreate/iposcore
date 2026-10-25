@@ -1,0 +1,182 @@
+name: Sync IPO records, financials and D-1 reviews
+
+on:
+  schedule:
+    # UTC 00:17 / 03:17 / 09:17 = KST 09:17 / 12:17 / 18:17.
+    # Scheduled runs can be delayed or dropped; configuration is not a successful run.
+    # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
+    - cron: '17 0,3,9 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Optional D-1 review selection date in KST; actual collection time is unchanged'
+        required: false
+        type: string
+      stock:
+        description: 'Optional exact IPO ID for reviews only; discovery and financials keep their normal scope'
+        required: false
+        type: string
+      write:
+        description: 'Write and commit allowed data files; false previews discovery/reviews and skips financial writes'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  # Retain the previous group so earlier review-only runs cannot overlap this pipeline.
+  group: ipo-review-snapshots-default-branch
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      DATA_WRITE: ${{ github.event_name == 'schedule' || inputs.write }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          # test:security reads the preserved 9e3b99d authentication baseline.
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+      - name: Verify the default-branch checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          git check-ref-format "refs/heads/$DEFAULT_BRANCH"
+          if [[ "$(git symbolic-ref --quiet --short HEAD)" != "$DEFAULT_BRANCH" ]]; then
+            echo 'Refusing to run the repository data pipeline outside the default branch.' >&2
+            exit 1
+          fi
+      - name: Run fixture checks
+        id: checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:content
+          npm run test:security
+      - name: Require the DART repository secret
+        id: dart_config
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' }}
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${DART_API_KEY//[[:space:]]/}" ]]; then
+            echo '::error::DART_API_KEY is missing. Discovery and financial sync did not run; this pipeline is not successful.'
+            exit 1
+          fi
+      - name: Discover and accumulate new IPO records
+        id: discovery
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' && steps.dart_config.outcome == 'success' }}
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=(--dry-run)
+          if [[ "$DATA_WRITE" == 'true' ]]; then args=(--write); fi
+          npm run sync:ipos -- "${args[@]}"
+      - name: Sync filed metrics and missing listing prices
+        id: financials
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' && steps.dart_config.outcome == 'success' && env.DATA_WRITE == 'true' }}
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The CLI skips price requests for records whose listing results are already stored.
+          npm run sync:financials -- --write
+      - name: Collect actual configured feeds
+        id: collect
+        # Reviews can still use existing records after a DART/configuration failure.
+        # Status checks retain prior failures instead of converting a partial run to success.
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' }}
+        env:
+          REVIEW_DATE: ${{ inputs.date || '' }}
+          REVIEW_STOCK: ${{ inputs.stock || '' }}
+          REVIEW_WRITE: ${{ env.DATA_WRITE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=()
+          if [[ -n "$REVIEW_DATE" ]]; then args+=(--date "$REVIEW_DATE"); fi
+          if [[ -n "$REVIEW_STOCK" ]]; then args+=(--stock "$REVIEW_STOCK"); fi
+          if [[ "$REVIEW_WRITE" == 'true' ]]; then args+=(--write); fi
+          npm run collect:reviews -- "${args[@]}"
+      - name: Validate accumulated records before committing
+        id: validation
+        if: ${{ !cancelled() && env.DATA_WRITE == 'true' && steps.checks.outcome == 'success' }}
+        run: npm run validate:data
+      - name: Preserve data and failed-attempt metadata on the default branch
+        id: commit
+        if: ${{ always() && env.DATA_WRITE == 'true' && steps.checks.outcome == 'success' && steps.validation.outcome == 'success' && (steps.discovery.outcome == 'success' || steps.discovery.outcome == 'failure' || steps.financials.outcome == 'success' || steps.financials.outcome == 'failure' || steps.collect.outcome == 'success' || steps.collect.outcome == 'failure') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git check-ref-format "refs/heads/$DEFAULT_BRANCH"
+          if [[ "$(git symbolic-ref --quiet --short HEAD)" != "$DEFAULT_BRANCH" ]]; then
+            echo 'The checkout is not the repository default branch.' >&2
+            exit 1
+          fi
+          if ! git diff --cached --quiet; then
+            echo 'Refusing to commit an unexpected pre-existing staging area.' >&2
+            exit 1
+          fi
+          git add -- src/data/customIpos.json src/data/reviewSnapshots.json
+          mapfile -t staged < <(git diff --cached --name-only)
+          if [[ "${#staged[@]}" == '0' ]]; then
+            echo 'No allowed data changes to commit.'
+            exit 0
+          fi
+          if [[ "${#staged[@]}" -gt 2 ]]; then
+            echo 'Refusing to commit more than the two allowed data files.' >&2
+            exit 1
+          fi
+          for file in "${staged[@]}"; do
+            case "$file" in
+              src/data/customIpos.json|src/data/reviewSnapshots.json) ;;
+              *) echo 'Refusing to commit a file outside the data allowlist.' >&2; exit 1 ;;
+            esac
+          done
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'data: sync IPO records, financials and review snapshots'
+          git push origin "HEAD:refs/heads/$DEFAULT_BRANCH"
+          # The existing Vercel Git integration must deploy this commit before readers see it.
+          # A successful Git push alone does not confirm that a deployment completed.
+      - name: Record pipeline outcomes
+        if: ${{ always() }}
+        env:
+          CHECKS_OUTCOME: ${{ steps.checks.outcome }}
+          DART_CONFIG_OUTCOME: ${{ steps.dart_config.outcome }}
+          DISCOVERY_OUTCOME: ${{ steps.discovery.outcome }}
+          FINANCIALS_OUTCOME: ${{ steps.financials.outcome }}
+          REVIEWS_OUTCOME: ${{ steps.collect.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' \
+            '## Repository data pipeline' \
+            "Write mode: $DATA_WRITE" \
+            "Fixture/security checks: $CHECKS_OUTCOME" \
+            "DART configuration: $DART_CONFIG_OUTCOME" \
+            "IPO discovery: $DISCOVERY_OUTCOME" \
+            "Financial metrics/listing prices: $FINANCIALS_OUTCOME" \
+            "D-1 reviews: $REVIEWS_OUTCOME" \
+            "Allowed data commit/push: $COMMIT_OUTCOME" \
+            'Read-only dispatches skip financial writes. A commit or push does not confirm a production deployment.' \
+            >> "$GITHUB_STEP_SUMMARY"

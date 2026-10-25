@@ -16,20 +16,27 @@ import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+function repositoryJobRequired() {
+  return NextResponse.json({ success: false, storageStatus: 'repository-job-required', reviewsExecuted: false,
+    error: '운영 금융 자료 변경은 저장소 갱신 작업과 배포가 필요합니다. 이 요청에서는 금융 변경과 리뷰 수집을 실행하지 않았습니다.' }, { status: 409 });
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const forceSync = searchParams.get('forceSync') === 'true';
 
-    // 명시적 forceSync 요청 시에만 실행 (정기 동기화는 일 1회 Vercel Cron /api/cron/update 에서 전담)
+    // 금융 자동 갱신은 저장소 작업이 담당하며, 로컬 명시적 요청만 직접 저장합니다.
     const auth = verifyAdminRequest(request);
     if (forceSync && !auth.authorized) {
       return NextResponse.json({ error: '동기화에는 관리자 권한이 필요합니다.' }, { status: 401 });
     }
+    if (forceSync && process.env.VERCEL) return repositoryJobRequired();
+    let syncSuccess = true;
     if (forceSync) {
-      await syncNewIposFromDart({ days: 30, limit: 15 });
-      await syncListingReturnsForIpos();
-      await crossCheckAndSyncIpos();
+      const discovery = await syncNewIposFromDart({ days: 30, limit: 15 });
+      const prices = await syncListingReturnsForIpos();
+      syncSuccess = discovery.success && prices.success;
     }
 
     const custom = loadServerCustomIpos();
@@ -37,7 +44,7 @@ export async function GET(request: Request) {
     const allIpos = getAllEffectiveIpos();
     const ipos = auth.authorized ? allIpos : allIpos.filter(isPublicIpo).map(toPublicIpo);
     return NextResponse.json({
-      success: true,
+      success: syncSuccess,
       total: ipos.length,
       ...(auth.authorized ? { customCount: custom.length } : {}),
       ipos,
@@ -55,6 +62,7 @@ export async function POST(request: Request) {
   if (!auth.authorized) {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
   }
+  if (process.env.VERCEL) return repositoryJobRequired();
 
   try {
     const body = await request.json();
@@ -126,7 +134,6 @@ export async function POST(request: Request) {
       const currentAll = getAllEffectiveIpos();
 
       return NextResponse.json({
-        success: true,
         ...syncResult,
         totalIposCount: currentAll.length,
       });
@@ -195,6 +202,7 @@ export async function POST(request: Request) {
         institutionalCompetitionRate: 0,
         lockupCommitmentRate: 0,
         circulatingSupplyRate: 0,
+        pendingForecastFields: ['institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate'],
         totalOfferingAmount: 0,
         marketCapAtIpo: 0,
         aiScore: 0,
@@ -233,6 +241,7 @@ export async function DELETE(request: Request) {
   if (!auth.authorized) {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
   }
+  if (process.env.VERCEL) return repositoryJobRequired();
 
   try {
     const { searchParams } = new URL(request.url);

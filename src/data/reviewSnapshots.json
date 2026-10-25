@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-24T23:45:05.201Z",
+  "updatedAt": "2026-10-25T00:28:10.537Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
       "stockName": "에이엘로봇",
       "subscriptionStart": "2026-10-26",
-      "collectedAt": "2026-10-24T23:45:05.201Z",
-      "lastSuccessfulAt": "2026-10-24T23:45:05.201Z",
+      "collectedAt": "2026-10-25T00:28:10.537Z",
+      "lastSuccessfulAt": "2026-10-25T00:28:10.537Z",
       "status": "empty",
       "reviews": [],
       "channels": [
@@ -38,8 +38,8 @@
       "ipoId": "iam-spac1",
       "stockName": "아이엠기업인수목적1호",
       "subscriptionStart": "2026-10-26",
-      "collectedAt": "2026-10-24T23:45:05.201Z",
-      "lastSuccessfulAt": "2026-10-24T23:45:05.201Z",
+      "collectedAt": "2026-10-25T00:28:10.537Z",
+      "lastSuccessfulAt": "2026-10-25T00:28:10.537Z",
       "status": "success",
       "reviews": [
         {
@@ -53,7 +53,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-10-24T23:45:05.201Z",
+            "fetchedAt": "2026-10-25T00:28:10.537Z",
             "contentHash": "f72ef233a9ee5b330d1cabe8d42ed1c746e1163a36eaf090a68574714dc178f6",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "청약: 아이엠스팩1호(10월 26~27일)",
@@ -71,7 +71,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-10-24T23:45:05.201Z",
+            "fetchedAt": "2026-10-25T00:28:10.537Z",
             "contentHash": "eb40e43f84fc6a6c07a3a2ff861adb70ef24773e99facbfb85a032b8992eb30d",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "다만, 이에스티는 11월 4일(수) 아이엠스팩1호와 동시 상장 예정입니다.",
@@ -89,7 +89,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-10-24T23:45:05.201Z",
+            "fetchedAt": "2026-10-25T00:28:10.537Z",
             "contentHash": "45789e81f8598f2693e1d79c2bbe2bbeb797f55fe7b67555ff372f037b76d144",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "아이엠스팩1호의 상장예정일이 11월 4일(수)이기에 현재 일정대로는 동시 상장 예정입니다.",

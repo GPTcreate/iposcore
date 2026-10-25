@@ -54,10 +54,16 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
   const todayStr = getKstDateString(now);
   const kstHour = getKstHour(now);
 
+  // Discovery cards stay available while their actual subscription dates are unknown.
+  const validDay = (value: string | undefined) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value)
+    && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value);
+
   // 1. 이미 상장일이 도래했거나 지난 경우
-  if (ipo.listingDate && todayStr >= ipo.listingDate) {
+  if (validDay(ipo.listingDate) && todayStr >= ipo.listingDate!) {
     return 'LISTED';
   }
+
+  if (!validDay(ipo.subscriptionStart) || !validDay(ipo.subscriptionEnd)) return ipo.status;
 
   // 2. 청약 마감일이 지났거나, 청약 마감일 당일 16시(청약 마감)가 지난 경우
   const isAfterSubscriptionEnd =
