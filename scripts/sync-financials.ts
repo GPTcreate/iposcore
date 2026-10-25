@@ -1,6 +1,7 @@
 interface FinancialOptions { write: boolean; days: number; help: boolean }
-interface DartResult { success: boolean; updatedCount: number; message: string; errors: unknown[] }
-interface PriceResult { success: boolean; totalCandidates: number; updatedCount: number; skippedCount: number; errors: unknown[] }
+interface PendingFiling { name: string; receiptNo: string; sourceUrl: string; reason: string; evidence: string }
+interface DartResult { success: boolean; updatedCount: number; message: string; errors: unknown[]; pendingCount?: number; pendingStocks?: PendingFiling[] }
+interface PriceResult { success: boolean; totalCandidates: number; updatedCount: number; skippedCount: number; deferredCount?: number; errors: unknown[] }
 export interface FinancialDependencies {
   load: () => unknown[];
   syncDart: (options: { days: number }) => Promise<DartResult>;
@@ -43,10 +44,33 @@ export async function runFinancialSync(options: FinancialOptions, dependencies?:
   const prices = await services.syncPrices();
   // Every changed record was atomically written by addOrUpdateIpo; reload verifies readable source data.
   const stored = services.load();
+  const success = dart.success && prices.success;
+  const pendingCount = (dart.pendingCount || 0) + (prices.deferredCount || 0);
   return {
-    success: dart.success && prices.success, stage: 'complete', dart, prices, customCount: stored.length,
+    success, stage: 'complete', dataStatus: !success ? 'failed' : pendingCount > 0 ? 'pending' : 'complete',
+    pendingCount, dart, prices, customCount: stored.length,
     storageStatus: dart.updatedCount + prices.updatedCount > 0 ? 'local-file-checked' : 'unchanged', deploymentConfirmed: false,
   };
+}
+
+/** Expected publication waits are visible separately from transport, parsing and storage failures. */
+export function formatFinancialSummary(result: Awaited<ReturnType<typeof runFinancialSync>>): string {
+  const cell = (value: string) => value.replace(/[|\r\n<>]/g, ' ').trim();
+  const lines = ['## 금융 자료 갱신', '',
+    `실행: ${result.success ? '정상' : '실패'} · 자료 상태: ${result.dataStatus}`,
+    `갱신 ${result.dart.updatedCount + result.prices.updatedCount}건 · 공시 발표 대기 ${result.dart.pendingCount || 0}건 · 장 마감 대기 ${result.prices.deferredCount || 0}건 · 오류 ${result.dart.errors.length + result.prices.errors.length}건`,
+    ''];
+  if (result.dart.pendingStocks?.length) {
+    lines.push('발표 대기는 공시 본문의 미확정 안내를 확인한 상태이며, 미발표 값을 만들지 않습니다.', '', '| 종목 | 상태 | 원문 |', '| --- | --- | --- |');
+    for (const pending of result.dart.pendingStocks) {
+      const receipt = /^\d{14}$/.test(pending.receiptNo) ? pending.receiptNo : '';
+      const url = receipt ? `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${receipt}` : '';
+      lines.push(`| ${cell(pending.name)} | ${cell(pending.reason)} | ${url ? `[공시](${url})` : '확인 필요'} |`);
+    }
+    lines.push('');
+  }
+  if (!result.success) lines.push('실패 항목은 로그에서 확인하세요. 기존 값을 보존했으며 정상 갱신으로 처리하지 않았습니다.', '');
+  return `${lines.join('\n')}\n`;
 }
 
 export async function main(args = process.argv.slice(2)): Promise<void> {
@@ -57,6 +81,12 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
   }
   const result = await runFinancialSync(options);
   console.log(JSON.stringify(result, null, 2));
+  if (process.env.GITHUB_STEP_SUMMARY || process.env.GITHUB_OUTPUT) {
+    const { appendFileSync } = await import('node:fs');
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, formatFinancialSummary(result), 'utf8');
+    if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT,
+      `financial_data_status=${result.dataStatus}\nfinancial_pending_count=${result.pendingCount}\nfinancial_error_count=${result.dart.errors.length + result.prices.errors.length}\n`, 'utf8');
+  }
   if (!result.success) process.exitCode = 1;
 }
 

@@ -328,7 +328,7 @@ export const MOCK_IPOS: IpoItem[] = [
   {
     "id": "dts-tech",
     "name": "디티에스",
-    "code": "284010",
+    "code": "0015M0",
     "market": "KOSDAQ",
     "status": "WAITING_LISTING",
     "subscriptionStart": "2026-10-13",

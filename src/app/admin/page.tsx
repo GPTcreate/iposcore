@@ -988,16 +988,15 @@ https://iposcore.kr/ipo/${ipo.id}`;
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-bold mb-1">확인한 종목코드 (6자리) *</label>
+                  <label className="block text-gray-700 font-bold mb-1">확인한 종목코드 (영숫자 6자리) *</label>
                   <input
                     type="text"
                     maxLength={6}
-                    pattern="[0-9]{6}"
-                    inputMode="numeric"
+                    pattern="[0-9A-Z]{6}"
                     required
-                    placeholder="예: 474170"
+                    placeholder="예: 0015M0"
                     value={manualIpoForm.code}
-                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, code: e.target.value })}
+                    onChange={(e) => setManualIpoForm({ ...manualIpoForm, code: e.target.value.toUpperCase() })}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-hidden"
                   />
                 </div>

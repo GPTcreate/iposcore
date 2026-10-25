@@ -12,6 +12,7 @@ import { IpoItem } from '@/types/ipo';
 import { verifyAdminRequest } from '@/lib/adminAuth';
 import { isPublicIpo, toPublicIpo } from '@/lib/publicIpo';
 import { loadServerReviewArchive } from '@/lib/reviewArchiveServer';
+import { normalizeStockCode } from '@/lib/stockCode';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -159,7 +160,8 @@ export async function POST(request: Request) {
         && /^\d{4}-\d{2}-\d{2}$/.test(value)
         && Number.isFinite(Date.parse(value))
         && new Date(value).toISOString().slice(0, 10) === value;
-      if (typeof name !== 'string' || !name.trim() || typeof code !== 'string' || !/^\d{6}$/.test(code)
+      const stockCode = normalizeStockCode(code);
+      if (typeof name !== 'string' || !name.trim() || !stockCode
         || !['KOSPI', 'KOSDAQ'].includes(market)
         || typeof underwriterName !== 'string' || !underwriterName.trim()
         || !Number.isFinite(Number(priceBandMin)) || Number(priceBandMin) <= 0
@@ -168,10 +170,9 @@ export async function POST(request: Request) {
         || !validDate(subscriptionStart) || !validDate(subscriptionEnd) || !validDate(refundDate)
         || subscriptionStart > subscriptionEnd || subscriptionEnd > refundDate
         || (listingDate && (!validDate(listingDate) || listingDate < refundDate))) {
-        return NextResponse.json({ error: '확인된 종목명·6자리 코드·시장·공모밴드·주관사·수수료·청약/환불일을 입력하세요. 없는 값은 자동 생성하지 않습니다.' }, { status: 400 });
+        return NextResponse.json({ error: '확인된 종목명·6자리 영숫자 코드·시장·공모밴드·주관사·수수료·청약/환불일을 입력하세요. 없는 값은 자동 생성하지 않습니다.' }, { status: 400 });
       }
       const cleanName = name.replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '').trim();
-      const stockCode = code;
       const pMin = Number(priceBandMin);
       const pMax = Number(priceBandMax);
       const defaultStart = subscriptionStart;

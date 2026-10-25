@@ -52,6 +52,7 @@ export function getAllIpos(): IpoItem[] {
  * 이전 임시 종목코드 호환용 별칭 맵 (이전 북마크나 외부 링크 유입 시 정상 접근 보장)
  */
 export const LEGACY_CODE_ALIASES: Record<string, string> = {
+  '284010': 'dts-tech', // 디티에스의 이전 미확인 코드. 공식 KRX 코드는 0015M0.
   '372100': 'intellivix', // 인텔리빅스 (과거 정정 전 코드)
   '377480': 'melcon',     // 멜콘
   '252540': 'jincostec',  // 진코스텍

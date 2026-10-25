@@ -57,6 +57,8 @@ export async function GET(request: Request) {
       confirmedUpdatedCount: confirmedSync.updatedCount,
       confirmedUpdatedStocks: confirmedSync.updatedStocks,
       confirmedErrors: confirmedSync.errors,
+      confirmedPendingCount: confirmedSync.pendingCount,
+      confirmedPendingStocks: confirmedSync.pendingStocks,
       crossCheck: {
         updatedCount: 0,
         updatedStocks: [],

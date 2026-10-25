@@ -259,9 +259,9 @@
   {
     "id": "dts-tech",
     "name": "디티에스",
-    "code": "284010",
+    "code": "0015M0",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-13",
     "subscriptionEnd": "2026-10-14",
     "refundDate": "2026-10-16",
@@ -283,7 +283,7 @@
     ],
     "institutionalCompetitionRate": 983.98,
     "generalCompetitionRate": 986.89,
-    "lockupCommitmentRate": 61,
+    "lockupCommitmentRate": 13.31,
     "circulatingSupplyRate": 15.12,
     "totalOfferingAmount": 412,
     "marketCapAtIpo": 2338,
@@ -294,16 +294,16 @@
       "proportionalCompetitionRate": 1973.78
     },
     "aiSummary": {
-      "headline": "공모가 18,500원 확정 & 일반 경쟁률 987:1 (비례 1,974:1) 흥행 마감! 10월 23일 코스닥 상장",
+      "headline": "디티에스 상장 완료! 시초가 32,350원(+74.9%), 종가 26,950원(+45.7%) 기록",
       "bulletPoints": [
         "통합 일반 청약 최종 경쟁률 986.89:1 (비례배정 경쟁률 1,973.78:1) 기록, 청약 증거금 약 5조 868억원 유입",
-        "확정 공모가 18,500원 (희망밴드 12,000~14,000원 대폭 초과), 최종 의무보유확약 비율 61.0% 고배정",
-        "균등 배정 1인당 약 1.16주 (기본 1주 + 16% 추첨 2주), 10월 16일 환불 완료 후 10월 23일(금) 코스닥 신규 상장 대기",
+        "확정 공모가 18,500원, 수요예측 신청수량 기준 의무보유확약률 13.31% (최종 배정 기준과 구분)",
+        "등록된 균등 배정 약 1.16주, 환불일 10월 16일·상장일 10월 23일",
         "주관사별 경쟁률: 대신증권 일반 998.39:1 (비례 1,996.77:1), 유진투자증권 일반 883.39:1 (비례 1,766.81:1)"
       ],
       "positivePoints": [
         "조선 슈퍼사이클 진입에 따른 탄탄한 3년치 일감 확보",
-        "최종 의무보유확약 비율 61.0% 배정으로 상장일 기관 유통 출회 물량 방어",
+        "수요예측 신청수량 중 확약 218,871,000주 / 전체 1,644,913,000주",
         "수익성 높은 특수선용 열교환기 믹스 개선"
       ],
       "riskPoints": [
@@ -311,12 +311,12 @@
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 70,
-      "neutralRatio": 23,
-      "cautionRatio": 7
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
     },
     "expertReviews": [],
-    "aiScore": 89,
+    "aiScore": 86,
     "scoreGrade": "S",
     "discovery": {
       "corpCode": "00534729",
@@ -324,6 +324,17 @@
       "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
       "receivedAt": "2026-10-12",
       "reportName": "[발행조건확정]증권신고서(지분증권)"
+    },
+    "openingPrice": 32350,
+    "openingReturnRate": 74.9,
+    "closingPrice": 26950,
+    "closingReturnRate": 45.7,
+    "fieldEvidence": {
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 수요예측 신청수량 기준 · 기간별 확약수량/전체 신청수량 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-10-25T01:42:27.329Z"
+      }
     }
   },
   {
@@ -348,7 +359,7 @@
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 27.4,
+    "circulatingSupplyRate": 30.38,
     "totalOfferingAmount": 360,
     "marketCapAtIpo": 2413,
     "aiSummary": {
@@ -404,7 +415,7 @@
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 23.8,
+    "circulatingSupplyRate": 29.47,
     "totalOfferingAmount": 538,
     "marketCapAtIpo": 2458,
     "aiSummary": {
@@ -959,7 +970,7 @@
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 28.5,
+    "circulatingSupplyRate": 34.06,
     "totalOfferingAmount": 234,
     "marketCapAtIpo": 1798,
     "aiScore": 75,
@@ -1015,7 +1026,7 @@
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 25,
+    "circulatingSupplyRate": 37.03,
     "totalOfferingAmount": 650,
     "marketCapAtIpo": 5950,
     "aiScore": 75,
@@ -1519,7 +1530,7 @@
     "underwriters": [],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "circulatingSupplyRate": 29.07,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
     "aiScore": 0,
@@ -1538,8 +1549,7 @@
     "expertReviews": [],
     "pendingForecastFields": [
       "institutionalCompetitionRate",
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
+      "lockupCommitmentRate"
     ]
   },
   {
@@ -1615,7 +1625,7 @@
     "underwriters": [],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "circulatingSupplyRate": 36.81,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
     "aiScore": 0,
@@ -1634,8 +1644,7 @@
     "expertReviews": [],
     "pendingForecastFields": [
       "institutionalCompetitionRate",
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
+      "lockupCommitmentRate"
     ]
   },
   {
@@ -1662,8 +1671,8 @@
     "confirmedPrice": 17000,
     "underwriters": [],
     "institutionalCompetitionRate": 1000.07,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "lockupCommitmentRate": 0.87,
+    "circulatingSupplyRate": 31.7,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
     "aiScore": 0,
@@ -1680,10 +1689,14 @@
       "cautionRatio": null
     },
     "expertReviews": [],
-    "pendingForecastFields": [
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
-    ]
+    "pendingForecastFields": [],
+    "fieldEvidence": {
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 수요예측 신청수량 기준 · 기간별 확약수량/전체 신청수량 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000246",
+        "checkedAt": "2026-10-25T01:42:27.329Z"
+      }
+    }
   },
   {
     "id": "dart-01783687",
@@ -1901,7 +1914,7 @@
     "confirmedPrice": 2000,
     "underwriters": [],
     "institutionalCompetitionRate": 1228.38,
-    "lockupCommitmentRate": 0,
+    "lockupCommitmentRate": 0.24,
     "circulatingSupplyRate": 97.45,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
@@ -1919,9 +1932,14 @@
       "cautionRatio": null
     },
     "expertReviews": [],
-    "pendingForecastFields": [
-      "lockupCommitmentRate"
-    ]
+    "pendingForecastFields": [],
+    "fieldEvidence": {
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 수요예측 신청수량 기준 · 기간별 확약수량/전체 신청수량 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-10-25T01:42:27.329Z"
+      }
+    }
   },
   {
     "id": "dart-02038432",

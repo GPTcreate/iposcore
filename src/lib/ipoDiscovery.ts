@@ -1,4 +1,5 @@
 import type { IpoEvidenceField, IpoItem } from '../types/ipo';
+import { normalizeStockCode } from './stockCode';
 
 export interface DartFilingItem {
   corp_code: string;
@@ -64,7 +65,7 @@ export function createDiscoveredIpo(filing: DartFilingItem): IpoItem | null {
   return {
     id: `dart-${filing.corp_code}`,
     name: filing.corp_name.replace(/주식회사|유한회사|\(주\)|\(유\)|㈜/g, '').trim(),
-    code: /^\d{6}$/.test(filing.stock_code || '') && filing.stock_code !== '000000' ? filing.stock_code! : '',
+    code: normalizeStockCode(filing.stock_code),
     market: 'UNCONFIRMED', status: 'UPCOMING', discovery,
     dataQuality: { status: 'unverified' },
     subscriptionStart: '', subscriptionEnd: '', refundDate: '',
@@ -80,8 +81,9 @@ export function createDiscoveredIpo(filing: DartFilingItem): IpoItem | null {
 export function findIpoForDartFiling(ipos: IpoItem[], filing: DartFilingItem): IpoItem | undefined {
   const byCorp = ipos.find((ipo) => ipo.discovery?.corpCode === filing.corp_code || ipo.id === `dart-${filing.corp_code}`);
   if (byCorp) return byCorp;
-  if (/^\d{6}$/.test(filing.stock_code || '') && filing.stock_code !== '000000') {
-    const byCode = ipos.find((ipo) => ipo.code && ipo.code === filing.stock_code
+  const stockCode = normalizeStockCode(filing.stock_code);
+  if (stockCode) {
+    const byCode = ipos.find((ipo) => ipo.code && ipo.code === stockCode
       && (!ipo.discovery?.corpCode || ipo.discovery.corpCode === filing.corp_code));
     if (byCode) return byCode;
   }

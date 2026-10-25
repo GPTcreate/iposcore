@@ -7,6 +7,7 @@ import ts from 'typescript';
 import * as cheerio from 'cheerio';
 import { createDiscoveredIpo, invalidateChangedIpoEvidence } from '../src/lib/ipoDiscovery';
 import * as discovery from '../src/lib/ipoDiscovery';
+import * as stockCode from '../src/lib/stockCode';
 import type { DartFilingItem } from '../src/lib/ipoDiscovery';
 import type { IpoItem } from '../src/types/ipo';
 import { hasScorableForecast, hasVerifiedField } from '../src/lib/contentQuality';
@@ -44,8 +45,9 @@ function dartFixture(initial: IpoItem) {
   return { module: loaded, writes, current: () => current };
 }
 
-interface DartResult { success: boolean; updatedCount: number; errors: unknown[] }
-interface Parsed { rcpNo: string; corpName: string; confirmedPrice?: number; circulatingSupplyRate?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number }
+interface DartResult { success: boolean; updatedCount: number; errors: unknown[]; pendingCount: number; pendingStocks: { sourceUrl: string; evidence: string; reason: string }[] }
+interface Parsed { rcpNo: string; corpName: string; confirmedPrice?: number; circulatingSupplyRate?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number;
+  publicationPending?: { sourceUrl: string; evidence: string; reason: string } }
 type SyncDart = (options: { apiKey?: string; fetcher: typeof fetch; parseFiling?: (receipt: string) => Promise<Parsed | null> }) => Promise<DartResult>;
 
 test('latest unchanged 1266/95.42/0 metrics never fall back to an older different filing', async () => {
@@ -79,6 +81,67 @@ test('unparseable latest filing records failure and cannot overwrite with an old
   assert.equal(result.errors.length, 1);
   assert.deepEqual(receipts, ['20261024000002']);
   assert.equal(fixture.writes.length, 0);
+});
+
+const publicationPending = {
+  reason: '공모가와 수요예측 결과가 최종 결정 전임을 공시에 명시',
+  evidence: '확정공모가액은 수요예측 후 대표주관회사와 발행회사가 협의하여 결정할 예정입니다.',
+  sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${filing().rcept_no}`,
+};
+
+test('explicit unpublished evidence is normal pending without manufacturing numbers or writing a record', async () => {
+  const initial = createDiscoveredIpo(filing())!;
+  const fixture = dartFixture(initial);
+  const result = await (fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart)({ apiKey: 'fixture-key',
+    fetcher: (async () => Response.json({ status: '000', list: [filing()] })) as typeof fetch,
+    parseFiling: async (receipt) => ({ rcpNo: receipt, corpName: '', publicationPending }) });
+  assert.equal(result.success, true);
+  assert.equal(result.pendingCount, 1);
+  assert.equal(result.errors.length, 0);
+  assert.equal(result.updatedCount, 0);
+  assert.equal(result.pendingStocks[0].sourceUrl, publicationPending.sourceUrl);
+  assert.equal(result.pendingStocks[0].evidence, publicationPending.evidence);
+  assert.equal(fixture.writes.length, 0);
+  assert.deepEqual(fixture.current(), initial);
+});
+
+test('a disclosed float can persist alongside publication pending while other unknown inputs stay pending', async () => {
+  const initial = createDiscoveredIpo(filing())!;
+  const fixture = dartFixture(initial);
+  const result = await (fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart)({ apiKey: 'fixture-key',
+    fetcher: (async () => Response.json({ status: '000', list: [filing()] })) as typeof fetch,
+    parseFiling: async (receipt) => ({ rcpNo: receipt, corpName: '', circulatingSupplyRate: 25.5, publicationPending }) });
+  assert.equal(result.success, true);
+  assert.equal(result.pendingCount, 1);
+  assert.equal(result.updatedCount, 1);
+  assert.equal(result.errors.length, 0);
+  assert.equal(fixture.writes.length, 1);
+  assert.equal(fixture.current().circulatingSupplyRate, 25.5);
+  assert.equal(fixture.current().lockupCommitmentRate, 0);
+  assert.equal(fixture.current().institutionalCompetitionRate, 0);
+  assert.deepEqual(fixture.current().pendingForecastFields, ['institutionalCompetitionRate', 'lockupCommitmentRate']);
+  assert.equal(hasScorableForecast(fixture.current()), false);
+});
+
+test('absent or invalid publication evidence remains a real extraction failure', async () => {
+  const metadataOnly = { rcpNo: filing().rcept_no, corpName: '' };
+  const invalid: (Parsed | null)[] = [null, metadataOnly,
+    { ...metadataOnly, publicationPending: { ...publicationPending, reason: '' } },
+    { ...metadataOnly, publicationPending: { ...publicationPending, evidence: '  ' } },
+    { ...metadataOnly, publicationPending: { ...publicationPending, sourceUrl: 'https://example.invalid/unpublished' } },
+    { ...metadataOnly, publicationPending: { ...publicationPending, sourceUrl: 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261024000002' } },
+  ];
+  for (const parsed of invalid) {
+    const fixture = dartFixture(createDiscoveredIpo(filing())!);
+    const result = await (fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart)({ apiKey: 'fixture-key',
+      fetcher: (async () => Response.json({ status: '000', list: [filing()] })) as typeof fetch,
+      parseFiling: async () => parsed });
+    assert.equal(result.success, false);
+    assert.equal(result.pendingCount, 0);
+    assert.equal(result.errors.length, 1);
+    assert.equal(result.updatedCount, 0);
+    assert.equal(fixture.writes.length, 0);
+  }
 });
 
 test('unpublished zero lockup cannot score after only competition and float were parsed', async () => {
@@ -181,6 +244,37 @@ test('fchart selects the exact listing day rather than the oldest candle', async
   });
   assert.equal(result!.tradeDate, '2026-10-20');
   assert.equal(result!.openingPrice, 2000);
+});
+
+test('alphanumeric KRX short codes survive discovery, price requests and matching', async () => {
+  assert.equal(stockCode.isStockCode('0015M0'), true);
+  assert.equal(stockCode.normalizeStockCode('0015m0'), '0015M0');
+  for (const invalid of ['0015-M0', '0015M', '0015M00', '000000', '0015/0']) assert.equal(stockCode.normalizeStockCode(invalid), '');
+  const created = createDiscoveredIpo(filing({ stock_code: '0015M0' }))!;
+  assert.equal(created.code, '0015M0');
+  assert.equal(discovery.findIpoForDartFiling([{ ...created, discovery: undefined }], filing({ stock_code: '0015M0', corp_name: '법인명 표기 변경' }))!.id, created.id);
+  const fixture = priceFixture(created);
+  const urls: string[] = [];
+  const result = await (fixture.module.fetchStockListingPrices as unknown as FetchPrices)('0015M0', '2026-10-23', {
+    fetcher: async (url) => { urls.push(url); return '<item data="20261023|32350|40750|23850|26950|21790647"/>'; },
+  });
+  assert.equal(result!.code, '0015M0');
+  assert.equal(result!.tradeDate, '2026-10-23');
+  assert.equal(new URL(urls[0]).searchParams.get('symbol'), '0015M0');
+});
+
+test('the former DTS code resolves to the same stable IPO identity after correction', () => {
+  const corrected = fixtureIpo({ id: 'dts-tech', name: '디티에스', code: '0015M0' });
+  const loaded = moduleFixture('src/lib/ipoStore.ts', {
+    '@/data/mockIpo': { MOCK_IPOS: [corrected] }, '@/data/customIpos.json': [],
+    '@/data/reviewSnapshots.json': { version: 1, updatedAt: null, snapshots: {} },
+    './reviewArchive': { normalizeReviewArchive: (value: unknown) => value, getReviewSnapshot: () => undefined },
+    './ipoDiscovery': discovery,
+  });
+  const lookup = loaded.getIpoByIdOrCode as unknown as (code: string) => IpoItem | undefined;
+  assert.equal(lookup('284010')!.id, 'dts-tech');
+  assert.equal(lookup('284010')!.code, '0015M0');
+  assert.equal(lookup('0015M0')!.id, 'dts-tech');
 });
 
 test('recent-session fallback searches for the exact listing day', async () => {
@@ -300,6 +394,7 @@ function routeFixture(relative: string, environment: Record<string, string>, fai
     '@/lib/adminAuth': { verifyAdminRequest: () => ({ authorized }) },
     '@/lib/publicIpo': { isPublicIpo: () => true, toPublicIpo: (item: IpoItem) => item },
     '@/lib/reviewArchiveServer': { loadServerReviewArchive: () => { calls.push('read-reviews'); } },
+    '@/lib/stockCode': stockCode,
     '@/lib/ipoServerStore': {
       loadServerCustomIpos: () => { calls.push('read-custom'); return []; },
       syncNewIposFromDart: async () => { calls.push('discovery'); return { success: !failures.includes('discovery'), filingsCount: 1, newCount: 0, newIpos: [], message: 'fixture' }; },
@@ -363,6 +458,19 @@ test('local explicit portal action remains available and DART discovery failure 
   assert.equal((await response.json()).success, false);
   assert.equal((await (fixture.module.POST as unknown as RouteHandler)(request('sync-crosscheck'))).status, 200);
   assert.equal(fixture.calls.includes('crosscheck'), true);
+});
+
+test('manual IPO registration accepts and normalizes an official alphanumeric code', async () => {
+  const fixture = routeFixture('src/app/api/ipo/route.ts', {});
+  const response = await (fixture.module.POST as unknown as RouteHandler)(new Request('https://example.invalid/api/ipo', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'create', name: '신규등록 테스트', code: '0015m0', market: 'KOSDAQ', priceBandMin: 17000, priceBandMax: 18500,
+      subscriptionStart: '2026-10-13', subscriptionEnd: '2026-10-14', refundDate: '2026-10-16', listingDate: '2026-10-23',
+      underwriterName: '테스트주관사', fee: 2000 }),
+  }));
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).ipo.code, '0015M0');
+  assert.equal(fixture.calls.includes('write-ipo'), true);
 });
 
 test('local forceSync excludes implicit portal writes and reflects financial sync failures', async () => {
