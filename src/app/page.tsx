@@ -12,10 +12,16 @@ import { GUIDE_ARTICLES } from '@/data/guidesData';
 import { IpoStatus } from '@/types/ipo';
 import { TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
 
-// 청약 진행 중이 0건이면 청약 예정을 기본 탭으로, 아니면 청약 진행 중으로 설정
+// 기본 탭 결정 규칙:
+// 1순위: 청약 진행 중 (SUBSCRIPTION)
+// 2순위: 청약 예정 (UPCOMING)
+// 3순위: 상장 대기 (WAITING_LISTING)
+// 4순위: 전체 (ALL)
 function getDefaultTab(ipos: { status: IpoStatus }[]): 'ALL' | IpoStatus {
-  const hasSubscription = ipos.some((i) => i.status === 'SUBSCRIPTION');
-  return hasSubscription ? 'SUBSCRIPTION' : 'UPCOMING';
+  if (ipos.some((i) => i.status === 'SUBSCRIPTION')) return 'SUBSCRIPTION';
+  if (ipos.some((i) => i.status === 'UPCOMING')) return 'UPCOMING';
+  if (ipos.some((i) => i.status === 'WAITING_LISTING')) return 'WAITING_LISTING';
+  return 'ALL';
 }
 
 export default function Home() {
@@ -35,12 +41,11 @@ export default function Home() {
         if (data && Array.isArray(data.ipos)) {
           const registered = data.ipos.filter(isPublicIpo);
           setAllIpos(registered);
-          // API 응답 기준으로 탭 재결정 (URL/세션에 저장된 탭이 없을 때만)
-          const hasStoredTab =
+          // URL 파라미터(?tab=...)로 명시된 탭이 없을 때 기본 탭(1순위 진행중, 2순위 청약예정) 적용
+          const hasUrlTab =
             typeof window !== 'undefined' &&
-            (new URLSearchParams(window.location.search).get('tab') ||
-              sessionStorage.getItem('iposcore_active_tab'));
-          if (!hasStoredTab) {
+            Boolean(new URLSearchParams(window.location.search).get('tab'));
+          if (!hasUrlTab) {
             setFilter(getDefaultTab(registered));
           }
         }
@@ -83,17 +88,11 @@ export default function Home() {
     const restoreActiveTab = () => {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab') as ('ALL' | IpoStatus) | null;
-      const savedTab = sessionStorage.getItem('iposcore_active_tab') as ('ALL' | IpoStatus) | null;
       const validTabs: ('ALL' | IpoStatus)[] = ['ALL', 'SUBSCRIPTION', 'UPCOMING', 'WAITING_LISTING', 'LISTED'];
 
-      const targetTab = tabParam && validTabs.includes(tabParam)
-        ? tabParam
-        : savedTab && validTabs.includes(savedTab)
-        ? savedTab
-        : null;
-
-      if (targetTab) {
-        setFilter(targetTab);
+      // URL에 ?tab= 파라미터가 명시된 경우에만 해당 탭 복원 (직접 접속 시에는 기본 탭 규칙 유지)
+      if (tabParam && validTabs.includes(tabParam)) {
+        setFilter(tabParam);
       }
     };
 
@@ -167,23 +166,24 @@ export default function Home() {
         </div>
 
         {allIpos.length > 0 && <>
-        {/* 필터 탭 (청약 진행 중이 0건일 때는 청약 예정을 앞으로 배치 & 모바일 가로 스크롤 최적화) */}
+        {/* 필터 탭 (1순위 청약 진행 중, 없으면 2순위 청약 예정을 맨 앞에 배치 & 모바일 가로 스크롤 최적화) */}
         <div className="mb-5 space-y-2">
           <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-gray-200/90 text-xs sm:text-sm font-bold overflow-x-auto scrollbar-none touch-pan-x">
             {(() => {
               const subCount = allIpos.filter((i) => i.status === 'SUBSCRIPTION').length;
+              const upCount = allIpos.filter((i) => i.status === 'UPCOMING').length;
               const hasSub = subCount > 0;
               const tabs: { key: 'ALL' | IpoStatus; label: string; count: number }[] = [
-                { key: 'ALL', label: '전체', count: allIpos.filter((i) => i.status !== 'LISTED').length },
                 ...(hasSub
                   ? [
                       { key: 'SUBSCRIPTION' as const, label: '청약 진행 중', count: subCount },
-                      { key: 'UPCOMING' as const, label: '청약 예정', count: allIpos.filter((i) => i.status === 'UPCOMING').length },
+                      { key: 'UPCOMING' as const, label: '청약 예정', count: upCount },
                     ]
                   : [
-                      { key: 'UPCOMING' as const, label: '청약 예정', count: allIpos.filter((i) => i.status === 'UPCOMING').length },
+                      { key: 'UPCOMING' as const, label: '청약 예정', count: upCount },
                       { key: 'SUBSCRIPTION' as const, label: '청약 진행 중', count: 0 },
                     ]),
+                { key: 'ALL' as const, label: '전체', count: allIpos.filter((i) => i.status !== 'LISTED').length },
                 { key: 'WAITING_LISTING', label: '상장 대기', count: allIpos.filter((i) => i.status === 'WAITING_LISTING').length },
                 { key: 'LISTED', label: '상장 완료 (실전 수익률)', count: allIpos.filter((i) => i.status === 'LISTED').length },
               ];
