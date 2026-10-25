@@ -222,7 +222,7 @@ export default function Home() {
         {displayedIpos.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-300 p-10 text-center text-gray-500 shadow-2xs">
             <p className="text-base font-semibold text-gray-700">현재 이 분류에 등록된 종목이 없습니다.</p>
-            <p className="text-sm text-gray-600 mt-2">실제 시장에 청약 종목이 없다는 뜻은 아닙니다. 청약 신청 전 DART 투자설명서와 주관사의 공고를 확인하세요.</p>
+            <p className="text-sm text-gray-600 mt-2">최신 일정은 공시와 주관사 공고에서 확인할 수 있습니다.</p>
             <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm font-bold text-blue-700">
               <a href="https://dart.fss.or.kr/" target="_blank" rel="noopener noreferrer" className="underline">DART 공시 확인</a>
               <Link href="/guides/dart-prospectus-reading-top-3-risk-factors" className="underline">공시 읽는 순서</Link>
@@ -253,9 +253,9 @@ export default function Home() {
 
         <section className="mb-6 rounded-xl border border-blue-200 bg-white p-5 sm:p-7 space-y-3">
           <p className="text-xs font-bold text-blue-700">공시 읽기 사례 · 2026-10-25</p>
-          <h2 className="text-lg sm:text-xl font-bold">4.58%와 95.42%, 공시의 어느 열을 읽었나요?</h2>
-          <p className="text-sm leading-relaxed text-gray-700">아이엠1호스팩의 공시에서 보호예수와 유통가능 물량을 구분하고, 주식 수와 공모가로 유통가능 금액을 다시 계산했습니다. 같은 표의 두 비율을 뒤집어 읽으면 위험 해석이 크게 달라집니다.</p>
-          <Link href="/research/iam-spac1-float" className="inline-block text-sm text-blue-700 font-bold underline">원문과 계산 과정 확인하기 →</Link>
+          <h2 className="text-lg sm:text-xl font-bold">아이엠1호스팩 유통물량 분석</h2>
+          <p className="text-sm text-gray-600">보호예수 4.58%·유통가능 95.42%, 공시에서 확인한 차이</p>
+          <Link href="/research/iam-spac1-float" className="inline-block text-sm text-blue-700 font-bold underline">공시와 분석 보기 →</Link>
         </section>
 
 
@@ -263,21 +263,13 @@ export default function Home() {
         {/* 광고 영역 - 페이지당 딱 1개만 단정하게 배치 */}
         <GoogleAdSlot label="스폰서 안내" className="my-8" />
 
-        <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">같은 경쟁률, 다른 청약 비용</h2>
-          <p className="text-sm text-gray-600 leading-relaxed mb-4">비례 경쟁률만 보고 필요한 자금을 판단하기는 어렵습니다. 공모가와 증거금률을 함께 곱해야 합니다. 아래는 실제 종목과 무관한 계산 예시입니다.</p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left min-w-[420px]">
-              <caption className="sr-only">공모가에 따른 비례 1주 이론 증거금 비교</caption>
-              <thead className="bg-gray-50"><tr><th className="p-3">가정</th><th className="p-3">공모가</th><th className="p-3">비례 경쟁률</th><th className="p-3">1주 이론 증거금</th></tr></thead>
-              <tbody><tr className="border-t border-gray-200"><td className="p-3">사례 A</td><td className="p-3">10,000원</td><td className="p-3">1,000 : 1</td><td className="p-3 font-bold">500만원</td></tr>
-              <tr className="border-t border-gray-200"><td className="p-3">사례 B</td><td className="p-3">30,000원</td><td className="p-3">1,000 : 1</td><td className="p-3 font-bold">1,500만원</td></tr></tbody>
-            </table>
+        <Link href="/calculator" className="my-6 flex items-center justify-between gap-4 rounded-xl border border-gray-300 bg-white p-5 shadow-2xs hover:border-blue-500">
+          <div>
+            <h2 className="text-base font-bold text-gray-900">같은 경쟁률, 다른 청약 비용</h2>
+            <p className="mt-1 text-xs text-gray-600">내 증거금과 수수료로 배정·손익을 계산하세요.</p>
           </div>
-          <p className="text-xs text-gray-600 mt-3 leading-relaxed">증거금률 50% 가정: 공모가 × 비례 경쟁률 × 0.5. 배정 보장 금액이 아니며 청약 단위·한도·잔여주 처리에 따라 실제 배정은 달라집니다. 기관 수요예측 경쟁률을 여기에 넣으면 계산이 맞지 않습니다.</p>
-          <p className="text-sm text-gray-700 mt-3 leading-relaxed">사례 B의 1,500만원을 연 5%로 4일 빌리면 이자는 약 8,219원입니다. 1주 배정, 주가 10% 상승(차익 3,000원), 청약 수수료 2,000원을 가정하면 매도 비용 전에도 약 7,219원 손실입니다. 주가 상승과 순이익은 다를 수 있습니다.</p>
-          <Link href="/calculator" className="inline-block mt-4 text-sm font-bold text-blue-700 underline">내 증거금·대출금으로 손익 비교하기 →</Link>
-        </section>
+          <ChevronRight className="h-5 w-5 shrink-0 text-blue-700" aria-hidden="true" />
+        </Link>
 
         {/* 신규: 공모주 투자 가이드 & 심층 분석 칼럼 추천 섹션 */}
         <section className="my-8 p-6 sm:p-7 rounded-xl border border-gray-300 bg-white shadow-2xs">
@@ -285,21 +277,17 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-blue-700" />
               <h2 className="text-lg font-bold text-gray-900">
-                공모주 실전 투자 가이드 & 심층 분석 칼럼
+                청약 가이드
               </h2>
             </div>
             <Link
               href="/guides"
               className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 group"
             >
-              <span>전체 가이드 보기 ({GUIDE_ARTICLES.length}편 전체)</span>
+              <span>전체 보기 ({GUIDE_ARTICLES.length})</span>
               <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
-
-          <p className="text-xs text-gray-600 mb-5 leading-relaxed">
-            계좌 준비, 공시의 위험요소, 배정 방식, 환불일의 자금 공백을 주제별로 살펴보세요. 각 글은 공식 자료와 직접 따라 계산할 수 있는 예시를 함께 제공합니다.
-          </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
             {GUIDE_ARTICLES.slice(0, 4).map((guide) => (
@@ -380,21 +368,6 @@ export default function Home() {
             </div>
           </div>
         </details>
-
-        <section className="my-8 p-6 rounded-xl border border-gray-300 bg-white shadow-2xs">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">청약 전에 남겨둘 네 가지 기록</h2>
-          <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700 leading-relaxed">
-            <li>최종 투자설명서의 접수번호와 정정 여부: 처음 본 신고서가 현재 유효한 문서인지 확인합니다.</li>
-            <li>기관 수요예측과 일반 청약의 구분: 비례 계산에는 해당 증권사의 비례 경쟁률이 필요합니다.</li>
-            <li>환불일 전후의 자금 잔액: 아직 환불되지 않은 증거금을 다음 청약에 중복 배정하지 않습니다.</li>
-            <li>내가 감당할 손실: 배정 주수, 가격 하락, 이자와 수수료를 함께 계산합니다.</li>
-          </ol>
-          <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold text-blue-700">
-            <Link href="/guides/dart-prospectus-reading-top-3-risk-factors" className="underline">투자설명서 읽기</Link>
-            <Link href="/guides/ipo-refund-period-and-capital-rotation-tips" className="underline">환불일 자금표 만들기</Link>
-            <Link href="/methodology" className="underline">출처와 분석 기준</Link>
-          </div>
-        </section>
 
         {/* 주간 리포트 이메일 알림 신청 */}
         <NewsletterBanner />

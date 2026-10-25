@@ -65,11 +65,11 @@ export default function NewsletterBanner() {
         </div>
 
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
-          매주 월요일 아침, 이번 주 공모주 핵심 리포트를 무료로 받아보세요
+          이번 주 공모주, 이메일로 받아보세요
         </h2>
 
         <p className="text-xs sm:text-sm text-gray-600 max-w-lg mx-auto leading-relaxed">
-          원문 확인을 마친 청약 정보와 공시 읽기 가이드를 보내드립니다. 발송 내용과 일정은 확인된 자료에 따라 달라질 수 있습니다.
+          주간 리포트와 선택한 청약 전날 알림을 받아보세요.
         </p>
 
         {status === 'success' ? (

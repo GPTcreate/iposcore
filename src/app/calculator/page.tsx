@@ -26,13 +26,16 @@ export default function CalculatorPage() {
       <Header />
       <main className="mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
         <div className="rounded-xl border border-gray-300 bg-white p-5 shadow-2xs sm:p-6">
-          <div className="mb-2 inline-flex items-center gap-1.5 rounded bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-800"><Calculator className="h-3.5 w-3.5" /><span>조건을 바꿔 비교하는 청약 계산 도구</span></div>
-          <h1 className="text-2xl font-black sm:text-3xl">공모주 비례배정·대출이자·손익분기 계산기</h1>
-          <p className="mt-2 text-sm leading-relaxed text-gray-600">균등 배정은 0주부터 시작합니다. 비례 경쟁률과 배정 가정을 직접 정하고 대출·거래 비용을 반영해, 주가가 오르거나 내릴 때의 손익을 비교해 보세요.</p>
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-800"><Calculator className="h-3.5 w-3.5" /><span>배정·비용·손익</span></div>
+          <h1 className="text-2xl font-black sm:text-3xl">공모주 청약 계산기</h1>
+          <p className="mt-2 text-sm text-gray-600">청약 조건과 비용을 입력해 배정 가정별 손익을 비교하세요.</p>
         </div>
 
         <IpoCalculator />
 
+        <details className="rounded-xl border border-gray-300 bg-white p-5 shadow-2xs sm:p-6">
+          <summary className="cursor-pointer font-semibold text-gray-700">계산 방식·예시·출처</summary>
+          <div className="mt-5 space-y-5">
         <section className="space-y-4 rounded-xl border border-gray-300 bg-white p-5 text-sm shadow-2xs sm:p-6" aria-labelledby="calculation-method">
           <h2 id="calculation-method" className="text-lg font-bold">계산 공식과 적용 범위</h2>
           <p className="leading-relaxed text-gray-600">아래는 이 도구에서 사용하는 단순화한 계산 모델입니다. 실제 청약 가능 금액, 배정 주수, 이자와 세금은 종목·계좌·금융기관의 조건에 따라 달라집니다. 청약 증거금은 전부 주식 취득대금이 되는 것이 아니며, 미배정 금액은 환불됩니다.</p>
@@ -70,6 +73,8 @@ export default function CalculatorPage() {
           <p className="leading-relaxed text-gray-600">이 도구는 공시나 계좌 정보를 자동 조회하지 않습니다. 투자 수익을 예측하거나 특정 청약을 권유하지 않으며, 청약 단위·한도·추첨, 환불금 재투자, 배정 후 매도일까지의 추가 대출 이자와 개별 과세 사정은 자동 반영하지 않습니다.</p>
           <Link href="/guides/proportional-allocation-and-5-down-6-up-strategy" className="inline-block font-semibold text-blue-700 underline">균등·비례 배정과 단수주 처리 가이드 읽기 →</Link>
         </section>
+          </div>
+        </details>
 
         <GoogleAdSlot label="스폰서 안내" />
         <NewsletterBanner />
