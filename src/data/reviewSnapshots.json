@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-25T08:23:12.859Z",
+  "updatedAt": "2026-10-25T13:43:17.490Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
       "stockName": "에이엘로봇",
       "subscriptionStart": "2026-10-26",
-      "collectedAt": "2026-10-25T08:23:12.859Z",
-      "lastSuccessfulAt": "2026-10-25T08:23:12.859Z",
+      "collectedAt": "2026-10-25T13:43:17.490Z",
+      "lastSuccessfulAt": "2026-10-25T13:43:17.490Z",
       "status": "empty",
       "reviews": [],
       "channels": [
@@ -38,8 +38,8 @@
       "ipoId": "iam-spac1",
       "stockName": "아이엠기업인수목적1호",
       "subscriptionStart": "2026-10-26",
-      "collectedAt": "2026-10-25T08:23:12.859Z",
-      "lastSuccessfulAt": "2026-10-25T08:23:12.859Z",
+      "collectedAt": "2026-10-25T13:43:17.490Z",
+      "lastSuccessfulAt": "2026-10-25T13:43:17.490Z",
       "status": "success",
       "reviews": [
         {
@@ -53,7 +53,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-10-25T08:23:12.859Z",
+            "fetchedAt": "2026-10-25T13:43:17.490Z",
             "contentHash": "30d6885e75c86179f91a0bb8514ad76f66ff3e5932a064cbcafd26367ed0a622",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "다음 주에는 아이엠스팩1호 1종목의 공모주 청약이 진행됩니다.",
@@ -71,7 +71,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-10-25T08:23:12.859Z",
+            "fetchedAt": "2026-10-25T13:43:17.490Z",
             "contentHash": "7256f7735fdb4b3287d87b4e9b792c7e73215af5ab942683a4bafdcaf7bdb936",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "2026년 10월 26일~27일 진행되는 아이엠스팩1호 공모주의 청약 관련 기관경쟁률 등 주요 지표를 분석하고, 균등 및 비례청약 참여 여부를",
@@ -89,7 +89,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-10-25T08:23:12.859Z",
+            "fetchedAt": "2026-10-25T13:43:17.490Z",
             "contentHash": "f72ef233a9ee5b330d1cabe8d42ed1c746e1163a36eaf090a68574714dc178f6",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "청약: 아이엠스팩1호(10월 26~27일)",
@@ -107,7 +107,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-10-25T08:23:12.859Z",
+            "fetchedAt": "2026-10-25T13:43:17.490Z",
             "contentHash": "eb40e43f84fc6a6c07a3a2ff861adb70ef24773e99facbfb85a032b8992eb30d",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "다만, 이에스티는 11월 4일(수) 아이엠스팩1호와 동시 상장 예정입니다.",
@@ -125,7 +125,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-10-25T08:23:12.859Z",
+            "fetchedAt": "2026-10-25T13:43:17.490Z",
             "contentHash": "45789e81f8598f2693e1d79c2bbe2bbeb797f55fe7b67555ff372f037b76d144",
             "matchedAlias": "아이엠스팩1호",
             "excerpt": "아이엠스팩1호의 상장예정일이 11월 4일(수)이기에 현재 일정대로는 동시 상장 예정입니다.",
