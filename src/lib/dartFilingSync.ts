@@ -170,7 +170,7 @@ export async function syncExistingIposWithDartFilings(options?: {
     let totalPages = 1;
     for (let page = 1; page <= totalPages; page++) {
       const dartUrl = `https://opendart.fss.or.kr/api/list.json?crtfc_key=${encodeURIComponent(apiKey)}&bgn_de=${startDate}&end_de=${endDate}&pblntf_ty=C&sort=date&sort_mth=desc&page_no=${page}&page_count=100`;
-      const res = await fetcher(dartUrl, { next: { revalidate: 0 }, signal: AbortSignal.timeout(10000) });
+      const res = await fetcher(dartUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
       if (!res.ok) return failed(`DART 공시 목록 조회 실패: HTTP ${res.status}. 기존 수치를 유지합니다.`);
       const data: DartListResponse = await res.json();
       if (data.status === '013' && page === 1) break;

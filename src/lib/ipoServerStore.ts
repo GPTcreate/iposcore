@@ -121,7 +121,7 @@ export async function syncNewIposFromDart(options?: {
     let totalPages = 1;
     for (let page = 1; page <= totalPages; page++) {
       const dartUrl = `https://opendart.fss.or.kr/api/list.json?crtfc_key=${encodeURIComponent(dartApiKey)}&bgn_de=${startDate}&end_de=${endDate}&pblntf_detail_ty=C001&sort=date&sort_mth=desc&page_no=${page}&page_count=100`;
-      const response = await (options?.fetcher || fetch)(dartUrl, { next: { revalidate: 0 }, signal: AbortSignal.timeout(10000) });
+      const response = await (options?.fetcher || fetch)(dartUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
       if (!response.ok) return { ...emptyResult, message: `DART 서버 응답 오류: HTTP ${response.status}. 기존 자료를 유지합니다.` };
       const data = await response.json() as DartListResponse;
       if (data.status === '013' && page === 1) break;
