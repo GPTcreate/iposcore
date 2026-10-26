@@ -1513,10 +1513,10 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01950720",
-      "receiptNo": "20261026000001",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
+      "receiptNo": "20261026000367",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367",
       "receivedAt": "2026-10-26",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "reportName": "[첨부정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
@@ -2036,5 +2036,53 @@
       "lockupCommitmentRate",
       "circulatingSupplyRate"
     ]
+  },
+  {
+    "id": "dart-02040710",
+    "name": "우리투자제1호기업인수목적",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "02040710",
+      "receiptNo": "20261026000285",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000285",
+      "receivedAt": "2026-10-26",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ],
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": []
   }
 ]

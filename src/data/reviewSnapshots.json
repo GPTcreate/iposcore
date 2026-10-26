@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-25T13:43:17.490Z",
+  "updatedAt": "2026-10-26T16:07:27.748Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -154,6 +154,38 @@
           "status": "success",
           "fetchedCount": 50,
           "matchedCount": 3
+        }
+      ]
+    },
+    "[\"mbd\",\"2026-10-28\"]": {
+      "ipoId": "mbd",
+      "stockName": "엠비디",
+      "subscriptionStart": "2026-10-28",
+      "collectedAt": "2026-10-26T16:07:27.748Z",
+      "lastSuccessfulAt": "2026-10-26T16:07:27.748Z",
+      "status": "empty",
+      "reviews": [],
+      "channels": [
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
         }
       ]
     }
