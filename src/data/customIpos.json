@@ -1513,9 +1513,9 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01950720",
-      "receiptNo": "20261023000486",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000486",
-      "receivedAt": "2026-10-23",
+      "receiptNo": "20261026000001",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
+      "receivedAt": "2026-10-26",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
