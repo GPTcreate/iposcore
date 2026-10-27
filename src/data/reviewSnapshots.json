@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-26T16:07:27.748Z",
+  "updatedAt": "2026-10-27T05:00:17.140Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -161,8 +161,8 @@
       "ipoId": "mbd",
       "stockName": "엠비디",
       "subscriptionStart": "2026-10-28",
-      "collectedAt": "2026-10-26T16:07:27.748Z",
-      "lastSuccessfulAt": "2026-10-26T16:07:27.748Z",
+      "collectedAt": "2026-10-27T05:00:17.140Z",
+      "lastSuccessfulAt": "2026-10-27T05:00:17.140Z",
       "status": "empty",
       "reviews": [],
       "channels": [
