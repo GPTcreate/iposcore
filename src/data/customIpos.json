@@ -2084,5 +2084,149 @@
       "cautionRatio": null
     },
     "expertReviews": []
+  },
+  {
+    "id": "dart-02041694",
+    "name": "신영해피투모로우제12호기업인수목적",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "02041694",
+      "receiptNo": "20261028000471",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
+      "receivedAt": "2026-10-28",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ],
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-01135039",
+    "name": "데스틴파워",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01135039",
+      "receiptNo": "20261028000434",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000434",
+      "receivedAt": "2026-10-28",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ],
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": []
+  },
+  {
+    "id": "dart-00208709",
+    "name": "KTE",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "00208709",
+      "receiptNo": "20261028000336",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000336",
+      "receivedAt": "2026-10-28",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "",
+    "subscriptionEnd": "",
+    "refundDate": "",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ],
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": []
   }
 ]
