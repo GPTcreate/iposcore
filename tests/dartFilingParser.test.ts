@@ -123,6 +123,11 @@ test('parenthetical total shares distinguish listing-day float from later cumula
   assert.equal(body(html.replace('4,218,360', '880,484'), receipt), null);
 });
 
+test('parenthetical description between expected shares and count resolves listing-day float', () => {
+  const html = '<p>당사의 상장예정주식수(금번 공모주식 및 의무인수분 포함) 10,598,414주 중 37.95%에 해당하는 4,021,887주는 상장 직후 유통가능 물량에 해당하며 당사의 최대주주 등의 보유주식 등은 상장 후 일정기간 동안 매각이 제한됩니다.</p>';
+  assert.equal(body(html, receipt)?.circulatingSupplyRate, 37.95);
+});
+
 test('domestic-only commitment data cannot establish the global commitment rate', () => {
   assert.equal(body(fixture('confirmed-current.html').replace('<th colspan="3">합계</th>', '<th colspan="3">국내 기관투자자</th>'), receipt)?.lockupCommitmentRate, undefined);
 });

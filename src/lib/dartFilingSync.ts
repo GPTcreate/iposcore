@@ -77,12 +77,12 @@ function inspectDartFilingBody(html: string, rcpNo: string): { data: DartFilingP
       const number = exactNumber(match[1]); if (number && number <= 100) circulation.push(number);
     }
     // The ratio must describe the same tradable share count and reconcile arithmetically.
-    for (const match of value.matchAll(/상장(?:예정)?주식수(?:는|인)?\s*([\d,]+)\s*주\s*중\s*(?:약\s*)?([\d.]+)\s*%\s*에\s*해당하는\s*([\d,]+)\s*주(?:는|가)?\s*상장\s*(?:직후|일|후)\s*유통\s*가능/g)) {
+    for (const match of value.matchAll(/상장(?:예정)?주식수(?:는|인)?(?:\s*\([^)\r\n]{0,100}\))?\s*([\d,]+)\s*주\s*중\s*(?:약\s*)?([\d.]+)\s*%\s*에\s*해당하는\s*([\d,]+)\s*주(?:는|가)?\s*상장\s*(?:직후|일|후)\s*유통\s*가능/g)) {
       const total = exactNumber(match[1]), ratio = exactNumber(match[2]), tradable = exactNumber(match[3]);
       if (total && tradable && ratio && Number.isInteger(total) && Number.isInteger(tradable) && tradable <= total && ratio <= 100
         && Math.abs(tradable / total * 100 - ratio) <= 0.015) circulation.push(ratio);
     }
-    for (const match of compact(value).matchAll(/상장(?:예정)?주식수(?:는|인)?([\d,]+)주(?:\([^)]{0,100}\))?중상장일유통가능물량은([\d,]+)주\((?:상장일기준)?([\d.]+)%\)/g)) {
+    for (const match of compact(value).matchAll(/상장(?:예정)?주식수(?:는|인)?(?:\([^)]{0,100}\))?([\d,]+)주(?:\([^)]{0,100}\))?중상장일유통가능물량은([\d,]+)주\((?:상장일기준)?([\d.]+)%\)/g)) {
       const total = exactNumber(match[1]), tradable = exactNumber(match[2]), ratio = exactNumber(match[3]);
       if (total && tradable && ratio && Number.isInteger(total) && Number.isInteger(tradable) && tradable <= total && ratio <= 100
         && Math.abs(tradable / total * 100 - ratio) <= 0.015) circulation.push(ratio);

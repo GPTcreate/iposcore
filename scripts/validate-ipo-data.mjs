@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { execFileSync } from 'child_process';
 
 const mockFilePath = path.join(process.cwd(), 'src', 'data', 'mockIpo.ts');
 const customFilePath = path.join(process.cwd(), 'src', 'data', 'customIpos.json');
@@ -110,6 +111,13 @@ for (const ipo of allIpos) {
       }
     }
   }
+}
+
+// 3. 콘텐츠 품질 및 공시 팩트 무결성 감사 실행
+try {
+  execFileSync(process.execPath, [path.join(process.cwd(), 'scripts', 'audit-content-integrity.mjs')], { stdio: 'inherit' });
+} catch (e) {
+  hasErrors = true;
 }
 
 if (hasErrors) {
