@@ -2054,10 +2054,10 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "02041694",
-      "receiptNo": "20261028000471",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
-      "receivedAt": "2026-10-28",
-      "reportName": "증권신고서(지분증권)"
+      "receiptNo": "20261029000239",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239",
+      "receivedAt": "2026-10-29",
+      "reportName": "[첨부정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
