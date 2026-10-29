@@ -892,10 +892,10 @@
     "code": "417970",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-10-26",
-    "subscriptionEnd": "2026-10-27",
-    "refundDate": "2026-10-29",
-    "listingDate": "2026-11-06",
+    "subscriptionStart": "2026-11-06",
+    "subscriptionEnd": "2026-11-09",
+    "refundDate": "2026-11-11",
+    "listingDate": "2026-11-18",
     "priceBandMin": 15700,
     "priceBandMax": 17600,
     "confirmedPrice": 0,
@@ -914,11 +914,10 @@
     "aiScore": 78,
     "scoreGrade": "A",
     "aiSummary": {
-      "headline": "로봇 힘·토크 센서 및 제어 솔루션 에이엘로봇, 10월 26일~27일 청약",
+      "headline": "협동로봇 및 스마트 팩토리 센서 국산화 에이엘로봇, 11월 6일~9일 청약",
       "bulletPoints": [
-        "협동로봇 및 스마트 팩토리 필수 초정밀 센서 융합 시스템 국산화",
-        "희망 공모가 15,700 ~ 17,600원, 청약일: 10월 26일(월) ~ 10월 27일(화)",
-        "환불일: 10월 29일(목), 대표 주관사: 대신증권"
+        "협동로봇 및 스마트 팩토리 필수 초정밀 센서 융합 시스템 국산화 전문 기업",
+        "기관 수요예측(10월 28일~11월 3일) 종료 후 공모가 확정 예정, 대표 주관사: 대신증권"
       ],
       "positivePoints": [],
       "riskPoints": [
@@ -945,10 +944,10 @@
     "code": "417050",
     "market": "KOSDAQ",
     "status": "UPCOMING",
-    "subscriptionStart": "2026-10-28",
-    "subscriptionEnd": "2026-10-29",
-    "refundDate": "2026-11-02",
-    "listingDate": "2026-11-10",
+    "subscriptionStart": "2026-11-12",
+    "subscriptionEnd": "2026-11-13",
+    "refundDate": "2026-11-17",
+    "listingDate": "2026-11-25",
     "priceBandMin": 9600,
     "priceBandMax": 11700,
     "confirmedPrice": 0,
@@ -967,11 +966,10 @@
     "aiScore": 75,
     "scoreGrade": "A",
     "aiSummary": {
-      "headline": "3D 세포배양 맞춤형 약물 반응 예측 플랫폼 엠비디, 10월 28일~29일 청약",
+      "headline": "3D 세포배양 맞춤형 약물 반응 예측 플랫폼 엠비디, 11월 12일~13일 청약",
       "bulletPoints": [
-        "정정 공시 완료: 10월 28일(수) ~ 10월 29일(목) 청약 진행",
-        "희망 공모가 9,600 ~ 11,700원, 환불일: 11월 2일(월), 주관사: 하나증권",
-        "공모주식 전량 신주 발행으로 연구개발 및 글로벌 임상 확장 자금 유입"
+        "3D 세포배양 및 오가노이드 기반 환자 맞춤형 항암제 효능 예측 플랫폼 전문 기업",
+        "기관 수요예측(11월 2일~6일) 종료 후 공모가 확정 예정, 대표 주관사: 하나증권"
       ],
       "positivePoints": [],
       "riskPoints": [
