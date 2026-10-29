@@ -105,9 +105,33 @@ if (enki) {
   }
 }
 
+// 4. 청약 개시일 도래 종목의 공모가 확정 및 일정 유효성 감사 (Stale Schedule Guard)
+// 대한민국 공모주 청약은 확정 공모가 없이 진행될 수 없으므로,
+// 청약 시작일이 도래했는데 공모가가 0원이면 일정이 연기되었거나 누락된 상태임.
+const todayStr = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Seoul',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}).format(new Date());
+
+function inspectScheduleValidity(sourceName, ipos) {
+  for (const ipo of ipos) {
+    if (ipo.isCancelled) continue;
+    if (ipo.subscriptionStart && ipo.subscriptionStart <= todayStr) {
+      if (!ipo.confirmedPrice || ipo.confirmedPrice <= 0) {
+        reportError(sourceName, ipo.name, `[일정 연기 의심 / 공모가 미확정] 청약 시작일(${ipo.subscriptionStart})이 도래했으나 확정 공모가가 0원입니다. DART 정정공시(일정 연기 또는 발행조건확정)를 확인하여 일정을 갱신해야 합니다.`);
+      }
+    }
+  }
+}
+
+inspectScheduleValidity('customIpos.json', customIpos);
+inspectScheduleValidity('mockIpo.ts', mockIpos);
+
 if (auditFailures > 0) {
   console.error(`\n🚨 [감사 실패] 총 ${auditFailures}건의 콘텐츠 무결성 오류가 발견되었습니다. 배포가 중단됩니다.\n`);
   process.exit(1);
 } else {
-  console.log(`✅ [감사 통과] 총 ${customIpos.length}개 종목의 콘텐츠 무결성(금지 문구 부재, SSOT 정합성, DART 팩트 일치) 검증 완료.\n`);
+  console.log(`✅ [감사 통과] 총 ${customIpos.length}개 종목의 콘텐츠 무결성(금지 문구 부재, SSOT 정합성, DART 팩트 일치, 청약일정 유효성) 검증 완료.\n`);
 }

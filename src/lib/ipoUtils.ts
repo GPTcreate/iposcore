@@ -79,6 +79,8 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
   if (!isWeekend && todayStr >= ipo.subscriptionStart && todayStr <= ipo.subscriptionEnd) {
+    // 자본시장법상 공모가 없이 일반 청약은 불가능하므로, 확정 공모가가 없으면 청약 진행 중으로 전이 불가
+    if (!ipo.confirmedPrice || ipo.confirmedPrice <= 0) return 'UPCOMING';
     return 'SUBSCRIPTION';
   }
 

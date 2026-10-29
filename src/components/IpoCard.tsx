@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { IpoItem } from '@/types/ipo';
-import { getEffectiveIpoStatus } from '@/lib/ipoUtils';
+import { getEffectiveIpoStatus, getKstDateString } from '@/lib/ipoUtils';
 import ScoreBadge from './ScoreBadge';
 import { hasVerifiedForecast, isReviewedIpo } from '@/lib/contentQuality';
 import { summarizeReviews } from '@/lib/reviewEvidence';
@@ -17,6 +17,8 @@ export default function IpoCard({ ipo }: IpoCardProps) {
   const effectiveStatus = getEffectiveIpoStatus(ipo);
   const reviews = summarizeReviews(ipo);
   const score = calculateIpoScore(ipo);
+  const todayStr = getKstDateString();
+  const isSchedulePending = Boolean(!ipo.isCancelled && ipo.subscriptionStart && todayStr >= ipo.subscriptionStart && (!ipo.confirmedPrice || ipo.confirmedPrice <= 0));
 
   // 상태별 라벨 및 스타일 (단정하고 눈에 잘 띄는 스타일)
   const getStatusBadge = () => {
@@ -33,6 +35,12 @@ export default function IpoCard({ ipo }: IpoCardProps) {
           className: 'bg-red-600 text-white font-bold'
         };
       case 'UPCOMING':
+        if (isSchedulePending) {
+          return {
+            text: '일정 확인 중',
+            className: 'bg-amber-600 text-white font-bold'
+          };
+        }
         return {
           text: '청약 예정',
           className: 'bg-blue-700 text-white font-semibold'

@@ -3,21 +3,28 @@ import path from 'path';
 
 const DART_API_KEY = process.env.DART_API_KEY || '035394bc3056c32575160716cc7cbd3d44b2fff7';
 const mockFilePath = path.join(process.cwd(), 'src', 'data', 'mockIpo.ts');
+const customFilePath = path.join(process.cwd(), 'src', 'data', 'customIpos.json');
 
 console.log('📡 [DART Disclosures Cross-Check Audit] 금융감독원 DART 공시 전수 대조 감사 시작...\n');
 
-function loadIposFromMock() {
+function loadMergedIpos() {
   const content = fs.readFileSync(mockFilePath, 'utf-8');
   const startMarker = 'export const MOCK_IPOS: IpoItem[] = ';
   const startIdx = content.indexOf(startMarker);
   let jsonStr = content.slice(startIdx + startMarker.length).trim();
-  if (jsonStr.endsWith(';')) {
-    jsonStr = jsonStr.slice(0, -1).trim();
-  }
-  return JSON.parse(jsonStr);
+  if (jsonStr.endsWith(';')) jsonStr = jsonStr.slice(0, -1).trim();
+  const mockIpos = JSON.parse(jsonStr);
+
+  const customIpos = fs.existsSync(customFilePath)
+    ? JSON.parse(fs.readFileSync(customFilePath, 'utf8'))
+    : [];
+
+  const map = new Map(mockIpos.map(i => [i.id, i]));
+  for (const i of customIpos) map.set(i.id, i);
+  return [...map.values()];
 }
 
-const mockIpos = loadIposFromMock();
+const allIpos = loadMergedIpos();
 
 async function runAudit() {
   const today = new Date();
@@ -44,14 +51,27 @@ async function runAudit() {
   console.log(`📑 최근 60일간 DART 유상/공모 지분증권 공시 접수: ${filings.length}건\n`);
 
   let discrepancyCount = 0;
+  const todayStr = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(today);
 
-  for (const ipo of mockIpos) {
+  for (const ipo of allIpos) {
     const matchedFilings = filings.filter((f) => {
       const cleanFilingName = f.corp_name.replace(/(주식회사|\(주\)|\(유\)|주\s)/g, '').trim();
       return cleanFilingName === ipo.name || (f.stock_code && f.stock_code === ipo.code);
     });
 
-    if (matchedFilings.length === 0) continue;
+    if (matchedFilings.length === 0) {
+      // DART 매칭과 무관하게 청약 시작일이 도래했는데 공모가가 0원인 경우 체크
+      if (!ipo.isCancelled && ipo.subscriptionStart && ipo.subscriptionStart <= todayStr && (!ipo.confirmedPrice || ipo.confirmedPrice <= 0)) {
+        console.warn(`🚨 [공모가 미확정 상태 청약 도래] '${ipo.name}': 청약 시작일(${ipo.subscriptionStart})이 도래했으나 확정 공모가가 0원입니다. 일정 연기 여부를 점검하십시오.`);
+        discrepancyCount++;
+      }
+      continue;
+    }
 
     const latest = matchedFilings[0];
     const isWithdrawal = latest.report_nm.includes('철회');
@@ -73,6 +93,18 @@ async function runAudit() {
     // 3. 발행조건확정 공시가 있는데 DB 공모가가 0원인 경우
     if (isPriceConfirmed && (!ipo.confirmedPrice || ipo.confirmedPrice === 0)) {
       console.warn(`🚨 [확정 공모가 미반영] '${ipo.name}': DART 발행조건확정(${latest.rcept_dt}) 접수됨. (현재 DB 공모가: 0원)`);
+      discrepancyCount++;
+    }
+
+    // 4. 기재정정 공시가 접수되었는데 접수번호가 DB의 discovery.receiptNo보다 최신인 경우
+    if (latest.report_nm.includes('기재정정') && ipo.discovery?.receiptNo && latest.rcept_no > ipo.discovery.receiptNo) {
+      console.warn(`⚠️ [정정공시 발생 (일정/조건 변경 가능성)] '${ipo.name}': 최신 정정공시(${latest.report_nm}, ${latest.rcept_dt}) 접수됨. (현재 기록: ${ipo.discovery.receiptNo})`);
+      discrepancyCount++;
+    }
+
+    // 5. 청약 시작일이 도래했으나 확정 공모가가 0원인 경우
+    if (!ipo.isCancelled && ipo.subscriptionStart && ipo.subscriptionStart <= todayStr && (!ipo.confirmedPrice || ipo.confirmedPrice <= 0)) {
+      console.warn(`🚨 [공모가 미확정 상태 청약 도래] '${ipo.name}': 청약 시작일(${ipo.subscriptionStart})이 도래했으나 확정 공모가가 0원입니다. 일정 연기 여부를 점검하십시오.`);
       discrepancyCount++;
     }
   }
