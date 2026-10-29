@@ -1107,7 +1107,7 @@
     "listingDate": "2026-11-18",
     "priceBandMin": 10000,
     "priceBandMax": 12000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 12000,
     "underwriters": [
       {
         "name": "한국투자증권",
@@ -1115,8 +1115,8 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
+    "institutionalCompetitionRate": 1201.81,
+    "lockupCommitmentRate": 5.62,
     "circulatingSupplyRate": 22.71,
     "totalOfferingAmount": 264,
     "marketCapAtIpo": 1148,
@@ -1141,10 +1141,10 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01658035",
-      "receiptNo": "20261021000210",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000210",
-      "receivedAt": "2026-10-21",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261029000504",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000504",
+      "receivedAt": "2026-10-29",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
     }
   },
   {
