@@ -346,7 +346,6 @@
     "subscriptionStart": "2026-11-02",
     "subscriptionEnd": "2026-11-03",
     "refundDate": "2026-11-05",
-    "listingDate": "2026-11-12",
     "priceBandMin": 16400,
     "priceBandMax": 20200,
     "confirmedPrice": 0,
@@ -363,10 +362,8 @@
     "totalOfferingAmount": 360,
     "marketCapAtIpo": 2413,
     "aiSummary": {
-      "headline": "전국 약국 80% 점유 의약품 B2B 플랫폼 바로팜, 11월 2일~3일 청약 연기 확정",
+      "headline": "바로팜 공모 일정과 공시 자료",
       "bulletPoints": [
-        "정정 공시 반영: 청약 일정이 11월 2일(월) ~ 11월 3일(화)로 최종 확정",
-        "희망 공모가 16,400 ~ 20,200원, 환불일: 11월 5일(목), 주관사: 미래에셋증권",
         "약국 원스톱 주문 SaaS 락인 효과와 제약 광고·커머스 고성장세"
       ],
       "positivePoints": [
@@ -410,15 +407,37 @@
         "publishedAt": "2026-10-15",
         "excerpt": "청약기일 | 2026.11.02 ~ 2026.11.03",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "바로팜 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000345",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
+        "value": "2026-11-05",
+        "publishedAt": "2026-10-15",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일 2026년 11월 05일(목)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "바로팜 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000345",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
+        "value": null,
+        "publishedAt": "2026-10-15",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:30:19.522Z",
+      "checkedAt": "2026-10-30T05:42:18.635Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -472,29 +491,29 @@
     "scoreGrade": "A",
     "discovery": {
       "corpCode": "00784184",
-      "receiptNo": "20261023000331",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000331",
-      "receivedAt": "2026-10-23",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261030000113",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000113",
+      "receivedAt": "2026-10-30",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "동원파츠 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000331",
-        "checkedAt": "2026-10-30T02:30:19.522Z",
+        "sourceTitle": "동원파츠 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000113",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
         "value": "2026-11-02",
-        "publishedAt": "2026-10-23",
+        "publishedAt": "2026-10-30",
         "excerpt": "청약기일 | 2026년 11월 02일 ~ 2026년 11월 03일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v2"
       },
       "subscriptionEnd": {
-        "sourceTitle": "동원파츠 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000331",
-        "checkedAt": "2026-10-30T02:30:19.522Z",
+        "sourceTitle": "동원파츠 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000113",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
         "value": "2026-11-03",
-        "publishedAt": "2026-10-23",
+        "publishedAt": "2026-10-30",
         "excerpt": "청약기일 | 2026년 11월 02일 ~ 2026년 11월 03일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
@@ -1144,7 +1163,6 @@
     "subscriptionStart": "2026-11-06",
     "subscriptionEnd": "2026-11-09",
     "refundDate": "2026-11-11",
-    "listingDate": "2026-11-18",
     "priceBandMin": 15700,
     "priceBandMax": 17600,
     "confirmedPrice": 0,
@@ -1163,10 +1181,9 @@
     "aiScore": 78,
     "scoreGrade": "A",
     "aiSummary": {
-      "headline": "협동로봇 및 스마트 팩토리 센서 국산화 에이엘로봇, 11월 6일~9일 청약",
+      "headline": "에이엘로봇 공모 일정과 공시 자료",
       "bulletPoints": [
-        "협동로봇 및 스마트 팩토리 필수 초정밀 센서 융합 시스템 국산화 전문 기업",
-        "기관 수요예측(10월 28일~11월 3일) 종료 후 공모가 확정 예정, 대표 주관사: 대신증권"
+        "협동로봇 및 스마트 팩토리 필수 초정밀 센서 융합 시스템 국산화 전문 기업"
       ],
       "positivePoints": [],
       "riskPoints": [
@@ -1181,38 +1198,60 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01797635",
-      "receiptNo": "20261012000490",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000490",
-      "receivedAt": "2026-10-12",
+      "receiptNo": "20261030000140",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000140",
+      "receivedAt": "2026-10-30",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "에이엘로봇 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000490",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "에이엘로봇 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000140",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
         "value": "2026-11-06",
-        "publishedAt": "2026-10-12",
+        "publishedAt": "2026-10-30",
         "excerpt": "청약기일 | 2026년 11월 06일 ~ 2026년 11월 09일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v2"
       },
       "subscriptionEnd": {
-        "sourceTitle": "에이엘로봇 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000490",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "에이엘로봇 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000140",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
         "value": "2026-11-09",
-        "publishedAt": "2026-10-12",
+        "publishedAt": "2026-10-30",
         "excerpt": "청약기일 | 2026년 11월 06일 ~ 2026년 11월 09일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v2"
+      },
+      "refundDate": {
+        "sourceTitle": "에이엘로봇 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000140",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
+        "value": "2026-11-11",
+        "publishedAt": "2026-10-30",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입일 당일 2026년 11월 11일(수)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "에이엘로봇 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000140",
+        "checkedAt": "2026-10-30T05:42:18.635Z",
+        "value": null,
+        "publishedAt": "2026-10-30",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "checkedAt": "2026-10-30T05:42:18.635Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -1469,13 +1508,10 @@
       }
     },
     "scheduleVerification": {
-      "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "status": "unavailable",
+      "checkedAt": "2026-10-30T05:42:18.635Z",
       "conflicts": [],
-      "coveredFields": [
-        "subscriptionStart",
-        "subscriptionEnd"
-      ]
+      "coveredFields": []
     }
   },
   {
