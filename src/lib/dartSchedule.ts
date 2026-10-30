@@ -1,5 +1,6 @@
 import { load } from 'cheerio';
 import type { AnyNode } from 'domhandler';
+import { fetchOfficialText } from './officialHttp';
 
 export const DART_SCHEDULE_PARSER_VERSION = 'dart-schedule-v3';
 export type DartScheduleField = 'subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate';
@@ -247,27 +248,15 @@ export async function fetchDartSchedule(receiptNo: string, options: { fetcher?: 
   const budget = Math.max(0, Math.min(3, Math.floor(options.maxRequests ?? 3)));
   let requestCount = 0;
   const get = async (url: string, limit: number): Promise<string> => {
-    if (requestCount >= budget) throw new Error('공시 요청 예산을 초과했습니다.');
-    requestCount++;
-    const response = await fetcher(url, { redirect: 'manual', cache: 'no-store', signal: AbortSignal.timeout(10_000), headers: { 'User-Agent': 'IPOScore/1.0' } });
-    if (!response.ok || response.status >= 300 || response.headers.get('location')) throw new Error('공시 조회 또는 리다이렉트가 거부되었습니다.');
-    if (response.url && response.url !== url) throw new Error('공시 응답 주소가 요청과 다릅니다.');
-    const declared = Number(response.headers.get('content-length'));
-    if (Number.isFinite(declared) && declared > limit) throw new Error('공시 응답 크기 제한을 초과했습니다.');
-    if (!response.body) return '';
-    const reader = response.body.getReader(), chunks: Uint8Array[] = [];
-    let bytes = 0;
-    while (true) {
-      const next = await reader.read();
-      if (next.done) break;
-      bytes += next.value.byteLength;
-      if (bytes > limit) { await reader.cancel(); throw new Error('공시 응답 크기 제한을 초과했습니다.'); }
-      chunks.push(next.value);
-    }
-    const body = new Uint8Array(bytes);
-    let at = 0;
-    for (const chunk of chunks) { body.set(chunk, at); at += chunk.byteLength; }
-    return new TextDecoder().decode(body);
+    const { response, text } = await fetchOfficialText(url, { maxBytes: limit,
+      init: { redirect: 'manual', cache: 'no-store', headers: { 'User-Agent': 'IPOScore/1.0' } },
+      fetcher: async (input, init) => {
+        if (requestCount >= budget) throw new Error('공시 요청 예산을 초과했습니다.');
+        requestCount++;
+        return fetcher(input, init);
+      } });
+    if (response.status === 304) throw new Error('공시 본문 없는 응답');
+    return text;
   };
   try {
     const main = await get(sourceUrl(receiptNo), 1_000_000);

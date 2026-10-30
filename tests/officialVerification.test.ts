@@ -165,6 +165,37 @@ test('transport failures back off, preserve data and suppress duplicate notices;
   assert(limited.requestCount <= 1);
 });
 
+test('transient retries share the global HTTP budget and cannot exceed it', async () => {
+  let calls = 0;
+  const limited = await verifyOfficialSchedules([ipo()], emptyVerificationArchive(), { now, maxRequests: 1,
+    fetcher: async () => { calls++; throw new TypeError('fetch failed', { cause: { code: 'ECONNRESET' } }); } });
+  assert.equal(calls, 1); assert.equal(limited.requestCount, 1);
+  assert.equal(limited.ipos[0].listingDate, ipo().listingDate);
+});
+
+test('only healthy caches parsed by the current version can send conditional headers or reuse 304', async () => {
+  const item = ipo(); item.discovery = undefined;
+  const first = await verifyOfficialSchedules([item], emptyVerificationArchive(), { now, fetcher: async input =>
+    new Response(String(input) === KIS_IPO_INDEX ? index : article(), { headers: { etag: 'fixture' } }) });
+  for (const state of ['healthy', 'old-parser', 'failed']) {
+    const archive = structuredClone(first.archive);
+    for (const source of Object.values(archive.sources)) {
+      if (state === 'old-parser') source.parser = 'old-parser';
+      if (state === 'failed') source.error = 'previous transport failure';
+    }
+    let requests = 0;
+    const next = await verifyOfficialSchedules(first.ipos, archive, { now: new Date(now.getTime() + 72 * 3600000),
+      fetcher: async (input, init) => {
+        requests++;
+        const conditional = new Headers(init?.headers).has('If-None-Match');
+        assert.equal(conditional, state === 'healthy');
+        return conditional ? new Response(null, { status: 304 }) : new Response(String(input) === KIS_IPO_INDEX ? index : article());
+      } });
+    assert.equal(requests, 2); assert.equal(next.errorCount, 0);
+    assert.equal(next.ipos[0].listingDate, '2026-11-17');
+  }
+});
+
 test('portal discrepancies do not mutate registered official values', async () => {
   const original = ipo();
   const exported: Record<string, unknown> = {};

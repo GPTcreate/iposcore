@@ -139,6 +139,17 @@ test('a main-page block, empty viewer index or unsupported cover is an error eli
 });
 
 const identity = (code = '02041694', name = '신영해피투모로우제12호기업인수목적') => `<span onclick="openCorpInfoNew('${code}', 'winCorpInfo', '/dsae001/selectPopup.ax');">${name}</span>`;
+test('a transient retry consumes the same strict DART HTTP budget', async () => {
+  for (const maxRequests of [2, 3]) {
+    let calls = 0;
+    const result = await fetchDartSchedule(receipt, { maxRequests, fetcher: async () => {
+      if (++calls === 1) throw new TypeError('connection reset', { cause: { code: 'ECONNRESET' } });
+      return new Response(calls === 2 ? node('증권발행조건확정') : schedule);
+    } });
+    assert.equal(calls, maxRequests); assert.equal(result.requestCount, maxRequests);
+    assert.equal(result.status, maxRequests === 3 ? 'parsed' : 'error');
+  }
+});
 const attachmentMain = (latest: string, bodies: string[], issuer = identity()) => issuer
   + `<select id="att"><option selected value="rcpNo=${latest}&amp;dcmNo=12345">[정정]첨부</option></select>`
   + `<select id="family">${bodies.map(body => `<option value="rcpNo=${body}" title="증권신고서(지분증권)">신고서</option>`).join('')}</select>`

@@ -6,6 +6,7 @@ import type { BrokerNotice, OfficialFacts, OfficialField } from './brokerSchedul
 import { DART_SCHEDULE_PARSER_VERSION, fetchDartSchedule } from './dartSchedule';
 import { IBK_IPO_INDEX, IBK_PARSER_VERSION, parseIbkIndex, parseIbkNotice } from './ibkSchedule';
 import { isIbkNoticeUrl } from './officialSource';
+import { fetchOfficialText } from './officialHttp';
 
 const HOUR = 3_600_000;
 const VERSION = 'official-verification-v2';
@@ -169,27 +170,21 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
       || !['www.truefriend.com', 'dart.fss.or.kr', 'www.ibks.com'].includes(parsed.hostname)) throw new Error('허용되지 않은 공식 원문 주소');
     if (result.requestCount >= maxRequests) throw new Error('REQUEST_BUDGET');
     result.requestCount++;
-    return (options.fetcher || fetch)(url, { ...init, redirect: 'error', signal: AbortSignal.timeout(15000), cache: 'no-store' });
+    return (options.fetcher || fetch)(url, { ...init, redirect: 'error', cache: 'no-store' });
   };
   async function brokerSource(url: string, parser: string, parse: (html: string) => { facts?: OfficialFacts; notices?: BrokerNotice[] }, interval: number, encoding = 'utf-8'): Promise<SourceCheck> {
     const old = archive.sources[url];
     if (old?.parser === parser && Date.parse(old.nextCheckAt) > now.getTime()
       && (old.error || Date.parse(old.checkedAt) + interval * HOUR > now.getTime())) return old;
     try {
-      const response = await transport(url, { headers: { ...(old?.etag ? { 'If-None-Match': old.etag } : {}), ...(old?.lastModified ? { 'If-Modified-Since': old.lastModified } : {}) } });
+      const reusable = old?.parser === parser && !old.error && (!!old.facts || Array.isArray(old.notices));
+      const { response, text } = await fetchOfficialText(url, { fetcher: transport, maxBytes: 2_000_000, encoding,
+        init: { headers: { ...(reusable && old.etag ? { 'If-None-Match': old.etag } : {}), ...(reusable && old.lastModified ? { 'If-Modified-Since': old.lastModified } : {}) } } });
       let parsed: Pick<SourceCheck, 'facts' | 'notices'>;
-      if (response.status === 304 && old && !old.error) parsed = { facts: old.facts, notices: old.notices };
+      if (response.status === 304 && reusable) parsed = { facts: old.facts, notices: old.notices };
       else {
-        if (!response.ok) throw new Error(`HTTP_${response.status}`);
-        if (Number(response.headers.get('content-length')) > 2_000_000) throw new Error('OVERSIZED');
-        const reader = response.body?.getReader();
-        if (!reader) throw new Error('EMPTY_BODY');
-        const chunks: Uint8Array[] = []; let bytes = 0;
-        try {
-          while (true) { const part = await reader.read(); if (part.done) break;
-            bytes += part.value.length; if (bytes > 2_000_000) { await reader.cancel(); throw new Error('OVERSIZED'); } chunks.push(part.value); }
-        } finally { reader.releaseLock(); }
-        parsed = parse(new TextDecoder(encoding).decode(Buffer.concat(chunks)));
+        if (response.status === 304) throw new Error('UNEXPECTED_NOT_MODIFIED');
+        parsed = parse(text);
       }
       return archive.sources[url] = { parser, checkedAt, nextCheckAt: nextTime(now, interval), failures: 0,
         etag: response.headers.get('etag') || old?.etag, lastModified: response.headers.get('last-modified') || old?.lastModified,
@@ -206,11 +201,17 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
       || (archive.targets[a.id]?.checkedAt || '').localeCompare(archive.targets[b.id]?.checkedAt || '')).slice(0, maxTargets);
   let brokerIndex: SourceCheck | undefined;
   let ibkIndex: SourceCheck | undefined;
-  if (due.some(ipo => ipo.underwriters.some(item => item.name === '한국투자증권'))) {
-    brokerIndex = await brokerSource(KIS_IPO_INDEX, BROKER_PARSER_VERSION, html => ({ notices: parseKisIndex(html) }), 6);
-  }
-  if (due.some(ipo => ipo.underwriters.some(item => /^(?:IBK투자증권|아이비케이투자증권)$/.test(item.name)))) {
-    ibkIndex = await brokerSource(IBK_IPO_INDEX, IBK_PARSER_VERSION, html => ({ notices: parseIbkIndex(html) }), 6, 'euc-kr');
+  try {
+    if (due.some(ipo => ipo.underwriters.some(item => item.name === '한국투자증권'))) {
+      brokerIndex = await brokerSource(KIS_IPO_INDEX, BROKER_PARSER_VERSION, html => ({ notices: parseKisIndex(html) }), 6);
+    }
+    if (due.some(ipo => ipo.underwriters.some(item => /^(?:IBK투자증권|아이비케이투자증권)$/.test(item.name)))) {
+      ibkIndex = await brokerSource(IBK_IPO_INDEX, IBK_PARSER_VERSION, html => ({ notices: parseIbkIndex(html) }), 6, 'euc-kr');
+    }
+  } catch (error) {
+    if (!(error instanceof Error) || error.message !== 'REQUEST_BUDGET') throw error;
+    result.skippedCount = ipos.length;
+    return result;
   }
   for (const ipo of due) {
     if (result.requestCount >= maxRequests) break;

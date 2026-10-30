@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import type { IpoItem } from '../src/types/ipo';
 import { isSameIpoIdentity, mergeDartDiscoveries } from '../src/lib/ipoDiscovery';
 import type { DartFilingItem, DartListResponse } from '../src/lib/ipoDiscovery';
+import { fetchOfficialText } from '../src/lib/officialHttp';
 
 export interface DiscoveryOptions { write: boolean; days: number; limit: number; help: boolean }
 
@@ -79,12 +80,11 @@ export async function fetchDiscoveryFilings(apiKey: string, days: number, now = 
     const url = new URL('https://opendart.fss.or.kr/api/list.json');
     for (const [key, value] of Object.entries({ crtfc_key: apiKey, bgn_de: startDate.toISOString().slice(0, 10).replace(/-/g, ''), end_de: endDate,
       pblntf_detail_ty: 'C001', sort: 'date', sort_mth: 'desc', page_no: String(page), page_count: '100' })) url.searchParams.set(key, value);
-    let response: Response;
-    try { response = await fetcher(url, { signal: AbortSignal.timeout(15000) }); }
+    let body: string;
+    try { body = (await fetchOfficialText(url, { fetcher, maxBytes: 2_000_000 })).text; }
     catch { throw new Error(`DART 공시 ${page}페이지를 가져오지 못했습니다. 기존 파일을 유지합니다.`); }
-    if (!response.ok) throw new Error(`DART 서버 응답 오류: HTTP ${response.status}. 기존 파일을 유지합니다.`);
     let data: DartListResponse;
-    try { data = await response.json() as DartListResponse; }
+    try { data = JSON.parse(body) as DartListResponse; }
     catch { throw new Error('DART 응답 형식이 올바르지 않습니다. 기존 파일을 유지합니다.'); }
     if (data.status === '013' && page === 1) return [];
     if (data.status !== '000' || !Array.isArray(data.list)) throw new Error('DART 공시 목록 응답이 정상적이지 않습니다. 기존 파일을 유지합니다.');
