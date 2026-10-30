@@ -8,3 +8,11 @@ export function isKisNoticeUrl(value: string): boolean {
       && /^\d{1,8}$/.test(url.searchParams.get('num') || '') && [...url.searchParams.keys()].length === 2;
   } catch { return false; }
 }
+export function isIbkNoticeUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.origin === 'https://www.ibks.com' && url.pathname === '/hts/hts_noticeview.do'
+      && !url.username && !url.password && !url.hash && !url.port && /^\d{1,8}$/.test(url.searchParams.get('seq') || '')
+      && [...url.searchParams.keys()].length === 1;
+  } catch { return false; }
+}

@@ -1,5 +1,5 @@
 import type { IpoEvidenceField, IpoFieldEvidence, IpoItem } from '../types/ipo';
-import { isKisNoticeUrl } from './officialSource';
+import { isKisNoticeUrl, isIbkNoticeUrl } from './officialSource';
 
 function isReceiptNumber(value: string | null): boolean {
   if (!value || !/^\d{14}$/.test(value)) return false;
@@ -19,7 +19,7 @@ export function isSpecificOfficialSourceUrl(value: string): boolean {
     if (url.hostname === 'kind.krx.co.kr' && url.pathname === '/common/disclsviewer.do') {
       return isReceiptNumber(url.searchParams.get('acptno'));
     }
-    return isKisNoticeUrl(value);
+    return isKisNoticeUrl(value) || isIbkNoticeUrl(value);
   } catch {
     return false;
   }
@@ -76,7 +76,7 @@ export function getFieldEvidence(ipo: EvidenceInput | null | undefined, field: E
   return evidence && typeof evidence.sourceTitle === 'string' && evidence.sourceTitle.trim().length > 0
     && typeof evidence.sourceUrl === 'string' && isSpecificOfficialSourceUrl(evidence.sourceUrl)
     && isValidReviewDate(evidence.checkedAt, true)
-    && (evidence.value === undefined || evidence.value === ipo?.[field])
+    && (evidence.value === undefined || evidence.value === ipo?.[field] || (evidence.value === null && ipo?.[field] === undefined))
     && !ipo?.scheduleVerification?.conflicts.some(conflict => conflict === field) ? evidence : undefined;
 }
 
@@ -84,6 +84,7 @@ function hasValidFieldValue(ipo: EvidenceInput, field: EvidenceField): boolean {
   if (ipo.pendingForecastFields !== undefined && (!Array.isArray(ipo.pendingForecastFields)
     || ipo.pendingForecastFields.some((pending) => pending === field))) return false;
   const value = ipo[field];
+  if (field === 'code') return typeof value === 'string' && /^[0-9A-Z]{6}$/.test(value);
   if (field === 'institutionalCompetitionRate' || field === 'confirmedPrice') return positive(value);
   if (field === 'lockupCommitmentRate') return percentage(value, true);
   if (field === 'circulatingSupplyRate') return percentage(value, false);

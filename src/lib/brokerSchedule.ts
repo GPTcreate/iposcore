@@ -11,6 +11,8 @@ export interface OfficialFacts {
   publishedAt: string;
   fields: Partial<Record<OfficialField, string | number>>;
   excerpts: Partial<Record<OfficialField, string>>;
+  pendingFields?: ('listingDate')[];
+  linkedFrom?: string;
 }
 export interface BrokerNotice { sourceUrl: string; title: string; publishedAt: string; company: string }
 export const normalizeCompany = (name: string) => name.replace(/주식회사|\(주\)|㈜|\s+/g, '');

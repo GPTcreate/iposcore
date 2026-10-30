@@ -4,19 +4,34 @@ import { loadDiscoverySource, writeDiscoveredIpos } from './sync-ipo-discovery';
 import { emptyVerificationArchive, validateVerificationArchive, verifyOfficialSchedules } from '../src/lib/officialVerification';
 import { isSameIpoIdentity } from '../src/lib/ipoDiscovery';
 
+export function parseOfficialArguments(args: string[]) {
+  const stocks: string[] = [], flags = new Set<string>();
+  for (let index = 0; index < args.length; index++) {
+    const argument = args[index];
+    if (argument === '--stock') {
+      const id = args[++index];
+      if (!id || !/^[a-z0-9][a-z0-9-]{0,79}$/.test(id) || stocks.includes(id)) throw new Error('--stock에 중복되지 않은 정확한 종목 ID를 입력하세요.');
+      stocks.push(id);
+    } else if (!['--write', '--dry-run', '--help'].includes(argument) || flags.has(argument)) throw new Error('지원하지 않거나 중복된 옵션입니다.');
+    else flags.add(argument);
+  }
+  if (flags.has('--write') && flags.has('--dry-run')) throw new Error('--write와 --dry-run을 함께 사용할 수 없습니다.');
+  return { stocks, write: flags.has('--write'), help: flags.has('--help') };
+}
 export async function main(args = process.argv.slice(2)): Promise<void> {
-  if (args.some(arg => !['--write', '--dry-run', '--help'].includes(arg)) || new Set(args).size !== args.length
-    || (args.includes('--write') && args.includes('--dry-run'))) throw new Error('지원하지 않거나 중복된 옵션입니다.');
-  if (args.includes('--help')) {
-    console.log('Usage: npm run verify:official -- [--dry-run | --write]\nBounded official DART/Korea Investment schedule checks. Default preview; --write updates customIpos.json and .cache/official-verification.json. No publishing or messages.'); return;
+  const options = parseOfficialArguments(args);
+  if (options.help) {
+    console.log('Usage: npm run verify:official -- [--dry-run | --write] [--stock exact-id ...]\nBounded official schedule checks. Default preview; --write updates customIpos.json and .cache/official-verification.json. --stock selects only the given IDs and preserves other records/cache. No publishing or messages.'); return;
   }
   if (process.env.VERCEL) throw new Error('공식 검증 저장은 저장소 워크플로에서 실행하세요.');
   const root = process.cwd(), source = loadDiscoverySource(root);
   const statePath = path.join(root, '.cache', 'official-verification.json');
   if (fs.existsSync(statePath) && fs.statSync(statePath).size > 5_000_000) throw new Error('공식 검증 이력 크기 제한을 초과했습니다.');
   const archive = fs.existsSync(statePath) ? validateVerificationArchive(JSON.parse(fs.readFileSync(statePath, 'utf8'))) : emptyVerificationArchive();
-  const result = await verifyOfficialSchedules(source.combined, archive);
-  if (args.includes('--write')) {
+  if (options.stocks.some(id => !source.combined.some(ipo => ipo.id === id))) throw new Error('등록되지 않은 종목 ID입니다. 조회를 실행하지 않았습니다.');
+  const selected = options.stocks.length ? source.combined.filter(ipo => options.stocks.includes(ipo.id)) : source.combined;
+  const result = await verifyOfficialSchedules(selected, archive);
+  if (options.write) {
     const custom = structuredClone(source.custom);
     for (const ipo of result.ipos) {
       const previous = source.combined.find(item => item.id === ipo.id);
@@ -33,7 +48,7 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
   }
   const summary = { checkedCount: result.checkedCount, skippedCount: result.skippedCount, requestCount: result.requestCount,
     changes: result.changes, newNotices: result.notices, errorCount: result.errorCount, coverage: result.coverage,
-    storageStatus: args.includes('--write') ? 'local-file-checked' : 'preview-only', deploymentConfirmed: false };
+    storageStatus: options.write ? 'local-file-checked' : 'preview-only', deploymentConfirmed: false };
   console.log(JSON.stringify(summary, null, 2));
   if (process.env.GITHUB_STEP_SUMMARY) {
     const clean = (value: string) => value.replace(/[|\r\n<>]/g, ' ');

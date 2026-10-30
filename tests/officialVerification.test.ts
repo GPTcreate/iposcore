@@ -8,6 +8,7 @@ import { isKisNoticeUrl, KIS_IPO_INDEX, parseKisIndex, parseKisNotice } from '..
 import { emptyVerificationArchive, isVerificationDue, reconcileOfficialFacts, validateVerificationArchive, VERIFICATION_VERSION, verificationIntervalHours, verifyOfficialSchedules } from '../src/lib/officialVerification';
 import type { OfficialFacts } from '../src/lib/brokerSchedule';
 import { getFieldEvidence } from '../src/lib/contentQuality';
+import { parseOfficialArguments } from '../scripts/verify-official';
 
 const url = `${KIS_IPO_INDEX}?cmd=TF09ac010002&num=668`;
 const now = new Date('2026-10-30T01:00:00Z');
@@ -82,6 +83,43 @@ test('bound newer retained evidence cannot regress to an older official notice',
     sourceTitle: '최신 DART 일정', sourceUrl: 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261101000100', checkedAt: '2026-11-01T01:00:00Z' } };
   const guarded = reconcileOfficialFacts(legacy, [facts()], '2026-11-01T02:00:00Z');
   assert.equal(guarded.ipo.listingDate, '2026-11-20'); assert(guarded.conflicts.includes('listingDate'));
+});
+
+test('explicit unannounced listing dates clear uncited placeholders, while newer official dates remain', () => {
+  const unannounced: OfficialFacts = { sourceUrl: 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000159',
+    sourceTitle: 'DART 현행 본문', publishedAt: '2026-10-16', fields: { subscriptionStart: '2026-11-05', subscriptionEnd: '2026-11-06' },
+    pendingFields: ['listingDate'], excerpts: { listingDate: '주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며' } };
+  const item = ipo(); item.discovery = undefined;
+  const cleared = reconcileOfficialFacts(item, [unannounced], now.toISOString());
+  assert.equal(cleared.ipo.listingDate, undefined); assert.equal(cleared.ipo.fieldEvidence?.listingDate?.value, null);
+  assert.deepEqual(cleared.pendingFields, ['listingDate']); assert(cleared.changed.includes('listingDate'));
+  const sourced = reconcileOfficialFacts(item, [facts()], now.toISOString()).ipo;
+  assert.equal(reconcileOfficialFacts(sourced, [unannounced], now.toISOString()).ipo.listingDate, '2026-11-17');
+  assert.equal(reconcileOfficialFacts(item, [unannounced, facts()], now.toISOString()).ipo.listingDate, '2026-11-17');
+  const sameDay = { ...unannounced, publishedAt: '2026-10-29' };
+  assert.equal(reconcileOfficialFacts(item, [sameDay, facts()], now.toISOString()).ipo.listingDate, '2026-11-17');
+  const latestPending = reconcileOfficialFacts(item, [sameDay], now.toISOString()).ipo;
+  const olderDate = { ...facts(), publishedAt: '2026-10-20' };
+  const refused = reconcileOfficialFacts(latestPending, [olderDate], now.toISOString());
+  assert.equal(refused.ipo.listingDate, undefined); assert(refused.conflicts.includes('listingDate'));
+  assert.equal(refused.ipo.fieldEvidence?.listingDate?.value, null);
+  assert.equal(reconcileOfficialFacts(refused.ipo, [olderDate], now.toISOString()).ipo.listingDate, undefined);
+});
+
+test('attachment provenance retains the actual body URL and rejects unrelated cached references', () => {
+  const archive = emptyVerificationArchive(), parent = 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239';
+  const body = 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471';
+  archive.sources[parent] = { parser: 'test', checkedAt: now.toISOString(), nextCheckAt: '2026-11-01T01:00:00Z', failures: 0,
+    facts: { sourceTitle: '연결 본문', sourceUrl: body, linkedFrom: parent, publishedAt: '2026-10-28', fields: {}, excerpts: {}, pendingFields: ['listingDate'] } };
+  assert.equal(validateVerificationArchive(archive).sources[parent].facts?.sourceUrl, body);
+  delete archive.sources[parent].facts!.linkedFrom;
+  assert.throws(() => validateVerificationArchive(archive));
+});
+
+test('targeted verification flags select exact distinct IDs without broadening scope', () => {
+  assert.deepEqual(parseOfficialArguments(['--write', '--stock', 'hana-aerodynamics', '--stock', 'dart-01950720']),
+    { write: true, help: false, stocks: ['hana-aerodynamics', 'dart-01950720'] });
+  for (const args of [['--stock'], ['--stock', 'https://invalid'], ['--stock', 'x', '--stock', 'x'], ['--write', '--dry-run'], ['--force']]) assert.throws(() => parseOfficialArguments(args));
 });
 
 test('milestone cadence, new-receipt invalidation, completed IPO skip and backoff', () => {

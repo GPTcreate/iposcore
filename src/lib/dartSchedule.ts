@@ -1,14 +1,16 @@
 import { load } from 'cheerio';
 import type { AnyNode } from 'domhandler';
 
-export const DART_SCHEDULE_PARSER_VERSION = 'dart-schedule-v2';
+export const DART_SCHEDULE_PARSER_VERSION = 'dart-schedule-v3';
 export type DartScheduleField = 'subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate';
 export interface DartScheduleResult {
   receiptNo: string;
+  bodyReceiptNo?: string;
   sourceUrl: string;
   status: 'parsed' | 'pending' | 'ambiguous' | 'error';
   fields: Partial<Record<DartScheduleField, string>>;
   evidence: Partial<Record<DartScheduleField, { excerpt: string }>>;
+  pendingFields?: 'listingDate'[];
   requestCount: number;
   error?: string;
 }
@@ -63,6 +65,7 @@ export function parseDartScheduleBody(html: string, receiptNo: string): DartSche
     return !marker?.before;
   };
   const candidates: Partial<Record<DartScheduleField, { value: string; excerpt: string }[]>> = {};
+  const pendingListingEvidence: string[] = [];
   let ambiguous = false;
   const add = (field: DartScheduleField, value: string, excerpt: string) => {
     if (!validDate(value)) { ambiguous = true; return; }
@@ -158,6 +161,21 @@ export function parseDartScheduleBody(html: string, receiptNo: string): DartSche
       single(listingLabel, 'listingDate');
     }
   });
+  $('p,td').each((_, node) => {
+    if (!current(node) || $(node).parents('table').toArray().some((table) => {
+      const value = compact(text(table)); return value.includes('정정전') && value.includes('정정후');
+    })) return;
+    const value = text(node);
+    if (value.includes('정정 전') && value.includes('정정 후')) return;
+    // This is an explicit retail surplus refund statement, not a payment-date inference.
+    const refunds = [...value.matchAll(/초과\s*청약증거금[^.!?]{0,180}?(20\d{2}년\s*\d{1,2}월\s*\d{1,2}일)(?:\s*\([^)]{0,8}\))?\s*\)?\s*에\s*환불합니다/g)];
+    for (const match of refunds) {
+      const values = dates(match[1]);
+      if (values.length === 1) add('refundDate', values[0], match[0]);
+    }
+    const pending = value.match(/주권의\s*신규상장\s*및\s*매매개시일은\s*아직\s*확정되지\s*않았으며[^.]{0,160}/);
+    if (pending) pendingListingEvidence.push(pending[0].slice(0, 240));
+  });
   const result = empty(receiptNo, 'pending');
   for (const field of ['subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate'] as const) {
     const values = candidates[field] || [];
@@ -166,18 +184,67 @@ export function parseDartScheduleBody(html: string, receiptNo: string): DartSche
   }
   const ordered = [result.fields.subscriptionStart, result.fields.subscriptionEnd, result.fields.refundDate, result.fields.listingDate].filter((value): value is string => !!value);
   if (ordered.some((value, index) => index > 0 && ordered[index - 1] > value)) ambiguous = true;
+  if (pendingListingEvidence.length && result.fields.listingDate) ambiguous = true;
   if (ambiguous) return empty(receiptNo, 'ambiguous');
+  if (pendingListingEvidence[0]) {
+    result.pendingFields = ['listingDate'];
+    result.evidence.listingDate = { excerpt: pendingListingEvidence[0] };
+  }
   if (Object.keys(result.fields).length) result.status = 'parsed';
   return result;
 }
 
 type ViewerNode = { title: string; dcmNo?: string; eleId?: string; offset?: string; length?: string; dtd?: string; rcpNo?: string };
 
-/** At most two same-origin requests: receipt main page, then its current offering section. */
+function offeringNodes(main: string, receiptNo: string): { eligible: ViewerNode[]; choices: ViewerNode[] } {
+  const nodes: ViewerNode[] = [];
+  let node: ViewerNode | undefined;
+  for (const match of main.matchAll(/node\d+\['(text|dcmNo|eleId|offset|length|dtd|rcpNo)'\]\s*=\s*['"]([^'"\r\n]*)['"]/g)) {
+    const [, key, value] = match;
+    if (key === 'text') { if (node) nodes.push(node); node = { title: compact(value) }; }
+    else if (node) Object.assign(node, { [key]: value });
+  }
+  if (node) nodes.push(node);
+  const eligible = nodes.filter((item) => (!item.rcpNo || item.rcpNo === receiptNo) && /^\d{1,20}$/.test(item.dcmNo || '')
+    && /^\d{1,8}$/.test(item.eleId || '') && /^\d{1,12}$/.test(item.offset || '') && /^\d{1,8}$/.test(item.length || '')
+    && Number(item.length) > 0 && Number(item.length) <= 2_000_000 && item.dtd === 'dart4.xsd');
+  const general = eligible.filter((item) => /^(?:I|Ⅰ|1)[.．]?모집또는매출에관한일반사항$/.test(item.title));
+  const body = eligible.filter((item) => /^(?:제1부)?모집또는매출에관한사항$/.test(item.title));
+  const confirmed = eligible.filter((item) => item.title === '증권발행조건확정');
+  return { eligible, choices: general.length ? general : body.length ? body : confirmed };
+}
+
+function mainIdentity(main: string): string | undefined {
+  const $ = load(main);
+  const identities = $('[onclick]').toArray().flatMap((node) => {
+    const code = $(node).attr('onclick')?.match(/^openCorpInfoNew\(['"](\d{8})['"],/)?.[1];
+    const name = compact($(node).text().normalize('NFKC')).replace(/주식회사|\(주\)|㈜/g, '');
+    return code && name ? [`${code}:${name}`] : [];
+  });
+  return new Set(identities).size === 1 ? identities[0] : undefined;
+}
+
+/** Follow only DART's explicitly selected attachment-to-body relation, never search older filings. */
+function attachmentBodyReceipt(main: string, receiptNo: string, eligible: ViewerNode[]): string | undefined {
+  const $ = load(main), selected = $('#att option[selected]');
+  if (selected.length !== 1 || $('#att').length !== 1 || $('#family').length !== 1 || !mainIdentity(main)) return undefined;
+  const attachment = selected.attr('value')?.match(/^rcpNo=(\d{14})&dcmNo=(\d{1,20})$/);
+  if (!attachment || attachment[1] !== receiptNo || !eligible.some(node => node.dcmNo === attachment[2])) return undefined;
+  const receipts = $('#family option').toArray().flatMap((node) => {
+    if (compact($(node).attr('title') || '') !== '증권신고서(지분증권)') return [];
+    const value = $(node).attr('value')?.match(/^rcpNo=(\d{14})$/)?.[1];
+    return value && validReceipt(value) ? [value] : [];
+  });
+  // A future relation means this is not a self-contained latest-filing snapshot.
+  if (receipts.some(value => value >= receiptNo)) return undefined;
+  return [...new Set(receipts)].sort().at(-1);
+}
+
+/** Two requests normally; an authenticated attachment-to-body relation allows one extra main page. */
 export async function fetchDartSchedule(receiptNo: string, options: { fetcher?: typeof fetch; maxRequests?: number } = {}): Promise<DartScheduleResult> {
   if (!validReceipt(receiptNo)) return empty(receiptNo, 'error', '유효하지 않은 DART 접수번호입니다.');
   const fetcher = options.fetcher || fetch;
-  const budget = Math.max(0, Math.min(2, Math.floor(options.maxRequests ?? 2)));
+  const budget = Math.max(0, Math.min(3, Math.floor(options.maxRequests ?? 3)));
   let requestCount = 0;
   const get = async (url: string, limit: number): Promise<string> => {
     if (requestCount >= budget) throw new Error('공시 요청 예산을 초과했습니다.');
@@ -204,27 +271,23 @@ export async function fetchDartSchedule(receiptNo: string, options: { fetcher?: 
   };
   try {
     const main = await get(sourceUrl(receiptNo), 1_000_000);
-    const nodes: ViewerNode[] = [];
-    let node: ViewerNode | undefined;
-    for (const match of main.matchAll(/node\d+\['(text|dcmNo|eleId|offset|length|dtd|rcpNo)'\]\s*=\s*['"]([^'"\r\n]*)['"]/g)) {
-      const [, key, value] = match;
-      if (key === 'text') { if (node) nodes.push(node); node = { title: compact(value) }; }
-      else if (node) Object.assign(node, { [key]: value });
+    let { eligible, choices } = offeringNodes(main, receiptNo);
+    let bodyReceiptNo = receiptNo;
+    if (!choices.length) {
+      const linkedReceipt = attachmentBodyReceipt(main, receiptNo, eligible);
+      if (linkedReceipt) {
+        const bodyMain = await get(sourceUrl(linkedReceipt), 1_000_000);
+        if (!mainIdentity(bodyMain) || mainIdentity(bodyMain) !== mainIdentity(main)) throw new Error('본문 법인 불일치');
+        bodyReceiptNo = linkedReceipt;
+        ({ eligible, choices } = offeringNodes(bodyMain, bodyReceiptNo));
+      }
     }
-    if (node) nodes.push(node);
-    const eligible = nodes.filter((item) => (!item.rcpNo || item.rcpNo === receiptNo) && /^\d{1,20}$/.test(item.dcmNo || '')
-      && /^\d{1,8}$/.test(item.eleId || '') && /^\d{1,12}$/.test(item.offset || '') && /^\d{1,8}$/.test(item.length || '')
-      && Number(item.length) > 0 && Number(item.length) <= 2_000_000 && item.dtd === 'dart4.xsd');
-    const general = eligible.filter((item) => /^(?:I|Ⅰ|1)[.．]?모집또는매출에관한일반사항$/.test(item.title));
-    const body = eligible.filter((item) => /^(?:제1부)?모집또는매출에관한사항$/.test(item.title));
-    const confirmed = eligible.filter((item) => item.title === '증권발행조건확정');
-    const choices = general.length ? general : body.length ? body : confirmed;
     if (choices.length !== 1) return { ...empty(receiptNo, choices.length ? 'ambiguous' : 'error',
       choices.length ? undefined : '유효한 DART 모집 본문을 확인하지 못했습니다. 기존 일정을 유지합니다.'), requestCount };
     const selected = choices[0];
-    const url = `https://dart.fss.or.kr/report/viewer.do?rcpNo=${receiptNo}&dcmNo=${selected.dcmNo}&eleId=${selected.eleId}&offset=${selected.offset}&length=${selected.length}&dtd=dart4.xsd`;
-    const result = parseDartScheduleBody(await get(url, 2_000_000), receiptNo);
-    return { ...result, requestCount };
+    const url = `https://dart.fss.or.kr/report/viewer.do?rcpNo=${bodyReceiptNo}&dcmNo=${selected.dcmNo}&eleId=${selected.eleId}&offset=${selected.offset}&length=${selected.length}&dtd=dart4.xsd`;
+    const result = parseDartScheduleBody(await get(url, 2_000_000), bodyReceiptNo);
+    return { ...result, receiptNo, ...(bodyReceiptNo !== receiptNo ? { bodyReceiptNo } : {}), requestCount };
   } catch {
     return { ...empty(receiptNo, 'error', 'DART 일정 원문을 안전하게 조회하지 못했습니다. 기존 일정을 유지합니다.'), requestCount };
   }

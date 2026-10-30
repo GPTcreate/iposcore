@@ -1579,7 +1579,7 @@
   {
     "id": "hana-aerodynamics",
     "name": "하나에어로다이내믹스",
-    "code": "410250",
+    "code": "271160",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-10",
@@ -1627,12 +1627,66 @@
       "receivedAt": "2026-10-16",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
-    "fieldEvidence": {},
+    "fieldEvidence": {
+      "subscriptionStart": {
+        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-10",
+        "publishedAt": "2026-10-20T08:15:00+09:00",
+        "excerpt": "청약일 | 2026년 11월 10일(화)~ 11월 11일(수)",
+        "parserVersion": "official-verification-v2"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-11",
+        "publishedAt": "2026-10-20T08:15:00+09:00",
+        "excerpt": "청약일 | 2026년 11월 10일(화)~ 11월 11일(수)",
+        "parserVersion": "official-verification-v2"
+      },
+      "refundDate": {
+        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-13",
+        "publishedAt": "2026-10-20T08:15:00+09:00",
+        "excerpt": "환불일 | 2026년 11월 13일(금)",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-20",
+        "publishedAt": "2026-10-20T08:15:00+09:00",
+        "excerpt": "상장 예정일 | 2026년 11월 20일(금) (예정)",
+        "parserVersion": "official-verification-v2"
+      },
+      "code": {
+        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
+        "checkedAt": "2026-10-30T03:52:38.037Z",
+        "value": "271160",
+        "publishedAt": "2026-10-20T08:15:00+09:00",
+        "excerpt": "종목명(종목코드) | 주식회사 하나에어로다이내믹스(A271160)",
+        "parserVersion": "ibk-schedule-v1"
+      }
+    },
     "scheduleVerification": {
-      "status": "unavailable",
-      "checkedAt": "2026-10-30T02:31:47.645Z",
+      "status": "verified",
+      "checkedAt": "2026-10-30T03:52:02.950Z",
       "conflicts": [],
-      "coveredFields": []
+      "coveredFields": [
+        "subscriptionStart",
+        "subscriptionEnd",
+        "refundDate",
+        "listingDate"
+      ]
+    },
+    "dataQuality": {
+      "status": "unverified"
     }
   },
   {
@@ -2063,9 +2117,9 @@
     "dataQuality": {
       "status": "unverified"
     },
-    "subscriptionStart": "",
-    "subscriptionEnd": "",
-    "refundDate": "",
+    "subscriptionStart": "2026-11-24",
+    "subscriptionEnd": "2026-11-25",
+    "refundDate": "2026-11-27",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -2093,12 +2147,60 @@
       "institutionalCompetitionRate",
       "lockupCommitmentRate"
     ],
-    "fieldEvidence": {},
+    "fieldEvidence": {
+      "subscriptionStart": {
+        "sourceTitle": "제논 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-24",
+        "publishedAt": "2026-10-26",
+        "excerpt": "청약기일 | 2026년 11월 24일~2026년 11월 25일",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "제논 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-25",
+        "publishedAt": "2026-10-26",
+        "excerpt": "청약기일 | 2026년 11월 24일~2026년 11월 25일",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+      },
+      "refundDate": {
+        "sourceTitle": "제논 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-27",
+        "publishedAt": "2026-10-26",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 2026년 11월 27일(금)에 환불합니다",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+      },
+      "listingDate": {
+        "sourceTitle": "제논 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": null,
+        "publishedAt": "2026-10-26",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+      }
+    },
     "scheduleVerification": {
-      "status": "unavailable",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "status": "partial",
+      "checkedAt": "2026-10-30T03:52:02.950Z",
       "conflicts": [],
-      "coveredFields": []
+      "coveredFields": [
+        "subscriptionStart",
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
+      ]
     }
   },
   {
@@ -2922,9 +3024,9 @@
     "dataQuality": {
       "status": "unverified"
     },
-    "subscriptionStart": "",
-    "subscriptionEnd": "",
-    "refundDate": "",
+    "subscriptionStart": "2026-11-24",
+    "subscriptionEnd": "2026-11-25",
+    "refundDate": "2026-11-27",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -2953,12 +3055,60 @@
       "cautionRatio": null
     },
     "expertReviews": [],
-    "fieldEvidence": {},
+    "fieldEvidence": {
+      "subscriptionStart": {
+        "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-24",
+        "publishedAt": "2026-10-28",
+        "excerpt": "청약기일 | 2026년 11월 24일 ~ 2026년 11월 25일",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-25",
+        "publishedAt": "2026-10-28",
+        "excerpt": "청약기일 | 2026년 11월 24일 ~ 2026년 11월 25일",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+      },
+      "refundDate": {
+        "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": "2026-11-27",
+        "publishedAt": "2026-10-28",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일(2026년 11월 27일)에 환불합니다",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+      },
+      "listingDate": {
+        "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
+        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "value": null,
+        "publishedAt": "2026-10-28",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2",
+        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+      }
+    },
     "scheduleVerification": {
-      "status": "unavailable",
-      "checkedAt": "2026-10-30T02:30:19.522Z",
+      "status": "partial",
+      "checkedAt": "2026-10-30T03:52:02.950Z",
       "conflicts": [],
-      "coveredFields": []
+      "coveredFields": [
+        "subscriptionStart",
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
+      ]
     }
   },
   {

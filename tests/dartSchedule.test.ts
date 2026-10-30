@@ -11,7 +11,7 @@ const node = (title = 'Ⅰ. 모집 또는 매출에 관한 일반사항', extra 
 
 test('DART schedule dates carry the receipt and the exact labelled excerpts', () => {
   const result = parseDartScheduleBody(schedule, receipt);
-  assert.equal(DART_SCHEDULE_PARSER_VERSION, 'dart-schedule-v2');
+  assert.equal(DART_SCHEDULE_PARSER_VERSION, 'dart-schedule-v3');
   assert.equal(result.status, 'parsed');
   assert.deepEqual(result.fields, { subscriptionStart: '2026-11-05', subscriptionEnd: '2026-11-06', refundDate: '2026-11-10', listingDate: '2026-11-17' });
   assert.match(result.evidence.listingDate!.excerpt, /상장\(예정\)일.*2026-11-17/);
@@ -136,4 +136,92 @@ test('a main-page block, empty viewer index or unsupported cover is an error eli
     assert.equal(result.requestCount, 1);
     assert.deepEqual(result.fields, {});
   }
+});
+
+const identity = (code = '02041694', name = '신영해피투모로우제12호기업인수목적') => `<span onclick="openCorpInfoNew('${code}', 'winCorpInfo', '/dsae001/selectPopup.ax');">${name}</span>`;
+const attachmentMain = (latest: string, bodies: string[], issuer = identity()) => issuer
+  + `<select id="att"><option selected value="rcpNo=${latest}&amp;dcmNo=12345">[정정]첨부</option></select>`
+  + `<select id="family">${bodies.map(body => `<option value="rcpNo=${body}" title="증권신고서(지분증권)">신고서</option>`).join('')}</select>`
+  + node('정정신고(보고)', `node1['rcpNo']='${latest}';`);
+
+test('three actual unresolved IPOs provide explicit subscription/refund dates and listing-pending evidence', () => {
+  for (const [name, currentReceipt, start, end, refund] of [
+    ['shinyoung', '20261028000471', '2026-11-24', '2026-11-25', '2026-11-27'],
+    ['xenon', '20261026000001', '2026-11-24', '2026-11-25', '2026-11-27'],
+    ['hana-aerodynamics', '20261016000159', '2026-11-10', '2026-11-11', '2026-11-13'],
+  ]) {
+    const html = fs.readFileSync(path.join(process.cwd(), 'tests', 'fixtures', 'dart', `${name}-schedule-pending.html`), 'utf8');
+    const result = parseDartScheduleBody(html, currentReceipt);
+    assert.equal(result.status, 'parsed', name);
+    assert.equal(result.fields.listingDate, undefined);
+    assert.deepEqual(result.fields, { subscriptionStart: start, subscriptionEnd: end, refundDate: refund }, name);
+    assert.deepEqual(result.pendingFields, ['listingDate']);
+    assert.match(result.evidence.refundDate!.excerpt, /초과 청약증거금.*환불합니다/);
+    assert.match(result.evidence.listingDate!.excerpt, /아직 확정되지 않았으며/);
+  }
+});
+
+test('explicit refund/pending statements respect amendment context and reject contradictory current dates', () => {
+  const refund = '<p>초과 청약증거금이 있는 경우에는 이를 2026년 11월 27일에 환불합니다.</p>';
+  const pending = '<p>주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 안내할 예정입니다.</p>';
+  const current = `<table>${row('상장예정일', '2026년 12월 01일')}</table>`;
+  const old = parseDartScheduleBody('<p>(주3) 정정 전</p>' + refund + pending + '<p>(주3) 정정 후</p>' + current, receipt);
+  assert.deepEqual(old.fields, { listingDate: '2026-12-01' });
+  assert.equal(old.pendingFields, undefined);
+  assert.equal(parseDartScheduleBody(current + pending, receipt).status, 'ambiguous');
+  assert.equal(parseDartScheduleBody(refund + refund.replace('27일', '26일'), receipt).status, 'ambiguous');
+  assert.equal(parseDartScheduleBody(refund.replace('11월 27일', '02월 30일'), receipt).status, 'ambiguous');
+  const paymentOnly = parseDartScheduleBody('<p>청약증거금은 납입일(2026년 11월 27일)에 대체됩니다.</p>', receipt);
+  assert.deepEqual(paymentOnly.fields, {});
+});
+
+test('a selected attachment follows only its latest declared same-issuer body within three requests', async () => {
+  const latest = '20261029000239', body = '20261028000471';
+  const calls: string[] = [];
+  const result = await fetchDartSchedule(latest, { maxRequests: 999, fetcher: (async input => {
+    const url = String(input); calls.push(url);
+    if (calls.length === 1) return new Response(attachmentMain(latest, ['20261023000001', body]));
+    if (calls.length === 2) return new Response(identity() + node(undefined, `node1['rcpNo']='${body}';`));
+    return new Response(schedule);
+  }) as typeof fetch });
+  assert.equal(result.status, 'parsed');
+  assert.equal(result.receiptNo, latest);
+  assert.equal(result.bodyReceiptNo, body);
+  assert.equal(result.sourceUrl, `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${body}`);
+  assert.equal(result.requestCount, 3);
+  assert(calls[1].endsWith(`rcpNo=${body}`));
+  assert.equal(new URL(calls[2]).searchParams.get('rcpNo'), body);
+});
+
+test('attachment fallback rejects issuer mismatch, missing selection evidence and future body receipts', async () => {
+  const latest = '20261029000239', body = '20261028000471';
+  for (const issuer of [identity('01950720'), identity('02041694', '다른회사')]) {
+    let calls = 0;
+    const result = await fetchDartSchedule(latest, { fetcher: (async () => new Response(++calls === 1
+      ? attachmentMain(latest, [body]) : issuer + node(undefined, `node1['rcpNo']='${body}';`))) as typeof fetch });
+    assert.equal(result.status, 'error'); assert.equal(calls, 2); assert.deepEqual(result.fields, {});
+  }
+  for (const main of [attachmentMain(latest, [body]).replace(' selected ', ' '),
+    attachmentMain(latest, [body]).replace(`rcpNo=${latest}&amp;dcmNo`, 'rcpNo=20261028000001&amp;dcmNo'),
+    attachmentMain(latest, [body, '20261030000001']), attachmentMain(latest, [latest])]) {
+    let calls = 0;
+    const result = await fetchDartSchedule(latest, { fetcher: (async () => { calls++; return new Response(main); }) as typeof fetch });
+    assert.equal(result.status, 'error'); assert.equal(calls, 1); assert.deepEqual(result.fields, {});
+  }
+});
+
+test('latest linked-body failure cannot descend to an older family filing or a second attachment hop', async () => {
+  const latest = '20261029000239', body = '20261028000471', older = '20261023000001';
+  for (const response of [new Response('Unavailable', { status: 503 }), new Response(attachmentMain(body, [older]))]) {
+    const calls: string[] = [];
+    const result = await fetchDartSchedule(latest, { fetcher: (async input => {
+      calls.push(String(input)); return calls.length === 1 ? new Response(attachmentMain(latest, [body, older])) : response;
+    }) as typeof fetch });
+    assert.equal(result.status, 'error'); assert.equal(calls.length, 2);
+    assert(!calls.some(url => url.endsWith(`rcpNo=${older}`)));
+  }
+  let calls = 0;
+  const limited = await fetchDartSchedule(latest, { maxRequests: 2, fetcher: (async () => new Response(++calls === 1
+    ? attachmentMain(latest, [body]) : identity() + node(undefined, `node1['rcpNo']='${body}';`))) as typeof fetch });
+  assert.equal(limited.status, 'error'); assert.equal(limited.requestCount, 2); assert.equal(calls, 2);
 });

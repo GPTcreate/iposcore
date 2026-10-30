@@ -121,7 +121,7 @@ export function mergeDartDiscoveries(current: IpoItem[], filings: DartFilingItem
   return { ipos, newIpos: ipos.filter((ipo) => newIds.has(ipo.id)), updatedIpos: ipos.filter((ipo) => updatedIds.has(ipo.id)), ignoredCount };
 }
 
-const EVIDENCE_FIELDS: IpoEvidenceField[] = ['institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate',
+const EVIDENCE_FIELDS: IpoEvidenceField[] = ['code', 'institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate',
   'subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate', 'confirmedPrice', 'depositRatePercent'];
 const REVIEWED_FIELDS: (keyof IpoItem)[] = ['name', 'code', 'market', 'status', ...EVIDENCE_FIELDS, 'priceBandMin', 'priceBandMax',
   'pendingForecastFields',
