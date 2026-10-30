@@ -6,6 +6,8 @@ export interface FinancialDependencies {
   load: () => unknown[];
   syncDart: (options: { days: number }) => Promise<DartResult>;
   syncPrices: () => Promise<PriceResult>;
+  flushMetricCache?: () => void;
+  metricCacheStats?: { hits: number; misses: number; backoffSkipped: number; failures: number };
 }
 
 export function parseFinancialArguments(args: string[]): FinancialOptions {
@@ -37,10 +39,17 @@ export async function runFinancialSync(options: FinancialOptions, dependencies?:
     const [store, dart, prices] = await Promise.all([
       import('../src/lib/ipoServerStore'), import('../src/lib/dartFilingSync'), import('../src/lib/stockPriceCrawler'),
     ]);
-    services = { load: store.loadServerCustomIpos, syncDart: dart.syncExistingIposWithDartFilings, syncPrices: prices.syncListingReturnsForIpos };
+    if (typeof dart.parseConfirmedFilingDetails !== 'function') throw new Error('DART 최신 수치 파서를 사용할 수 없습니다.');
+    const { createDartMetricCache } = await import('../src/lib/dartMetricCache');
+    const cache = createDartMetricCache({ parseFiling: dart.parseConfirmedFilingDetails });
+    services = { load: store.loadServerCustomIpos,
+      syncDart: (syncOptions) => dart.syncExistingIposWithDartFilings({ ...syncOptions, parseFiling: cache.parseFiling }),
+      syncPrices: () => prices.syncListingReturnsForIpos({ requireVerifiedListingDate: true }), flushMetricCache: cache.flush, metricCacheStats: cache.stats };
   }
   services.load();
-  const dart = await services.syncDart({ days: options.days });
+  let dart: DartResult;
+  try { dart = await services.syncDart({ days: options.days }); }
+  finally { services.flushMetricCache?.(); }
   const prices = await services.syncPrices();
   // Every changed record was atomically written by addOrUpdateIpo; reload verifies readable source data.
   const stored = services.load();
@@ -49,6 +58,7 @@ export async function runFinancialSync(options: FinancialOptions, dependencies?:
   return {
     success, stage: 'complete', dataStatus: !success ? 'failed' : pendingCount > 0 ? 'pending' : 'complete',
     pendingCount, dart, prices, customCount: stored.length,
+    ...(services.metricCacheStats ? { metricCache: { ...services.metricCacheStats } } : {}),
     storageStatus: dart.updatedCount + prices.updatedCount > 0 ? 'local-file-checked' : 'unchanged', deploymentConfirmed: false,
   };
 }
@@ -58,8 +68,9 @@ export function formatFinancialSummary(result: Awaited<ReturnType<typeof runFina
   const cell = (value: string) => value.replace(/[|\r\n<>]/g, ' ').trim();
   const lines = ['## 금융 자료 갱신', '',
     `실행: ${result.success ? '정상' : '실패'} · 자료 상태: ${result.dataStatus}`,
-    `갱신 ${result.dart.updatedCount + result.prices.updatedCount}건 · 공시 발표 대기 ${result.dart.pendingCount || 0}건 · 장 마감 대기 ${result.prices.deferredCount || 0}건 · 오류 ${result.dart.errors.length + result.prices.errors.length}건`,
+    `갱신 ${result.dart.updatedCount + result.prices.updatedCount}건 · 공시 발표 대기 ${result.dart.pendingCount || 0}건 · 시세 저장 대기 ${result.prices.deferredCount || 0}건 · 오류 ${result.dart.errors.length + result.prices.errors.length}건`,
     ''];
+  if (result.metricCache) lines.push(`수치 원문: 캐시 ${result.metricCache.hits}건 · 새 조회 ${result.metricCache.misses}건 · 재시도 대기 ${result.metricCache.backoffSkipped}건`, '');
   if (result.dart.pendingStocks?.length) {
     lines.push('발표 대기는 공시 본문의 미확정 안내를 확인한 상태이며, 미발표 값을 만들지 않습니다.', '', '| 종목 | 상태 | 원문 |', '| --- | --- | --- |');
     for (const pending of result.dart.pendingStocks) {
@@ -76,7 +87,7 @@ export function formatFinancialSummary(result: Awaited<ReturnType<typeof runFina
 export async function main(args = process.argv.slice(2)): Promise<void> {
   const options = parseFinancialArguments(args);
   if (options.help || !options.write) {
-    console.log('Usage: node scripts/sync-financials.mjs --write [--days 1..90]\nWithout --write: no network requests or data changes. Requires DART_API_KEY. Runs existing DART metrics and matching-date Naver listing-price paths only; no cross-check portal, LLM, email or Telegram. Changes are written to src/data/customIpos.json; repository commit and deployment are separate.');
+    console.log('Usage: node scripts/sync-financials.mjs --write [--days 1..90]\nWithout --write: no cache, network requests or data changes. Requires DART_API_KEY. Runs DART metrics with receipt/version caching and matching-date Naver listing prices; no cross-check portal, LLM, email or Telegram. Changes are written to src/data/customIpos.json; repository commit and deployment are separate.');
     return;
   }
   const result = await runFinancialSync(options);

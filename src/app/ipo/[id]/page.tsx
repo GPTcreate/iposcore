@@ -126,6 +126,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
             <ScoreBadge score={score.score} grade={score.scoreGrade} isVerified={verifiedScore} size="lg" basis={score.basis} sampleSize={score.sampleSize} />
           </header>
           {ipo.isCancelled && <p className="p-4 bg-rose-50 border border-rose-200 rounded-lg text-sm leading-relaxed">공모 철회 등록 안내: {ipo.cancelReason || '최신 공시에서 진행 상태와 철회 사유를 확인하세요.'}</p>}
+          {ipo.scheduleVerification?.status === 'conflict' && <p className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">공식 자료 간 일정이 달라 확인이 필요합니다. 항목별 원문을 확인하세요.</p>}
           <nav className="flex flex-wrap gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs font-semibold text-blue-700"><a href="#ipo-schedule" className="underline">일정·공모가</a><a href="#ipo-metrics" className="underline">기관·유통 지표</a><a href="#ipo-underwriters" className="underline">주관사·수수료</a><a href="#ipo-calculator" className="underline">배정·손익 계산</a><a href="#blog-reviews" className="underline">블로그 리뷰</a></nav>
         </article>
 

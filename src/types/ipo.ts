@@ -1,8 +1,11 @@
 export type IpoStatus = 'UPCOMING' | 'SUBSCRIPTION' | 'WAITING_LISTING' | 'LISTED';
 
-export type IpoEvidenceField = 'institutionalCompetitionRate' | 'lockupCommitmentRate' | 'circulatingSupplyRate'
+export type IpoEvidenceField = 'code' | 'institutionalCompetitionRate' | 'lockupCommitmentRate' | 'circulatingSupplyRate'
   | 'subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate' | 'confirmedPrice' | 'depositRatePercent';
-export interface IpoFieldEvidence { sourceTitle: string; sourceUrl: string; checkedAt: string }
+export interface IpoFieldEvidence {
+  sourceTitle: string; sourceUrl: string; checkedAt: string;
+  value?: string | number | null; publishedAt?: string; excerpt?: string; parserVersion?: string; linkedFrom?: string;
+}
 export type IpoForecastField = 'institutionalCompetitionRate' | 'lockupCommitmentRate' | 'circulatingSupplyRate';
 
 export interface ExpertReview {
@@ -38,6 +41,12 @@ export interface IpoItem {
   };
   // Field-level checks do not claim that the entire company profile was reviewed.
   fieldEvidence?: Partial<Record<IpoEvidenceField, IpoFieldEvidence>>;
+  scheduleVerification?: {
+    status: 'verified' | 'partial' | 'conflict' | 'unavailable'; checkedAt: string;
+    conflicts: ('subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate' | 'confirmedPrice')[];
+    coveredFields: ('subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate' | 'confirmedPrice')[];
+    pendingFields?: ('listingDate')[];
+  };
   discovery?: { corpCode: string; receiptNo: string; sourceUrl: string; receivedAt: string; reportName: string };
   // Newly discovered zero placeholders remain unknown until each input is actually parsed.
   pendingForecastFields?: IpoForecastField[];

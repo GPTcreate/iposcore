@@ -10,7 +10,7 @@ import * as discovery from '../src/lib/ipoDiscovery';
 import * as stockCode from '../src/lib/stockCode';
 import type { DartFilingItem } from '../src/lib/ipoDiscovery';
 import type { IpoItem } from '../src/types/ipo';
-import { hasScorableForecast, hasVerifiedField } from '../src/lib/contentQuality';
+import { getFieldEvidence, hasScorableForecast, hasVerifiedField } from '../src/lib/contentQuality';
 import { calculateIpoScore } from '../src/lib/scoring';
 import { analyzeIpoSentiment } from '../src/lib/sentimentAnalyzer';
 
@@ -230,12 +230,13 @@ function priceFixture(initial: IpoItem) {
     https: { get: () => { throw new Error('Live HTTPS is forbidden in fixtures.'); } },
     './ipoUtils': { getAllEffectiveIpos: () => [structuredClone(initial)], getKstDateString: () => '2026-10-25' },
     './ipoServerStore': { addOrUpdateIpo: (incoming: IpoItem) => { writes.push(structuredClone(incoming)); return { success: true, ipo: incoming }; } },
+    './contentQuality': { getFieldEvidence },
   });
   return { module: loaded, writes };
 }
 interface Prices { code: string; tradeDate: string; openingPrice: number; closingPrice: number; source: string }
 type FetchPrices = (code: string, listingDate?: string, options?: { fetcher: (url: string) => Promise<string> }) => Promise<Prices | null>;
-type SyncPrices = (options?: { fetchPrices?: () => Promise<Prices | null>; now?: Date; targetCode?: string }) => Promise<{ success: boolean; updatedCount: number; skippedCount: number; deferredCount: number; errors: unknown[] }>;
+type SyncPrices = (options?: { fetchPrices?: (code: string, listingDate?: string) => Promise<Prices | null>; now?: Date; targetCode?: string; requireVerifiedListingDate?: boolean }) => Promise<{ success: boolean; updatedCount: number; skippedCount: number; deferredCount: number; errors: unknown[] }>;
 
 test('fchart selects the exact listing day rather than the oldest candle', async () => {
   const fixture = priceFixture(fixtureIpo());
@@ -324,6 +325,63 @@ test('matching-day prices still persist returns and finalized records remain fro
   const frozen = priceFixture(fixture.writes[0]);
   assert.equal((await (frozen.module.syncListingReturnsForIpos as unknown as SyncPrices)()).updatedCount, 0);
   assert.equal(frozen.writes.length, 0);
+});
+
+const listingEvidence = { sourceTitle: '상장일 공식 공시', sourceUrl: 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000001',
+  checkedAt: '2026-10-23T00:00:00Z', value: '2026-10-20' };
+
+test('scheduled prices defer without requests when official listing evidence is absent, stale, untrusted or unavailable', async () => {
+  const checks: Partial<IpoItem>[] = [
+    {},
+    { fieldEvidence: { listingDate: { ...listingEvidence, value: undefined } } },
+    { fieldEvidence: { listingDate: { ...listingEvidence, value: '2026-10-21' } } },
+    { fieldEvidence: { listingDate: { ...listingEvidence, sourceUrl: 'https://example.invalid/notice' } } },
+    ...(['conflict', 'unavailable'] as const).map(status => ({ fieldEvidence: { listingDate: listingEvidence },
+      scheduleVerification: { status, checkedAt: listingEvidence.checkedAt, conflicts: status === 'conflict' ? ['listingDate' as const] : [], coveredFields: [] } })),
+  ];
+  for (const changes of checks) {
+    const fixture = priceFixture(fixtureIpo({ listingDate: '2026-10-20', ...changes }));
+    let fetches = 0;
+    const result = await (fixture.module.syncListingReturnsForIpos as unknown as SyncPrices)({ requireVerifiedListingDate: true,
+      fetchPrices: async () => { fetches++; throw new Error('Unverified listing dates must not query prices.'); } });
+    assert.equal(fetches, 0);
+    assert.equal(fixture.writes.length, 0);
+    assert.equal(result.deferredCount, 1);
+    assert.equal(result.skippedCount, 1);
+    assert.equal(result.success, true);
+  }
+});
+
+test('scheduled prices use the officially verified day and still reject a different trading session', async () => {
+  for (const tradeDate of ['2026-10-20', '2026-10-21']) {
+    const initial = fixtureIpo({ listingDate: '2026-10-20', fieldEvidence: { listingDate: listingEvidence },
+      scheduleVerification: { status: 'partial', checkedAt: listingEvidence.checkedAt, conflicts: [], coveredFields: ['listingDate'] } });
+    const fixture = priceFixture(initial);
+    const requested: (string | undefined)[][] = [];
+    const result = await (fixture.module.syncListingReturnsForIpos as unknown as SyncPrices)({ requireVerifiedListingDate: true,
+      fetchPrices: async (code, date) => { requested.push([code, date]); return { code, tradeDate, openingPrice: 3000, closingPrice: 4000, source: 'fchart_origin' }; } });
+    assert.deepEqual(requested, [[initial.code, '2026-10-20']]);
+    assert.equal(fixture.writes.length, tradeDate === initial.listingDate ? 1 : 0);
+    assert.equal(result.success, tradeDate === initial.listingDate);
+    if (fixture.writes.length) {
+      assert.equal(fixture.writes[0].status, 'LISTED');
+      assert.equal(fixture.writes[0].openingReturnRate, 50);
+      assert.equal(fixture.writes[0].closingReturnRate, 100);
+    }
+  }
+});
+
+test('scheduled guards preserve finalized prices without a request or new evidence requirement', async () => {
+  const initial = fixtureIpo({ status: 'LISTED', listingDate: '2026-10-20', openingPrice: 3000, closingPrice: 4000 });
+  const fixture = priceFixture(initial);
+  let fetches = 0;
+  const result = await (fixture.module.syncListingReturnsForIpos as unknown as SyncPrices)({ requireVerifiedListingDate: true,
+    fetchPrices: async () => { fetches++; throw new Error('Finalized listing prices must stay frozen.'); } });
+  assert.equal(fetches, 0);
+  assert.equal(fixture.writes.length, 0);
+  assert.equal(result.skippedCount, 1);
+  assert.equal(result.deferredCount, 0);
+  assert.equal(result.success, true);
 });
 
 test('listing-day prices defer before 15:40 KST even for a manual target and resume after close', async () => {

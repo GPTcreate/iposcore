@@ -43,5 +43,6 @@ next-env.d.ts
 
 # scratch scripts & temporary audit files
 scratch/
+.cache/
 .codex-remote-attachments/
 /src/data/visitors.json

@@ -77,7 +77,7 @@ export async function POST(request: Request) {
       return NextResponse.json(result);
     }
 
-    // 1-2. 외부 포털 2중 교차 검증 (DART + 38커뮤니케이션) 자가 치유 동기화
+    // 1-2. 비공식 포털 차이 보고. 공식 근거 확인 전에는 값을 변경하지 않습니다.
     if (action === 'sync-crosscheck') {
       const result = await crossCheckAndSyncIpos();
       return NextResponse.json(result);

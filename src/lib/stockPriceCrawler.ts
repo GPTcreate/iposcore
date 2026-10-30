@@ -2,6 +2,7 @@ import https from 'https';
 import { IpoItem } from '@/types/ipo';
 import { getAllEffectiveIpos, getKstDateString } from './ipoUtils';
 import { addOrUpdateIpo } from './ipoServerStore';
+import { getFieldEvidence } from './contentQuality';
 
 export interface CrawledStockPrice {
   code: string;
@@ -183,6 +184,8 @@ export async function fetchStockListingPrices(code: string, listingDate?: string
 export async function syncListingReturnsForIpos(options?: {
   forceAll?: boolean;
   targetCode?: string;
+  /** Scheduled runs must verify the listing date before freezing its first-day prices. */
+  requireVerifiedListingDate?: boolean;
   now?: Date;
   fetchPrices?: (code: string, listingDate?: string) => Promise<CrawledStockPrice | null>;
 }): Promise<SyncPriceResult> {
@@ -244,6 +247,17 @@ export async function syncListingReturnsForIpos(options?: {
       skippedCount++;
       errors.push({ code: ipo.code, name: ipo.name, error: '상장일이 확인되지 않아 상장일 시세 저장을 보류했습니다.' });
       continue;
+    }
+    if (options?.requireVerifiedListingDate) {
+      const evidence = getFieldEvidence(ipo, 'listingDate');
+      if (ipo.scheduleVerification?.status === 'conflict' || ipo.scheduleVerification?.status === 'unavailable'
+        || !evidence || evidence.value !== ipo.listingDate) {
+        // A quote matching a registered date cannot prove that date was the listing day.
+        // Wait for value-bound official evidence without querying or freezing market prices.
+        skippedCount++;
+        deferredCount++;
+        continue;
+      }
     }
     if (ipo.listingDate === todayStr && beforeFinalClose) {
       // Intraday quotes must never become the permanently frozen listing-day close.

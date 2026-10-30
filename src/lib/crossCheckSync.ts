@@ -1,6 +1,4 @@
 import { getAllIpos } from './ipoStore';
-import { addOrUpdateIpo } from './ipoServerStore';
-import { IpoItem } from '@/types/ipo';
 
 export interface PortalIpoSummary {
   name: string;
@@ -142,8 +140,8 @@ export async function fetch38IpoDetail(detailUrl: string): Promise<PortalIpoDeta
 }
 
 /**
- * 2중 교차 검증 및 자가 치유(Self-Healing Diff Audit):
- * DART 단일 소스 의존을 탈피하여 외부 정형 포털과 공모가, 상장일, 경쟁률, 확약비율 자동 대조 및 보정
+ * 비공식 포털은 차이 탐지에만 사용합니다.
+ * 공식 검증 전에는 일정과 수치를 변경하지 않습니다.
  */
 export async function crossCheckAndSyncIpos(): Promise<{
   updatedCount: number;
@@ -152,6 +150,7 @@ export async function crossCheckAndSyncIpos(): Promise<{
     changes: string[];
   }[];
   message: string;
+  discrepancies?: { name: string; changes: string[] }[];
 }> {
   const currentIpos = getAllIpos();
   const activeTargets = currentIpos.filter((i) => !i.isCancelled && i.status !== 'LISTED');
@@ -172,7 +171,7 @@ export async function crossCheckAndSyncIpos(): Promise<{
     const cleanIpoName = ipo.name.replace(/주식회사|\(주\)|\(유\)|\s+/g, '');
     const matchedSummary = portalList.find((p) => {
       const pClean = p.name.replace(/주식회사|\(주\)|\(유\)|\s+/g, '');
-      return pClean === cleanIpoName || cleanIpoName.includes(pClean) || pClean.includes(cleanIpoName);
+      return pClean === cleanIpoName;
     });
 
     if (!matchedSummary || !matchedSummary.detailUrl) continue;
@@ -186,7 +185,6 @@ export async function crossCheckAndSyncIpos(): Promise<{
     // 1) 상장일(listingDate) 불일치 자가 보정 (예: 11월 5일 -> 11월 4일)
     if (detail.listingDate && detail.listingDate !== ipo.listingDate) {
       changes.push(`상장일 변경: ${ipo.listingDate || '미정'} ➔ ${detail.listingDate}`);
-      ipo.listingDate = detail.listingDate;
     }
 
     // 2) 확정 공모가 보정 (희망밴드 하단의 50% 이상이며 최소 1,000원 이상인 정상적인 공모가만 수용)
@@ -197,32 +195,29 @@ export async function crossCheckAndSyncIpos(): Promise<{
       ipo.confirmedPrice !== detail.confirmedPrice
     ) {
       changes.push(`공모가 확정: ${ipo.confirmedPrice ? ipo.confirmedPrice.toLocaleString() + '원' : '미정'} ➔ ${detail.confirmedPrice.toLocaleString()}원`);
-      ipo.confirmedPrice = detail.confirmedPrice;
     }
 
     // 3) 기관 수요예측 경쟁률 보정
     if (detail.institutionalCompetitionRate && detail.institutionalCompetitionRate > 0 && ipo.institutionalCompetitionRate !== detail.institutionalCompetitionRate) {
       changes.push(`기관경쟁률 갱신: ${ipo.institutionalCompetitionRate}:1 ➔ ${detail.institutionalCompetitionRate}:1`);
-      ipo.institutionalCompetitionRate = detail.institutionalCompetitionRate;
     }
 
     // 4) 의무보유확약 비율 보정
     if (detail.lockupCommitmentRate !== undefined && detail.lockupCommitmentRate >= 0 && ipo.lockupCommitmentRate !== detail.lockupCommitmentRate) {
       changes.push(`의무확약 갱신: ${ipo.lockupCommitmentRate}% ➔ ${detail.lockupCommitmentRate}%`);
-      ipo.lockupCommitmentRate = detail.lockupCommitmentRate;
     }
 
     if (changes.length > 0) {
-      addOrUpdateIpo(ipo);
       updatedStocks.push({ name: ipo.name, changes });
     }
   }
 
   return {
-    updatedCount: updatedStocks.length,
-    updatedStocks,
+    updatedCount: 0,
+    updatedStocks: [],
+    discrepancies: updatedStocks,
     message: updatedStocks.length > 0
-      ? `[교차 검증 성공] 총 ${updatedStocks.length}개 종목의 불일치 수치가 외부 포털과 자동 동기화되었습니다.`
-      : '모든 활성 공모주의 일정 및 확정 수치가 외부 포털과 100% 일치합니다.',
+      ? `[포털 차이 감지] ${updatedStocks.length}개 종목에 차이가 있습니다. 공식 근거 검증이 필요하며 등록값은 변경하지 않았습니다.`
+      : '비교 가능한 항목에서 새 차이를 발견하지 못했습니다. 공식 자료 검증 완료를 뜻하지 않습니다.',
   };
 }

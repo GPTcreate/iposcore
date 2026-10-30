@@ -899,10 +899,10 @@ https://iposcore.kr/ipo/${ipo.id}`;
                 onClick={handleSyncCrossCheck}
                 disabled={crossCheckLoading}
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
-                title="DART 공시뿐만 아니라 38커뮤니케이션 등 외부 포털과 공모가, 상장일, 경쟁률, 확약비율을 2중 교차 대조하여 자동 보정합니다"
+                title="38커뮤니케이션과 등록자료의 차이를 보고합니다. 공식 근거 검증 전에는 값을 변경하지 않습니다"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${crossCheckLoading ? 'animate-spin' : ''}`} />
-                <span>{crossCheckLoading ? '포털 2중 교차 대조 중...' : '🔄 포털 2중 교차 검증 (DART + 38)'}</span>
+                <span>{crossCheckLoading ? '포털 차이 확인 중...' : '🔎 포털 차이 확인 (38)'}</span>
               </button>
 
               <button
