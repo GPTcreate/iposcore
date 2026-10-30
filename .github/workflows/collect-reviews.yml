@@ -1,4 +1,4 @@
-name: Sync IPO records, financials and D-1 reviews
+name: Sync IPO records, official schedules, financials and D-1 reviews
 
 on:
   schedule:
@@ -77,6 +77,15 @@ jobs:
             echo '::error::DART_API_KEY is missing. Discovery and financial sync did not run; this pipeline is not successful.'
             exit 1
           fi
+      - name: Restore official-source request caches
+        id: source_cache
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache
+          key: ipo-official-v1-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            ipo-official-v1-${{ runner.os }}-
       - name: Discover and accumulate new IPO records
         id: discovery
         if: ${{ !cancelled() && steps.checks.outcome == 'success' && steps.dart_config.outcome == 'success' }}
@@ -88,6 +97,15 @@ jobs:
           args=(--dry-run)
           if [[ "$DATA_WRITE" == 'true' ]]; then args=(--write); fi
           npm run sync:ipos -- "${args[@]}"
+      - name: Verify due official schedules with a bounded request budget
+        id: official
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=(--dry-run)
+          if [[ "$DATA_WRITE" == 'true' ]]; then args=(--write); fi
+          npm run verify:official -- "${args[@]}"
       - name: Sync filed metrics and missing listing prices
         id: financials
         if: ${{ !cancelled() && steps.checks.outcome == 'success' && steps.dart_config.outcome == 'success' && env.DATA_WRITE == 'true' }}
@@ -98,6 +116,21 @@ jobs:
           set -euo pipefail
           # The CLI skips price requests for records whose listing results are already stored.
           npm run sync:financials -- --write
+      - name: Preserve source cache and retry state
+        if: ${{ !cancelled() && env.DATA_WRITE == 'true' && steps.checks.outcome == 'success' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .cache
+          key: ipo-official-v1-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Preserve bounded verification evidence
+        if: ${{ !cancelled() && env.DATA_WRITE == 'true' && steps.checks.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-source-checks
+          path: .cache/*.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Collect actual configured feeds
         id: collect
         # Reviews can still use existing records after a DART/configuration failure.
@@ -164,6 +197,7 @@ jobs:
           DART_CONFIG_OUTCOME: ${{ steps.dart_config.outcome }}
           DISCOVERY_OUTCOME: ${{ steps.discovery.outcome }}
           FINANCIALS_OUTCOME: ${{ steps.financials.outcome }}
+          OFFICIAL_OUTCOME: ${{ steps.official.outcome }}
           REVIEWS_OUTCOME: ${{ steps.collect.outcome }}
           COMMIT_OUTCOME: ${{ steps.commit.outcome }}
         shell: bash
@@ -176,6 +210,7 @@ jobs:
             "DART configuration: $DART_CONFIG_OUTCOME" \
             "IPO discovery: $DISCOVERY_OUTCOME" \
             "Financial metrics/listing prices: $FINANCIALS_OUTCOME" \
+            "Official schedules: $OFFICIAL_OUTCOME" \
             "D-1 reviews: $REVIEWS_OUTCOME" \
             "Allowed data commit/push: $COMMIT_OUTCOME" \
             'Read-only dispatches skip financial writes. A commit or push does not confirm a production deployment.' \
