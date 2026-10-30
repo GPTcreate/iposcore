@@ -6,43 +6,49 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - name: Compare bounded Node and IPv4 curl requests
+          cache: npm
+      - name: Probe response bodies with bounded requests
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
         shell: bash
         run: |
           node --input-type=module <<'NODE'
-          import dns from 'node:dns/promises';
-          import { execFile } from 'node:child_process';
-          import { promisify } from 'node:util';
-          const run = promisify(execFile);
+          const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).replaceAll('-', '');
+          const api = new URL('https://opendart.fss.or.kr/api/list.json');
+          for (const [key, value] of Object.entries({ crtfc_key: process.env.DART_API_KEY || '', bgn_de: day, end_de: day, pblntf_detail_ty: 'C001', page_count: '1' })) api.searchParams.set(key, value);
           const targets = [
-            ['opendart', 'https://opendart.fss.or.kr/api/list.json'],
-            ['dart', 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000504'],
-            ['kis', 'https://www.truefriend.com/main/research/corporate/ipo/Pre01.jsp'],
-            ['ibk', 'https://www.ibks.com/hts/hts_noticelist.do?popup=Y'],
+            ['api-default', api, undefined, true],
+            ['api-browser', api, 'Mozilla/5.0', true],
+            ['dart-collector', 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000504', 'IPOScore/1.0', false],
+            ['dart-browser', 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000504', 'Mozilla/5.0', false],
           ];
-          const results = await Promise.all(targets.map(async ([name, url]) => {
-            const result = { name };
-            try { result.families = [...new Set((await dns.lookup(new URL(url).hostname, { all: true })).map(x => x.family))]; }
-            catch { result.dnsFailed = true; }
-            const started = Date.now();
+          const results = await Promise.all(targets.map(async ([name, url, agent, isApi]) => {
+            const result = { name }, started = Date.now();
             try {
-              const response = await fetch(url, { redirect: 'error', signal: AbortSignal.timeout(7000), headers: { 'User-Agent': 'IPOScore-Connectivity-Check' } });
-              result.nodeStatus = response.status;
-              await response.body?.cancel();
-            } catch (error) {
-              result.nodeError = /^[A-Z_0-9]+$/.test(error?.cause?.code || '') ? error.cause.code : error?.name || 'Error';
-            }
-            result.nodeMs = Date.now() - started;
-            try {
-              const output = await run('curl', ['-4', '--silent', '--show-error', '--output', '/dev/null', '--connect-timeout', '5', '--max-time', '7', '--write-out', '%{http_code}', url], { timeout: 9000 });
-              result.curl4Status = output.stdout.trim();
-            } catch (error) { result.curl4Exit = Number.isInteger(error?.code) ? error.code : 'failed'; }
+              const response = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(15000), headers: agent ? { 'User-Agent': agent } : {} });
+              result.httpStatus = response.status;
+              const location = response.headers.get('location');
+              if (location) { try { const u = new URL(location, url); result.redirectOrigin = u.origin; result.redirectPath = u.pathname; } catch { result.invalidRedirect = true; } }
+              if (Number(response.headers.get('content-length')) > 2000000) { await response.body?.cancel(); result.oversized = true; }
+              else {
+                const body = await response.text();
+                result.bodyLength = body.length;
+                if (isApi) { try { const parsed = JSON.parse(body); result.dartStatus = /^\d{3}$/.test(parsed.status || '') ? parsed.status : 'INVALID'; result.count = parsed.total_count; } catch { result.invalidJson = true; } }
+                else result.viewerNodeCount = (body.match(/node\d+\['text'\]/g) || []).length;
+              }
+            } catch (error) { result.error = /^[A-Z_0-9]+$/.test(error?.cause?.code || '') ? error.cause.code : error?.name || 'Error'; }
+            result.ms = Date.now() - started;
             return result;
           }));
           console.log(JSON.stringify(results, null, 2));
           NODE
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+      - name: Verify one actual IPO with the deployed collector
+        run: npm run verify:official -- --dry-run --stock optronics
