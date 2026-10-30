@@ -384,29 +384,29 @@
     "scoreGrade": "A",
     "discovery": {
       "corpCode": "01835829",
-      "receiptNo": "20261015000345",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000345",
-      "receivedAt": "2026-10-15",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261030000396",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000396",
+      "receivedAt": "2026-10-30",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "바로팜 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000345",
-        "checkedAt": "2026-10-30T02:30:19.522Z",
+        "sourceTitle": "바로팜 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000396",
+        "checkedAt": "2026-10-30T15:54:12.835Z",
         "value": "2026-11-02",
-        "publishedAt": "2026-10-15",
+        "publishedAt": "2026-10-30",
         "excerpt": "청약기일 | 2026.11.02 ~ 2026.11.03",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v2"
       },
       "subscriptionEnd": {
-        "sourceTitle": "바로팜 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000345",
-        "checkedAt": "2026-10-30T02:30:19.522Z",
+        "sourceTitle": "바로팜 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000396",
+        "checkedAt": "2026-10-30T15:54:12.835Z",
         "value": "2026-11-03",
-        "publishedAt": "2026-10-15",
+        "publishedAt": "2026-10-30",
         "excerpt": "청약기일 | 2026.11.02 ~ 2026.11.03",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v2"
       },
       "refundDate": {
         "sourceTitle": "바로팜 DART 공시 일정",
@@ -429,12 +429,11 @@
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T05:42:18.635Z",
+      "checkedAt": "2026-10-30T15:54:12.835Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd",
-        "refundDate"
+        "subscriptionEnd"
       ],
       "pendingFields": [
         "listingDate"
@@ -1345,10 +1344,9 @@
     "subscriptionStart": "2026-11-03",
     "subscriptionEnd": "2026-11-04",
     "refundDate": "2026-11-06",
-    "listingDate": "2026-11-12",
     "priceBandMin": 10500,
     "priceBandMax": 13000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 8000,
     "underwriters": [
       {
         "name": "한국투자증권",
@@ -1356,9 +1354,9 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 37.03,
+    "institutionalCompetitionRate": 66.58,
+    "lockupCommitmentRate": 0.06,
+    "circulatingSupplyRate": 36.97,
     "totalOfferingAmount": 650,
     "marketCapAtIpo": 5950,
     "aiScore": 75,
@@ -1381,57 +1379,59 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01863318",
-      "receiptNo": "20261016000268",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000268",
-      "receivedAt": "2026-10-16",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261030000467",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+      "receivedAt": "2026-10-30",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "(주)넥스아이 수요예측 공지",
-        "sourceUrl": "https://www.truefriend.com/main/research/corporate/ipo/Pre01.jsp?cmd=TF09ac010002&num=665",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "넥스아이 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+        "checkedAt": "2026-10-30T15:54:12.835Z",
         "value": "2026-11-03",
-        "publishedAt": "2026-10-19T04:10:00+09:00",
-        "excerpt": "2. 청약일: 2026년 11월 03일(화) ~ 11월 04일",
-        "parserVersion": "official-verification-v1"
+        "publishedAt": "2026-10-30",
+        "excerpt": "청약기일(주3) | 일반투자자 | 개시일 | 2026년 11월 03일(화)",
+        "parserVersion": "official-verification-v2"
       },
       "subscriptionEnd": {
-        "sourceTitle": "(주)넥스아이 수요예측 공지",
-        "sourceUrl": "https://www.truefriend.com/main/research/corporate/ipo/Pre01.jsp?cmd=TF09ac010002&num=665",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "넥스아이 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+        "checkedAt": "2026-10-30T15:54:12.835Z",
         "value": "2026-11-04",
-        "publishedAt": "2026-10-19T04:10:00+09:00",
-        "excerpt": "2. 청약일: 2026년 11월 03일(화) ~ 11월 04일",
-        "parserVersion": "official-verification-v1"
+        "publishedAt": "2026-10-30",
+        "excerpt": "청약기일(주3) | 일반투자자 | 종료일 | 2026년 11월 04일(수)",
+        "parserVersion": "official-verification-v2"
       },
       "refundDate": {
-        "sourceTitle": "(주)넥스아이 수요예측 공지",
-        "sourceUrl": "https://www.truefriend.com/main/research/corporate/ipo/Pre01.jsp?cmd=TF09ac010002&num=665",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "넥스아이 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+        "checkedAt": "2026-10-30T15:54:12.835Z",
         "value": "2026-11-06",
-        "publishedAt": "2026-10-19T04:10:00+09:00",
-        "excerpt": "3. 납입 및 환불일: 2026년 11월 06일",
-        "parserVersion": "official-verification-v1"
+        "publishedAt": "2026-10-30",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일(2026년 11월 06일(금))에 환불합니다",
+        "parserVersion": "official-verification-v2"
       },
       "listingDate": {
-        "sourceTitle": "(주)넥스아이 수요예측 공지",
-        "sourceUrl": "https://www.truefriend.com/main/research/corporate/ipo/Pre01.jsp?cmd=TF09ac010002&num=665",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
-        "value": "2026-11-12",
-        "publishedAt": "2026-10-19T04:10:00+09:00",
-        "excerpt": "상장(예정)일: 2026년 11월 12일",
-        "parserVersion": "official-verification-v1"
+        "sourceTitle": "넥스아이 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+        "checkedAt": "2026-10-30T15:54:12.835Z",
+        "value": null,
+        "publishedAt": "2026-10-30",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
-      "status": "verified",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "status": "unavailable",
+      "checkedAt": "2026-10-30T15:54:12.835Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
         "subscriptionEnd",
-        "refundDate",
+        "refundDate"
+      ],
+      "pendingFields": [
         "listingDate"
       ]
     }
@@ -1458,7 +1458,7 @@
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 28,
+    "circulatingSupplyRate": 34.86,
     "totalOfferingAmount": 253,
     "marketCapAtIpo": 1591,
     "aiScore": 73,
@@ -1482,10 +1482,10 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "00960234",
-      "receiptNo": "20261008000649",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000649",
-      "receivedAt": "2026-10-08",
-      "reportName": "증권신고서(지분증권)"
+      "receiptNo": "20261030000616",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000616",
+      "receivedAt": "2026-10-30",
+      "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
@@ -2898,9 +2898,9 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01706509",
-      "receiptNo": "20261008000705",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000705",
-      "receivedAt": "2026-10-08",
+      "receiptNo": "20261030000682",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
+      "receivedAt": "2026-10-30",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
