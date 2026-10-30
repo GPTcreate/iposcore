@@ -51,4 +51,46 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --ignore-scripts
       - name: Verify one actual IPO with the deployed collector
-        run: npm run verify:official -- --dry-run --stock optronics
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        run: |
+          cat > "$RUNNER_TEMP/iposcore-fetch-diag.cjs" <<'NODE'
+          const original = globalThis.fetch;
+          const safeError = error => ({ error: ['TypeError', 'Error', 'TimeoutError', 'AbortError', 'SyntaxError'].includes(error?.name) ? error.name : 'OtherError', code: /^[A-Z_0-9]{1,60}$/.test(error?.cause?.code || '') ? error.cause.code : undefined });
+          globalThis.fetch = async function(input, init) {
+            const u = new URL(String(input)), started = Date.now();
+            const target = { host: u.hostname, path: u.pathname };
+            const log = event => console.log(JSON.stringify({ diagnostic: true, ...target, ms: Date.now() - started, ...event }));
+            log({ stage: 'start', cache: init?.cache, redirect: init?.redirect });
+            try {
+              const response = await original(input, init);
+              log({ stage: 'headers', status: response.status, sameUrl: response.url === String(input), length: response.headers.get('content-length') });
+              if (response.body) {
+                const getReader = response.body.getReader.bind(response.body);
+                response.body.getReader = function(...args) {
+                  const reader = getReader(...args), read = reader.read.bind(reader); let bytes = 0;
+                  reader.read = async function(...readArgs) {
+                    try { const part = await read(...readArgs); bytes += part.value?.byteLength || 0; if (part.done) log({ stage: 'stream-done', bytes }); return part; }
+                    catch (error) { log({ stage: 'stream-error', bytes, ...safeError(error) }); throw error; }
+                  };
+                  return reader;
+                };
+              }
+              for (const method of ['text', 'json']) {
+                const consume = response[method].bind(response);
+                response[method] = async function() {
+                  try { const value = await consume(); log({ stage: method + '-done', length: typeof value === 'string' ? value.length : undefined, apiStatus: method === 'json' && /^\d{3}$/.test(value?.status || '') ? value.status : undefined, count: method === 'json' ? value?.total_count : undefined }); return value; }
+                  catch (error) { log({ stage: method + '-error', ...safeError(error) }); throw error; }
+                };
+              }
+              return response;
+            } catch (error) { log({ stage: 'fetch-error', ...safeError(error) }); throw error; }
+          };
+          NODE
+          NODE_OPTIONS="--require=$RUNNER_TEMP/iposcore-fetch-diag.cjs" npm run verify:official -- --dry-run --stock optronics
+      - name: Check the discovery request with the same safe tracing
+        if: always()
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        run: NODE_OPTIONS="--require=$RUNNER_TEMP/iposcore-fetch-diag.cjs" npm run sync:ipos -- --dry-run --days 1
+
