@@ -14,6 +14,7 @@
     "test:content": "node scripts/test-content.mjs",
     "collect:reviews": "node scripts/run-collect-reviews.mjs",
     "sync:ipos": "node scripts/sync-ipo-discovery.mjs",
+    "verify:official": "node scripts/run-verify-official.mjs",
     "sync:financials": "node scripts/sync-financials.mjs"
   },
   "dependencies": {

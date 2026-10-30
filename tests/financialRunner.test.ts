@@ -9,7 +9,7 @@ const pending = { name: '발표 대기 기업', receiptNo: receipt,
   sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${receipt}`,
   reason: '수요예측 및 확정 공모가 발표 전', evidence: '수요예측 결과를 반영하여 최종 결정할 예정입니다.' };
 
-function fixture(dartFailure = false, priceFailure = false, unreadable = false) {
+function fixture(dartFailure = false, priceFailure = false, unreadable = false, missingParser = false) {
   const moduleExports: Record<string, unknown> = {};
   const writes: Record<string, string> = {};
   const calls: string[] = [];
@@ -18,15 +18,25 @@ function fixture(dartFailure = false, priceFailure = false, unreadable = false) 
     env: { DART_API_KEY: 'fixture-only', GITHUB_STEP_SUMMARY: 'summary.md', GITHUB_OUTPUT: 'output.txt' }, argv: [],
   };
   let loads = 0;
+  let cacheCreations = 0;
+  let cacheFlushes = 0;
+  const imports: string[] = [];
   const services: Record<string, unknown> = {
     '../src/lib/ipoServerStore': { loadServerCustomIpos: () => {
       if (++loads === 2 && unreadable) throw new Error('Unreadable saved data');
       return [];
     } },
-    '../src/lib/dartFilingSync': { syncExistingIposWithDartFilings: async () => {
+    '../src/lib/dartFilingSync': { ...(missingParser ? {} : { parseConfirmedFilingDetails: async () => null }), syncExistingIposWithDartFilings: async (options: { parseFiling?: unknown }) => {
+      assert.equal(typeof options.parseFiling, 'function');
       calls.push('dart');
       return { success: !dartFailure, updatedCount: 0, message: 'fixture',
         errors: dartFailure ? [{ error: 'DART request failed' }] : [], pendingCount: 1, pendingStocks: [pending] };
+    } },
+    '../src/lib/dartMetricCache': { createDartMetricCache: (options: { parseFiling: unknown }) => {
+      assert.equal(typeof options.parseFiling, 'function');
+      cacheCreations++;
+      return { parseFiling: options.parseFiling, flush: () => { cacheFlushes++; },
+        stats: { hits: 4, misses: 1, backoffSkipped: 2, failures: 0 } };
     } },
     '../src/lib/stockPriceCrawler': { syncListingReturnsForIpos: async () => {
       calls.push('prices');
@@ -41,11 +51,14 @@ function fixture(dartFailure = false, priceFailure = false, unreadable = false) 
   vm.runInNewContext(js, { exports: moduleExports, module: { exports: moduleExports }, process: processMock,
     console: { log: (value: string) => printed.push(value), error: () => {} },
     require: (name: string) => {
+      imports.push(name);
       assert(Object.prototype.hasOwnProperty.call(services, name), `Unexpected import ${name}`);
       return services[name];
     },
   });
-  return { main: moduleExports.main as (args: string[]) => Promise<void>, writes, calls, printed, processMock };
+  return { main: moduleExports.main as (args: string[]) => Promise<void>,
+    runFinancialSync: moduleExports.runFinancialSync as (options: { write: boolean; days: number; help: boolean }) => Promise<unknown>,
+    writes, calls, printed, processMock, imports, effects: () => ({ loads, cacheCreations, cacheFlushes }) };
 }
 
 test('documented publication waits complete normally and remain visible in runner output', async () => {
@@ -58,6 +71,8 @@ test('documented publication waits complete normally and remain visible in runne
   assert.equal(result.dart.updatedCount, 0);
   assert.equal(result.deploymentConfirmed, false);
   assert.equal(result.dart.pendingStocks[0].evidence, pending.evidence);
+  assert.deepEqual(result.metricCache, { hits: 4, misses: 1, backoffSkipped: 2, failures: 0 });
+  assert.deepEqual(run.effects(), { loads: 2, cacheCreations: 1, cacheFlushes: 1 });
   assert.deepEqual(run.calls, ['dart', 'prices']);
   assert.equal(run.processMock.exitCode, undefined);
   assert.match(run.writes['summary.md'], /공시 발표 대기 1건/);
@@ -92,5 +107,27 @@ test('help and missing explicit write remain free of data requests or report wri
     await run.main(args);
     assert.equal(run.calls.length, 0);
     assert.equal(Object.keys(run.writes).length, 0);
+    assert.equal(run.imports.length, 0);
+    assert.deepEqual(run.effects(), { loads: 0, cacheCreations: 0, cacheFlushes: 0 });
   }
+});
+
+test('write, credentials and Vercel guards run before cache imports, disk loads or network services', async () => {
+  for (const guard of ['write', 'credentials', 'vercel']) {
+    const run = fixture();
+    if (guard === 'credentials') delete run.processMock.env.DART_API_KEY;
+    if (guard === 'vercel') run.processMock.env.VERCEL = '1';
+    await assert.rejects(run.runFinancialSync({ write: guard !== 'write', days: 14, help: false }));
+    assert.equal(run.imports.length, 0);
+    assert.equal(run.calls.length, 0);
+    assert.deepEqual(run.effects(), { loads: 0, cacheCreations: 0, cacheFlushes: 0 });
+  }
+});
+
+test('an unavailable latest parser stops before cache access or synchronization', async () => {
+  const run = fixture(false, false, false, true);
+  await assert.rejects(run.main(['--write']), /최신 수치 파서/);
+  assert(!run.imports.includes('../src/lib/dartMetricCache'));
+  assert.deepEqual(run.effects(), { loads: 0, cacheCreations: 0, cacheFlushes: 0 });
+  assert.equal(run.calls.length, 0);
 });

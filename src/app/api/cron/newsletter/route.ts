@@ -28,7 +28,8 @@ export async function GET(request: Request) {
       console.warn('[Cron:Newsletter] 발송 전 DART 동기화 경고 (기존 데이터로 계속 진행):', syncErr);
     }
 
-    if (!getAllEffectiveIpos().some((ipo) => isReviewedIpo(ipo) && !ipo.isCancelled && ipo.status !== 'LISTED')) {
+    if (!getAllEffectiveIpos().some((ipo) => isReviewedIpo(ipo) && !ipo.isCancelled && ipo.status !== 'LISTED'
+      && (!ipo.scheduleVerification || ipo.scheduleVerification.status === 'verified'))) {
       return NextResponse.json({ success: true, sentCount: 0, message: '원문 확인을 마친 청약 자료가 없어 발송을 보류합니다.' });
     }
 

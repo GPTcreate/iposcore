@@ -95,6 +95,15 @@ npm run dev
 npm run build
 ```
 
+### 공식 일정 검증
+
+기존 예약 작업에서 공시 발견 후 공식 일정을 먼저 검증합니다. 동일 DART 접수번호는 캐시를 재사용하고 일정 임박도에 따라 6/24/72시간 간격으로 대상만 조회합니다. 회당12종목·HTTP30회로 제한하며 실패는 간격을 늘려 재시도합니다. 한국투자증권 최신 공지 어댑터와 DART 일정표를 지원하고 부분 추출·충돌·실패를 전체 일치로 표시하지 않습니다. 비공식 포털은 자동 보정하지 않습니다.
+
+npm run verify:official -- --dry-run
+npm run verify:official -- --write
+
+확인시각만 달라지면 재배포하지 않으며 새 상장성과는 값과 연결된 공식 상장일 근거가 있어야 저장합니다. 세부 기준은 [공식 검증 운영 절차](docs/OPERATIONAL_INTEGRITY_PROCESS.md)를 참고하세요.
+
 ### 3. 실제 블로그 수집 점검
 ```bash
 npm run collect:reviews -- --dry-run

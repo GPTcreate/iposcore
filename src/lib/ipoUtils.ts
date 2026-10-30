@@ -59,7 +59,7 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
     && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value);
 
   // 1. 이미 상장일이 도래했거나 지난 경우
-  if (validDay(ipo.listingDate) && todayStr >= ipo.listingDate!) {
+  if (validDay(ipo.listingDate) && !ipo.scheduleVerification?.conflicts.includes('listingDate') && todayStr >= ipo.listingDate!) {
     return 'LISTED';
   }
 

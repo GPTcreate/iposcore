@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const DART_API_KEY = process.env.DART_API_KEY || '035394bc3056c32575160716cc7cbd3d44b2fff7';
+const DART_API_KEY = process.env.DART_API_KEY?.trim();
+if (!DART_API_KEY) { console.error('DART_API_KEY is required. No request was sent.'); process.exit(1); }
 const mockFilePath = path.join(process.cwd(), 'src', 'data', 'mockIpo.ts');
 const customFilePath = path.join(process.cwd(), 'src', 'data', 'customIpos.json');
 
@@ -110,7 +111,7 @@ async function runAudit() {
   }
 
   if (discrepancyCount === 0) {
-    console.log('✨ [감사 완료] 모든 DART 최신 공시와 로컬 데이터베이스가 100% 일치합니다.');
+    console.log('✨ [감사 완료] 조회 범위의 공시 접수정보에서 새 차이를 찾지 못했습니다. 원문 항목 검증 완료를 뜻하지 않습니다.');
   } else {
     console.warn(`\n⚠️ 총 ${discrepancyCount}건의 최신 공시 미반영 내역이 감지되었습니다.`);
   }
