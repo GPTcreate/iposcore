@@ -43,6 +43,11 @@ function fixture(dartFailure = false, priceFailure = false, unreadable = false, 
       return { success: !priceFailure, totalCandidates: 0, updatedCount: 0, skippedCount: 0, deferredCount: 0,
         errors: priceFailure ? [{ error: 'Stock request failed' }] : [] };
     } },
+    '../src/lib/ipoStore': { getAllIpos: () => [] },
+    '../src/lib/krxListings': { syncKrxListingIdentities: async () => {
+      calls.push('listings');
+      return { success: true, updatedCount: 0, pendingCount: 0, errors: [] };
+    } },
     'node:fs': { appendFileSync: (file: string, content: string) => { writes[file] = (writes[file] || '') + content; } },
   };
   const source = fs.readFileSync('scripts/sync-financials.ts', 'utf8');
@@ -73,7 +78,7 @@ test('documented publication waits complete normally and remain visible in runne
   assert.equal(result.dart.pendingStocks[0].evidence, pending.evidence);
   assert.deepEqual(result.metricCache, { hits: 4, misses: 1, backoffSkipped: 2, failures: 0 });
   assert.deepEqual(run.effects(), { loads: 2, cacheCreations: 1, cacheFlushes: 1 });
-  assert.deepEqual(run.calls, ['dart', 'prices']);
+  assert.deepEqual(run.calls, ['listings', 'dart', 'prices']);
   assert.equal(run.processMock.exitCode, undefined);
   assert.match(run.writes['summary.md'], /공시 발표 대기 1건/);
   assert(run.writes['summary.md'].includes(pending.sourceUrl));
@@ -89,7 +94,7 @@ test('publication waits never mask a real DART or price failure', async () => {
     assert.equal(result.success, false);
     assert.equal(result.dataStatus, 'failed');
     assert.equal(run.processMock.exitCode, 1);
-    assert.deepEqual(run.calls, ['dart', 'prices']);
+    assert.deepEqual(run.calls, ['listings', 'dart', 'prices']);
     assert.match(run.writes['summary.md'], /실행: 실패/);
     assert(run.writes['output.txt'].includes(`financial_error_count=${Number(dartFailure) + Number(priceFailure)}`));
   }

@@ -8,6 +8,8 @@ import * as cheerio from 'cheerio';
 import { createDiscoveredIpo, invalidateChangedIpoEvidence } from '../src/lib/ipoDiscovery';
 import * as discovery from '../src/lib/ipoDiscovery';
 import * as stockCode from '../src/lib/stockCode';
+import { normalizeListingCompany } from '../src/lib/officialSource';
+import { fetchOfficialText } from '../src/lib/officialHttp';
 import type { DartFilingItem } from '../src/lib/ipoDiscovery';
 import type { IpoItem } from '../src/types/ipo';
 import { getFieldEvidence, hasScorableForecast, hasVerifiedField } from '../src/lib/contentQuality';
@@ -26,6 +28,7 @@ function moduleFixture(relative: string, imports: Record<string, unknown>, envir
   const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
   vm.runInNewContext(js, { exports, module: { exports }, require: (name: string) => {
     if (name === 'cheerio') return cheerio;
+    if (name === './officialHttp') return { fetchOfficialText };
     if (Object.prototype.hasOwnProperty.call(imports, name)) return imports[name];
     throw new Error(`Unexpected fixture import: ${name}`);
   }, process: { env: environment, argv: [] }, console: { log: () => {}, warn: () => {}, error: () => {} },
@@ -231,11 +234,12 @@ function priceFixture(initial: IpoItem) {
     './ipoUtils': { getAllEffectiveIpos: () => [structuredClone(initial)], getKstDateString: () => '2026-10-25' },
     './ipoServerStore': { addOrUpdateIpo: (incoming: IpoItem) => { writes.push(structuredClone(incoming)); return { success: true, ipo: incoming }; } },
     './contentQuality': { getFieldEvidence },
+    './officialSource': { normalizeListingCompany },
   });
   return { module: loaded, writes };
 }
 interface Prices { code: string; tradeDate: string; openingPrice: number; closingPrice: number; source: string }
-type FetchPrices = (code: string, listingDate?: string, options?: { fetcher: (url: string) => Promise<string> }) => Promise<Prices | null>;
+type FetchPrices = (code: string, listingDate?: string, options?: { fetcher: (url: string) => Promise<string>; expectedName?: string }) => Promise<Prices | null>;
 type SyncPrices = (options?: { fetchPrices?: (code: string, listingDate?: string) => Promise<Prices | null>; now?: Date; targetCode?: string; requireVerifiedListingDate?: boolean }) => Promise<{ success: boolean; updatedCount: number; skippedCount: number; deferredCount: number; errors: unknown[] }>;
 
 test('fchart selects the exact listing day rather than the oldest candle', async () => {
@@ -245,6 +249,36 @@ test('fchart selects the exact listing day rather than the oldest candle', async
   });
   assert.equal(result!.tradeDate, '2026-10-20');
   assert.equal(result!.openingPrice, 2000);
+});
+
+test('company identity and stock type are checked before any listing candle can be frozen', async () => {
+  const fixture = priceFixture(fixtureIpo());
+  for (const basic of [{ itemCode: '462900', stockName: 'KoAct 바이오헬스케어액티브', stockEndType: 'etf' },
+    { itemCode: '439270', stockName: '다른기업', stockEndType: 'stock' },
+    { itemCode: '999999', stockName: '크리에이츠', stockEndType: 'stock' }]) {
+    const calls: string[] = [];
+    await assert.rejects((fixture.module.fetchStockListingPrices as unknown as FetchPrices)('439270', '2026-10-30', {
+      expectedName: '크리에이츠', fetcher: async url => { calls.push(url); return JSON.stringify(basic); },
+    }), /종목명·코드·주식/);
+    assert.equal(calls.length, 1);
+  }
+  const result = await (fixture.module.fetchStockListingPrices as unknown as FetchPrices)('0127E0', '2026-10-30', {
+    expectedName: '한화플러스제6호기업인수목적', fetcher: async url => url.endsWith('/basic')
+      ? JSON.stringify({ itemCode: '0127E0', stockName: '한화플러스제6호스팩', stockEndType: 'stock' })
+      : '<item data="20261030|2810|2995|1863|1866|28113355"/>',
+  });
+  assert.equal(result!.openingPrice, 2810);
+  assert.equal(result!.closingPrice, 1866);
+});
+
+test('after-market realtime values cannot substitute for a missing regular-session close', async () => {
+  const fixture = priceFixture(fixtureIpo());
+  const result = await (fixture.module.fetchStockListingPrices as unknown as FetchPrices)('123456', '2026-10-25', {
+    fetcher: async url => url.includes('polling') ? JSON.stringify({ datas: [{ localTradedAt: '2026-10-25T20:00:00',
+      openPrice: 2000, closePrice: 9000, marketStatus: 'CLOSE', marketSessionType: 'afterMarket' }] })
+      : url.includes('fchart') ? '<protocol/>' : '[]',
+  });
+  assert.equal(result, null);
 });
 
 test('alphanumeric KRX short codes survive discovery, price requests and matching', async () => {

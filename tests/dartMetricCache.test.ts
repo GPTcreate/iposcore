@@ -48,6 +48,24 @@ test('an explicit publication wait is cached and a new receipt or parser version
   assert.equal(Object.keys(JSON.parse(fs.readFileSync(file, 'utf8')).entries).length, 3);
 });
 
+test('the current parser retries a receipt despite an older parser failure backoff', async () => {
+  const file = location(), now = () => new Date('2026-10-31T00:00:00.000Z');
+  for (const parserVersion of ['dart-metrics-v1', 'dart-metrics-v2']) {
+    const old = createDartMetricCache({ file, parserVersion, now, parseFiling: async () => null });
+    await old.parseFiling(receipt);
+    old.flush();
+  }
+  let calls = 0;
+  const current = createDartMetricCache({ file, now, parseFiling: async () => { calls++; return facts(); } });
+  assert.notEqual(DART_METRIC_PARSER_VERSION, 'dart-metrics-v1');
+  assert.notEqual(DART_METRIC_PARSER_VERSION, 'dart-metrics-v2');
+  assert.equal((await current.parseFiling(receipt))?.confirmedPrice, 2000);
+  assert.equal(calls, 1);
+  assert.equal(current.stats.backoffSkipped, 0);
+  current.flush();
+  assert.equal(Object.keys(JSON.parse(fs.readFileSync(file, 'utf8')).entries).length, 3);
+});
+
 test('failed parsing backs off 6, 12, 24 then 48 hours and the boundary allows one retry', async () => {
   const file = location();
   let current = new Date('2026-10-30T00:00:00.000Z'), calls = 0;

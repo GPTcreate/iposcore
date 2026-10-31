@@ -3,6 +3,7 @@ import type { AnyNode } from 'domhandler';
 import { getAllIpos } from './ipoStore';
 import { addOrUpdateIpo, DartFilingItem, DartListResponse } from './ipoServerStore';
 import { findIpoForDartFiling } from './ipoDiscovery';
+import { fetchOfficialText } from './officialHttp';
 
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
 
@@ -183,8 +184,13 @@ function inspectDartFilingBody(html: string, rcpNo: string): { data: DartFilingP
   const result: DartFilingParseResult = { rcpNo, corpName: '' };
   const candidates = { confirmedPrice: uniqueValue(price), circulatingSupplyRate: uniqueValue(circulation), institutionalCompetitionRate: uniqueValue(competition), lockupCommitmentRate: uniqueValue(lockup) };
   for (const [key, value] of Object.entries(candidates)) if (value !== undefined) Object.assign(result, { [key]: value });
-  const ambiguous = [price, circulation, competition, lockup].some((values) => values.length > 0 && uniqueValue(values) === undefined);
-  if (pendingEvidence.length && !price.length && !competition.length && !lockup.length && !hasDemandResult && !ambiguous) result.publicationPending = {
+  const publishedAmbiguity = [price, competition, lockup].some((values) => values.length > 0 && uniqueValue(values) === undefined);
+  const circulationAmbiguity = circulation.length > 0 && uniqueValue(circulation) === undefined;
+  const publicationPending = pendingEvidence.length > 0 && !price.length && !competition.length && !lockup.length && !hasDemandResult;
+  // A pre-pricing float discrepancy cannot invalidate an explicit publication wait.
+  // Keep that float unassigned; conflicting published results still fail closed.
+  const ambiguous = publishedAmbiguity || (circulationAmbiguity && !publicationPending);
+  if (publicationPending && !ambiguous) result.publicationPending = {
     reason: '공시에서 수요예측 후 확정 공모가를 결정할 예정이라고 명시했습니다.',
     evidence: pendingEvidence[0], sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${rcpNo}`,
   };
@@ -200,9 +206,11 @@ export async function parseConfirmedFilingDetails(rcpNo: string, options?: { fet
   if (!/^\d{14}$/.test(rcpNo)) return null;
   const fetcher = options?.fetcher || fetch;
   const get = async (url: string, limit: number) => {
-    const response = await fetcher(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(10000) });
-    if (!response.ok || Number(response.headers.get('content-length')) > limit) return null;
-    const body = await response.text(); return body.length <= limit ? body : null;
+    // Preserve the existing character bound while bounding the complete UTF-8 stream.
+    // Korean text can use three bytes per UTF-16 code unit.
+    const { response, text } = await fetchOfficialText(url, { fetcher, maxBytes: limit * 3,
+      init: { cache: 'no-store', headers: { 'User-Agent': 'IPOScore/1.0' } } });
+    return response.status === 304 || text.length > limit ? null : text;
   };
   try {
     const main = await get(`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${rcpNo}`, 1_000_000);

@@ -52,6 +52,9 @@ export function getAllIpos(): IpoItem[] {
  * 이전 임시 종목코드 호환용 별칭 맵 (이전 북마크나 외부 링크 유입 시 정상 접근 보장)
  */
 export const LEGACY_CODE_ALIASES: Record<string, string> = {
+  '462900': 'creates', // KRX 공식 439270으로 정정. 이전 서비스 링크 유지.
+  '382010': 'tne-korea', // KRX 공식 0053F0.
+  '450043': 'hanwha-plus-spac6', // KRX 공식 0127E0.
   '410250': 'hana-aerodynamics', // IBK 공식 공지의 종목코드는 271160. 이전 링크를 유지합니다.
   '284010': 'dts-tech', // 디티에스의 이전 미확인 코드. 공식 KRX 코드는 0015M0.
   '372100': 'intellivix', // 인텔리빅스 (과거 정정 전 코드)

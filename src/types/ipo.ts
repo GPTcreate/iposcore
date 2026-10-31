@@ -106,6 +106,7 @@ export interface IpoItem {
   openingReturnRate?: number;    // 시초가 기준 수익률 (%)
   closingPrice?: number;         // 상장일 종가 (원)
   closingReturnRate?: number;    // 종가 기준 수익률 (%)
+  listingPriceEvidence?: { code: string; tradeDate: string; source: string; sourceUrl: string; checkedAt: string };
 
   // 취소/철회 종목 정보
   isCancelled?: boolean;         // 공모 취소/철회 여부
