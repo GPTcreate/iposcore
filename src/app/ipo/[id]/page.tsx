@@ -91,7 +91,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
   const reviewed = isReviewedIpo(ipo);
   const verifiedScore = hasVerifiedForecast(ipo);
   const score = calculateIpoScore(ipo);
-  const fieldNames: IpoEvidenceField[] = ['subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate', 'confirmedPrice', 'depositRatePercent', 'institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate'];
+  const fieldNames: IpoEvidenceField[] = ['subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate', 'confirmedPrice', 'depositRatePercent', 'institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate', 'totalOfferingAmount', 'marketCapAtIpo', 'businessDescription'];
   const fieldSources = fieldNames.flatMap((field) => { const source = getFieldEvidence(ipo, field); return source ? [{ title: source.sourceTitle, url: source.sourceUrl }] : []; });
   const wholeSources = [...(ipo.dataQuality?.sources || []), ...(ipo.discovery ? [{ title: ipo.discovery.reportName, url: ipo.discovery.sourceUrl }] : [])].filter((source) => isSpecificOfficialSourceUrl(source.url));
   const sources = [...new Map([...fieldSources, ...wholeSources].map((source) => [source.url, source])).values()];
@@ -156,8 +156,8 @@ export default async function IpoDetailPage({ params }: PageProps) {
             <Metric label="기관 수요예측 경쟁률" ipo={ipo} field="institutionalCompetitionRate">{!ipo.pendingForecastFields?.includes('institutionalCompetitionRate') && ipo.institutionalCompetitionRate > 0 ? `${formatNumber(ipo.institutionalCompetitionRate)} : 1` : '결과 확인 중'}</Metric>
             <Metric label="의무보유확약 비율" ipo={ipo} field="lockupCommitmentRate">{hasOfferingData && !ipo.pendingForecastFields?.includes('lockupCommitmentRate') ? percentage(ipo.lockupCommitmentRate) : '결과 확인 중'}</Metric>
             <Metric label="상장일 유통가능 비율" ipo={ipo} field="circulatingSupplyRate">{!ipo.pendingForecastFields?.includes('circulatingSupplyRate') && ipo.circulatingSupplyRate > 0 ? percentage(ipo.circulatingSupplyRate) : '비율 확인 중'}</Metric>
-            <Metric label="총 공모금액" ipo={ipo}>{amount(ipo.totalOfferingAmount)}</Metric>
-            <Metric label="공모가 기준 시가총액" ipo={ipo}>{amount(ipo.marketCapAtIpo)}</Metric>
+            <Metric label="총 공모금액" ipo={ipo} field="totalOfferingAmount">{amount(ipo.totalOfferingAmount)}</Metric>
+            <Metric label="공모가 기준 시가총액" ipo={ipo} field="marketCapAtIpo">{amount(ipo.marketCapAtIpo)}</Metric>
             <Metric label="유통가능 금액 (계산)" ipo={ipo}>{circulatingAmount === undefined ? '계산 자료 미등록' : `약 ${amount(circulatingAmount)}`}</Metric>
           </dl>
         </section>
@@ -175,6 +175,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
 
         {(ipo.aiSummary.bulletPoints.length > 0 || ipo.aiSummary.positivePoints.length > 0 || ipo.aiSummary.riskPoints.length > 0) && <section className="rounded-xl border border-gray-300 bg-white p-5 sm:p-7 space-y-4">
           <h2 className="flex items-center gap-2 text-lg font-bold"><FileText className="w-5 h-5 text-blue-700" />핵심 체크포인트</h2>
+          {ipo.businessDescription && <p className="text-sm text-gray-700 leading-relaxed">{ipo.businessDescription} <FieldSource ipo={ipo} field="businessDescription" /></p>}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{[{ title: '주의할 점', points: ipo.aiSummary.riskPoints }, { title: '관심 요인', points: ipo.aiSummary.positivePoints }].filter((group) => group.points.length).map((group) => <div key={group.title} className="rounded-lg border border-gray-200 bg-gray-50 p-4"><h3 className="font-bold text-sm mb-2">{group.title}</h3><ul className="list-disc pl-4 text-xs leading-relaxed space-y-2">{group.points.map((point, index) => <li key={index}>{memoText(point)}</li>)}</ul></div>)}</div>
           {ipo.aiSummary.bulletPoints.length > 0 && <details className="border-t border-gray-200 pt-3"><summary className="cursor-pointer text-xs font-semibold text-gray-600">분석 메모 더 보기</summary><ul className="mt-3 list-disc pl-5 text-sm leading-relaxed space-y-2">{ipo.aiSummary.bulletPoints.map((point, index) => <li key={index}>{memoText(point)}</li>)}</ul></details>}
         </section>}

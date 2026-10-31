@@ -97,6 +97,26 @@ function inspectProseConsistency(sourceName, ipos) {
 inspectProseConsistency('customIpos.json', customIpos);
 inspectProseConsistency('mockIpo.ts', mockIpos);
 
+// Disclosed share counts must reconcile with the final offer price; forecast amounts cannot pass silently.
+function inspectOfferingAmounts(sourceName, ipos) {
+  for (const ipo of ipos) {
+    for (const [countField, amountField] of [['offeringShareCount', 'totalOfferingAmount'], ['listedShareCount', 'marketCapAtIpo']]) {
+      const count = ipo[countField], amount = ipo[amountField];
+      if (count === undefined) continue;
+      if (!Number.isSafeInteger(count) || count <= 0) { reportError(sourceName, ipo.name, `${countField}는 양의 정수 주식수여야 합니다.`); continue; }
+      if (ipo.confirmedPrice > 0 && amount > 0 && Math.abs(count * ipo.confirmedPrice / 100_000_000 - amount) > 0.000001) {
+        reportError(sourceName, ipo.name, `${amountField}가 공시 주식수 × 확정 공모가와 다릅니다.`);
+      }
+    }
+    for (const field of ['totalOfferingAmount', 'marketCapAtIpo', 'offeringShareCount', 'listedShareCount', 'businessDescription']) {
+      const evidence = ipo.fieldEvidence?.[field];
+      if (evidence?.value !== undefined && evidence.value !== ipo[field]) reportError(sourceName, ipo.name, `${field}의 원문 근거가 현재 값과 다릅니다.`);
+    }
+  }
+}
+inspectOfferingAmounts('customIpos.json', customIpos);
+inspectOfferingAmounts('mockIpo.ts', mockIpos);
+
 // 3. 엔키화이트햇 등 공식 DART 정정 공시 데이터 특수 검증
 const enki = customIpos.find(i => i.id === 'enki-whitehat');
 if (enki) {

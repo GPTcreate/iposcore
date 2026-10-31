@@ -1,10 +1,12 @@
 import { load } from 'cheerio';
 import type { AnyNode } from 'domhandler';
+import type { IpoItem } from '../types/ipo';
 import { getAllIpos } from './ipoStore';
 import { addOrUpdateIpo, DartFilingItem, DartListResponse } from './ipoServerStore';
 import { findIpoForDartFiling } from './ipoDiscovery';
 import { fetchOfficialText } from './officialHttp';
 import { fetchDartDocumentOffering } from './dartDocument';
+import { inspectDartOfferingTerms } from './dartOffering';
 
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
 export const DART_METRIC_SYNC_BUDGET_MS = 5 * 60 * 1000;
@@ -16,6 +18,9 @@ export interface DartFilingParseResult {
   circulatingSupplyRate?: number;
   institutionalCompetitionRate?: number;
   lockupCommitmentRate?: number;
+  offeringShareCount?: number;
+  totalOfferingAmount?: number;
+  offeringExcerpt?: string;
   publicationPending?: { reason: string; evidence: string; sourceUrl: string };
 }
 
@@ -38,7 +43,7 @@ function inspectDartFilingBody(html: string, rcpNo: string): { data: DartFilingP
   const markers: { at: number; before: boolean }[] = [];
   $('p,td,th').each((_, node) => {
     const label = text(node).replace(/[\s\p{P}\p{S}]/gu, '');
-    if (/^정정[전후]$/.test(label) && node.startIndex !== null) markers.push({ at: node.startIndex!, before: label === '정정전' });
+    if (/^(?:주\d+)?정정[전후]$/.test(label) && node.startIndex !== null) markers.push({ at: node.startIndex!, before: label.endsWith('정정전') });
   });
   markers.sort((a, b) => a.at - b.at);
   const current = (node: AnyNode): boolean => {
@@ -186,12 +191,18 @@ function inspectDartFilingBody(html: string, rcpNo: string): { data: DartFilingP
   const result: DartFilingParseResult = { rcpNo, corpName: '' };
   const candidates = { confirmedPrice: uniqueValue(price), circulatingSupplyRate: uniqueValue(circulation), institutionalCompetitionRate: uniqueValue(competition), lockupCommitmentRate: uniqueValue(lockup) };
   for (const [key, value] of Object.entries(candidates)) if (value !== undefined) Object.assign(result, { [key]: value });
+  const offering = inspectDartOfferingTerms($, current, candidates.confirmedPrice);
+  if (offering.offeringShareCount !== undefined && offering.totalOfferingAmount !== undefined) {
+    result.offeringShareCount = offering.offeringShareCount;
+    result.totalOfferingAmount = offering.totalOfferingAmount;
+    result.offeringExcerpt = offering.excerpt;
+  }
   const publishedAmbiguity = [price, competition, lockup].some((values) => values.length > 0 && uniqueValue(values) === undefined);
   const circulationAmbiguity = circulation.length > 0 && uniqueValue(circulation) === undefined;
   const publicationPending = pendingEvidence.length > 0 && !price.length && !competition.length && !lockup.length && !hasDemandResult;
   // A pre-pricing float discrepancy cannot invalidate an explicit publication wait.
   // Keep that float unassigned; conflicting published results still fail closed.
-  const ambiguous = publishedAmbiguity || (circulationAmbiguity && !publicationPending);
+  const ambiguous = publishedAmbiguity || offering.ambiguous || (circulationAmbiguity && !publicationPending);
   if (publicationPending && !ambiguous) result.publicationPending = {
     reason: '공시에서 수요예측 후 확정 공모가를 결정할 예정이라고 명시했습니다.',
     evidence: pendingEvidence[0], sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${rcpNo}`,
@@ -200,7 +211,8 @@ function inspectDartFilingBody(html: string, rcpNo: string): { data: DartFilingP
 }
 
 export function parseDartFilingBody(html: string, rcpNo: string): DartFilingParseResult | null {
-  return inspectDartFilingBody(html, rcpNo).data;
+  const result = inspectDartFilingBody(html, rcpNo);
+  return result.ambiguous ? null : result.data;
 }
 
 function mergeDartFilingBodies(bodies: string[], rcpNo: string): DartFilingParseResult | null {
@@ -213,13 +225,15 @@ function mergeDartFilingBodies(bodies: string[], rcpNo: string): DartFilingParse
     if (inspection.data) parts.push(inspection.data);
   }
   const merged: DartFilingParseResult = { rcpNo, corpName: '' };
-  const fields = ['confirmedPrice', 'circulatingSupplyRate', 'institutionalCompetitionRate', 'lockupCommitmentRate'] as const;
+  const fields = ['confirmedPrice', 'circulatingSupplyRate', 'institutionalCompetitionRate', 'lockupCommitmentRate', 'offeringShareCount', 'totalOfferingAmount'] as const;
   for (const field of fields) {
     const values = parts.flatMap(part => part[field] === undefined ? [] : [part[field]!]);
     const value = uniqueValue(values);
     if (values.length && value === undefined) return null;
     if (value !== undefined) merged[field] = value;
   }
+  merged.offeringExcerpt = parts.find(part => part.offeringShareCount === merged.offeringShareCount
+    && part.totalOfferingAmount === merged.totalOfferingAmount && part.offeringExcerpt)?.offeringExcerpt;
   if (!publishedFacts) merged.publicationPending = parts.find(part => part.publicationPending)?.publicationPending;
   return Object.values(merged).some(value => typeof value === 'number') || merged.publicationPending ? merged : null;
 }
@@ -378,7 +392,7 @@ export async function syncExistingIposWithDartFilings(options?: {
         pendingStocks.push({ name: ipo.name, code: ipo.code, receiptNo: filing.rcept_no,
           sourceUrl: pending.sourceUrl, reason: pending.reason, evidence: pending.evidence });
       }
-      if (!parsed || ![parsed.confirmedPrice, parsed.circulatingSupplyRate, parsed.institutionalCompetitionRate, parsed.lockupCommitmentRate]
+      if (!parsed || ![parsed.confirmedPrice, parsed.circulatingSupplyRate, parsed.institutionalCompetitionRate, parsed.lockupCommitmentRate, parsed.totalOfferingAmount]
         .some((value) => typeof value === 'number' && Number.isFinite(value))) {
         if (hasPendingEvidence) continue;
         errors.push({ name: ipo.name, receiptNo: filing.rcept_no, error: '최신 공시에서 수치를 추출하지 못했습니다. 기존 수치를 유지합니다.' });
@@ -386,6 +400,7 @@ export async function syncExistingIposWithDartFilings(options?: {
       }
 
       let changed = false;
+      const offeringEvidence: NonNullable<IpoItem['fieldEvidence']> = {};
 
       if (finite(parsed.confirmedPrice) && parsed.confirmedPrice > 0 && ipo.confirmedPrice !== parsed.confirmedPrice) {
         ipo.confirmedPrice = parsed.confirmedPrice;
@@ -405,6 +420,22 @@ export async function syncExistingIposWithDartFilings(options?: {
       if (finite(parsed.lockupCommitmentRate) && parsed.lockupCommitmentRate >= 0 && parsed.lockupCommitmentRate <= 100 && ipo.lockupCommitmentRate !== parsed.lockupCommitmentRate) {
         ipo.lockupCommitmentRate = parsed.lockupCommitmentRate;
         changed = true;
+      }
+
+      if (Number.isSafeInteger(parsed.offeringShareCount) && parsed.offeringShareCount! > 0 && finite(parsed.totalOfferingAmount)
+        && parsed.totalOfferingAmount > 0 && parsed.confirmedPrice === ipo.confirmedPrice && parsed.offeringExcerpt?.trim()
+        && Math.abs(parsed.offeringShareCount! * ipo.confirmedPrice / 100_000_000 - parsed.totalOfferingAmount) < 0.000001) {
+        for (const field of ['offeringShareCount', 'totalOfferingAmount'] as const) {
+          const value = parsed[field]!;
+          const previous = ipo.fieldEvidence?.[field];
+          if (ipo[field] !== value) { ipo[field] = value; changed = true; }
+          if (previous?.value !== value || previous.sourceUrl !== `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${filing.rcept_no}`) {
+            offeringEvidence[field] = { sourceTitle: `${ipo.name} DART 확정 공모조건`, sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${filing.rcept_no}`,
+              checkedAt: today.toISOString(), publishedAt: `${filing.rcept_no.slice(0, 4)}-${filing.rcept_no.slice(4, 6)}-${filing.rcept_no.slice(6, 8)}`,
+              value, excerpt: parsed.offeringExcerpt, parserVersion: 'dart-offering-v1' };
+            changed = true;
+          }
+        }
       }
 
       if (ipo.pendingForecastFields) {
@@ -427,7 +458,9 @@ export async function syncExistingIposWithDartFilings(options?: {
         if (ipo.status === 'UPCOMING' && nowStr >= ipo.subscriptionStart && nowStr <= ipo.subscriptionEnd) {
           ipo.status = 'SUBSCRIPTION';
         }
-        addOrUpdateIpo(ipo);
+        const saved = addOrUpdateIpo(ipo).ipo;
+        // General edits invalidate changed citations. Bind the freshly checked facts only after that invalidation.
+        if (Object.keys(offeringEvidence).length) addOrUpdateIpo({ ...saved, fieldEvidence: { ...saved.fieldEvidence, ...offeringEvidence } });
         updatedStocks.push({
           name: ipo.name,
           code: ipo.code,
