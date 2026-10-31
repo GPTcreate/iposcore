@@ -6,7 +6,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -93,4 +93,48 @@ jobs:
         env:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
         run: NODE_OPTIONS="--require=$RUNNER_TEMP/iposcore-fetch-diag.cjs" npm run sync:ipos -- --dry-run --days 1
+      - name: Probe two actual metric filings without saving data or caches
+        if: always()
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          NODE_OPTIONS: --require=${{ runner.temp }}/iposcore-fetch-diag.cjs
+          TMPDIR: ${{ runner.temp }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { spawnSync } from 'node:child_process';
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import path from 'node:path';
+          const root = process.cwd(), temporary = process.env.RUNNER_TEMP;
+          if (!temporary) throw new Error('The diagnostic temporary directory is unavailable.');
+          const source = readFileSync(path.join(root, 'scripts', 'sync-financials.mjs'), 'utf8');
+          const marker = 'const result = spawnSync(process.execPath';
+          const boundary = source.indexOf(marker);
+          if (boundary < 0 || source.indexOf(marker, boundary + marker.length) >= 0) throw new Error('The financial compilation runner changed.');
+          const runner = path.join(temporary, 'iposcore-metric-probe-runner.mjs');
+          const suffix = `
+          const probe = path.join(output, 'metric-parser-probe.cjs');
+          writeFileSync(probe, \`
+          const { parseConfirmedFilingDetails } = require(\${JSON.stringify(path.join(output, 'src', 'lib', 'dartFilingSync.js'))});
+          (async () => {
+            for (const receiptNo of ['20261030000406', '20261028000157']) {
+              const result = await parseConfirmedFilingDetails(receiptNo);
+              const parsed = result ? Object.fromEntries(['confirmedPrice', 'circulatingSupplyRate', 'institutionalCompetitionRate', 'lockupCommitmentRate']
+                .filter(field => typeof result[field] === 'number' && Number.isFinite(result[field]))
+                .map(field => [field, result[field]])) : null;
+              if (parsed) parsed.publicationPending = Boolean(result.publicationPending);
+              console.log(JSON.stringify({ receiptNo, parsed }));
+            }
+          })().catch(() => { console.error('The read-only metric probe failed.'); process.exitCode = 1; });
+          \`);
+          const result = spawnSync(process.execPath, [probe], {
+            cwd: root, stdio: 'inherit',
+            env: { ...process.env, NODE_PATH: [path.join(root, 'node_modules'), process.env.NODE_PATH].filter(Boolean).join(path.delimiter) },
+          });
+          process.exit(result.status ?? 1);
+          `;
+          writeFileSync(runner, source.slice(0, boundary) + suffix);
+          const result = spawnSync(process.execPath, [runner], { cwd: root, stdio: 'inherit', env: process.env });
+          process.exit(result.status ?? 1);
+          NODE
 
