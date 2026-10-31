@@ -2962,7 +2962,7 @@
     },
     "subscriptionStart": "2026-11-18",
     "subscriptionEnd": "2026-11-19",
-    "refundDate": "",
+    "refundDate": "2026-11-23",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -3009,15 +3009,37 @@
         "publishedAt": "2026-10-19",
         "excerpt": "청약기일 | 2026년 11월 18일 ~ 2026년 11월 19일",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "에스에프씨 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-11-23",
+        "publishedAt": "2026-10-19",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 2026년 11월 23일에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "에스에프씨 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": null,
+        "publishedAt": "2026-10-19",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "checkedAt": "2026-10-31T09:01:39.729Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -3039,7 +3061,7 @@
     },
     "subscriptionStart": "2026-12-10",
     "subscriptionEnd": "2026-12-11",
-    "refundDate": "",
+    "refundDate": "2026-12-15",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -3086,15 +3108,37 @@
         "publishedAt": "2026-10-19",
         "excerpt": "청약기일 | 2026년 12월 10일 ~ 2026년 12월 11일",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-15",
+        "publishedAt": "2026-10-19",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일(2026년 12월 15일)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": null,
+        "publishedAt": "2026-10-19",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:47.645Z",
+      "checkedAt": "2026-10-31T09:01:39.729Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -3276,9 +3320,9 @@
     "dataQuality": {
       "status": "unverified"
     },
-    "subscriptionStart": "2026-11-10",
-    "subscriptionEnd": "2026-11-11",
-    "refundDate": "",
+    "subscriptionStart": "2026-12-01",
+    "subscriptionEnd": "2026-12-02",
+    "refundDate": "2026-12-04",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -3309,31 +3353,53 @@
     ],
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "다비오 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000705",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
-        "value": "2026-11-10",
-        "publishedAt": "2026-10-08",
-        "excerpt": "청약기일 | 2026년 11월 10일 ~ 2026년 11월 11일",
-        "parserVersion": "official-verification-v1"
+        "sourceTitle": "다비오 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-01",
+        "publishedAt": "2026-10-30",
+        "excerpt": "청약기일 | 2026년 12월 1일 ~ 2026년 12월 2일",
+        "parserVersion": "official-verification-v2"
       },
       "subscriptionEnd": {
-        "sourceTitle": "다비오 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008000705",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
-        "value": "2026-11-11",
-        "publishedAt": "2026-10-08",
-        "excerpt": "청약기일 | 2026년 11월 10일 ~ 2026년 11월 11일",
-        "parserVersion": "official-verification-v1"
+        "sourceTitle": "다비오 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-02",
+        "publishedAt": "2026-10-30",
+        "excerpt": "청약기일 | 2026년 12월 1일 ~ 2026년 12월 2일",
+        "parserVersion": "official-verification-v2"
+      },
+      "refundDate": {
+        "sourceTitle": "다비오 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-04",
+        "publishedAt": "2026-10-30",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입일 당일 2026년 12월 4일(금)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "다비오 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": null,
+        "publishedAt": "2026-10-30",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:47.645Z",
+      "checkedAt": "2026-10-31T09:01:39.729Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -3355,7 +3421,7 @@
     },
     "subscriptionStart": "2026-12-02",
     "subscriptionEnd": "2026-12-03",
-    "refundDate": "",
+    "refundDate": "2026-12-07",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -3402,15 +3468,25 @@
         "publishedAt": "2026-10-26",
         "excerpt": "청약기일 | 2026.12.02~2026.12.03",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "우리투자제1호기업인수목적 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000285",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-07",
+        "publishedAt": "2026-10-26",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일( 2026년 12월 7일(월))에 환불합니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:30:19.522Z",
+      "checkedAt": "2026-10-31T09:01:39.729Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
       ]
     }
   },
@@ -3535,7 +3611,7 @@
     },
     "subscriptionStart": "2026-12-14",
     "subscriptionEnd": "2026-12-15",
-    "refundDate": "",
+    "refundDate": "2026-12-17",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -3582,15 +3658,37 @@
         "publishedAt": "2026-10-28",
         "excerpt": "청약기일주3) | 일반투자자 | 종료일 | 2026년 12월 15일(화)",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "데스틴파워 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000434",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-17",
+        "publishedAt": "2026-10-28",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일(2026년 12월 17일(목))에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "데스틴파워 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000434",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": null,
+        "publishedAt": "2026-10-28",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:30:19.522Z",
+      "checkedAt": "2026-10-31T09:01:39.729Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -3612,7 +3710,7 @@
     },
     "subscriptionStart": "2026-12-14",
     "subscriptionEnd": "2026-12-15",
-    "refundDate": "",
+    "refundDate": "2026-12-17",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -3659,15 +3757,37 @@
         "publishedAt": "2026-10-28",
         "excerpt": "청약기일 | 2026년 12월 14일 ~ 2026년 12월 15일",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "KTE DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000336",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": "2026-12-17",
+        "publishedAt": "2026-10-28",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일 2026년 12월 17일(목)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "KTE DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000336",
+        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "value": null,
+        "publishedAt": "2026-10-28",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:30:19.522Z",
+      "checkedAt": "2026-10-31T09:01:39.729Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   }
