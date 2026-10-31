@@ -74,7 +74,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${DART_API_KEY//[[:space:]]/}" ]]; then
-            echo '::error::DART_API_KEY is missing. Discovery and financial sync did not run; this pipeline is not successful.'
+            echo '::error::DART_API_KEY is missing. Discovery and filing metrics are unavailable; public listing recovery continues. This pipeline remains unsuccessful.'
             exit 1
           fi
       - name: Restore official-source request caches
