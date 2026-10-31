@@ -4,6 +4,7 @@ import { getAllIpos } from './ipoStore';
 import { addOrUpdateIpo, DartFilingItem, DartListResponse } from './ipoServerStore';
 import { findIpoForDartFiling } from './ipoDiscovery';
 import { fetchOfficialText } from './officialHttp';
+import { fetchDartDocumentOffering } from './dartDocument';
 
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
 
@@ -201,10 +202,39 @@ export function parseDartFilingBody(html: string, rcpNo: string): DartFilingPars
   return inspectDartFilingBody(html, rcpNo).data;
 }
 
+function mergeDartFilingBodies(bodies: string[], rcpNo: string): DartFilingParseResult | null {
+  const parts: DartFilingParseResult[] = [];
+  let publishedFacts = false;
+  for (const html of bodies) {
+    const inspection = inspectDartFilingBody(html, rcpNo);
+    if (inspection.ambiguous) return null;
+    publishedFacts ||= inspection.publishedFacts;
+    if (inspection.data) parts.push(inspection.data);
+  }
+  const merged: DartFilingParseResult = { rcpNo, corpName: '' };
+  const fields = ['confirmedPrice', 'circulatingSupplyRate', 'institutionalCompetitionRate', 'lockupCommitmentRate'] as const;
+  for (const field of fields) {
+    const values = parts.flatMap(part => part[field] === undefined ? [] : [part[field]!]);
+    const value = uniqueValue(values);
+    if (values.length && value === undefined) return null;
+    if (value !== undefined) merged[field] = value;
+  }
+  if (!publishedFacts) merged.publicationPending = parts.find(part => part.publicationPending)?.publicationPending;
+  return Object.values(merged).some(value => typeof value === 'number') || merged.publicationPending ? merged : null;
+}
+
 /** Select offering-body nodes, never the amendment cover or an attachment. */
-export async function parseConfirmedFilingDetails(rcpNo: string, options?: { fetcher?: typeof fetch }): Promise<DartFilingParseResult | null> {
+export async function parseConfirmedFilingDetails(rcpNo: string, options?: { fetcher?: typeof fetch; apiKey?: string }): Promise<DartFilingParseResult | null> {
   if (!/^\d{14}$/.test(rcpNo)) return null;
   const fetcher = options?.fetcher || fetch;
+  const apiKey = options?.apiKey || process.env.DART_API_KEY;
+  if (apiKey?.trim()) {
+    try {
+      const bodies = await fetchDartDocumentOffering(rcpNo, { apiKey, fetcher });
+      // A valid current source containing conflicting or unextractable facts must not be bypassed.
+      if (bodies) return mergeDartFilingBodies(bodies, rcpNo);
+    } catch { /* The bounded viewer remains available after an API transport or format failure. */ }
+  }
   const get = async (url: string, limit: number) => {
     // Preserve the existing character bound while bounding the complete UTF-8 stream.
     // Korean text can use three bytes per UTF-16 code unit.
@@ -233,30 +263,14 @@ export async function parseConfirmedFilingDetails(rcpNo: string, options?: { fet
       if (general.length === 1 && risk.length === 1 && general[0].dcmNo === risk[0].dcmNo) chosen.push(general[0], risk[0]);
     }
     if (!chosen.length) return null;
-    const parts: DartFilingParseResult[] = [];
-    let publishedFacts = false;
+    const bodies: string[] = [];
     for (const selected of chosen) {
       const url = `https://dart.fss.or.kr/report/viewer.do?rcpNo=${rcpNo}&dcmNo=${selected.dcmNo}&eleId=${selected.eleId}&offset=${selected.offset}&length=${selected.length}&dtd=dart4.xsd`;
       const html = await get(url, 2_000_000);
       if (!html) return null;
-      const inspection = inspectDartFilingBody(html, rcpNo);
-      if (inspection.ambiguous) return null;
-      publishedFacts ||= inspection.publishedFacts;
-      if (inspection.data) parts.push(inspection.data);
+      bodies.push(html);
     }
-    const merged: DartFilingParseResult = { rcpNo, corpName: '' };
-    const fields = ['confirmedPrice', 'circulatingSupplyRate', 'institutionalCompetitionRate', 'lockupCommitmentRate'] as const;
-    let conflicting = false;
-    for (const field of fields) {
-      const values = parts.flatMap((part) => part[field] === undefined ? [] : [part[field]!]);
-      const value = uniqueValue(values); if (values.length && value === undefined) conflicting = true;
-      if (value !== undefined) merged[field] = value;
-    }
-    if (conflicting) return null;
-    if (!publishedFacts) {
-      merged.publicationPending = parts.find((part) => part.publicationPending)?.publicationPending;
-    }
-    return Object.values(merged).some((value) => typeof value === 'number') || merged.publicationPending ? merged : null;
+    return mergeDartFilingBodies(bodies, rcpNo);
   } catch { return null; }
 }
 

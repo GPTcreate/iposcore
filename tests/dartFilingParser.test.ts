@@ -6,6 +6,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import * as cheerio from 'cheerio';
 import { fetchOfficialText } from '../src/lib/officialHttp';
+import { fetchDartDocumentOffering } from '../src/lib/dartDocument';
 
 interface Parsed { confirmedPrice?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number; circulatingSupplyRate?: number; publicationPending?: { reason: string; evidence: string; sourceUrl: string } }
 const receipt = '20261022000373';
@@ -16,12 +17,41 @@ const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind
 vm.runInNewContext(js, { exports: parserExports, module: { exports: parserExports }, require: (name: string) => {
   if (name === 'cheerio') return cheerio;
   if (name === './officialHttp') return { fetchOfficialText };
+  if (name === './dartDocument') return { fetchDartDocumentOffering };
   if (name === './ipoStore' || name === './ipoServerStore' || name === './ipoDiscovery') return {};
   throw new Error(`Unexpected import ${name}`);
 }, AbortSignal, Response, Date, Intl, URL, console, fetch: () => { throw new Error('Live network forbidden in fixtures'); }, process: { env: {} } });
 const body = parserExports.parseDartFilingBody as (html: string, receipt: string) => Parsed | null;
 const parse = parserExports.parseConfirmedFilingDetails as (receipt: string, options: { fetcher: typeof fetch }) => Promise<Parsed | null>;
 const node = (title: string, id: number, extra = '') => `node1['text']='${title}';node1['dcmNo']='12345';node1['eleId']='${id}';node1['offset']='10';node1['length']='1000';node1['dtd']='dart4.xsd';${extra}`;
+
+test('authenticated offering bodies use strict metrics, retain conflicts, and fall back only after API failure', async () => {
+  for (const mode of ['normal', 'transport', 'conflict']) {
+    const loaded: Record<string, unknown> = {}, calls: string[] = [];
+    vm.runInNewContext(js, { exports: loaded, module: { exports: loaded }, require: (name: string) => {
+      if (name === 'cheerio') return cheerio;
+      if (name === './officialHttp') return { fetchOfficialText };
+      if (name === './dartDocument') return { fetchDartDocumentOffering: async (_receipt: string, options: { apiKey: string }) => {
+        assert.equal(_receipt, receipt); assert.equal(options.apiKey, 'fixture-only'); calls.push('document');
+        if (mode === 'transport') throw new Error('API unavailable');
+        return [mode === 'conflict' ? '<p>확정공모가액 10,000원</p><p>확정공모가액 20,000원</p>' : fixture('confirmed-current.html')];
+      } };
+      if (name === './ipoStore' || name === './ipoServerStore' || name === './ipoDiscovery') return {};
+      throw new Error('Unexpected fixture import');
+    }, AbortSignal, Response, Date, Intl, URL, console, process: { env: {} } });
+    const run = loaded.parseConfirmedFilingDetails as (receipt: string, options: { apiKey: string; fetcher: typeof fetch }) => Promise<Parsed | null>;
+    const result = await run(receipt, { apiKey: 'fixture-only', fetcher: async () => {
+      calls.push('viewer');
+      return new Response(calls.length === 2 ? node('제1부 모집 또는 매출에 관한 사항', 8) : fixture('confirmed-current.html'));
+    } });
+    if (mode === 'conflict') assert.equal(result, null);
+    else {
+      assert.equal(result?.confirmedPrice, 2000);
+      assert.equal(result?.institutionalCompetitionRate, 1266.52);
+    }
+    assert.deepEqual(calls, mode === 'transport' ? ['document', 'viewer', 'viewer'] : ['document']);
+  }
+});
 
 test('offering body is selected instead of an amendment cover or issuer attachment', async () => {
   const calls: string[] = [];
