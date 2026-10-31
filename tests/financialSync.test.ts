@@ -10,6 +10,7 @@ import * as discovery from '../src/lib/ipoDiscovery';
 import * as stockCode from '../src/lib/stockCode';
 import { normalizeListingCompany } from '../src/lib/officialSource';
 import { fetchOfficialText } from '../src/lib/officialHttp';
+import { fetchDartDocumentOffering } from '../src/lib/dartDocument';
 import type { DartFilingItem } from '../src/lib/ipoDiscovery';
 import type { IpoItem } from '../src/types/ipo';
 import { getFieldEvidence, hasScorableForecast, hasVerifiedField } from '../src/lib/contentQuality';
@@ -29,6 +30,7 @@ function moduleFixture(relative: string, imports: Record<string, unknown>, envir
   vm.runInNewContext(js, { exports, module: { exports }, require: (name: string) => {
     if (name === 'cheerio') return cheerio;
     if (name === './officialHttp') return { fetchOfficialText };
+    if (name === './dartDocument') return { fetchDartDocumentOffering };
     if (Object.prototype.hasOwnProperty.call(imports, name)) return imports[name];
     throw new Error(`Unexpected fixture import: ${name}`);
   }, process: { env: environment, argv: [] }, console: { log: () => {}, warn: () => {}, error: () => {} },
