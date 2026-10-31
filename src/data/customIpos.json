@@ -1887,6 +1887,24 @@
         "publishedAt": "2026-10-29",
         "excerpt": "청약 기일(주3) | 일반청약자 | 종료일 | 2026년 11월 06일(금)",
         "parserVersion": "official-verification-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "옵토닉스 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000524",
+        "checkedAt": "2026-10-31T11:50:33.788Z",
+        "publishedAt": "2026-10-29",
+        "value": 2200000,
+        "excerpt": "보통주 일반공모 | 증권수량 2,200,000주 | 모집(매출)가액 12,000원 | 모집(매출)총액 26,400,000,000원",
+        "parserVersion": "dart-offering-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "옵토닉스 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000524",
+        "checkedAt": "2026-10-31T11:50:33.788Z",
+        "publishedAt": "2026-10-29",
+        "value": 264,
+        "excerpt": "보통주 일반공모 | 증권수량 2,200,000주 | 모집(매출)가액 12,000원 | 모집(매출)총액 26,400,000,000원",
+        "parserVersion": "dart-offering-v1"
       }
     },
     "scheduleVerification": {
@@ -1899,7 +1917,8 @@
         "listingDate",
         "confirmedPrice"
       ]
-    }
+    },
+    "offeringShareCount": 2200000
   },
   {
     "id": "hana-aerodynamics",
@@ -2842,7 +2861,7 @@
     "institutionalCompetitionRate": 1000.07,
     "lockupCommitmentRate": 0.87,
     "circulatingSupplyRate": 31.7,
-    "totalOfferingAmount": 0,
+    "totalOfferingAmount": 384.2,
     "marketCapAtIpo": 0,
     "aiScore": 0,
     "scoreGrade": "C",
@@ -2864,6 +2883,24 @@
         "sourceTitle": "DART 수요예측 신청수량 기준 · 기간별 확약수량/전체 신청수량 대조",
         "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000246",
         "checkedAt": "2026-10-25T01:42:27.329Z"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "영광 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000246",
+        "checkedAt": "2026-10-31T11:50:33.788Z",
+        "publishedAt": "2026-10-21",
+        "value": 2260000,
+        "excerpt": "보통주 일반공모 | 증권수량 2,260,000주 | 모집(매출)가액 17,000원 | 모집(매출)총액 38,420,000,000원",
+        "parserVersion": "dart-offering-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "영광 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000246",
+        "checkedAt": "2026-10-31T11:50:33.788Z",
+        "publishedAt": "2026-10-21",
+        "value": 384.2,
+        "excerpt": "보통주 일반공모 | 증권수량 2,260,000주 | 모집(매출)가액 17,000원 | 모집(매출)총액 38,420,000,000원",
+        "parserVersion": "dart-offering-v1"
       }
     },
     "scheduleVerification": {
@@ -2871,7 +2908,8 @@
       "checkedAt": "2026-10-30T02:23:49.036Z",
       "conflicts": [],
       "coveredFields": []
-    }
+    },
+    "offeringShareCount": 2260000
   },
   {
     "id": "dart-01783687",
