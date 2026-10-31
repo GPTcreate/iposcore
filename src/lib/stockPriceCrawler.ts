@@ -3,6 +3,7 @@ import { IpoItem } from '@/types/ipo';
 import { getAllEffectiveIpos, getKstDateString } from './ipoUtils';
 import { addOrUpdateIpo } from './ipoServerStore';
 import { getFieldEvidence } from './contentQuality';
+import { normalizeListingCompany } from './officialSource';
 
 export interface CrawledStockPrice {
   code: string;
@@ -19,6 +20,7 @@ export interface SyncPriceResult {
   updatedStocks: { code: string; name: string; openingPrice: number; closingPrice: number; source: string }[];
   skippedCount: number;
   deferredCount: number;
+  deferredStocks: { code: string; name: string; reason: string }[];
   errors: { code: string; name: string; error: string }[];
   timestamp: string;
 }
@@ -44,8 +46,11 @@ function httpsGet(url: string, headers: Record<string, string> = {}): Promise<st
         timeout: 5000,
       },
       (res) => {
+        if (res.statusCode !== 200) { res.resume(); reject(new Error(`시세 HTTP ${res.statusCode}`)); return; }
         let data = '';
         res.on('data', (chunk) => (data += chunk));
+        res.on('error', reject);
+        res.on('aborted', () => reject(new Error('시세 응답이 중단되었습니다.')));
         res.on('end', () => resolve(data));
       }
     );
@@ -102,7 +107,8 @@ async function fetchFromRealtimePolling(code: string, listingDate?: string, fetc
       const close = parseInt(String(item.closePriceRaw || item.closePrice).replace(/[^0-9]/g, ''), 10);
       const tradeDate = item.localTradedAt ? String(item.localTradedAt).slice(0, 10) : '';
 
-      if (open > 0 && close > 0 && isIsoDay(tradeDate) && (!listingDate || tradeDate === listingDate)) {
+      if (item.marketStatus === 'CLOSE' && item.marketSessionType === 'regularMarket'
+        && open > 0 && close > 0 && isIsoDay(tradeDate) && (!listingDate || tradeDate === listingDate)) {
         return {
           code,
           tradeDate,
@@ -152,21 +158,21 @@ async function fetchFromRecentPrices(code: string, listingDate?: string, fetcher
 /**
  * 특정 종목 코드의 실제 거래소 체결 시세(시초가 & 종가) 크롤링
  */
-export async function fetchStockListingPrices(code: string, listingDate?: string, options?: { fetcher?: PriceFetcher }): Promise<CrawledStockPrice | null> {
-  if (!code || code.trim().length !== 6) {
+export async function fetchStockListingPrices(code: string, listingDate?: string, options?: { fetcher?: PriceFetcher; expectedName?: string }): Promise<CrawledStockPrice | null> {
+  if (!code || !/^[0-9A-Z]{6}$/.test(code.trim()) || code.trim() === '000000') {
     return null;
   }
 
   const cleanCode = code.trim();
-  const todayStr = getKstDateString();
-
-  // 상장 당일인 경우: 실시간 폴링 API 우선 조회
-  if (listingDate && todayStr === listingDate) {
-    const realtime = await fetchFromRealtimePolling(cleanCode, listingDate, options?.fetcher);
-    if (realtime) return realtime;
+  if (options?.expectedName) {
+    const basic = JSON.parse(await (options.fetcher || httpsGet)(`https://m.stock.naver.com/api/stock/${cleanCode}/basic`));
+    if (basic.stockEndType !== 'stock' || basic.itemCode !== cleanCode
+      || normalizeListingCompany(basic.stockName || '') !== normalizeListingCompany(options.expectedName)) {
+      throw new Error('시세 종목명·코드·주식 종류가 등록된 기업과 다릅니다. 상장성과를 저장하지 않았습니다.');
+    }
   }
 
-  // 상장일이 과거인 경우: fchart 일봉 원천 데이터(상장 첫날 캔들) 우선 조회
+  // Always prefer the regular-session daily candle, including the listing day after close.
   const fchart = await fetchFromFchart(cleanCode, listingDate, options?.fetcher);
   if (fchart) return fchart;
 
@@ -198,6 +204,7 @@ export async function syncListingReturnsForIpos(options?: {
 
   let skippedCount = 0;
   let deferredCount = 0;
+  const deferredStocks: SyncPriceResult['deferredStocks'] = [];
 
   // 크롤링 대상 종목 필터링:
   // 1) 상장 완료(LISTED) 또는 오늘 상장일 도래 종목
@@ -213,7 +220,7 @@ export async function syncListingReturnsForIpos(options?: {
 
     // 이미 시초가와 종가가 모두 확정 등록된 종목 여부
     const isAlreadyFinalized =
-      Boolean(ipo.openingPrice && ipo.openingPrice > 0 && ipo.closingPrice && ipo.closingPrice > 0);
+      Boolean(Number.isFinite(ipo.openingPrice) && ipo.openingPrice! > 0 && Number.isFinite(ipo.closingPrice) && ipo.closingPrice! > 0);
 
     // 관리자가 특정 종목 코드를 명시하여 강제 갱신을 요청한 경우가 아니라면,
     // 최종 등록 완료된 종목은 일체 다시 보거나 크롤링하지 않음!
@@ -237,6 +244,7 @@ export async function syncListingReturnsForIpos(options?: {
       updatedStocks: [],
       skippedCount,
       deferredCount,
+      deferredStocks,
       errors: [],
       timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
     };
@@ -256,6 +264,7 @@ export async function syncListingReturnsForIpos(options?: {
         // Wait for value-bound official evidence without querying or freezing market prices.
         skippedCount++;
         deferredCount++;
+        deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '공식 상장일 근거 확인 대기' });
         continue;
       }
     }
@@ -263,18 +272,22 @@ export async function syncListingReturnsForIpos(options?: {
       // Intraday quotes must never become the permanently frozen listing-day close.
       skippedCount++;
       deferredCount++;
+      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '상장일 정규장 마감 후 집계' });
       continue;
     }
     // 6자리 정상 코드가 없는 경우 건너뜀
     if (!ipo.code || ipo.code.length !== 6 || !ipo.confirmedPrice || ipo.confirmedPrice <= 0) {
       skippedCount++;
+      deferredCount++;
+      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '종목코드 또는 확정 공모가 확인 대기' });
       continue;
     }
 
     try {
-      const priceData = await (options?.fetchPrices || fetchStockListingPrices)(ipo.code, ipo.listingDate);
+      const priceData = await (options?.fetchPrices || ((code, date) => fetchStockListingPrices(code, date, { expectedName: ipo.name })))(ipo.code, ipo.listingDate);
 
-      if (!priceData || priceData.openingPrice <= 0 || priceData.closingPrice <= 0) {
+      if (!priceData || priceData.code !== ipo.code || !Number.isFinite(priceData.openingPrice) || !Number.isFinite(priceData.closingPrice)
+        || priceData.openingPrice <= 0 || priceData.closingPrice <= 0) {
         errors.push({
           code: ipo.code,
           name: ipo.name,
@@ -301,6 +314,12 @@ export async function syncListingReturnsForIpos(options?: {
         openingReturnRate: openRate,
         closingPrice: priceData.closingPrice,
         closingReturnRate: closeRate,
+        listingPriceEvidence: { code: ipo.code, tradeDate: priceData.tradeDate, source: priceData.source,
+          sourceUrl: priceData.source === 'fchart_origin'
+            ? `https://fchart.stock.naver.com/sise.nhn?symbol=${ipo.code}&timeframe=day&count=1000&requestType=0`
+            : priceData.source === 'recent_price_history' ? `https://m.stock.naver.com/api/stock/${ipo.code}/price?page=1&pageSize=20`
+              : `https://polling.finance.naver.com/api/realtime/domestic/stock/${ipo.code}`,
+          checkedAt: (options?.now || new Date()).toISOString() },
       };
 
       // AI 요약 헤드라인 자동 갱신
@@ -340,6 +359,7 @@ export async function syncListingReturnsForIpos(options?: {
     updatedStocks,
     skippedCount,
     deferredCount,
+    deferredStocks,
     errors,
     timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
   };

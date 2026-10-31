@@ -348,7 +348,7 @@
     "refundDate": "2026-11-05",
     "priceBandMin": 16400,
     "priceBandMax": 20200,
-    "confirmedPrice": 0,
+    "confirmedPrice": 16400,
     "underwriters": [
       {
         "name": "미래에셋증권",
@@ -356,9 +356,9 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
+    "institutionalCompetitionRate": 152.36,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 30.38,
+    "circulatingSupplyRate": 30.33,
     "totalOfferingAmount": 360,
     "marketCapAtIpo": 2413,
     "aiSummary": {
@@ -452,7 +452,7 @@
     "listingDate": "2026-11-13",
     "priceBandMin": 23000,
     "priceBandMax": 26500,
-    "confirmedPrice": 0,
+    "confirmedPrice": 26500,
     "underwriters": [
       {
         "name": "삼성증권",
@@ -462,7 +462,7 @@
     ],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 29.47,
+    "circulatingSupplyRate": 29.49,
     "totalOfferingAmount": 538,
     "marketCapAtIpo": 2458,
     "aiSummary": {
@@ -528,9 +528,9 @@
   {
     "id": "creates",
     "name": "크리에이츠",
-    "code": "462900",
+    "code": "439270",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
@@ -551,7 +551,7 @@
     "totalOfferingAmount": 210,
     "marketCapAtIpo": 1969,
     "aiSummary": {
-      "headline": "글로벌 골프 론치모니터(UNEEKOR) 공모가 15,000원 확정, 10월 20일~21일 일반 청약 진행",
+      "headline": "크리에이츠 상장 완료! 시초가 12,000원(-20%), 종가 9,000원(-40%) 기록",
       "bulletPoints": [
         "기관 수요예측 경쟁률 240.46:1 기록, 공모가 희망 밴드 하단인 15,000원 확정",
         "상장일 유통가능물량 39.43%(5,176,832주), 의무보유확약 0.0%로 수급 부담 주의",
@@ -567,13 +567,13 @@
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 55,
-      "neutralRatio": 30,
-      "cautionRatio": 15
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
     },
     "expertReviews": [],
-    "aiScore": 68,
-    "scoreGrade": "B",
+    "aiScore": 27,
+    "scoreGrade": "C",
     "discovery": {
       "corpCode": "01540903",
       "receiptNo": "20261019000283",
@@ -599,6 +599,22 @@
         "publishedAt": "2026-10-19",
         "excerpt": "청약기일 | 2026년 10월 20일 ~ 2026년 10월 21일",
         "parserVersion": "official-verification-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "439270",
+        "excerpt": "크리에이츠 | 코스닥 | 439270 | 상장일 2026-10-30",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "2026-10-30",
+        "excerpt": "크리에이츠 | 코스닥 | 439270 | 상장일 2026-10-30",
+        "parserVersion": "krx-company-list-v1"
       }
     },
     "scheduleVerification": {
@@ -607,16 +623,28 @@
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "listingDate"
       ]
+    },
+    "openingPrice": 12000,
+    "openingReturnRate": -20,
+    "closingPrice": 9000,
+    "closingReturnRate": -40,
+    "listingPriceEvidence": {
+      "code": "439270",
+      "tradeDate": "2026-10-30",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=439270&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-10-31T08:29:39.688Z"
     }
   },
   {
     "id": "tne-korea",
     "name": "티앤이코리아",
-    "code": "382010",
+    "code": "0053F0",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
@@ -637,7 +665,7 @@
     "totalOfferingAmount": 367.2,
     "marketCapAtIpo": 1737,
     "aiSummary": {
-      "headline": "확정 공모가 15,300원(상단) 확정! 기관 경쟁률 1,041:1 & 의무확약 29.5% 흥행",
+      "headline": "티앤이코리아 상장 완료! 시초가 30,350원(+98.4%), 종가 21,000원(+37.3%) 기록",
       "bulletPoints": [
         "수요예측 결과 공모 희망밴드(12,600~15,300원) 최상단인 15,300원으로 최종 확정 (공모규모 367.2억원)",
         "기관 수요예측 경쟁률 1,041.02:1 기록 및 의무보유확약 비율 29.52%(신청수량 기준) 달성",
@@ -653,12 +681,12 @@
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 73,
-      "neutralRatio": 21,
-      "cautionRatio": 6
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
     },
     "expertReviews": [],
-    "aiScore": 81,
+    "aiScore": 82,
     "scoreGrade": "A",
     "discovery": {
       "corpCode": "01543043",
@@ -685,6 +713,22 @@
         "publishedAt": "2026-10-16",
         "excerpt": "청약기일 | 2026년 10월 20일~2026년 10월 21일",
         "parserVersion": "official-verification-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "0053F0",
+        "excerpt": "티앤이코리아 | 코스닥 | 0053F0 | 상장일 2026-10-29",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "2026-10-29",
+        "excerpt": "티앤이코리아 | 코스닥 | 0053F0 | 상장일 2026-10-29",
+        "parserVersion": "krx-company-list-v1"
       }
     },
     "scheduleVerification": {
@@ -693,8 +737,20 @@
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "listingDate"
       ]
+    },
+    "openingPrice": 30350,
+    "openingReturnRate": 98.4,
+    "closingPrice": 21000,
+    "closingReturnRate": 37.3,
+    "listingPriceEvidence": {
+      "code": "0053F0",
+      "tradeDate": "2026-10-29",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0053F0&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-10-31T08:29:39.721Z"
     }
   },
   {
@@ -788,7 +844,7 @@
     "name": "인텔리빅스",
     "code": "420610",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-21",
     "subscriptionEnd": "2026-10-22",
     "refundDate": "2026-10-26",
@@ -816,7 +872,7 @@
       "proportionalCompetitionRate": 2821.75
     },
     "aiSummary": {
-      "headline": "13년 연속 흑자 AI 비전 테크 인텔리빅스, 공모가 9,000원 상단 확정 및 청약 흥행 마감",
+      "headline": "인텔리빅스 상장 완료! 시초가 19,290원(+114.3%), 종가 29,150원(+223.9%) 기록",
       "bulletPoints": [
         "일반 청약 최종 경쟁률 1,410.9:1, 증거금 약 3.97조 원 몰리며 흥행 성료",
         "기관 수요예측 1,234.3:1 대흥행 기록, 희망 밴드 최상단인 9,000원에 최종 확정",
@@ -833,13 +889,13 @@
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 86,
-      "neutralRatio": 11,
-      "cautionRatio": 3
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
     },
     "expertReviews": [],
-    "aiScore": 88,
-    "scoreGrade": "S",
+    "aiScore": 84,
+    "scoreGrade": "A",
     "discovery": {
       "corpCode": "01649408",
       "receiptNo": "20261020000360",
@@ -865,6 +921,22 @@
         "publishedAt": "2026-10-20",
         "excerpt": "청약기일 | 2026년 10월 21일 ~ 2026년 10월 22일",
         "parserVersion": "official-verification-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "420610",
+        "excerpt": "인텔리빅스 | 코스닥 | 420610 | 상장일 2026-10-30",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "2026-10-30",
+        "excerpt": "인텔리빅스 | 코스닥 | 420610 | 상장일 2026-10-30",
+        "parserVersion": "krx-company-list-v1"
       }
     },
     "scheduleVerification": {
@@ -873,16 +945,28 @@
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "listingDate"
       ]
+    },
+    "openingPrice": 19290,
+    "openingReturnRate": 114.3,
+    "closingPrice": 29150,
+    "closingReturnRate": 223.9,
+    "listingPriceEvidence": {
+      "code": "420610",
+      "tradeDate": "2026-10-30",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=420610&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-10-31T08:29:39.742Z"
     }
   },
   {
     "id": "hanwha-plus-spac6",
     "name": "한화플러스제6호기업인수목적",
-    "code": "450043",
+    "code": "0127E0",
     "market": "KOSDAQ",
-    "status": "WAITING_LISTING",
+    "status": "LISTED",
     "subscriptionStart": "2026-10-20",
     "subscriptionEnd": "2026-10-21",
     "refundDate": "2026-10-23",
@@ -902,10 +986,10 @@
     "circulatingSupplyRate": 93.6,
     "totalOfferingAmount": 120,
     "marketCapAtIpo": 128,
-    "aiScore": 72,
-    "scoreGrade": "B",
+    "aiScore": 53,
+    "scoreGrade": "C",
     "aiSummary": {
-      "headline": "공모가 2,000원 신규 스팩! 한화플러스제6호스팩 10월 20일~21일 청약",
+      "headline": "한화플러스제6호기업인수목적 상장 완료! 시초가 2,810원(+40.5%), 종가 1,866원(-6.7%) 기록",
       "bulletPoints": [
         "공모가 2,000원 고정, 청약 기간: 2026년 10월 20일(화) ~ 10월 21일(수)",
         "환불일: 10월 23일(금), 대표 주관사: 한화투자증권 (일반 청약한도 15만주)",
@@ -917,9 +1001,9 @@
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 75,
-      "neutralRatio": 20,
-      "cautionRatio": 5
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
     },
     "expertReviews": [],
     "discovery": {
@@ -947,6 +1031,22 @@
         "publishedAt": "2026-10-19",
         "excerpt": "청약기일 | 2026.10.20~2026.10.21",
         "parserVersion": "official-verification-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "0127E0",
+        "excerpt": "한화플러스제6호스팩 | 코스닥 | 0127E0 | 상장일 2026-10-30",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "value": "2026-10-30",
+        "excerpt": "한화플러스제6호스팩 | 코스닥 | 0127E0 | 상장일 2026-10-30",
+        "parserVersion": "krx-company-list-v1"
       }
     },
     "scheduleVerification": {
@@ -955,8 +1055,20 @@
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "listingDate"
       ]
+    },
+    "openingPrice": 2810,
+    "openingReturnRate": 40.5,
+    "closingPrice": 1866,
+    "closingReturnRate": -6.7,
+    "listingPriceEvidence": {
+      "code": "0127E0",
+      "tradeDate": "2026-10-30",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0127E0&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-10-31T08:29:39.768Z"
     }
   },
   {
@@ -2866,9 +2978,9 @@
   {
     "id": "dart-02032951",
     "name": "에스케이증권제14호기업인수목적",
-    "code": "",
-    "market": "UNCONFIRMED",
-    "status": "WAITING_LISTING",
+    "code": "0205H0",
+    "market": "KOSDAQ",
+    "status": "LISTED",
     "discovery": {
       "corpCode": "02032951",
       "receiptNo": "20261014000196",
@@ -2891,10 +3003,10 @@
     "circulatingSupplyRate": 97.45,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
-    "aiScore": 0,
-    "scoreGrade": "C",
+    "aiScore": 64,
+    "scoreGrade": "B",
     "aiSummary": {
-      "headline": "공시 발견 · 청약 정보 확인 중",
+      "headline": "에스케이증권제14호기업인수목적 상장 완료! 시초가 4,065원(+103.3%), 종가 1,882원(-5.9%) 기록",
       "bulletPoints": [],
       "positivePoints": [],
       "riskPoints": []
@@ -2929,6 +3041,22 @@
         "publishedAt": "2026-10-14",
         "excerpt": "청약기일 | 2026.10.15~2026.10.16",
         "parserVersion": "official-verification-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:32:45.065Z",
+        "value": "0205H0",
+        "excerpt": "에스케이증권제14호기업인수목적 | 코스닥 | 0205H0 | 상장일 2026-10-27",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-10-31T08:32:45.065Z",
+        "value": "2026-10-27",
+        "excerpt": "에스케이증권제14호기업인수목적 | 코스닥 | 0205H0 | 상장일 2026-10-27",
+        "parserVersion": "krx-company-list-v1"
       }
     },
     "scheduleVerification": {
@@ -2937,8 +3065,21 @@
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "listingDate"
       ]
+    },
+    "listingDate": "2026-10-27",
+    "openingPrice": 4065,
+    "openingReturnRate": 103.3,
+    "closingPrice": 1882,
+    "closingReturnRate": -5.9,
+    "listingPriceEvidence": {
+      "code": "0205H0",
+      "tradeDate": "2026-10-27",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0205H0&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-10-31T08:33:04.729Z"
     }
   },
   {

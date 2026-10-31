@@ -1,11 +1,14 @@
 interface FinancialOptions { write: boolean; days: number; help: boolean }
 interface PendingFiling { name: string; receiptNo: string; sourceUrl: string; reason: string; evidence: string }
 interface DartResult { success: boolean; updatedCount: number; message: string; errors: unknown[]; pendingCount?: number; pendingStocks?: PendingFiling[] }
-interface PriceResult { success: boolean; totalCandidates: number; updatedCount: number; skippedCount: number; deferredCount?: number; errors: unknown[] }
+interface PriceResult { success: boolean; totalCandidates: number; updatedCount: number; skippedCount: number; deferredCount?: number;
+  deferredStocks?: { name: string; reason: string }[]; errors: unknown[] }
+interface ListingResult { success: boolean; updatedCount: number; pendingCount: number; errors: unknown[] }
 export interface FinancialDependencies {
   load: () => unknown[];
   syncDart: (options: { days: number }) => Promise<DartResult>;
   syncPrices: () => Promise<PriceResult>;
+  syncListings?: () => Promise<ListingResult>;
   flushMetricCache?: () => void;
   metricCacheStats?: { hits: number; misses: number; backoffSkipped: number; failures: number };
 }
@@ -36,30 +39,38 @@ export async function runFinancialSync(options: FinancialOptions, dependencies?:
   let services = dependencies;
   if (!services) {
     // Do not import runtime stores/parsers until all execution and credential guards pass.
-    const [store, dart, prices] = await Promise.all([
+    const [store, dart, prices, listings, ipoStore] = await Promise.all([
       import('../src/lib/ipoServerStore'), import('../src/lib/dartFilingSync'), import('../src/lib/stockPriceCrawler'),
+      import('../src/lib/krxListings'), import('../src/lib/ipoStore'),
     ]);
     if (typeof dart.parseConfirmedFilingDetails !== 'function') throw new Error('DART 최신 수치 파서를 사용할 수 없습니다.');
     const { createDartMetricCache } = await import('../src/lib/dartMetricCache');
     const cache = createDartMetricCache({ parseFiling: dart.parseConfirmedFilingDetails });
     services = { load: store.loadServerCustomIpos,
+      syncListings: () => listings.syncKrxListingIdentities(ipoStore.getAllIpos(), { save: incoming => {
+        // This collector's evidence binds the corrected value; generic edits intentionally invalidate it.
+        const custom = store.loadServerCustomIpos(), index = custom.findIndex(item => item.id === incoming.id);
+        if (index < 0) custom.push(incoming); else custom[index] = incoming;
+        store.saveServerCustomIpos(custom);
+      } }),
       syncDart: (syncOptions) => dart.syncExistingIposWithDartFilings({ ...syncOptions, parseFiling: cache.parseFiling }),
       syncPrices: () => prices.syncListingReturnsForIpos({ requireVerifiedListingDate: true }), flushMetricCache: cache.flush, metricCacheStats: cache.stats };
   }
   services.load();
+  const listings = await services.syncListings?.();
   let dart: DartResult;
   try { dart = await services.syncDart({ days: options.days }); }
   finally { services.flushMetricCache?.(); }
   const prices = await services.syncPrices();
   // Every changed record was atomically written by addOrUpdateIpo; reload verifies readable source data.
   const stored = services.load();
-  const success = dart.success && prices.success;
-  const pendingCount = (dart.pendingCount || 0) + (prices.deferredCount || 0);
+  const success = dart.success && prices.success && listings?.success !== false;
+  const pendingCount = (dart.pendingCount || 0) + (prices.deferredCount || 0) + (listings?.pendingCount || 0);
   return {
     success, stage: 'complete', dataStatus: !success ? 'failed' : pendingCount > 0 ? 'pending' : 'complete',
-    pendingCount, dart, prices, customCount: stored.length,
+    pendingCount, dart, prices, ...(listings ? { listings } : {}), customCount: stored.length,
     ...(services.metricCacheStats ? { metricCache: { ...services.metricCacheStats } } : {}),
-    storageStatus: dart.updatedCount + prices.updatedCount > 0 ? 'local-file-checked' : 'unchanged', deploymentConfirmed: false,
+    storageStatus: dart.updatedCount + prices.updatedCount + (listings?.updatedCount || 0) > 0 ? 'local-file-checked' : 'unchanged', deploymentConfirmed: false,
   };
 }
 
@@ -68,9 +79,11 @@ export function formatFinancialSummary(result: Awaited<ReturnType<typeof runFina
   const cell = (value: string) => value.replace(/[|\r\n<>]/g, ' ').trim();
   const lines = ['## 금융 자료 갱신', '',
     `실행: ${result.success ? '정상' : '실패'} · 자료 상태: ${result.dataStatus}`,
-    `갱신 ${result.dart.updatedCount + result.prices.updatedCount}건 · 공시 발표 대기 ${result.dart.pendingCount || 0}건 · 시세 저장 대기 ${result.prices.deferredCount || 0}건 · 오류 ${result.dart.errors.length + result.prices.errors.length}건`,
+    `갱신 ${result.dart.updatedCount + result.prices.updatedCount + (result.listings?.updatedCount || 0)}건 · 공시 발표 대기 ${result.dart.pendingCount || 0}건 · 시세 저장 대기 ${result.prices.deferredCount || 0}건 · 오류 ${result.dart.errors.length + result.prices.errors.length + (result.listings?.errors.length || 0)}건`,
     ''];
   if (result.metricCache) lines.push(`수치 원문: 캐시 ${result.metricCache.hits}건 · 새 조회 ${result.metricCache.misses}건 · 재시도 대기 ${result.metricCache.backoffSkipped}건`, '');
+  if (result.listings) lines.push(`거래소 상장정보: 보완 ${result.listings.updatedCount}건 · 상장 확인 대기 ${result.listings.pendingCount}건 · 오류 ${result.listings.errors.length}건`, '');
+  for (const pending of result.prices.deferredStocks || []) lines.push(`- ${cell(pending.name)}: ${cell(pending.reason)}`);
   if (result.dart.pendingStocks?.length) {
     lines.push('발표 대기는 공시 본문의 미확정 안내를 확인한 상태이며, 미발표 값을 만들지 않습니다.', '', '| 종목 | 상태 | 원문 |', '| --- | --- | --- |');
     for (const pending of result.dart.pendingStocks) {
@@ -96,7 +109,7 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
     const { appendFileSync } = await import('node:fs');
     if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, formatFinancialSummary(result), 'utf8');
     if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT,
-      `financial_data_status=${result.dataStatus}\nfinancial_pending_count=${result.pendingCount}\nfinancial_error_count=${result.dart.errors.length + result.prices.errors.length}\n`, 'utf8');
+      `financial_data_status=${result.dataStatus}\nfinancial_pending_count=${result.pendingCount}\nfinancial_error_count=${result.dart.errors.length + result.prices.errors.length + (result.listings?.errors.length || 0)}\n`, 'utf8');
   }
   if (!result.success) process.exitCode = 1;
 }

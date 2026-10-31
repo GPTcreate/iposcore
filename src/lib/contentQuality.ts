@@ -1,5 +1,5 @@
 import type { IpoEvidenceField, IpoFieldEvidence, IpoItem } from '../types/ipo';
-import { isKisNoticeUrl, isIbkNoticeUrl } from './officialSource';
+import { isKisNoticeUrl, isIbkNoticeUrl, KRX_COMPANY_LIST, normalizeListingCompany } from './officialSource';
 
 function isReceiptNumber(value: string | null): boolean {
   if (!value || !/^\d{14}$/.test(value)) return false;
@@ -73,8 +73,14 @@ export const hasScorableMetrics = hasScorableForecast;
 /** An item-level audit does not silently create a field-specific source record. */
 export function getFieldEvidence(ipo: EvidenceInput | null | undefined, field: EvidenceField): FieldEvidence | undefined {
   const evidence = ipo?.fieldEvidence?.[field];
+  // A complete exchange export is evidence for its exact identity/date row, not for other IPO metrics or a full review.
+  const krxRow = (field === 'code' || field === 'listingDate') && evidence?.sourceUrl === KRX_COMPANY_LIST
+    && evidence.parserVersion === 'krx-company-list-v1' && typeof evidence.excerpt === 'string'
+    && normalizeListingCompany(evidence.excerpt.split('|')[0]) === normalizeListingCompany(ipo?.name || '')
+    && evidence.excerpt.split('|').map(value => value.trim()).includes(ipo?.code || '')
+    && evidence.excerpt.endsWith(`상장일 ${ipo?.listingDate}`);
   return evidence && typeof evidence.sourceTitle === 'string' && evidence.sourceTitle.trim().length > 0
-    && typeof evidence.sourceUrl === 'string' && isSpecificOfficialSourceUrl(evidence.sourceUrl)
+    && typeof evidence.sourceUrl === 'string' && (isSpecificOfficialSourceUrl(evidence.sourceUrl) || krxRow)
     && isValidReviewDate(evidence.checkedAt, true)
     && (evidence.value === undefined || evidence.value === ipo?.[field] || (evidence.value === null && ipo?.[field] === undefined))
     && !ipo?.scheduleVerification?.conflicts.some(conflict => conflict === field) ? evidence : undefined;

@@ -129,8 +129,56 @@ test('milestone cadence, new-receipt invalidation, completed IPO skip and backof
   const state = { parserVersion: VERIFICATION_VERSION, receiptNo: ipo().discovery!.receiptNo, checkedAt: now.toISOString(), nextCheckAt: '2026-11-01T01:00:00Z', failures: 3, fingerprint: '' };
   assert.equal(isVerificationDue(ipo(), state, new Date('2026-10-31T01:00:00Z')), false);
   assert.equal(isVerificationDue({ ...ipo(), discovery: { ...ipo().discovery!, receiptNo: '20261030000100' } }, state, now), true);
-  assert.equal(isVerificationDue({ ...ipo(), status: 'LISTED' }, undefined, now), false);
+  assert.equal(isVerificationDue({ ...ipo(), status: 'LISTED', openingPrice: 15000, closingPrice: 16000 }, undefined, now), false);
   assert.throws(() => validateVerificationArchive({ version: 1, sources: { bad: {} }, targets: {} }));
+});
+
+test('listing status alone cannot freeze verification while either first-day price is missing or invalid', () => {
+  for (const status of ['LISTED', 'WAITING_LISTING'] as const) {
+    for (const prices of [{}, { openingPrice: 15000 }, { closingPrice: 16000 },
+      { openingPrice: 0, closingPrice: 16000 }, { openingPrice: 15000, closingPrice: 0 },
+      { openingPrice: Number.NaN, closingPrice: 16000 }, { openingPrice: 15000, closingPrice: Number.POSITIVE_INFINITY }]) {
+      assert.equal(isVerificationDue({ ...ipo(), status, ...prices }, undefined, now), true);
+    }
+    assert.equal(isVerificationDue({ ...ipo(), status, openingPrice: 15000, closingPrice: 16000 }, undefined, now), false);
+    assert.equal(isVerificationDue({ ...ipo(), status, isCancelled: true }, undefined, now), false);
+  }
+});
+
+test('overdue missing results receive the bounded verification slot before an imminent future milestone', async () => {
+  for (const status of ['LISTED', 'WAITING_LISTING'] as const) {
+    const future: IpoItem = { ...ipo(), id: 'future', underwriters: [], subscriptionStart: '2026-11-01' };
+    const overdue: IpoItem = { ...ipo(), id: 'overdue', status, underwriters: [], subscriptionStart: '2026-10-20',
+      subscriptionEnd: '2026-10-21', refundDate: '2026-10-23', listingDate: '2026-10-27' };
+    const completed = { ...overdue, id: 'completed', openingPrice: 15000, closingPrice: 16000 };
+    const cancelled = { ...overdue, id: 'cancelled', isCancelled: true };
+    assert.equal(verificationIntervalHours(future, now), 6);
+    assert.equal(verificationIntervalHours(overdue, now), 24);
+    const calls: string[] = [];
+    const fetcher: typeof fetch = async input => {
+      const address = String(input); calls.push(address);
+      const main = "node1['text']='I. 모집 또는 매출에 관한 일반사항';node1['rcpNo']='20261021000210';node1['dcmNo']='1';node1['eleId']='1';node1['offset']='1';node1['length']='100';node1['dtd']='dart4.xsd';";
+      return new Response(address.includes('viewer.do') ? '<p>청약 일정 미정</p>' : main);
+    };
+    const result = await verifyOfficialSchedules([future, completed, cancelled, overdue], emptyVerificationArchive(),
+      { now, fetcher, maxTargets: 1, maxRequests: 2 });
+    assert.deepEqual(result.coverage.map(item => item.id), ['overdue']);
+    assert.equal(result.checkedCount, 1);
+    assert.equal(result.skippedCount, 3);
+    assert.equal(result.requestCount, 2);
+    assert.equal(calls.length, 2);
+    assert.equal(result.errorCount, 0);
+    assert.deepEqual(result.ipos.find(item => item.id === 'completed'), completed);
+
+    // Recovery priority must not bypass a recent failure's retry delay.
+    const archive = emptyVerificationArchive();
+    archive.targets.overdue = { parserVersion: VERIFICATION_VERSION, receiptNo: overdue.discovery!.receiptNo,
+      checkedAt: now.toISOString(), nextCheckAt: '2026-10-31T01:00:00Z', failures: 1, fingerprint: '' };
+    const backedOff = await verifyOfficialSchedules([future, overdue], archive, { now, fetcher, maxTargets: 1, maxRequests: 2 });
+    assert.deepEqual(backedOff.coverage.map(item => item.id), ['future']);
+    assert.equal(backedOff.requestCount, 2);
+    assert.deepEqual(backedOff.ipos.find(item => item.id === 'overdue'), overdue);
+  }
 });
 
 test('not-due checks make no requests, immutable DART is reused and unchanged checks cause no data deployment', async () => {

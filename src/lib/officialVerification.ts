@@ -56,8 +56,13 @@ export function verificationIntervalHours(ipo: IpoItem, now: Date): number {
   const nearest = days.length ? Math.min(...days) : undefined;
   return nearest === undefined ? 24 : nearest <= 2 ? 6 : nearest <= 7 ? 24 : 72;
 }
+function hasFinalizedListingPrices(ipo: IpoItem): boolean {
+  return Number.isFinite(ipo.openingPrice) && ipo.openingPrice! > 0
+    && Number.isFinite(ipo.closingPrice) && ipo.closingPrice! > 0;
+}
 export function isVerificationDue(ipo: IpoItem, state: TargetCheck | undefined, now: Date): boolean {
-  if (ipo.isCancelled || ipo.status === 'LISTED') return false;
+  // The displayed/stored listing status does not mean first-day results were collected.
+  if (ipo.isCancelled || hasFinalizedListingPrices(ipo)) return false;
   return !state || state.parserVersion !== VERIFICATION_VERSION || state.receiptNo !== ipo.discovery?.receiptNo || Date.parse(state.nextCheckAt) <= now.getTime()
     || (!!state.inputHash && state.inputHash !== targetInputHash(ipo))
     || (!state.failures && Date.parse(state.checkedAt) + verificationIntervalHours(ipo, now) * HOUR <= now.getTime());
@@ -196,8 +201,12 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
         error: '공식 원문 조회 또는 파싱 실패. 이전 자료 보존.' };
     }
   }
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+  const awaitingListingResults = (ipo: IpoItem) => isIsoDay(ipo.listingDate) && ipo.listingDate <= today && !hasFinalizedListingPrices(ipo);
+  // Recover overdue first-day results before future milestones, within the same due/backoff and request limits.
   const due = result.ipos.filter(ipo => isVerificationDue(ipo, archive.targets[ipo.id], now))
-    .sort((a, b) => verificationIntervalHours(a, now) - verificationIntervalHours(b, now)
+    .sort((a, b) => Number(awaitingListingResults(b)) - Number(awaitingListingResults(a))
+      || verificationIntervalHours(a, now) - verificationIntervalHours(b, now)
       || (archive.targets[a.id]?.checkedAt || '').localeCompare(archive.targets[b.id]?.checkedAt || '')).slice(0, maxTargets);
   let brokerIndex: SourceCheck | undefined;
   let ibkIndex: SourceCheck | undefined;

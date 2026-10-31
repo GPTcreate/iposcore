@@ -5,6 +5,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import ts from 'typescript';
 import * as cheerio from 'cheerio';
+import { fetchOfficialText } from '../src/lib/officialHttp';
 
 interface Parsed { confirmedPrice?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number; circulatingSupplyRate?: number; publicationPending?: { reason: string; evidence: string; sourceUrl: string } }
 const receipt = '20261022000373';
@@ -14,6 +15,7 @@ const parserExports: Record<string, unknown> = {};
 const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
 vm.runInNewContext(js, { exports: parserExports, module: { exports: parserExports }, require: (name: string) => {
   if (name === 'cheerio') return cheerio;
+  if (name === './officialHttp') return { fetchOfficialText };
   if (name === './ipoStore' || name === './ipoServerStore' || name === './ipoDiscovery') return {};
   throw new Error(`Unexpected import ${name}`);
 }, AbortSignal, Response, Date, Intl, URL, console, fetch: () => { throw new Error('Live network forbidden in fixtures'); }, process: { env: {} } });
@@ -108,6 +110,68 @@ test('publication pending requires explicit current evidence and never substitut
   assert.equal(body('<p>수요예측을 실시합니다.</p>', receipt), null);
   assert.equal(body('<p>정정 전</p>' + evidence + '<p>정정 후</p><p>공모 조건 별도 확인</p>', receipt), null);
   assert.equal(body(evidence + '<p>확정 공모가액을 15,300원으로 최종 결정하였습니다.</p>', receipt)?.publicationPending, undefined);
+});
+
+test('an explicit pre-pricing wait preserves conflicting float as unknown without failing the filing', async () => {
+  // Reduced actual KMF layout: the same total and tradable counts have different disclosed percentages.
+  const narrative = '<p>당사의 상장예정주식수 8,483,285주 중 38.31%에 해당하는 3,250,187주는 상장 직후 유통가능 물량에 해당합니다.</p>';
+  const table = fixture('post-offering-float.html').replace('1,000,000', '8,483,285')
+    .replace('300,000', '3,250,187').replace('30.00%', '38.32%');
+  const pending = '<p>확정공모가액은 수요예측 결과를 반영하여 대표주관회사와 발행회사가 협의하여 최종 결정할 예정입니다.</p>';
+  const html = pending + narrative + table;
+  const parsed = body(html, receipt);
+  assert.ok(parsed?.publicationPending);
+  assert.equal(parsed?.circulatingSupplyRate, undefined);
+  assert.equal(parsed?.confirmedPrice, undefined);
+  assert.equal(parsed?.institutionalCompetitionRate, undefined);
+  assert.equal(parsed?.lockupCommitmentRate, undefined);
+  const throughViewer = async (contents: string) => {
+    let calls = 0;
+    return parse(receipt, { fetcher: (async () => new Response(++calls === 1
+      ? node('제1부 모집 또는 매출에 관한 사항', 8) : contents)) as typeof fetch });
+  };
+  assert.ok((await throughViewer(html))?.publicationPending);
+  assert.equal(await throughViewer(narrative + table), null);
+  for (const published of [
+    '<p>확정 공모가액 15,300원</p>',
+    '<p>의무보유확약 비율 20%</p>',
+    fixture('confirmed-current.html'),
+  ]) assert.equal(await throughViewer(html + published), null);
+  assert.equal(await throughViewer(pending + '<p>확정 공모가액 15,300원</p><p>확정 공모가액 16,000원</p>'), null);
+});
+
+test('confirmed filings retry transient transport failures through the bounded official reader', async () => {
+  let calls = 0;
+  const result = await parse(receipt, { fetcher: (async (_url, init) => {
+    assert.equal(init?.redirect, 'error');
+    assert.equal(init?.cache, 'no-store');
+    assert.ok(init?.signal);
+    if (++calls === 1) throw new TypeError('fetch failed', { cause: { code: 'UND_ERR_CONNECT_TIMEOUT' } });
+    return new Response(calls === 2 ? node('제1부 모집 또는 매출에 관한 사항', 8) : fixture('confirmed-current.html'));
+  }) as typeof fetch });
+  assert.equal(calls, 3);
+  assert.equal(result?.confirmedPrice, 2000);
+});
+
+test('an oversized streamed main page is rejected without parsing a plausible prefix', async () => {
+  let calls = 0;
+  assert.equal(await parse(receipt, { fetcher: (async () => {
+    calls++;
+    return new Response(node('제1부 모집 또는 매출에 관한 사항', 8) + ' '.repeat(1_000_001));
+  }) as typeof fetch }), null);
+  assert.equal(calls, 1);
+});
+
+test('a Korean offering body within the character limit may exceed two megabytes in UTF-8', async () => {
+  const contents = fixture('confirmed-current.html') + '<!--' + '가'.repeat(700_000) + '-->';
+  assert.ok(contents.length < 2_000_000);
+  assert.ok(Buffer.byteLength(contents, 'utf8') > 2_000_000);
+  let calls = 0;
+  const result = await parse(receipt, { fetcher: (async () => new Response(++calls === 1
+    ? node('제1부 모집 또는 매출에 관한 사항', 8) : contents)) as typeof fetch });
+  assert.equal(calls, 2);
+  assert.equal(result?.confirmedPrice, 2000);
+  assert.equal(result?.institutionalCompetitionRate, 1266.52);
 });
 
 test('grouped post-offering headers select tradable shares and reconcile with issued shares', () => {
