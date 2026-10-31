@@ -192,6 +192,8 @@ export async function syncListingReturnsForIpos(options?: {
   targetCode?: string;
   /** Scheduled runs must verify the listing date before freezing its first-day prices. */
   requireVerifiedListingDate?: boolean;
+  /** Latest filing was not processed within this run's budget; avoid freezing an old denominator. */
+  deferCodes?: string[];
   now?: Date;
   fetchPrices?: (code: string, listingDate?: string) => Promise<CrawledStockPrice | null>;
 }): Promise<SyncPriceResult> {
@@ -200,11 +202,13 @@ export async function syncListingReturnsForIpos(options?: {
   const timeParts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Seoul', hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).formatToParts(options?.now || new Date());
   const hour = Number(timeParts.find((part) => part.type === 'hour')!.value);
   const minute = Number(timeParts.find((part) => part.type === 'minute')!.value);
-  const beforeFinalClose = hour * 60 + minute < 15 * 60 + 40;
+  // Evening collection leaves room for delayed/special regular trading sessions.
+  const beforeFinalClose = hour * 60 + minute < 18 * 60;
 
   let skippedCount = 0;
   let deferredCount = 0;
   const deferredStocks: SyncPriceResult['deferredStocks'] = [];
+  const errors: SyncPriceResult['errors'] = [];
 
   // 크롤링 대상 종목 필터링:
   // 1) 상장 완료(LISTED) 또는 오늘 상장일 도래 종목
@@ -225,6 +229,10 @@ export async function syncListingReturnsForIpos(options?: {
     // 관리자가 특정 종목 코드를 명시하여 강제 갱신을 요청한 경우가 아니라면,
     // 최종 등록 완료된 종목은 일체 다시 보거나 크롤링하지 않음!
     if (isAlreadyFinalized && (!options?.targetCode || options.targetCode !== ipo.code)) {
+      if (ipo.listingPriceEvidence && (ipo.listingPriceEvidence.code !== ipo.code
+        || ipo.listingPriceEvidence.tradeDate !== ipo.listingDate)) {
+        errors.push({ code: ipo.code, name: ipo.name, error: '확정 가격의 종목코드·거래일 근거가 현재 등록자료와 다릅니다. 기존 가격을 보존하고 검토가 필요합니다.' });
+      }
       skippedCount++;
       return false;
     }
@@ -233,24 +241,30 @@ export async function syncListingReturnsForIpos(options?: {
   });
 
   const updatedStocks: SyncPriceResult['updatedStocks'] = [];
-  const errors: SyncPriceResult['errors'] = [];
 
   // 대기 중인 대상 종목이 없으면(모두 등록 완료 상태) 네트워크 호출 없이 0ms 즉시 반환
   if (candidates.length === 0) {
     return {
-      success: true,
+      success: errors.length === 0,
       totalCandidates: 0,
       updatedCount: 0,
       updatedStocks: [],
       skippedCount,
       deferredCount,
       deferredStocks,
-      errors: [],
+      errors,
       timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
     };
   }
 
   for (const ipo of candidates) {
+    if (options?.deferCodes?.includes(ipo.code)) {
+      deferredCount++;
+      skippedCount++;
+      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '최신 공시 시간 예산 보류: 공모가 확인 후 상장성과 저장' });
+      errors.push({ code: ipo.code, name: ipo.name, error: '최신 공시 확인이 시간 예산으로 보류되어 기존 공모가로 상장성과를 확정하지 않았습니다.' });
+      continue;
+    }
     if (!isIsoDay(ipo.listingDate)) {
       skippedCount++;
       errors.push({ code: ipo.code, name: ipo.name, error: '상장일이 확인되지 않아 상장일 시세 저장을 보류했습니다.' });
@@ -258,13 +272,18 @@ export async function syncListingReturnsForIpos(options?: {
     }
     if (options?.requireVerifiedListingDate) {
       const evidence = getFieldEvidence(ipo, 'listingDate');
-      if (ipo.scheduleVerification?.status === 'conflict' || ipo.scheduleVerification?.status === 'unavailable'
+      const blockedFields = ipo.scheduleVerification?.conflicts.some(field => ['listingDate', 'confirmedPrice'].includes(field));
+      const unavailableSchedule = ['conflict', 'unavailable'].includes(ipo.scheduleVerification?.status || '')
+        && evidence?.parserVersion !== 'krx-company-list-v1';
+      if (blockedFields || unavailableSchedule
         || !evidence || evidence.value !== ipo.listingDate) {
         // A quote matching a registered date cannot prove that date was the listing day.
         // Wait for value-bound official evidence without querying or freezing market prices.
         skippedCount++;
         deferredCount++;
         deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '공식 상장일 근거 확인 대기' });
+        if (ipo.listingDate < todayStr || (ipo.listingDate === todayStr && !beforeFinalClose)) errors.push({ code: ipo.code, name: ipo.name,
+          error: '상장일 저녁 집계 시점이 지났으나 공식 상장일 근거를 확인하지 못해 가격이 누락되어 있습니다.' });
         continue;
       }
     }
@@ -272,7 +291,7 @@ export async function syncListingReturnsForIpos(options?: {
       // Intraday quotes must never become the permanently frozen listing-day close.
       skippedCount++;
       deferredCount++;
-      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '상장일 정규장 마감 후 집계' });
+      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '상장일 18시 이후 최종 일봉 집계' });
       continue;
     }
     // 6자리 정상 코드가 없는 경우 건너뜀
@@ -280,6 +299,8 @@ export async function syncListingReturnsForIpos(options?: {
       skippedCount++;
       deferredCount++;
       deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '종목코드 또는 확정 공모가 확인 대기' });
+      if (ipo.listingDate < todayStr || (ipo.listingDate === todayStr && !beforeFinalClose)) errors.push({ code: ipo.code, name: ipo.name,
+        error: '상장일 저녁 집계 시점이 지났으나 종목코드 또는 확정 공모가가 없어 가격이 누락되어 있습니다.' });
       continue;
     }
 

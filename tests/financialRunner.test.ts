@@ -9,7 +9,8 @@ const pending = { name: '발표 대기 기업', receiptNo: receipt,
   sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${receipt}`,
   reason: '수요예측 및 확정 공모가 발표 전', evidence: '수요예측 결과를 반영하여 최종 결정할 예정입니다.' };
 
-function fixture(dartFailure = false, priceFailure = false, unreadable = false, missingParser = false) {
+function fixture(dartFailure = false, priceFailure = false, unreadable = false, missingParser = false,
+  throwStage?: 'listings' | 'prices' | 'dart' | 'cache' | 'flush') {
   const moduleExports: Record<string, unknown> = {};
   const writes: Record<string, string> = {};
   const calls: string[] = [];
@@ -29,23 +30,27 @@ function fixture(dartFailure = false, priceFailure = false, unreadable = false, 
     '../src/lib/dartFilingSync': { ...(missingParser ? {} : { parseConfirmedFilingDetails: async () => null }), syncExistingIposWithDartFilings: async (options: { parseFiling?: unknown }) => {
       assert.equal(typeof options.parseFiling, 'function');
       calls.push('dart');
+      if (throwStage === 'dart') throw new Error('https://private.invalid/?crtfc_key=fixture-only');
       return { success: !dartFailure, updatedCount: 0, message: 'fixture',
         errors: dartFailure ? [{ error: 'DART request failed' }] : [], pendingCount: 1, pendingStocks: [pending] };
     } },
     '../src/lib/dartMetricCache': { createDartMetricCache: (options: { parseFiling: unknown }) => {
       assert.equal(typeof options.parseFiling, 'function');
       cacheCreations++;
-      return { parseFiling: options.parseFiling, flush: () => { cacheFlushes++; },
+      if (throwStage === 'cache') throw new Error('corrupt cache fixture-only');
+      return { parseFiling: options.parseFiling, flush: () => { cacheFlushes++; if (throwStage === 'flush') throw new Error('flush fixture-only'); },
         stats: { hits: 4, misses: 1, backoffSkipped: 2, failures: 0 } };
     } },
     '../src/lib/stockPriceCrawler': { syncListingReturnsForIpos: async () => {
       calls.push('prices');
+      if (throwStage === 'prices') throw new Error('price fixture-only');
       return { success: !priceFailure, totalCandidates: 0, updatedCount: 0, skippedCount: 0, deferredCount: 0,
         errors: priceFailure ? [{ error: 'Stock request failed' }] : [] };
     } },
     '../src/lib/ipoStore': { getAllIpos: () => [] },
     '../src/lib/krxListings': { syncKrxListingIdentities: async () => {
       calls.push('listings');
+      if (throwStage === 'listings') throw new Error('listing fixture-only');
       return { success: true, updatedCount: 0, pendingCount: 0, errors: [] };
     } },
     'node:fs': { appendFileSync: (file: string, content: string) => { writes[file] = (writes[file] || '') + content; } },
@@ -117,16 +122,54 @@ test('help and missing explicit write remain free of data requests or report wri
   }
 });
 
-test('write, credentials and Vercel guards run before cache imports, disk loads or network services', async () => {
-  for (const guard of ['write', 'credentials', 'vercel']) {
+test('write and Vercel guards run before cache imports, disk loads or network services', async () => {
+  for (const guard of ['write', 'vercel']) {
     const run = fixture();
-    if (guard === 'credentials') delete run.processMock.env.DART_API_KEY;
     if (guard === 'vercel') run.processMock.env.VERCEL = '1';
     await assert.rejects(run.runFinancialSync({ write: guard !== 'write', days: 14, help: false }));
     assert.equal(run.imports.length, 0);
     assert.equal(run.calls.length, 0);
     assert.deepEqual(run.effects(), { loads: 0, cacheCreations: 0, cacheFlushes: 0 });
   }
+});
+
+test('exchange, price, DART and cache exceptions are isolated and never expose raw errors', async () => {
+  for (const stage of ['listings', 'prices', 'dart', 'cache', 'flush'] as const) {
+    const run = fixture(false, false, false, false, stage);
+    await run.main(['--write']);
+    const result = JSON.parse(run.printed[0]);
+    assert.equal(result.success, false, stage);
+    assert.equal(run.processMock.exitCode, 1, stage);
+    assert(run.calls.includes('listings'), stage);
+    assert(run.calls.includes('prices'), stage);
+    if (stage !== 'cache') assert(run.calls.includes('dart'), stage);
+    assert(!JSON.stringify([run.printed, run.writes]).includes('fixture-only'), stage);
+    assert.equal(run.effects().loads, 2, stage);
+  }
+});
+
+test('missing DART credentials still recover public listing prices while reporting failure', async () => {
+  const run = fixture();
+  delete run.processMock.env.DART_API_KEY;
+  await run.main(['--write']);
+  const result = JSON.parse(run.printed[0]);
+  assert.deepEqual(run.calls, ['listings', 'prices']);
+  assert.equal(run.effects().cacheCreations, 0);
+  assert.equal(result.success, false);
+  assert.equal(run.processMock.exitCode, 1);
+});
+
+test('a budget-deferred latest filing cannot freeze prices with the old offer-price denominator', async () => {
+  const run = fixture();
+  let forwarded: unknown;
+  const result = await (run.runFinancialSync as unknown as (options: unknown, dependencies: unknown) => Promise<{ success: boolean }>)({ write: true, days: 14, help: false }, {
+    load: () => [],
+    syncDart: async () => ({ success: false, updatedCount: 0, message: 'budget', errors: [], deferredCount: 1,
+      deferredStocks: [{ code: '123456', name: '기업', receiptNo: receipt, reason: 'budget' }] }),
+    syncPrices: async (options: unknown) => { forwarded = options; return { success: true, totalCandidates: 0, updatedCount: 0, skippedCount: 0, errors: [] }; },
+  });
+  assert.deepEqual(JSON.parse(JSON.stringify(forwarded)), { deferCodes: ['123456'] });
+  assert.equal(result.success, false);
 });
 
 test('an unavailable latest parser stops before cache access or synchronization', async () => {

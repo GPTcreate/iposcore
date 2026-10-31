@@ -34,7 +34,7 @@ function moduleFixture(relative: string, imports: Record<string, unknown>, envir
     if (Object.prototype.hasOwnProperty.call(imports, name)) return imports[name];
     throw new Error(`Unexpected fixture import: ${name}`);
   }, process: { env: environment, argv: [] }, console: { log: () => {}, warn: () => {}, error: () => {} },
-  structuredClone, URL, AbortSignal, Response });
+  structuredClone, URL, AbortSignal, Response, performance });
   return exports;
 }
 
@@ -50,10 +50,111 @@ function dartFixture(initial: IpoItem) {
   return { module: loaded, writes, current: () => current };
 }
 
-interface DartResult { success: boolean; updatedCount: number; errors: unknown[]; pendingCount: number; pendingStocks: { sourceUrl: string; evidence: string; reason: string }[] }
+interface DartResult { success: boolean; updatedCount: number; errors: unknown[]; pendingCount: number; pendingStocks: { sourceUrl: string; evidence: string; reason: string }[];
+  deferredCount: number; deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[] }
 interface Parsed { rcpNo: string; corpName: string; confirmedPrice?: number; circulatingSupplyRate?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number;
   publicationPending?: { sourceUrl: string; evidence: string; reason: string } }
-type SyncDart = (options: { apiKey?: string; fetcher: typeof fetch; parseFiling?: (receipt: string) => Promise<Parsed | null> }) => Promise<DartResult>;
+type SyncDart = (options: { apiKey?: string; fetcher: typeof fetch; parseFiling?: (receipt: string) => Promise<Parsed | null>;
+  monotonicNow?: () => number; timeBudgetMs?: number; now?: Date }) => Promise<DartResult>;
+
+function dartBatchFixture(initial: IpoItem[]) {
+  let current = structuredClone(initial);
+  const writes: IpoItem[] = [];
+  const loaded = moduleFixture('src/lib/dartFilingSync.ts', {
+    './ipoStore': { getAllIpos: () => structuredClone(current) },
+    './ipoServerStore': { addOrUpdateIpo: (incoming: IpoItem) => {
+      const index = current.findIndex(item => item.id === incoming.id);
+      const saved = invalidateChangedIpoEvidence(current[index], incoming);
+      current = current.map((item, position) => position === index ? saved : item);
+      writes.push(structuredClone(saved));
+      return { success: true, ipo: saved };
+    } }, './ipoDiscovery': discovery,
+  });
+  return { sync: loaded.syncExistingIposWithDartFilings as unknown as SyncDart, writes, current: () => current };
+}
+
+test('the five-minute monotonic budget defers only remaining real filings and preserves completed work', async () => {
+  const second = filing({ corp_code: '87654321', corp_name: '다음공시기업', stock_code: '654321', rcept_no: '20261023000002' });
+  const unfiled = { ...fixtureIpo(), id: 'no-latest-filing', code: '555555', name: '해당 공시 없는 기업', discovery: undefined };
+  const fixture = dartBatchFixture([fixtureIpo(), createDiscoveredIpo(second)!, unfiled]);
+  const parsed: string[] = []; let elapsed = 0;
+  const result = await fixture.sync({ apiKey: 'fixture-key', monotonicNow: () => elapsed,
+    fetcher: async () => Response.json({ status: '000', list: [filing(), second] }),
+    parseFiling: async receipt => { parsed.push(receipt); elapsed = 5 * 60 * 1000; return { rcpNo: receipt, corpName: '', confirmedPrice: 2200 }; } });
+  assert.equal(result.success, false);
+  assert.equal(result.updatedCount, 1);
+  assert.equal(fixture.current()[0].confirmedPrice, 2200);
+  assert.equal(fixture.current()[1].confirmedPrice, 0);
+  assert.deepEqual(parsed, [filing().rcept_no]);
+  assert.equal(result.deferredCount, 1);
+  assert.equal(result.deferredStocks[0].receiptNo, second.rcept_no);
+  assert.match(result.deferredStocks[0].reason, /시간 예산/);
+  assert.equal(result.pendingCount, 0);
+  assert.equal(result.errors.length, 0);
+  assert.equal(fixture.writes.length, 1);
+});
+
+test('finishing the final receipt after the deadline does not invent unprocessed work', async () => {
+  const fixture = dartFixture(fixtureIpo()); let elapsed = 0;
+  const result = await (fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart)({ apiKey: 'fixture-key', timeBudgetMs: 1,
+    monotonicNow: () => elapsed, fetcher: async () => Response.json({ status: '000', list: [filing()] }),
+    parseFiling: async receipt => { elapsed = 100; return { rcpNo: receipt, corpName: '', confirmedPrice: 2200 }; } });
+  assert.equal(result.success, true);
+  assert.equal(result.updatedCount, 1);
+  assert.equal(result.deferredCount, 0);
+});
+
+test('today and overdue incomplete listings receive the metric budget before future offerings', async () => {
+  const listedFiling = filing({ corp_code: '87654321', corp_name: '상장성과 대기 기업', stock_code: '654321', rcept_no: '20261023000002' });
+  for (const listingDate of ['2026-10-20', '2026-10-31']) {
+    const future = fixtureIpo({ listingDate: '2026-11-10' });
+    const due = { ...createDiscoveredIpo(listedFiling)!, listingDate, confirmedPrice: 0 };
+    const fixture = dartBatchFixture([future, due]);
+    const parsed: string[] = []; let elapsed = 0;
+    const result = await fixture.sync({ apiKey: 'fixture-key', now: new Date('2026-10-31T00:00:00Z'), monotonicNow: () => elapsed,
+      fetcher: async () => Response.json({ status: '000', list: [filing(), listedFiling] }),
+      parseFiling: async receipt => { parsed.push(receipt); elapsed = 5 * 60 * 1000; return { rcpNo: receipt, corpName: '', confirmedPrice: 2200 }; } });
+    assert.deepEqual(parsed, [listedFiling.rcept_no]);
+    assert.equal(result.success, false);
+    assert.equal(result.updatedCount, 1);
+    assert.equal(fixture.current()[1].confirmedPrice, 2200);
+    assert.deepEqual(fixture.current()[0], future);
+    assert.equal(result.deferredCount, 1);
+    assert.equal(result.deferredStocks[0].code, future.code);
+    assert.equal(result.deferredStocks[0].receiptNo, filing().rcept_no);
+  }
+});
+
+test('exhausted pagination stops safely before treating a partial list as the latest filing set', async () => {
+  const fixture = dartFixture(fixtureIpo()); let elapsed = 0, requests = 0, parses = 0;
+  const result = await (fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart)({ apiKey: 'fixture-key', timeBudgetMs: 1,
+    monotonicNow: () => elapsed, fetcher: async () => { requests++; elapsed = 1; return Response.json({ status: '000', total_page: 2, list: [filing()] }); },
+    parseFiling: async () => { parses++; return null; } });
+  assert.equal(result.success, false);
+  assert.equal(requests, 1);
+  assert.equal(parses, 0);
+  assert.equal(fixture.writes.length, 0);
+  assert.equal(result.pendingCount, 0);
+  assert.equal(result.errors.length, 1);
+});
+
+test('raw LISTED without complete prices can recover its offer price while twenty completed records stay untouched', async () => {
+  const completed = Array.from({ length: 20 }, (_, index) => fixtureIpo({ id: `frozen-${index}`, code: String(500000 + index),
+    status: index % 2 ? 'LISTED' : 'UPCOMING', openingPrice: 3000, closingPrice: 4000 }));
+  const cancelled = fixtureIpo({ id: 'cancelled', isCancelled: true, confirmedPrice: 0 });
+  const incomplete = fixtureIpo({ status: 'LISTED', confirmedPrice: 0 });
+  const fixture = dartBatchFixture([...completed, cancelled, incomplete]);
+  let parses = 0;
+  const result = await fixture.sync({ apiKey: 'fixture-key', monotonicNow: () => 0,
+    fetcher: async () => Response.json({ status: '000', list: [filing()] }),
+    parseFiling: async receipt => { parses++; return { rcpNo: receipt, corpName: '', confirmedPrice: 2200 }; } });
+  assert.equal(result.success, true);
+  assert.equal(parses, 1);
+  assert.equal(fixture.writes.length, 1);
+  assert.equal(fixture.current().at(-1)!.confirmedPrice, 2200);
+  assert.deepEqual(fixture.current().slice(0, 20), completed);
+  assert.deepEqual(fixture.current()[20], cancelled);
+});
 
 test('latest unchanged 1266/95.42/0 metrics never fall back to an older different filing', async () => {
   const fixture = dartFixture(fixtureIpo());
@@ -366,7 +467,7 @@ test('matching-day prices still persist returns and finalized records remain fro
 const listingEvidence = { sourceTitle: '상장일 공식 공시', sourceUrl: 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000001',
   checkedAt: '2026-10-23T00:00:00Z', value: '2026-10-20' };
 
-test('scheduled prices defer without requests when official listing evidence is absent, stale, untrusted or unavailable', async () => {
+test('overdue scheduled prices report missing results without requests when listing evidence is absent, stale, untrusted or unavailable', async () => {
   const checks: Partial<IpoItem>[] = [
     {},
     { fieldEvidence: { listingDate: { ...listingEvidence, value: undefined } } },
@@ -384,7 +485,8 @@ test('scheduled prices defer without requests when official listing evidence is 
     assert.equal(fixture.writes.length, 0);
     assert.equal(result.deferredCount, 1);
     assert.equal(result.skippedCount, 1);
-    assert.equal(result.success, true);
+    assert.equal(result.success, false);
+    assert.equal(result.errors.length, 1);
   }
 });
 
@@ -420,8 +522,8 @@ test('scheduled guards preserve finalized prices without a request or new eviden
   assert.equal(result.success, true);
 });
 
-test('listing-day prices defer before 15:40 KST even for a manual target and resume after close', async () => {
-  for (const time of ['2026-10-25T00:10:00Z', '2026-10-25T06:39:00Z', '2026-10-25T06:40:00Z']) {
+test('listing-day prices defer through 17:59 KST even for a manual target and resume at 18:00', async () => {
+  for (const time of ['2026-10-25T00:10:00Z', '2026-10-25T07:00:00Z', '2026-10-25T08:59:00Z', '2026-10-25T09:00:00Z']) {
     const initial = fixtureIpo({ listingDate: '2026-10-25' });
     const fixture = priceFixture(initial);
     let fetches = 0;
@@ -429,7 +531,7 @@ test('listing-day prices defer before 15:40 KST even for a manual target and res
       now: new Date(time), targetCode: initial.code,
       fetchPrices: async () => { fetches++; return { code: initial.code, tradeDate: '2026-10-25', openingPrice: 3000, closingPrice: 4000, source: 'realtime_polling' }; },
     });
-    const afterClose = time.endsWith('06:40:00Z');
+    const afterClose = time.endsWith('09:00:00Z');
     assert.equal(fetches, afterClose ? 1 : 0);
     assert.equal(result.deferredCount, afterClose ? 0 : 1);
     assert.equal(fixture.writes.length, afterClose ? 1 : 0);
@@ -442,14 +544,27 @@ type RunSync = (options: { write: boolean; days: number; help: boolean }, depend
 const successDart = { success: true, updatedCount: 1, message: 'fixture', errors: [] };
 const successPrices = { success: true, totalCandidates: 1, updatedCount: 1, skippedCount: 0, errors: [] };
 
-test('CLI execution guards prevent all IO without --write, configured key, or durable local execution', async () => {
-  for (const [environment, write] of [[{ DART_API_KEY: 'fixture-key' }, false], [{}, true], [{ DART_API_KEY: 'fixture-key', VERCEL: 'production' }, true]] as const) {
+test('CLI execution guards prevent all IO without --write or durable local execution', async () => {
+  for (const [environment, write] of [[{ DART_API_KEY: 'fixture-key' }, false], [{ DART_API_KEY: 'fixture-key', VERCEL: 'production' }, true]] as const) {
     const fixture = moduleFixture('scripts/sync-financials.ts', {}, { ...environment });
     let calls = 0;
     const dependencies = { load: () => { calls++; return []; }, syncDart: async () => { calls++; return successDart; }, syncPrices: async () => { calls++; return successPrices; } };
     await assert.rejects((fixture.runFinancialSync as unknown as RunSync)({ write, days: 14, help: false }, dependencies));
     assert.equal(calls, 0);
   }
+});
+
+test('a missing DART key still permits public listing prices and reports the metric stage failure', async () => {
+  const fixture = moduleFixture('scripts/sync-financials.ts', {}, {});
+  const calls: string[] = [];
+  const result = await (fixture.runFinancialSync as unknown as RunSync)({ write: true, days: 14, help: false }, {
+    load: () => { calls.push('load'); return []; },
+    syncDart: async () => { calls.push('dart'); return successDart; },
+    syncPrices: async () => { calls.push('prices'); return successPrices; },
+  });
+  assert.deepEqual(calls, ['load', 'prices', 'load']);
+  assert.equal(result.success, false);
+  assert.equal(result.storageStatus, 'local-file-checked');
 });
 
 test('CLI runs only the two allowed paths then reloads persisted source and never claims deployment', async () => {

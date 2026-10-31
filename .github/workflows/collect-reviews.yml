@@ -33,7 +33,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       DATA_WRITE: ${{ github.event_name == 'schedule' || inputs.write }}
@@ -108,7 +108,9 @@ jobs:
           npm run verify:official -- "${args[@]}"
       - name: Sync filed metrics and missing listing prices
         id: financials
-        if: ${{ !cancelled() && steps.checks.outcome == 'success' && steps.dart_config.outcome == 'success' && env.DATA_WRITE == 'true' }}
+        # Public exchange/price recovery still runs when the DART secret is unavailable.
+        # The CLI reports DART failure independently and never calls authenticated APIs without a key.
+        if: ${{ !cancelled() && steps.checks.outcome == 'success' && env.DATA_WRITE == 'true' }}
         env:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
         shell: bash
@@ -187,9 +189,30 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'data: sync IPO records, financials and review snapshots'
-          git push origin "HEAD:refs/heads/$DEFAULT_BRANCH"
+          # A source-code push during collection must not discard collected data.
+          # Rebase only cleanly mergeable changes, revalidate, and never force-push.
+          for attempt in 1 2 3; do
+            git fetch origin "$DEFAULT_BRANCH"
+            if ! git rebase "origin/$DEFAULT_BRANCH"; then
+              git rebase --abort
+              echo '::error::Concurrent changes conflict with collected data. Recovery artifact retained; no remote data overwritten.'
+              exit 1
+            fi
+            npm run validate:data
+            if git push origin "HEAD:refs/heads/$DEFAULT_BRANCH"; then break; fi
+            if [[ "$attempt" == '3' ]]; then exit 1; fi
+          done
           # The existing Vercel Git integration must deploy this commit before readers see it.
           # A successful Git push alone does not confirm that a deployment completed.
+      - name: Preserve collected data after a commit or push failure
+        if: ${{ failure() && env.DATA_WRITE == 'true' && steps.commit.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: collected-data-recovery
+          path: |
+            src/data/customIpos.json
+            src/data/reviewSnapshots.json
+          retention-days: 7
       - name: Record pipeline outcomes
         if: ${{ always() }}
         env:
