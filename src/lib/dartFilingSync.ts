@@ -7,6 +7,7 @@ import { fetchOfficialText } from './officialHttp';
 import { fetchDartDocumentOffering } from './dartDocument';
 
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
+export const DART_METRIC_SYNC_BUDGET_MS = 5 * 60 * 1000;
 
 export interface DartFilingParseResult {
   rcpNo: string;
@@ -278,6 +279,9 @@ export async function syncExistingIposWithDartFilings(options?: {
   days?: number;
   apiKey?: string;
   now?: Date;
+  /** Monotonic elapsed time is separate from the KST date used to select filings. */
+  monotonicNow?: () => number;
+  timeBudgetMs?: number;
   fetcher?: typeof fetch;
   parseFiling?: (receiptNo: string) => Promise<DartFilingParseResult | null>;
 }): Promise<{
@@ -288,10 +292,21 @@ export async function syncExistingIposWithDartFilings(options?: {
   errors: { name?: string; receiptNo?: string; error: string }[];
   pendingCount: number;
   pendingStocks: { name: string; code: string; receiptNo: string; sourceUrl: string; reason: string; evidence: string }[];
+  deferredCount: number;
+  deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[];
 }> {
   const apiKey = options?.apiKey || process.env.DART_API_KEY;
-  const failed = (message: string) => ({ success: false, updatedCount: 0, updatedStocks: [], pendingCount: 0, pendingStocks: [], message, errors: [{ error: message }] });
+  const failed = (message: string) => ({ success: false, updatedCount: 0, updatedStocks: [], pendingCount: 0, pendingStocks: [],
+    deferredCount: 0, deferredStocks: [], message, errors: [{ error: message }] });
   if (!apiKey?.trim()) return failed('DART_API_KEY가 설정되지 않았습니다. 기존 수치를 유지합니다.');
+  const monotonicNow = options?.monotonicNow || (() => performance.now());
+  const budget = options?.timeBudgetMs ?? DART_METRIC_SYNC_BUDGET_MS;
+  const started = monotonicNow();
+  if (!Number.isFinite(budget) || budget < 0 || !Number.isFinite(started)) return failed('금융 원문 조회 시간 예산이 유효하지 않습니다. 기존 수치를 유지합니다.');
+  const budgetExpired = () => {
+    const current = monotonicNow();
+    return !Number.isFinite(current) || current - started >= budget;
+  };
   const days = Math.max(1, Math.min(90, Math.floor(options?.days || 14)));
   const today = options?.now || new Date();
   const todayKst = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(today);
@@ -305,6 +320,8 @@ export async function syncExistingIposWithDartFilings(options?: {
   try {
     let totalPages = 1;
     for (let page = 1; page <= totalPages; page++) {
+      // Do not use a partial list to guess which filing is the latest for each company.
+      if (page > 1 && budgetExpired()) return failed('금융 시간 예산 안에 DART 공시 목록 전체를 확인하지 못했습니다. 기존 수치를 유지하고 다음 실행에서 재시도합니다.');
       const dartUrl = `https://opendart.fss.or.kr/api/list.json?crtfc_key=${encodeURIComponent(apiKey)}&bgn_de=${startDate}&end_de=${endDate}&pblntf_ty=C&sort=date&sort_mth=desc&page_no=${page}&page_count=100`;
       const res = await fetcher(dartUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
       if (!res.ok) return failed(`DART 공시 목록 조회 실패: HTTP ${res.status}. 기존 수치를 유지합니다.`);
@@ -319,14 +336,20 @@ export async function syncExistingIposWithDartFilings(options?: {
     return failed('DART 공시 목록 조회 실패. 기존 수치를 유지합니다.');
   }
 
-  const allCurrentIpos = getAllIpos();
+  const awaitingListingResults = (ipo: ReturnType<typeof getAllIpos>[number]) => ipo.status === 'LISTED'
+    || Boolean(ipo.listingDate && /^\d{4}-\d{2}-\d{2}$/.test(ipo.listingDate) && ipo.listingDate <= todayKst);
+  // Recover the offer-price denominator for current/missed listings before spending the budget on future offerings.
+  const allCurrentIpos = [...getAllIpos()].sort((first, second) => Number(awaitingListingResults(second)) - Number(awaitingListingResults(first)));
   const updatedStocks: { name: string; code: string; confirmedPrice?: number; circulatingRate?: number; competitionRate?: number }[] = [];
   const errors: { name?: string; receiptNo?: string; error: string }[] = [];
   const pendingStocks: { name: string; code: string; receiptNo: string; sourceUrl: string; reason: string; evidence: string }[] = [];
+  const deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[] = [];
 
   for (const ipo of allCurrentIpos) {
-    // 이미 상장 완료되었거나 취소된 종목은 스킵
-    if (ipo.isCancelled || ipo.status === 'LISTED') continue;
+    // A displayed/stored LISTED state does not prove that listing results were collected.
+    // Preserve completed records in full; incomplete listings can still recover their offer price.
+    if (ipo.isCancelled || (finite(ipo.openingPrice) && ipo.openingPrice > 0
+      && finite(ipo.closingPrice) && ipo.closingPrice > 0)) continue;
 
     // 해당 종목의 최근 DART 공시 검색
     const targetFilings = filings.filter((f) => typeof f.corp_name === 'string' && typeof f.report_nm === 'string' && /^\d{14}$/.test(f.rcept_no)
@@ -340,6 +363,11 @@ export async function syncExistingIposWithDartFilings(options?: {
     // Never descend to an older amendment merely because the newest values match.
     const filing = targetFilings[0];
     if (!filing) continue;
+    if (budgetExpired()) {
+      deferredStocks.push({ name: ipo.name, code: ipo.code, receiptNo: filing.rcept_no,
+        reason: '이번 실행의 금융 원문 조회 시간 예산을 사용하여 다음 실행에서 재시도합니다.' });
+      continue;
+    }
 
       console.log(`[DartFilingSync] 확정 공시 감지 -> ${ipo.name} (${filing.report_nm}, rcpNo: ${filing.rcept_no})`);
       const parsed = await (options?.parseFiling ? options.parseFiling(filing.rcept_no) : parseConfirmedFilingDetails(filing.rcept_no, { fetcher }));
@@ -411,12 +439,14 @@ export async function syncExistingIposWithDartFilings(options?: {
   }
 
   return {
-    success: errors.length === 0,
+    success: errors.length === 0 && deferredStocks.length === 0,
     updatedCount: updatedStocks.length,
     updatedStocks,
-    message: `DART 대조: 갱신 ${updatedStocks.length}건 · 발표 대기 ${pendingStocks.length}건 · 오류 ${errors.length}건`,
+    message: `DART 대조: 갱신 ${updatedStocks.length}건 · 발표 대기 ${pendingStocks.length}건 · 시간 예산 대기 ${deferredStocks.length}건 · 오류 ${errors.length}건`,
     errors,
     pendingCount: pendingStocks.length,
     pendingStocks,
+    deferredCount: deferredStocks.length,
+    deferredStocks,
   };
 }
