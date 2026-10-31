@@ -1,7 +1,8 @@
 export type IpoStatus = 'UPCOMING' | 'SUBSCRIPTION' | 'WAITING_LISTING' | 'LISTED';
 
 export type IpoEvidenceField = 'code' | 'institutionalCompetitionRate' | 'lockupCommitmentRate' | 'circulatingSupplyRate'
-  | 'subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate' | 'confirmedPrice' | 'depositRatePercent';
+  | 'subscriptionStart' | 'subscriptionEnd' | 'refundDate' | 'listingDate' | 'confirmedPrice' | 'depositRatePercent'
+  | 'offeringShareCount' | 'listedShareCount' | 'totalOfferingAmount' | 'marketCapAtIpo' | 'businessDescription';
 export interface IpoFieldEvidence {
   sourceTitle: string; sourceUrl: string; checkedAt: string;
   value?: string | number | null; publishedAt?: string; excerpt?: string; parserVersion?: string; linkedFrom?: string;
@@ -77,6 +78,9 @@ export interface IpoItem {
   circulatingSupplyRate: number;        // 유통가능물량 비율 (%)
   totalOfferingAmount: number;          // 총 공모금액 (억원)
   marketCapAtIpo: number;               // 상장 시 시가총액 (억원)
+  offeringShareCount?: number;          // 공시의 총 공모주식수, 일반청약 배정수량과 구분
+  listedShareCount?: number;            // 공모 후 실제 상장예정주식수, 옵션 포함 평가용 수량 제외
+  businessDescription?: string;        // 항목 원문과 연결한 사업 개요
   subscriptionResults?: {               // 청약 마감 후 실전 결과
     totalAccounts?: number;             // 총 청약 건수
     totalDepositAmount?: number;        // 증거금 규모 (조 원)

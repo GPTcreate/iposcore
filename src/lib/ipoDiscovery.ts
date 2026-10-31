@@ -122,9 +122,10 @@ export function mergeDartDiscoveries(current: IpoItem[], filings: DartFilingItem
 }
 
 const EVIDENCE_FIELDS: IpoEvidenceField[] = ['code', 'institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate',
-  'subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate', 'confirmedPrice', 'depositRatePercent'];
+  'subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate', 'confirmedPrice', 'depositRatePercent',
+  'offeringShareCount', 'listedShareCount', 'totalOfferingAmount', 'marketCapAtIpo', 'businessDescription'];
 const REVIEWED_FIELDS: (keyof IpoItem)[] = ['name', 'code', 'market', 'status', ...EVIDENCE_FIELDS, 'priceBandMin', 'priceBandMax',
-  'pendingForecastFields',
+  'pendingForecastFields', 'aiSummary',
   'underwriters', 'generalCompetitionRate', 'totalOfferingAmount', 'marketCapAtIpo', 'subscriptionResults',
   'openingPrice', 'openingReturnRate', 'closingPrice', 'closingReturnRate', 'isCancelled', 'cancelReason'];
 
@@ -132,6 +133,16 @@ const REVIEWED_FIELDS: (keyof IpoItem)[] = ['name', 'code', 'market', 'status', 
 export function invalidateChangedIpoEvidence(previous: IpoItem | undefined, incoming: IpoItem): IpoItem {
   const next = structuredClone(incoming);
   if (!previous) return next;
+  if (previous.confirmedPrice !== next.confirmedPrice) {
+    // A forecast amount cannot survive a changed final price without fresh monetary facts.
+    for (const field of ['totalOfferingAmount', 'marketCapAtIpo'] as const) {
+      const count = next[field === 'totalOfferingAmount' ? 'offeringShareCount' : 'listedShareCount'];
+      const reconciled = typeof count === 'number' && Number.isSafeInteger(count) && count > 0 && next.confirmedPrice > 0
+        && Math.abs(count * next.confirmedPrice / 100_000_000 - next[field]) < 0.000001;
+      if (next[field] === previous[field] && !reconciled) next[field] = 0;
+      if (next.fieldEvidence) delete next.fieldEvidence[field];
+    }
+  }
   for (const field of EVIDENCE_FIELDS) {
     if (!Object.is(previous[field], next[field]) && next.fieldEvidence) delete next.fieldEvidence[field];
   }

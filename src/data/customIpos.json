@@ -1489,18 +1489,18 @@
     "institutionalCompetitionRate": 66.58,
     "lockupCommitmentRate": 0.06,
     "circulatingSupplyRate": 36.97,
-    "totalOfferingAmount": 650,
-    "marketCapAtIpo": 5950,
-    "aiScore": 75,
-    "scoreGrade": "A",
+    "totalOfferingAmount": 400,
+    "marketCapAtIpo": 3667.61912,
+    "aiScore": 34,
+    "scoreGrade": "C",
     "aiSummary": {
-      "headline": "넥스아이 공모 일정과 공시 자료",
+      "headline": "항체 기반 항암 신약개발 기업 넥스아이",
       "bulletPoints": [
-        "반도체 및 2차전지 불량 자동 검출 비전 AI 장비 수요 확대"
+        "타깃 발굴 플랫폼 NEXORA™를 활용해 항암 신약 후보물질을 개발합니다."
       ],
       "positivePoints": [],
       "riskPoints": [
-        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+        "신약 개발 성과와 사업화 일정의 불확실성을 공시에서 확인하세요."
       ]
     },
     "sentimentConsensus": {
@@ -1561,6 +1561,51 @@
         "publishedAt": "2026-10-30T03:10:00+09:00",
         "excerpt": "확정 발행가액 : 8,000원",
         "parserVersion": "official-verification-v2"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "넥스아이 정정 투자설명서 공모개요",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000472",
+        "checkedAt": "2026-10-31T11:33:54.758Z",
+        "publishedAt": "2026-10-30",
+        "value": 5000000,
+        "excerpt": "보통주 일반공모 | 증권수량 5,000,000주 | 모집(매출)가액 8,000원 | 모집(매출)총액 40,000,000,000원",
+        "parserVersion": "dart-offering-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "넥스아이 정정 투자설명서 공모개요",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000472",
+        "checkedAt": "2026-10-31T11:33:54.758Z",
+        "publishedAt": "2026-10-30",
+        "value": 400,
+        "excerpt": "보통주 일반공모 | 증권수량 5,000,000주 | 모집(매출)가액 8,000원 | 모집(매출)총액 40,000,000,000원",
+        "parserVersion": "dart-offering-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "넥스아이 확정 공모조건·상장예정주식수",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+        "checkedAt": "2026-10-31T11:33:54.758Z",
+        "publishedAt": "2026-10-30",
+        "value": 45845239,
+        "excerpt": "확정공모가액 8,000원 기준 상장예정주식수 45,845,239주(기발행 40,670,239주 + 공모 5,000,000주 + 의무인수 175,000주).",
+        "parserVersion": "editorial-filing-facts-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "넥스아이 확정 공모조건 기준 시가총액",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000467",
+        "checkedAt": "2026-10-31T11:33:54.758Z",
+        "publishedAt": "2026-10-30",
+        "value": 3667.61912,
+        "excerpt": "상장예정주식수 45,845,239주 × 확정공모가액 8,000원 ÷ 100,000,000 = 3,667.61912억원. 옵션 포함 평가용 주식수는 제외.",
+        "parserVersion": "editorial-filing-facts-v1"
+      },
+      "businessDescription": {
+        "sourceTitle": "넥스아이 정정 증권신고서 사업의 개요",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000268",
+        "checkedAt": "2026-10-31T11:33:54.758Z",
+        "publishedAt": "2026-10-16",
+        "value": "항암·면역치료 불응인자를 표적으로 항체 기반 항암 신약을 연구·개발하는 기업입니다.",
+        "excerpt": "항암ㆍ면역치료 불응인자 발굴 및 first-in-class 항암 신약을 연구하는 신약개발 기업. 항체 기반의 혁신신약 후보물질 도출, 핵심기술 NEXORA™ 플랫폼.",
+        "parserVersion": "editorial-filing-facts-v1"
       }
     },
     "scheduleVerification": {
@@ -1575,7 +1620,13 @@
         "confirmedPrice"
       ]
     },
-    "listingDate": "2026-11-12"
+    "listingDate": "2026-11-12",
+    "offeringShareCount": 5000000,
+    "listedShareCount": 45845239,
+    "businessDescription": "항암·면역치료 불응인자를 표적으로 항체 기반 항암 신약을 연구·개발하는 기업입니다.",
+    "dataQuality": {
+      "status": "unverified"
+    }
   },
   {
     "id": "yky-mc",

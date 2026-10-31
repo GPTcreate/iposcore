@@ -7,8 +7,10 @@ import ts from 'typescript';
 import * as cheerio from 'cheerio';
 import { fetchOfficialText } from '../src/lib/officialHttp';
 import { fetchDartDocumentOffering } from '../src/lib/dartDocument';
+import { inspectDartOfferingTerms } from '../src/lib/dartOffering';
 
-interface Parsed { confirmedPrice?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number; circulatingSupplyRate?: number; publicationPending?: { reason: string; evidence: string; sourceUrl: string } }
+interface Parsed { confirmedPrice?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number; circulatingSupplyRate?: number;
+  offeringShareCount?: number; totalOfferingAmount?: number; offeringExcerpt?: string; publicationPending?: { reason: string; evidence: string; sourceUrl: string } }
 const receipt = '20261022000373';
 const fixture = (name: string) => fs.readFileSync(path.join(process.cwd(), 'tests/fixtures/dart', name), 'utf8');
 const source = fs.readFileSync(path.join(process.cwd(), 'src/lib/dartFilingSync.ts'), 'utf8');
@@ -18,12 +20,22 @@ vm.runInNewContext(js, { exports: parserExports, module: { exports: parserExport
   if (name === 'cheerio') return cheerio;
   if (name === './officialHttp') return { fetchOfficialText };
   if (name === './dartDocument') return { fetchDartDocumentOffering };
+  if (name === './dartOffering') return { inspectDartOfferingTerms };
   if (name === './ipoStore' || name === './ipoServerStore' || name === './ipoDiscovery') return {};
   throw new Error(`Unexpected import ${name}`);
 }, AbortSignal, Response, Date, Intl, URL, console, fetch: () => { throw new Error('Live network forbidden in fixtures'); }, process: { env: {} } });
 const body = parserExports.parseDartFilingBody as (html: string, receipt: string) => Parsed | null;
 const parse = parserExports.parseConfirmedFilingDetails as (receipt: string, options: { fetcher: typeof fetch }) => Promise<Parsed | null>;
 const node = (title: string, id: number, extra = '') => `node1['text']='${title}';node1['dcmNo']='12345';node1['eleId']='${id}';node1['offset']='10';node1['length']='1000';node1['dtd']='dart4.xsd';${extra}`;
+
+test('numbered amendment markers exclude the old offering table before accepting final amount arithmetic', () => {
+  const table = (price: number) => `<table><thead><tr><th>증권의 종류</th><th>증권수량</th><th>액면가액</th><th>모집(매출)가액</th><th>모집(매출)총액</th><th>모집(매출)방법</th></tr></thead><tbody><tr><td>보통주</td><td>5,000,000</td><td>500</td><td>${price}</td><td>${5000000 * price}</td><td>일반공모</td></tr></tbody></table>`;
+  const result = body(`<p>(주1) 정 정 전</p><p>1주당 확정공모가액을 10,500원으로 최종 결정하였습니다.</p>${table(10500)}<p>(주1) 정 정 후</p><p>1주당 확정공모가액을 8,000원으로 최종 결정하였습니다.</p>${table(8000)}`, receipt);
+  assert.equal(result?.confirmedPrice, 8000);
+  assert.equal(result?.offeringShareCount, 5000000);
+  assert.equal(result?.totalOfferingAmount, 400);
+  assert.match(result?.offeringExcerpt || '', /40000000000/);
+});
 
 test('authenticated offering bodies use strict metrics, retain conflicts, and fall back only after API failure', async () => {
   for (const mode of ['normal', 'transport', 'conflict']) {
@@ -36,6 +48,7 @@ test('authenticated offering bodies use strict metrics, retain conflicts, and fa
         if (mode === 'transport') throw new Error('API unavailable');
         return [mode === 'conflict' ? '<p>확정공모가액 10,000원</p><p>확정공모가액 20,000원</p>' : fixture('confirmed-current.html')];
       } };
+      if (name === './dartOffering') return { inspectDartOfferingTerms };
       if (name === './ipoStore' || name === './ipoServerStore' || name === './ipoDiscovery') return {};
       throw new Error('Unexpected fixture import');
     }, AbortSignal, Response, Date, Intl, URL, console, process: { env: {} } });

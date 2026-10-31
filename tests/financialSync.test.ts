@@ -11,6 +11,7 @@ import * as stockCode from '../src/lib/stockCode';
 import { normalizeListingCompany } from '../src/lib/officialSource';
 import { fetchOfficialText } from '../src/lib/officialHttp';
 import { fetchDartDocumentOffering } from '../src/lib/dartDocument';
+import { inspectDartOfferingTerms } from '../src/lib/dartOffering';
 import type { DartFilingItem } from '../src/lib/ipoDiscovery';
 import type { IpoItem } from '../src/types/ipo';
 import { getFieldEvidence, hasScorableForecast, hasVerifiedField } from '../src/lib/contentQuality';
@@ -31,6 +32,7 @@ function moduleFixture(relative: string, imports: Record<string, unknown>, envir
     if (name === 'cheerio') return cheerio;
     if (name === './officialHttp') return { fetchOfficialText };
     if (name === './dartDocument') return { fetchDartDocumentOffering };
+    if (name === './dartOffering') return { inspectDartOfferingTerms };
     if (Object.prototype.hasOwnProperty.call(imports, name)) return imports[name];
     throw new Error(`Unexpected fixture import: ${name}`);
   }, process: { env: environment, argv: [] }, console: { log: () => {}, warn: () => {}, error: () => {} },
@@ -53,9 +55,46 @@ function dartFixture(initial: IpoItem) {
 interface DartResult { success: boolean; updatedCount: number; errors: unknown[]; pendingCount: number; pendingStocks: { sourceUrl: string; evidence: string; reason: string }[];
   deferredCount: number; deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[] }
 interface Parsed { rcpNo: string; corpName: string; confirmedPrice?: number; circulatingSupplyRate?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number;
+  offeringShareCount?: number; totalOfferingAmount?: number; offeringExcerpt?: string;
   publicationPending?: { sourceUrl: string; evidence: string; reason: string } }
 type SyncDart = (options: { apiKey?: string; fetcher: typeof fetch; parseFiling?: (receipt: string) => Promise<Parsed | null>;
   monotonicNow?: () => number; timeBudgetMs?: number; now?: Date }) => Promise<DartResult>;
+
+test('final offering arithmetic replaces the forecast amount and retains value-bound citations after storage invalidation', async () => {
+  const fixture = dartFixture(fixtureIpo({ confirmedPrice: 13000, totalOfferingAmount: 650, marketCapAtIpo: 5950 }));
+  const options = { apiKey: 'fixture-key', fetcher: (async () => Response.json({ status: '000', list: [filing()] })) as typeof fetch,
+    parseFiling: async (rcpNo: string) => ({ rcpNo, corpName: '', confirmedPrice: 8000, offeringShareCount: 5000000,
+      totalOfferingAmount: 400, offeringExcerpt: '보통주 일반공모 5,000,000주 × 8,000원 = 40,000,000,000원' }) };
+  const sync = fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart;
+  assert.equal((await sync(options)).updatedCount, 1);
+  assert.equal(fixture.current().totalOfferingAmount, 400);
+  assert.equal(fixture.current().offeringShareCount, 5000000);
+  assert.equal(fixture.current().marketCapAtIpo, 0);
+  assert.equal(hasVerifiedField(fixture.current(), 'totalOfferingAmount'), true);
+  assert.equal(getFieldEvidence(fixture.current(), 'totalOfferingAmount')?.value, 400);
+  assert.equal((await sync(options)).updatedCount, 0);
+});
+
+test('a changed confirmed price cannot keep old derived amounts or their prior citations', () => {
+  const initial = fixtureIpo({ confirmedPrice: 13000, totalOfferingAmount: 650, marketCapAtIpo: 5950,
+    fieldEvidence: { totalOfferingAmount: { sourceTitle: '공시', sourceUrl: 'https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261023000001',
+      checkedAt: '2026-10-23T00:00:00Z', value: 650 } } });
+  const result = invalidateChangedIpoEvidence(initial, { ...initial, confirmedPrice: 8000 });
+  assert.equal(result.totalOfferingAmount, 0);
+  assert.equal(result.marketCapAtIpo, 0);
+  assert.equal(result.fieldEvidence?.totalOfferingAmount, undefined);
+});
+
+test('a newly disclosed share count can keep an equal cash total after the final price changes', async () => {
+  const fixture = dartFixture(fixtureIpo({ confirmedPrice: 13000, totalOfferingAmount: 650 }));
+  const sync = fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart;
+  await sync({ apiKey: 'fixture-key', fetcher: (async () => Response.json({ status: '000', list: [filing()] })) as typeof fetch,
+    parseFiling: async rcpNo => ({ rcpNo, corpName: '', confirmedPrice: 8000, offeringShareCount: 8125000,
+      totalOfferingAmount: 650, offeringExcerpt: '일반공모 8,125,000주 × 8,000원 = 65,000,000,000원' }) });
+  assert.equal(fixture.current().totalOfferingAmount, 650);
+  assert.equal(fixture.current().offeringShareCount, 8125000);
+  assert.equal(getFieldEvidence(fixture.current(), 'totalOfferingAmount')?.value, 650);
+});
 
 function dartBatchFixture(initial: IpoItem[]) {
   let current = structuredClone(initial);

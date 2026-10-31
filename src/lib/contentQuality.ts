@@ -91,6 +91,9 @@ function hasValidFieldValue(ipo: EvidenceInput, field: EvidenceField): boolean {
     || ipo.pendingForecastFields.some((pending) => pending === field))) return false;
   const value = ipo[field];
   if (field === 'code') return typeof value === 'string' && /^[0-9A-Z]{6}$/.test(value);
+  if (field === 'businessDescription') return typeof value === 'string' && value.trim().length > 0;
+  if (field === 'offeringShareCount' || field === 'listedShareCount') return positive(value) && Number.isSafeInteger(value);
+  if (field === 'totalOfferingAmount' || field === 'marketCapAtIpo') return positive(value);
   if (field === 'institutionalCompetitionRate' || field === 'confirmedPrice') return positive(value);
   if (field === 'lockupCommitmentRate') return percentage(value, true);
   if (field === 'circulatingSupplyRate') return percentage(value, false);

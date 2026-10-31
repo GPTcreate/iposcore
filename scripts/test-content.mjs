@@ -9,9 +9,10 @@ const run = (args) => {
   const result = spawnSync(process.execPath, args, { stdio: 'inherit', env: { ...process.env, NODE_PATH: path.resolve('node_modules') } });
   if (result.status !== 0) throw new Error(`Content checks failed (${result.status}).`);
 };
-const tests = ['contentQuality', 'reviewEvidence', 'reviewCollector', 'reviewArchive', 'ipoDiscovery', 'financialSync', 'dartFilingParser', 'financialRunner', 'dartSchedule', 'officialVerification', 'dartMetricCache', 'ibkSchedule', 'officialHttp', 'krxListings', 'dartDocument', 'listingReliability'];
+const tests = ['contentQuality', 'reviewEvidence', 'reviewCollector', 'reviewArchive', 'ipoDiscovery', 'financialSync', 'dartFilingParser', 'financialRunner', 'dartSchedule', 'officialVerification', 'dartMetricCache', 'ibkSchedule', 'officialHttp', 'krxListings', 'dartDocument', 'listingReliability', 'dartOffering'];
 run(['node_modules/typescript/bin/tsc', '--target', 'ES2022', '--module', 'commonjs', '--moduleResolution', 'node', '--outDir', output, '--esModuleInterop', '--skipLibCheck', '--resolveJsonModule',
   ...tests.map(name => `tests/${name}.test.ts`)]);
 run(['--test', ...tests.map(name => path.join(output, `tests/${name}.test.js`))]);
 run(['--experimental-strip-types', '--test', 'tests/ipoCalculation.test.ts']);
 run(['--test', 'tests/collectorCommit.test.mjs']);
+run(['--test', 'tests/offeringIntegrity.test.mjs']);

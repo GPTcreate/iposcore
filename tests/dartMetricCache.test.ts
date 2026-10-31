@@ -50,7 +50,7 @@ test('an explicit publication wait is cached and a new receipt or parser version
 
 test('the current parser retries a receipt despite an older parser failure backoff', async () => {
   const file = location(), now = () => new Date('2026-10-31T00:00:00.000Z');
-  for (const parserVersion of ['dart-metrics-v1', 'dart-metrics-v2', 'dart-metrics-v3']) {
+  for (const parserVersion of ['dart-metrics-v1', 'dart-metrics-v2', 'dart-metrics-v3', 'dart-metrics-v4']) {
     const old = createDartMetricCache({ file, parserVersion, now, parseFiling: async () => null });
     await old.parseFiling(receipt);
     old.flush();
@@ -60,11 +60,25 @@ test('the current parser retries a receipt despite an older parser failure backo
   assert.notEqual(DART_METRIC_PARSER_VERSION, 'dart-metrics-v1');
   assert.notEqual(DART_METRIC_PARSER_VERSION, 'dart-metrics-v2');
   assert.notEqual(DART_METRIC_PARSER_VERSION, 'dart-metrics-v3');
+  assert.notEqual(DART_METRIC_PARSER_VERSION, 'dart-metrics-v4');
   assert.equal((await current.parseFiling(receipt))?.confirmedPrice, 2000);
   assert.equal(calls, 1);
   assert.equal(current.stats.backoffSkipped, 0);
   current.flush();
-  assert.equal(Object.keys(JSON.parse(fs.readFileSync(file, 'utf8')).entries).length, 4);
+  assert.equal(Object.keys(JSON.parse(fs.readFileSync(file, 'utf8')).entries).length, 5);
+});
+
+test('offering facts survive cache round trips only when final price and total reconcile', async () => {
+  const file = location();
+  const offering = { rcpNo: receipt, corpName: '', confirmedPrice: 8000, offeringShareCount: 5000000,
+    totalOfferingAmount: 400, offeringExcerpt: '일반공모 5,000,000주 × 8,000원 = 40,000,000,000원' };
+  const cache = createDartMetricCache({ file, parseFiling: async () => offering });
+  assert.equal((await cache.parseFiling(receipt))?.totalOfferingAmount, 400);
+  cache.flush();
+  const restored = createDartMetricCache({ file, parseFiling: async () => { throw new Error('No request on cache hit'); } });
+  assert.equal((await restored.parseFiling(receipt))?.offeringShareCount, 5000000);
+  const rejected = createDartMetricCache({ file: location(), parseFiling: async () => ({ ...offering, totalOfferingAmount: 650 }) });
+  assert.equal(await rejected.parseFiling(receipt), null);
 });
 
 test('failed parsing backs off 6, 12, 24 then 48 hours and the boundary allows one retry', async () => {

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 
 /** Bump when the confirmed-filing extraction rules change. Receipts are immutable. */
-export const DART_METRIC_PARSER_VERSION = 'dart-metrics-v4';
+export const DART_METRIC_PARSER_VERSION = 'dart-metrics-v5';
 export interface DartMetricParseResult {
   rcpNo: string;
   corpName: string;
@@ -11,6 +11,9 @@ export interface DartMetricParseResult {
   circulatingSupplyRate?: number;
   institutionalCompetitionRate?: number;
   lockupCommitmentRate?: number;
+  offeringShareCount?: number;
+  totalOfferingAmount?: number;
+  offeringExcerpt?: string;
   publicationPending?: { reason: string; evidence: string; sourceUrl: string };
 }
 type CacheEntry = { receiptNo: string; parserVersion: string; lastAttemptAt: string } & (
@@ -52,6 +55,14 @@ function sanitizeResult(input: unknown, receiptNo: string): DartMetricParseResul
     if (!isObject(pending) || !safeText(pending.reason) || !safeText(pending.evidence)
       || pending.sourceUrl !== `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${receiptNo}`) return null;
     result.publicationPending = { reason: pending.reason, evidence: pending.evidence, sourceUrl: pending.sourceUrl };
+  }
+  if (input.offeringShareCount !== undefined || input.totalOfferingAmount !== undefined || input.offeringExcerpt !== undefined) {
+    if (!Number.isSafeInteger(input.offeringShareCount) || !finite(input.offeringShareCount) || input.offeringShareCount <= 0
+      || !finite(input.totalOfferingAmount) || input.totalOfferingAmount <= 0 || !safeText(input.offeringExcerpt)
+      || !result.confirmedPrice || Math.abs(input.offeringShareCount * result.confirmedPrice / 100_000_000 - input.totalOfferingAmount) > 0.000001) return null;
+    result.offeringShareCount = input.offeringShareCount;
+    result.totalOfferingAmount = input.totalOfferingAmount;
+    result.offeringExcerpt = input.offeringExcerpt;
   }
   return facts || result.publicationPending ? result : null;
 }
