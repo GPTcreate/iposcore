@@ -2195,7 +2195,6 @@
     "subscriptionStart": "2026-11-23",
     "subscriptionEnd": "2026-11-24",
     "refundDate": "2026-11-26",
-    "listingDate": "2026-12-03",
     "priceBandMin": 18000,
     "priceBandMax": 25000,
     "confirmedPrice": 0,
@@ -2219,11 +2218,8 @@
     "aiScore": 78,
     "scoreGrade": "A",
     "aiSummary": {
-      "headline": "알츠하이머 타우 단백질 표적 항체 치료제 바이오텍 아델, 11월 23일~24일 청약",
-      "bulletPoints": [
-        "희망 공모가: 18,000 ~ 25,000원, 청약일: 11월 23일(월) ~ 11월 24일(화)",
-        "환불일: 11월 26일(목), 주관사: 삼성증권, 미래에셋증권"
-      ],
+      "headline": "아델 공모 일정과 공시 자료",
+      "bulletPoints": [],
       "positivePoints": [],
       "riskPoints": [
         "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
@@ -2260,15 +2256,37 @@
         "publishedAt": "2026-10-27",
         "excerpt": "청약기일 | 2026년 11월 23일 ~ 2026년 11월 24일",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "아델 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-11-26",
+        "publishedAt": "2026-10-27",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일 2026년 11월 26일(목)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "아델 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": null,
+        "publishedAt": "2026-10-27",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:47.645Z",
+      "checkedAt": "2026-10-31T08:40:33.068Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -2281,7 +2299,7 @@
     "subscriptionStart": "2026-11-24",
     "subscriptionEnd": "2026-11-25",
     "refundDate": "2026-11-27",
-    "listingDate": "2026-12-04",
+    "listingDate": "2026-12-03",
     "priceBandMin": 15000,
     "priceBandMax": 17800,
     "confirmedPrice": 0,
@@ -2300,11 +2318,8 @@
     "aiScore": 76,
     "scoreGrade": "A",
     "aiSummary": {
-      "headline": "발효공학 및 타깃전달(TDS) 기술 기반 기능성 효소·바이오 소재 전문 케이엠에프, 11월 24일~25일 청약",
-      "bulletPoints": [
-        "희망 공모가: 15,000 ~ 17,800원, 청약 기간: 11월 24일(화) ~ 11월 25일(수)",
-        "환불일: 11월 27일(금), 주관사: IBK투자증권"
-      ],
+      "headline": "케이엠에프 공모 일정과 공시 자료",
+      "bulletPoints": [],
       "positivePoints": [
         "발효 효소 및 콤부차 소재 등 발효공학 기반 기능성 소재 원스톱 생산 역량"
       ],
@@ -2327,31 +2342,51 @@
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "케이엠에프 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000388",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "(주)케이엠에프 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6139",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
         "value": "2026-11-24",
-        "publishedAt": "2026-10-27",
-        "excerpt": "청약기일 | 2026.11.24~2026.11.25",
-        "parserVersion": "official-verification-v1"
+        "publishedAt": "2026-10-29T09:07:00+09:00",
+        "excerpt": "청약일 | 2026년 11월 24일(화)~ 11월 25일(수)",
+        "parserVersion": "official-verification-v2"
       },
       "subscriptionEnd": {
-        "sourceTitle": "케이엠에프 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000388",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "(주)케이엠에프 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6139",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
         "value": "2026-11-25",
-        "publishedAt": "2026-10-27",
-        "excerpt": "청약기일 | 2026.11.24~2026.11.25",
-        "parserVersion": "official-verification-v1"
+        "publishedAt": "2026-10-29T09:07:00+09:00",
+        "excerpt": "청약일 | 2026년 11월 24일(화)~ 11월 25일(수)",
+        "parserVersion": "official-verification-v2"
+      },
+      "refundDate": {
+        "sourceTitle": "(주)케이엠에프 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6139",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-11-27",
+        "publishedAt": "2026-10-29T09:07:00+09:00",
+        "excerpt": "환불일 | 2026년 11월 27일(금)",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "(주)케이엠에프 코스닥상장 공모주 청약안내",
+        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6139",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-12-03",
+        "publishedAt": "2026-10-29T09:07:00+09:00",
+        "excerpt": "상장 예정일 | 2026년 12월 3일(목) (예정)",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
-      "status": "partial",
-      "checkedAt": "2026-10-30T02:31:47.645Z",
+      "status": "verified",
+      "checkedAt": "2026-10-31T08:40:33.068Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate",
+        "listingDate"
       ]
     }
   },
@@ -2475,7 +2510,7 @@
     },
     "subscriptionStart": "2026-12-09",
     "subscriptionEnd": "2026-12-10",
-    "refundDate": "",
+    "refundDate": "2026-12-14",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -2522,15 +2557,37 @@
         "publishedAt": "2026-10-22",
         "excerpt": "청약기일주3) | 일반투자자 | 종료일 | 2026년 12월 10일(목)",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "인터엑스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-12-14",
+        "publishedAt": "2026-10-22",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일(2026년 12월 14일(월))에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "인터엑스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": null,
+        "publishedAt": "2026-10-22",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "checkedAt": "2026-10-31T08:40:33.068Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -2552,7 +2609,7 @@
     },
     "subscriptionStart": "2026-11-18",
     "subscriptionEnd": "2026-11-19",
-    "refundDate": "",
+    "refundDate": "2026-11-23",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -2598,15 +2655,37 @@
         "publishedAt": "2026-10-21",
         "excerpt": "청약기일 | 2026년 11월 18일 ~ 2026년 11월 19일",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "유캐스트 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000443",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-11-23",
+        "publishedAt": "2026-10-21",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일 2026년 11월 23일(월)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "유캐스트 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000443",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": null,
+        "publishedAt": "2026-10-21",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "checkedAt": "2026-10-31T08:40:33.068Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -2685,7 +2764,7 @@
     },
     "subscriptionStart": "2026-12-07",
     "subscriptionEnd": "2026-12-08",
-    "refundDate": "",
+    "refundDate": "2026-12-10",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -2732,15 +2811,37 @@
         "publishedAt": "2026-10-21",
         "excerpt": "청약기일주3) | 일반투자자 | 종료일 | 2026년 12월 08일(화)",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "이노보테라퓨틱스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000153",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-12-10",
+        "publishedAt": "2026-10-21",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일(2026년 12월 10일(목))에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "이노보테라퓨틱스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000153",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": null,
+        "publishedAt": "2026-10-21",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "checkedAt": "2026-10-31T08:40:33.068Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
@@ -2762,7 +2863,7 @@
     },
     "subscriptionStart": "2026-11-27",
     "subscriptionEnd": "2026-11-30",
-    "refundDate": "",
+    "refundDate": "2026-12-02",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -2809,15 +2910,37 @@
         "publishedAt": "2026-10-20",
         "excerpt": "청약기일 | 2026년 11월 27일 ~ 2026년 11월 30일",
         "parserVersion": "official-verification-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "에이엔에이치스트럭쳐 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000375",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": "2026-12-02",
+        "publishedAt": "2026-10-20",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일인 2026년 12월 02일(수)에 환불합니다",
+        "parserVersion": "official-verification-v2"
+      },
+      "listingDate": {
+        "sourceTitle": "에이엔에이치스트럭쳐 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000375",
+        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "value": null,
+        "publishedAt": "2026-10-20",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v2"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:31:06.835Z",
+      "checkedAt": "2026-10-31T08:40:33.068Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd"
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
       ]
     }
   },
