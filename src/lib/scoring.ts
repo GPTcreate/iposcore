@@ -16,6 +16,8 @@ export interface ScoringInput {
     cautionRatio: number | null;
   };
   status?: IpoItem['status'];
+  isCancelled?: IpoItem['isCancelled'];
+  scheduleVerification?: IpoItem['scheduleVerification'];
   dataQuality?: IpoItem['dataQuality'];
   fieldEvidence?: FieldEvidenceMap;
   id?: IpoItem['id'];
@@ -33,6 +35,8 @@ export interface ScoringResult {
   isPendingForecast: boolean;
   isVerified: boolean;
   basis: ScoreBasis;
+  reviewEligible: boolean;
+  reviewStartsOn: string | null;
   sampleSize: number;
   coverage: {
     quantitative: boolean;
@@ -64,13 +68,21 @@ export const SCORING_RULES = {
 } as const;
 
 /**
- * With actual classified reviews: round(quantitative raw (max 85) + positiveRatio * .15).
- * Without a classified sample: round(quantitative raw / 85 * 100), labelled quantitative only.
+ * Before KST D-1: quantitative only, even when classified reviews already exist.
+ * From KST D-1 with actual classified reviews: round(raw (max 85) + positiveRatio * .15).
+ * Otherwise: round(quantitative raw / 85 * 100), labelled quantitative only.
  * No market-average replacement, price bonus or legacy sentiment contributes points.
  * This rule is a site-defined comparison measure, not a validated return forecast.
  */
-export function calculateIpoScore(ipo: ScoringInput): ScoringResult {
-  const reviewSummary = summarizeReviews(ipo);
+export function calculateIpoScore(ipo: ScoringInput, now = new Date()): ScoringResult {
+  const reviewSummary = summarizeReviews(ipo, now);
+  const day = ipo.subscriptionStart;
+  const validDay = typeof day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(day)
+    && Number.isFinite(Date.parse(day)) && new Date(day).toISOString().slice(0, 10) === day;
+  const hasSchedule = validDay && !ipo.isCancelled && !ipo.scheduleVerification?.conflicts.includes('subscriptionStart');
+  const reviewOpensAt = hasSchedule ? Date.parse(`${day}T00:00:00+09:00`) - 86400000 : null;
+  const reviewStartsOn = hasSchedule ? new Date(Date.parse(`${day}T00:00:00Z`) - 86400000).toISOString().slice(0, 10) : null;
+  const reviewEligible = reviewOpensAt !== null && Number.isFinite(now.getTime()) && now.getTime() >= reviewOpensAt;
   const scorable = hasScorableForecast(ipo);
   const isVerified = hasVerifiedForecast(ipo);
   const coverage = {
@@ -88,6 +100,8 @@ export function calculateIpoScore(ipo: ScoringInput): ScoringResult {
       isPendingForecast: true,
       isVerified,
       basis: 'PENDING',
+      reviewEligible,
+      reviewStartsOn,
       sampleSize: reviewSummary.sampleSize,
       coverage,
       quantitativeRawScore: 0,
@@ -104,7 +118,7 @@ export function calculateIpoScore(ipo: ScoringInput): ScoringResult {
   const circulatingScore = SCORING_RULES.circulating.find(([maximum]) => ipo.circulatingSupplyRate <= maximum)![1];
   const quantitativeRawScore = competitionScore + lockupScore + circulatingScore;
   const quantitativeScore = Math.round(quantitativeRawScore / SCORING_RULES.maximumRawScore * 100);
-  const hasClassifiedReviews = reviewSummary.sampleSize > 0;
+  const hasClassifiedReviews = reviewEligible && reviewSummary.sampleSize > 0;
   const sentimentScore = hasClassifiedReviews ? reviewSummary.positiveRatio! * SCORING_RULES.maximumSentimentScore / 100 : 0;
   const score = hasClassifiedReviews ? Math.round(quantitativeRawScore + sentimentScore) : quantitativeScore;
   const scoreGrade = score >= SCORING_RULES.gradeThresholds.S ? 'S'
@@ -117,6 +131,8 @@ export function calculateIpoScore(ipo: ScoringInput): ScoringResult {
     isPendingForecast: false,
     isVerified,
     basis: hasClassifiedReviews ? 'COMBINED' : 'QUANTITATIVE',
+    reviewEligible,
+    reviewStartsOn,
     sampleSize: reviewSummary.sampleSize,
     coverage,
     quantitativeRawScore,

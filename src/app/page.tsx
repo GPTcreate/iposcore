@@ -6,7 +6,8 @@ import Header from '@/components/Header';
 import IpoCard from '@/components/IpoCard';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
 import NewsletterBanner from '@/components/NewsletterBanner';
-import { getAllEffectiveIpos } from '@/lib/ipoUtils';
+import { getAllEffectiveIpos, getEffectiveIpo } from '@/lib/ipoUtils';
+import { useKstDayRefresh } from '@/lib/useKstDayRefresh';
 import { isPublicIpo, toPublicIpo } from '@/lib/publicIpo';
 import { GUIDE_ARTICLES } from '@/data/guidesData';
 import { IpoStatus } from '@/types/ipo';
@@ -31,6 +32,16 @@ export default function Home() {
   // KST 현재 일자 및 시각 기준 실시간 상태 동적 전이 적용
   const initialIpos = React.useMemo(() => getAllEffectiveIpos().filter(isPublicIpo).map(toPublicIpo), []);
   const [allIpos, setAllIpos] = useState(initialIpos);
+
+  const refreshScoreDay = React.useCallback(() => {
+    // Recalculate the date gate immediately, even if the network is unavailable.
+    setAllIpos(ipos => ipos.map(ipo => getEffectiveIpo(ipo)));
+    fetch('/api/ipo', { cache: 'no-store' })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data && Array.isArray(data.ipos)) setAllIpos(data.ipos.filter(isPublicIpo)); })
+      .catch(() => {});
+  }, []);
+  useKstDayRefresh(refreshScoreDay);
 
   const [filter, setFilter] = useState<'ALL' | IpoStatus>(() => getDefaultTab(initialIpos));
 

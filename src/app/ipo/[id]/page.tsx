@@ -5,6 +5,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { Building2, CalendarDays, ChartColumn, FileText } from 'lucide-react';
 import Header from '@/components/Header';
 import ScoreBadge from '@/components/ScoreBadge';
+import ScorePhaseRefresh from '@/components/ScorePhaseRefresh';
 import IpoCalculator from '@/components/IpoCalculator';
 import DetailBackButton from '@/components/DetailBackButton';
 import GoogleAdSlot from '@/components/GoogleAdSlot';
@@ -60,7 +61,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   loadServerCustomIpos();
   loadServerReviewArchive();
-  const ipo = getEffectiveIpoByIdOrCode(id);
+  const evaluatedAt = new Date();
+  const ipo = getEffectiveIpoByIdOrCode(id, evaluatedAt);
   if (!ipo) return { title: '종목 자료를 찾을 수 없습니다', robots: { index: false } };
   const title = `${ipo.name} 공모주 일정·참고점수·블로그 리뷰`;
   const indexable = isIndexableIpo(ipo);
@@ -84,13 +86,14 @@ export default async function IpoDetailPage({ params }: PageProps) {
   const { id } = await params;
   loadServerCustomIpos();
   loadServerReviewArchive();
-  const ipo = getEffectiveIpoByIdOrCode(id);
+  const evaluatedAt = new Date();
+  const ipo = getEffectiveIpoByIdOrCode(id, evaluatedAt);
   if (!ipo) notFound();
   if (id !== ipo.id) permanentRedirect(`/ipo/${ipo.id}`);
 
   const reviewed = isReviewedIpo(ipo);
   const verifiedScore = hasVerifiedForecast(ipo);
-  const score = calculateIpoScore(ipo);
+  const score = calculateIpoScore(ipo, evaluatedAt);
   const fieldNames: IpoEvidenceField[] = ['subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate', 'confirmedPrice', 'depositRatePercent', 'institutionalCompetitionRate', 'lockupCommitmentRate', 'circulatingSupplyRate', 'totalOfferingAmount', 'marketCapAtIpo', 'businessDescription'];
   const fieldSources = fieldNames.flatMap((field) => { const source = getFieldEvidence(ipo, field); return source ? [{ title: source.sourceTitle, url: source.sourceUrl }] : []; });
   const wholeSources = [...(ipo.dataQuality?.sources || []), ...(ipo.discovery ? [{ title: ipo.discovery.reportName, url: ipo.discovery.sourceUrl }] : [])].filter((source) => isSpecificOfficialSourceUrl(source.url));
@@ -110,6 +113,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
+      <ScorePhaseRefresh evaluatedAt={evaluatedAt.getTime()} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(article).replace(/</g, '\\u003c') }} />
       <Header />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
@@ -123,7 +127,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
               <p className="text-sm text-gray-700 leading-relaxed">{memoText(ipo.aiSummary.headline)}</p>
               <p className={`text-xs ${reviewed ? 'text-blue-700' : 'text-gray-500'}`}>{reviewed ? `공시 원문 확인 · ${ipo.dataQuality?.reviewedAt?.slice(0, 10)}` : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료'}</p>
             </div>
-            <ScoreBadge score={score.score} grade={score.scoreGrade} isVerified={verifiedScore} size="lg" basis={score.basis} sampleSize={score.sampleSize} />
+            <ScoreBadge score={score.score} grade={score.scoreGrade} isVerified={verifiedScore} size="lg" basis={score.basis} sampleSize={score.sampleSize} reviewEligible={score.reviewEligible} reviewStartsOn={score.reviewStartsOn} />
           </header>
           {ipo.isCancelled && <p className="p-4 bg-rose-50 border border-rose-200 rounded-lg text-sm leading-relaxed">공모 철회 등록 안내: {ipo.cancelReason || '최신 공시에서 진행 상태와 철회 사유를 확인하세요.'}</p>}
           {ipo.scheduleVerification?.status === 'conflict' && <p className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">공식 자료 간 일정이 달라 확인이 필요합니다. 항목별 원문을 확인하세요.</p>}
@@ -185,9 +189,12 @@ export default async function IpoDetailPage({ params }: PageProps) {
           <div className="mt-4 space-y-5 text-xs text-gray-600 leading-relaxed">
             {sources.length > 0 && <section className="space-y-2"><h3 className="font-bold text-gray-800">공시 원문</h3><ul className="space-y-2">{sources.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline break-words">{source.title} ↗</a>{sourceCheckedDates.has(source.url) && <span className="ml-2 text-gray-500">확인일 {sourceCheckedDates.get(source.url)}</span>}</li>)}</ul><p>원문 링크는 확인한 항목의 근거이며, 이후 정정이나 다른 조건까지 확인했다는 뜻은 아닙니다.</p></section>}
             <section className="space-y-2"><h3 className="font-bold text-gray-800">점수·계산 기준</h3>
-              {score.basis === 'PENDING' ? <p>기관 경쟁률·확약·유통 비율이 갖춰지면 참고점수를 계산합니다.</p> : <p>경쟁률 {score.breakdown.competitionScore} + 확약 {score.breakdown.lockupScore} + 유통 {score.breakdown.circulatingScore} = {score.quantitativeRawScore} / 85점.
-                {score.basis === 'COMBINED' ? ` 명시 입장 표본 ${score.sampleSize}건의 참여 비율을 기준으로 리뷰 ${Number(score.breakdown.sentimentScore.toFixed(2))}점을 더했습니다.` : ' 분류 표본이 없어 정량 합계를 100점으로 환산했습니다.'}
+              {score.basis === 'PENDING' ? <p>기관 경쟁률·확약·유통 비율이 갖춰지면 정량점수를 계산합니다.</p> : <p>경쟁률 {score.breakdown.competitionScore} + 확약 {score.breakdown.lockupScore} + 유통 {score.breakdown.circulatingScore} = {score.quantitativeRawScore} / 85점.
+                {score.basis === 'COMBINED' ? ` 청약 D-1 이후 명시 입장 표본 ${score.sampleSize}건의 참여 비율로 감성 ${Number(score.breakdown.sentimentScore.toFixed(2))}점을 더한 종합점수입니다.`
+                  : score.reviewEligible ? ' 감성 표본 대기로 정량 합계를 100점으로 환산했습니다.'
+                    : score.reviewStartsOn ? ' 청약 D-1 전이므로 정량 합계를 100점으로 환산했습니다.' : ' 청약 일정 확인 중으로 정량 합계를 100점으로 환산했습니다.'}
                 {' '}<Link href="/methodology" className="text-blue-700 underline">전체 산식</Link></p>}
+              <p>감성은 청약 전날(D-1) 00시(KST)부터 반영하며, 분류 표본이 없으면 정량점수를 유지합니다.</p>
               <p>유통가능 금액 = 등록 시가총액 × 유통가능 비율 ÷ 100. 확약은 신청·배정 기준을 구분하며, 보호예수 비율과 유통가능 비율은 다릅니다.</p>
             </section>
             <section className="space-y-2"><h3 className="font-bold text-gray-800">자료 이용 안내</h3><ul className="list-disc pl-4 space-y-2">

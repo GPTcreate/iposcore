@@ -107,7 +107,7 @@ export async function runMethod2Pipeline(options?: {
 
     for (const target of targets) {
       const snapshot = merged.snapshots[reviewSnapshotKey(target.ipo.id, target.ipo.subscriptionStart)];
-      const analysis = await analyzeIpoSentiment({ ...target.ipo, reviewCollection: snapshot }, target.triggerType);
+      const analysis = await analyzeIpoSentiment({ ...target.ipo, reviewCollection: snapshot }, target.triggerType, now);
       processedTargets.push({
         stockName: target.ipo.name, stockCode: target.ipo.code, triggerType: target.triggerType, reason: target.reason,
         beforeScore: target.ipo.aiScore, afterScore: analysis.aiScore, scoreGrade: analysis.scoreGrade,

@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
 import type { ExpertReview, IpoItem } from '../src/types/ipo';
 import type { ReviewSnapshot } from '../src/types/reviews';
 import { canonicalizeReviewUrl, getCollectedReviews, summarizeReviews } from '../src/lib/reviewEvidence';
@@ -233,6 +236,139 @@ test('review contribution comes from classified collected evidence, excluding un
   assert.equal(absent.basis, 'QUANTITATIVE');
   assert.equal(absent.score, 100);
   assert.equal(absent.sampleSize, 0);
+});
+
+function phaseFixture(sentiment: ExpertReview['sentiment'] = 'CAUTION') {
+  const review = article('writer1', sentiment, { publishedAt: '2020-01-01T00:00:00Z' });
+  review.evidence!.fetchedAt = '2020-01-01T01:00:00Z';
+  return { ...forecast, institutionalCompetitionRate: 950, lockupCommitmentRate: 12, circulatingSupplyRate: 27,
+    ...collected([review], { collectedAt: '2020-01-01T02:00:00Z' }), ...identity, status: 'UPCOMING' as const };
+}
+
+test('switches from quantitative to combined at exactly KST midnight on subscription D-1', () => {
+  const ipo = phaseFixture();
+  const before = calculateIpoScore(ipo, new Date('2020-01-01T14:59:59.999Z'));
+  assert.equal(before.sampleSize, 1);
+  assert.equal(before.reviewStartsOn, '2020-01-02');
+  assert.equal(before.reviewEligible, false);
+  assert.equal(before.basis, 'QUANTITATIVE');
+  assert.equal(before.score, 79);
+  assert.equal(before.scoreGrade, 'A');
+  assert.equal(before.breakdown.sentimentScore, 0);
+  const after = calculateIpoScore(ipo, new Date('2020-01-01T15:00:00.000Z'));
+  assert.equal(after.reviewEligible, true);
+  assert.equal(after.basis, 'COMBINED');
+  assert.equal(after.reviewSummary.cautionRatio, 100);
+  assert.equal(after.score, 67);
+  assert.equal(after.scoreGrade, 'B');
+  for (const status of ['SUBSCRIPTION', 'WAITING_LISTING', 'LISTED'] as const) {
+    const later = calculateIpoScore({ ...ipo, status }, new Date('2020-01-05T00:00:00Z'));
+    assert.equal(later.reviewEligible, true);
+    assert.equal(later.basis, 'COMBINED');
+    assert.equal(later.score, 67);
+  }
+});
+
+test('early positive opinions remain visible without contributing points before D-1', async () => {
+  const ipo = phaseFixture('POSITIVE');
+  const before = new Date('2020-01-01T14:59:59.999Z');
+  const score = calculateIpoScore(ipo, before);
+  assert.equal(score.reviewSummary.positiveRatio, 100);
+  assert.equal(score.breakdown.sentimentScore, 0);
+  assert.equal(score.score, 79);
+  const output = await analyzeIpoSentiment(ipo, 'MANUAL_FORCE', before);
+  assert.equal(output.basis, 'QUANTITATIVE');
+  assert.equal(output.aiScore, 79);
+  assert.equal(output.expertReviews.length, 1);
+  const after = calculateIpoScore(ipo, new Date('2020-01-01T15:00:00Z'));
+  assert.equal(after.basis, 'COMBINED');
+  assert.equal(after.breakdown.sentimentScore, 15);
+  assert.equal(after.score, 82);
+});
+
+test('D-1 without usable opinions keeps the quantitative score and does not invent neutral evidence', () => {
+  const atD1 = new Date('2020-01-01T15:00:00Z');
+  for (const sentiment of ['NEUTRAL', 'UNCLASSIFIED'] as const) {
+    const result = calculateIpoScore(phaseFixture(sentiment), atD1);
+    assert.equal(result.reviewEligible, true);
+    assert.equal(result.basis, sentiment === 'NEUTRAL' ? 'COMBINED' : 'QUANTITATIVE');
+    assert.equal(result.score, sentiment === 'NEUTRAL' ? 67 : 79);
+  }
+  const failed = phaseFixture(); failed.reviewCollection!.status = 'failed';
+  const result = calculateIpoScore(failed, atD1);
+  assert.equal(result.reviewEligible, true);
+  assert.equal(result.basis, 'QUANTITATIVE');
+  assert.equal(result.reviewSummary.positiveRatio, null);
+  const pending = calculateIpoScore({ ...phaseFixture('POSITIVE'), institutionalCompetitionRate: 0 }, atD1);
+  assert.equal(pending.reviewEligible, true);
+  assert.equal(pending.sampleSize, 1);
+  assert.equal(pending.basis, 'PENDING');
+  assert.equal(pending.score, 0);
+});
+
+test('unknown, invalid, conflicting and cancelled schedules never open sentiment scoring', () => {
+  for (const subscriptionStart of ['', 'not-a-date', '2020-02-30', '2020-01-03T00:00:00Z']) {
+    const score = calculateIpoScore({ ...phaseFixture(), subscriptionStart }, now);
+    assert.equal(score.reviewEligible, false);
+    assert.equal(score.reviewStartsOn, null);
+    assert.equal(score.basis, 'QUANTITATIVE');
+  }
+  for (const change of [
+    { isCancelled: true },
+    { scheduleVerification: { status: 'conflict' as const, checkedAt: '2020-01-01T00:00:00Z', conflicts: ['subscriptionStart' as const], coveredFields: [] } },
+  ]) {
+    const score = calculateIpoScore({ ...phaseFixture('POSITIVE'), ...change }, now);
+    assert.equal(score.sampleSize, 1);
+    assert.equal(score.reviewEligible, false);
+    assert.equal(score.reviewStartsOn, null);
+    assert.equal(score.basis, 'QUANTITATIVE');
+  }
+});
+
+test('a delayed schedule resets the date gate and calendar-year boundaries use KST dates', () => {
+  const delayed = phaseFixture('POSITIVE');
+  delayed.subscriptionStart = '2020-01-04';
+  delayed.reviewCollection!.subscriptionStart = delayed.subscriptionStart;
+  const score = calculateIpoScore(delayed, new Date('2020-01-01T15:00:00Z'));
+  assert.equal(score.sampleSize, 1);
+  assert.equal(score.reviewStartsOn, '2020-01-03');
+  assert.equal(score.reviewEligible, false);
+  assert.equal(score.basis, 'QUANTITATIVE');
+  const year = calculateIpoScore({ ...forecast, subscriptionStart: '2020-01-01' }, new Date('2019-12-30T15:00:00Z'));
+  assert.equal(year.reviewStartsOn, '2019-12-31');
+  assert.equal(year.reviewEligible, true);
+  const invalidNow = calculateIpoScore(phaseFixture(), new Date('invalid'));
+  assert.equal(invalidNow.reviewEligible, false);
+  const monday = phaseFixture('POSITIVE');
+  monday.subscriptionStart = '2020-01-06';
+  monday.reviewCollection!.subscriptionStart = monday.subscriptionStart;
+  assert.equal(calculateIpoScore(monday, new Date('2020-01-04T14:59:59.999Z')).reviewEligible, false);
+  assert.equal(calculateIpoScore(monday, new Date('2020-01-04T15:00:00Z')).basis, 'COMBINED');
+});
+
+test('effective API records pass one evaluation time to scoring and review aggregation', () => {
+  const ipo = phaseFixture('POSITIVE');
+  const moduleStub = { exports: {} };
+  const compiled = ts.transpileModule(readFileSync('src/lib/ipoUtils.ts', 'utf8'), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  vm.runInNewContext(compiled, { module: moduleStub, exports: moduleStub.exports, require: (name: string) => {
+    if (name === './ipoStore') return { getAllIpos: () => [ipo] };
+    if (name === './scoring') return { calculateIpoScore };
+    if (name === './reviewEvidence') return { getCollectedReviews, summarizeReviews };
+    throw new Error('Unexpected dependency: ' + name);
+  } });
+  const effective = moduleStub.exports as { getAllEffectiveIpos: (now: Date) => IpoItem[] };
+  const before = effective.getAllEffectiveIpos(new Date('2020-01-01T14:59:59.999Z'))[0];
+  assert.equal(before.aiScore, 79);
+  assert.equal(before.scoreBasis, 'QUANTITATIVE');
+  assert.equal(before.reviewScoreEligible, false);
+  assert.equal(before.reviewScoreStartsOn, '2020-01-02');
+  assert.equal(before.sentimentConsensus.positiveRatio, 100);
+  const after = effective.getAllEffectiveIpos(new Date('2020-01-01T15:00:00Z'))[0];
+  assert.equal(after.aiScore, 82);
+  assert.equal(after.scoreBasis, 'COMBINED');
+  assert.equal(after.reviewScoreEligible, true);
 });
 
 test('partial refresh displays retained failed-channel articles but counts only successful channels', async () => {
