@@ -1,0 +1,219 @@
+{
+  "source": [
+    {
+      "id": "creates",
+      "receipt": "20261019000286",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+      "status": "VERIFIED_PRE_CUTOFF_RECEIPT",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "크리에이츠/투자설명서/2026.10.19",
+      "retrievedAt": "2026-11-01T11:58:38.430Z",
+      "parsed": {
+        "rcpNo": "20261019000286",
+        "corpName": "",
+        "confirmedPrice": 15000,
+        "circulatingSupplyRate": 39.43,
+        "institutionalCompetitionRate": 240.46,
+        "lockupCommitmentRate": 0,
+        "offeringShareCount": 1400000,
+        "totalOfferingAmount": 210,
+        "offeringExcerpt": "보통주 일반공모 | 증권수량 1,400,000주 | 모집(매출)가액 15,000원 | 모집(매출)총액 21,000,000,000원"
+      }
+    },
+    {
+      "id": "intellivix",
+      "receipt": "20261020000365",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+      "status": "VERIFIED_PRE_CUTOFF_RECEIPT",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "인텔리빅스/투자설명서/2026.10.20",
+      "retrievedAt": "2026-11-01T11:58:41.244Z",
+      "parsed": {
+        "rcpNo": "20261020000365",
+        "corpName": "",
+        "confirmedPrice": 9000,
+        "circulatingSupplyRate": 23.95,
+        "institutionalCompetitionRate": 1234.3,
+        "lockupCommitmentRate": 6.14,
+        "offeringShareCount": 2500000,
+        "totalOfferingAmount": 225,
+        "offeringExcerpt": "보통주 일반공모 | 증권수량 2,500,000주 | 모집(매출)가액 9,000원 | 모집(매출)총액 22,500,000,000원"
+      }
+    },
+    {
+      "id": "hanwha-plus-spac6",
+      "receipt": "20261019000187",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+      "status": "VERIFIED_PRE_CUTOFF_RECEIPT",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "한화플러스제6호스팩/투자설명서/2026.10.19",
+      "retrievedAt": "2026-11-01T11:58:43.852Z",
+      "parsed": {
+        "rcpNo": "20261019000187",
+        "corpName": "",
+        "confirmedPrice": 2000,
+        "circulatingSupplyRate": 93.6,
+        "institutionalCompetitionRate": 1256.48,
+        "lockupCommitmentRate": 0,
+        "offeringShareCount": 6000000,
+        "totalOfferingAmount": 120,
+        "offeringExcerpt": "보통주 일반공모 | 증권수량 6,000,000주 | 모집(매출)가액 2,000원 | 모집(매출)총액 12,000,000,000원"
+      }
+    },
+    {
+      "id": "dts-tech",
+      "receipt": "20261012000308",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+      "status": "VERIFIED_PRE_CUTOFF_RECEIPT",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "디티에스/증권신고서(지분증권)/2026.10.12",
+      "retrievedAt": "2026-11-01T11:58:44.273Z",
+      "parsed": {
+        "rcpNo": "20261012000308",
+        "corpName": "",
+        "confirmedPrice": 18500,
+        "circulatingSupplyRate": 15.12,
+        "institutionalCompetitionRate": 983.98,
+        "lockupCommitmentRate": 13.31,
+        "offeringShareCount": 2228917,
+        "totalOfferingAmount": 412.349645,
+        "offeringExcerpt": "보통주 일반공모 | 증권수량 2,228,917주 | 모집(매출)가액 18,500원 | 모집(매출)총액 41,234,964,500원"
+      }
+    },
+    {
+      "id": "dart-02032951",
+      "receipt": "20261014000202",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+      "status": "VERIFIED_PRE_CUTOFF_RECEIPT",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "에스케이증권제14호기업인수목적/투자설명서/2026.10.14",
+      "retrievedAt": "2026-11-01T11:58:45.268Z",
+      "parsed": {
+        "rcpNo": "20261014000202",
+        "corpName": "",
+        "confirmedPrice": 2000,
+        "circulatingSupplyRate": 97.45,
+        "institutionalCompetitionRate": 1228.38,
+        "lockupCommitmentRate": 0.24,
+        "offeringShareCount": 6500000,
+        "totalOfferingAmount": 130,
+        "offeringExcerpt": "보통주 일반공모 | 증권수량 6,500,000주 | 모집(매출)가액 2,000원 | 모집(매출)총액 13,000,000,000원"
+      }
+    },
+    {
+      "id": "tne-korea",
+      "receipt": "20261016000158",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+      "status": "MISSING_METRICS",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "티앤이코리아/증권신고서(지분증권)/2026.10.16",
+      "retrievedAt": "2026-11-01T11:58:46.061Z",
+      "parsed": null
+    },
+    {
+      "id": "melcon",
+      "receipt": "20260929000191",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+      "status": "MISSING_METRICS",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "멜콘/증권신고서(지분증권)/2026.09.29",
+      "retrievedAt": "2026-11-01T11:58:46.903Z",
+      "parsed": {
+        "rcpNo": "20260929000191",
+        "corpName": "",
+        "confirmedPrice": 12300,
+        "institutionalCompetitionRate": 1136.84,
+        "lockupCommitmentRate": 36.07,
+        "offeringShareCount": 2500000,
+        "totalOfferingAmount": 307.5,
+        "offeringExcerpt": "보통주 일반공모 | 증권수량 2,500,000주 | 모집(매출)가액 12,300원 | 모집(매출)총액 30,750,000,000원"
+      }
+    },
+    {
+      "id": "jincostec",
+      "receipt": "20261001000586",
+      "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000586",
+      "status": "MISSING_METRICS",
+      "identityMatches": true,
+      "publishedByCutoff": true,
+      "mainTitle": "진코스텍/증권신고서(지분증권)/2026.10.01",
+      "retrievedAt": "2026-11-01T11:58:47.684Z",
+      "parsed": null
+    }
+  ],
+  "manualSupplement": [
+    {
+      "id": "melcon",
+      "name": "멜콘",
+      "receipt": "20260929000191",
+      "source": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260929000191&dcmNo=11593609&eleId=1&offset=651&length=564368&dtd=dart4.xsd#toc1",
+      "sourceMain": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+      "sourceDate": "2026-09-29",
+      "cutoff": "2026-09-30T14:59:59.999Z",
+      "identityMatches": true,
+      "reviewType": "MANUAL_RECONSTRUCTION_CURRENT_AMENDMENT",
+      "values": {
+        "confirmedPrice": 12300,
+        "institutionalCompetitionRate": 1136.84,
+        "lockupCommitmentRate": 36.07,
+        "circulatingSupplyRate": 34.5
+      },
+      "floatEvidence": {
+        "anchor": "toc1",
+        "tableIndex": 140,
+        "htmlStart": 302579,
+        "row": [
+          "상장일 유통가능 주식수",
+          "4,346,680",
+          "34.50%",
+          "4,346,680",
+          "34.06%"
+        ],
+        "totalShares": 12600000,
+        "tradableShares": 4346680,
+        "calculatedRatio": 34.497460317460316,
+        "column": "공모 후 기준 (주식매수선택권 행사 시 제외)",
+        "correctionMarkerLocation": 280402
+      }
+    },
+    {
+      "id": "tne-korea",
+      "name": "티앤이코리아",
+      "receipt": "20261016000158",
+      "source": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20261016000158&dcmNo=11616571&eleId=1&offset=650&length=941795&dtd=dart4.xsd#toc1",
+      "sourceMain": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+      "sourceDate": "2026-10-16",
+      "cutoff": "2026-10-19T14:59:59.999Z",
+      "identityMatches": true,
+      "reviewType": "MANUAL_RECONSTRUCTION_CURRENT_AMENDMENT",
+      "values": {
+        "confirmedPrice": 15300,
+        "institutionalCompetitionRate": 1041.02,
+        "lockupCommitmentRate": 29.52,
+        "circulatingSupplyRate": 31.29
+      },
+      "floatEvidence": {
+        "anchor": "toc1",
+        "tableIndex": 175,
+        "htmlStart": 386998,
+        "row": [
+          "상장일 유통가능",
+          "3,551,856",
+          "31.29%"
+        ],
+        "totalShares": 11351096,
+        "tradableShares": 3551856,
+        "calculatedRatio": 31.290863895433535,
+        "column": "공모 후 기준 (주식매수선택권 행사 시 제외)",
+        "correctionMarkerLocation": 333342
+      }
+    }
+  ]
+}

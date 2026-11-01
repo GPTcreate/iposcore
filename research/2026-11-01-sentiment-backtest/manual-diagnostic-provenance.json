@@ -1,0 +1,358 @@
+{
+  "method": "Outcome-blind diagnosis of direct personal intent. Production classification is unchanged. Human labels are diagnostic only, not production inputs or a trained/optimized model.",
+  "completedAt": "2026-11-01T12:16:11.887Z",
+  "productionLabelsModified": false,
+  "outcomesUsedForHumanLabels": false,
+  "selection": "All eligible context-reviewed latest-blog labels, not only the six primary examples. Unreviewed or ambiguous sources are not negative votes.",
+  "limits": [
+    "Current page content may have changed after publication.",
+    "One blog is an author proxy, not proven independent identity.",
+    "This is a diagnostic subset, not exhaustively labeled ground truth."
+  ],
+  "labels": [
+    {
+      "url": "https://blog.naver.com/kastro83/224448141708",
+      "blogId": "kastro83",
+      "title": "인텔리빅스 공모주 청약분석 기관경쟁률 1,234대 1, AI 테마는 매력적이지만 동시상장 부담",
+      "retrievedAt": "2026-11-01T12:01:39.401Z",
+      "bodyHash": "cfe8b480f21c9bb49eea241fbecfe47239118380ebae690614f8b22e038e5ff3",
+      "evidence": {
+        "excerpt": "개인적으로는 이번 인텔리빅스에 균등청약을 중심으로 참여하되",
+        "excerptSha256": "a080fe740379cc05737ea20bf356fc2f063a16342c9a1c8e91ee31f85bc5dbed",
+        "paragraphIndex": 331,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "c2cad95c6048604a67e4f48e524604d09792a8335f56c1f1a79b0b067517cbb4",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "intellivix"
+        ]
+      },
+      "label": {
+        "ipoId": "intellivix",
+        "stockName": "인텔리빅스",
+        "blogId": "kastro83",
+        "authorProxy": "kastro83",
+        "url": "https://blog.naver.com/kastro83/224448141708",
+        "originaldate": "2026. 10. 20. 20:40",
+        "humanClearIntent": "POSITIVE",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "균등 참여; 비례는 최종조건 확인 후 소액 검토",
+        "category": "CLEAR_EQUAL_PARTICIPATION_WITH_CONDITIONAL_PROPORTIONAL",
+        "reason": "전용 분석의 개인 청약결정 절에서 균등 참여를 명시. 337문단 전체 후미 확인에서도 이를 철회하지 않았음.",
+        "automaticExclusionReasons": [
+          "COMPANY_AND_FIRST_PERSON_SEPARATED_IN_FIRST_300_PARAGRAPHS",
+          "EXPLICIT_COMPANY_INTENT_PARAGRAPH_AFTER_300_LIMIT",
+          "UNSUPPORTED_INTERVENING_WORDS_AND_VERB_FORM"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": true,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 1,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224446745167",
+      "blogId": "kastro83",
+      "title": "한화플러스제6호스팩 공모주 청약분석 기관경쟁률과 균등·비례배정 전망, 참여할까?",
+      "retrievedAt": "2026-11-01T12:01:40.057Z",
+      "bodyHash": "da273c24dd826f322a45fea119199b0b0cd85bab9533b1c1b1b785cd782f7725",
+      "evidence": {
+        "excerpt": "균등 청약은 참여할 계획입니다.",
+        "excerptSha256": "9fc65c87768a8097905bf98a58b832348b4ddc00711cffc935cfcd240bf9c6c5",
+        "paragraphIndex": 255,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "bbdfb004eaa031beea7015c001bb1b5bca877335842f70124ce8d2a06f417865",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "hanwha-plus-spac6"
+        ]
+      },
+      "label": {
+        "ipoId": "hanwha-plus-spac6",
+        "stockName": "한화플러스제6호기업인수목적",
+        "blogId": "kastro83",
+        "authorProxy": "kastro83",
+        "url": "https://blog.naver.com/kastro83/224446745167",
+        "originaldate": "2026. 10. 19. 17:07",
+        "humanClearIntent": "POSITIVE",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "균등 참여; 비례는 결정 대기",
+        "category": "CLEAR_EQUAL_PARTICIPATION_WITH_UNDECIDED_PROPORTIONAL",
+        "reason": "전용 종목의 개인 청약결정 절에서 최소 균등참여 계획을 확정. 비례에 관한 유보를 전체 불참으로 해석하지 않음.",
+        "automaticExclusionReasons": [
+          "COMPANY_AND_FIRST_PERSON_NOT_IN_SAME_PARAGRAPH"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": true,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 1,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224446607662",
+      "blogId": "kastro83",
+      "title": "크리에이츠 공모주 청약분석 기관경쟁률 240대 1, 확약 사실상 0% 균등·비례청약 참여할까?",
+      "retrievedAt": "2026-11-01T12:01:40.713Z",
+      "bodyHash": "b62a59d472b3c516739ffd31204d7dded675dfcd9d373d4b10e742b31bd53518",
+      "evidence": {
+        "excerpt": "확인한 뒤 결정할 계획입니다.",
+        "excerptSha256": "e7855e7b7ac71fd2abd368a22ba4267f1ba2e48514946201a1c427cc3451c7e2",
+        "paragraphIndex": 234,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "16ee33bd08863db6c013c8a4eb9eef6029d9421efd81f5ce8744a8635bbd85c5",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "creates"
+        ]
+      },
+      "label": {
+        "ipoId": "creates",
+        "stockName": "크리에이츠",
+        "blogId": "kastro83",
+        "authorProxy": "kastro83",
+        "url": "https://blog.naver.com/kastro83/224446607662",
+        "originaldate": "2026. 10. 19. 15:15",
+        "humanClearIntent": "NEUTRAL",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "균등 최종 결정 보류; 비례는 불참에 무게",
+        "category": "DEFERRED_DECISION_WITH_MIXED_SUBSCOPE",
+        "reason": "개인 결정 절에서 균등 여부는 최종 계좌 추이를 본 뒤 결정하고 비례는 불참 쪽에 무게를 둠. 전체 확정불참으로 합치지 않음.",
+        "automaticExclusionReasons": [
+          "COMPANY_NOT_IN_OWN_VOICE_PARAGRAPH",
+          "UNSUPPORTED_DEFERRED_DECISION_FORM"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": false,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 2,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224444103843",
+      "blogId": "kastro83",
+      "title": "2026년 10월 4주차 공모주 일정 청약 9종목 상장 3종목, 티앤이코리아와 크리에이츠 주목",
+      "retrievedAt": "2026-11-01T12:01:41.375Z",
+      "bodyHash": "0bdede1d7655cb779eb23e96223df5b9d662a5312adf36dee3e4da43ad23d501",
+      "evidence": {
+        "excerpt": "균등청약에는 참여하는 방향으로 생각하고 있습니다.",
+        "excerptSha256": "62b880c592a6bf146fc808dfdec942c0913a1c50f5cbce58c0c33efd8bc424dd",
+        "paragraphIndex": 80,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "bb930b18ddf544ca9acfaf98f81aed780f73f1e62f3b3b011cc7d0a08e50d35e",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "tne-korea"
+        ]
+      },
+      "label": {
+        "ipoId": "tne-korea",
+        "stockName": "티앤이코리아",
+        "blogId": "kastro83",
+        "authorProxy": "kastro83",
+        "url": "https://blog.naver.com/kastro83/224444103843",
+        "originaldate": "2026. 10. 17. 20:10",
+        "humanClearIntent": "POSITIVE",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "티앤이코리아 균등 참여; 비례 규모는 조건 확인",
+        "category": "SECTION_BOUND_CLEAR_EQUAL_PARTICIPATION",
+        "reason": "여러 종목의 주간글이지만 74~82문단의 티앤이코리아 절에 한정된 저자 의사. 바로 앞 문단의 개인 관점을 연결해 판정함. 다른 종목에는 이 라벨을 전파하지 않음.",
+        "automaticExclusionReasons": [
+          "COMPANY_SECTION_AND_FIRST_PERSON_IN_ADJACENT_PARAGRAPHS",
+          "UNSUPPORTED_VERB_FORM"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": true,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 1,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224439243360",
+      "blogId": "kastro83",
+      "title": "디티에스 공모주 청약 분석 기관경쟁률 983.98대 1, 균등·비례 청약 참여할까?",
+      "retrievedAt": "2026-11-01T12:01:42.694Z",
+      "bodyHash": "b1d8a4c55a66fc96faaaf3321485f9e324059c04d1a13a1871b24129b04b5824",
+      "evidence": {
+        "excerpt": "균등청약은 참여할 계획입니다.",
+        "excerptSha256": "3c1f6634c65f52907433ea443d9ad1538ebb35b8e200cd5be9a5a531955f9619",
+        "paragraphIndex": 122,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "3c1f6634c65f52907433ea443d9ad1538ebb35b8e200cd5be9a5a531955f9619",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "dts-tech"
+        ]
+      },
+      "label": {
+        "ipoId": "dts-tech",
+        "stockName": "디티에스",
+        "blogId": "kastro83",
+        "authorProxy": "kastro83",
+        "url": "https://blog.naver.com/kastro83/224439243360",
+        "originaldate": "2026. 10. 12. 18:30",
+        "humanClearIntent": "POSITIVE",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "균등 참여; 증권사와 비례 비중은 최종 경쟁률 확인",
+        "category": "CLEAR_EQUAL_PARTICIPATION_WITH_UNDECIDED_ALLOCATION",
+        "reason": "해당종목 개인 결정 절에서 균등참여 계획을 명시. 증권사 선택과 비례비중 조건은 별도 범위임.",
+        "automaticExclusionReasons": [
+          "COMPANY_AND_FIRST_PERSON_NOT_IN_SAME_PARAGRAPH"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": true,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 2,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224447058992",
+      "blogId": "juan116_",
+      "title": "공모주 분석:크리에이츠 (10/20~10/21), 삼성증권",
+      "retrievedAt": "2026-11-01T12:01:53.198Z",
+      "bodyHash": "340bbbc10232de94c1923da6c74b73d7feacb27567193aa961eded785bbc3c8f",
+      "evidence": {
+        "excerpt": "균등 청약도 진행하지 않을 생각이다.",
+        "excerptSha256": "d881ea6ff30faffabcf439b5e28c61edf2fc38c87f59c4f86623c536d258e35a",
+        "paragraphIndex": 78,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "8b320e9f70ce09c2618a58dbf116bd1285704f1b9e99c881190508cfc462a2e8",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "creates"
+        ]
+      },
+      "label": {
+        "ipoId": "creates",
+        "stockName": "크리에이츠",
+        "blogId": "juan116_",
+        "authorProxy": "juan116_",
+        "url": "https://blog.naver.com/juan116_/224447058992",
+        "originaldate": "2026. 10. 19. 22:32",
+        "humanClearIntent": "CAUTION",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "크리에이츠 균등도 불참",
+        "category": "CLEAR_NONPARTICIPATION_DESPITE_COMPARISON_COMPANY_MENTIONS",
+        "reason": "크리에이츠 전용 분석의 결론 및 저자 나는 문장에 명시 불참. 같은 문장의 다른 회사들은 동시 청약 비교대상임.",
+        "automaticExclusionReasons": [
+          "TARGET_COMPANY_OMITTED_IN_CONCLUSION_PARAGRAPH",
+          "OTHER_COMPANY_NAMES_IN_CONCLUSION",
+          "UNSUPPORTED_NEGATIVE_VERB_FORM"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": true,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 2,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224439569113",
+      "blogId": "juan116_",
+      "title": "공모주 분석:디티에스 (10/13~10/14), 대신증권·유진투자증권",
+      "retrievedAt": "2026-11-01T12:01:54.508Z",
+      "bodyHash": "867aa642802a8d641e815a236c26c97113b6bcc48778f59ce1df5dd7e5cb8ec2",
+      "evidence": {
+        "excerpt": "두 증권사의 경쟁률을 보고 청약을 진행해보려고 한다.",
+        "excerptSha256": "fd42f53de4c7a4eb9b3af425e52f87f134332c964dfd118d51986038b2215780",
+        "paragraphIndex": 140,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "ee752c695e4cd7a9f98878d33a7e3749fd131a7c0aba2b17221c4a218321fab7",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "dts-tech"
+        ]
+      },
+      "label": {
+        "ipoId": "dts-tech",
+        "stockName": "디티에스",
+        "blogId": "juan116_",
+        "authorProxy": "juan116_",
+        "url": "https://blog.naver.com/juan116_/224439569113",
+        "originaldate": "2026. 10. 12. 23:26",
+        "humanClearIntent": "POSITIVE",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "디티에스 참여 의사; 증권사 선택은 경쟁률 확인",
+        "category": "CLEAR_PERSONAL_INTENT_WITH_PENDING_BROKER_CHOICE",
+        "reason": "디티에스 전용 결론에서 청약진행 의사를 표현. 어느 증권사를 고를지 확인하는 계획이며 전체 참여 자체를 조건부 추천으로 바꾸지 않음.",
+        "automaticExclusionReasons": [
+          "TARGET_COMPANY_AND_EXPLICIT_FIRST_PERSON_OMITTED_IN_CONCLUSION",
+          "UNSUPPORTED_VERB_FORM"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": false,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 2,
+        "smallSample": true
+      }
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224426451017",
+      "blogId": "juan116_",
+      "title": "공모주 분석:멜콘 (10/1-10/2), 대신증권",
+      "retrievedAt": "2026-11-01T12:01:55.826Z",
+      "bodyHash": "a3d3e5a993600a1a19827965e90a9c42c2906523dd0be960a71c88552305bf7c",
+      "evidence": {
+        "excerpt": "나는 균등 배정분만 최소 수량(10주, 증거금 61,500원)으로 넣어볼 생각이다.",
+        "excerptSha256": "825031221ef0b424f127989073954b1dde4c5e2ccaa6c3c80cc3287c04cc8c51",
+        "paragraphIndex": 245,
+        "paragraphIndexBase": 0,
+        "paragraphSha256": "276c2f9d3b43357a4152f8886feb2027ac4c1bfb3e549162425dd41168a32e54",
+        "paragraphHashInput": "Full source paragraph string held transiently in memory, not the shortened excerpt. Full paragraph not redistributed.",
+        "targetIds": [
+          "melcon"
+        ]
+      },
+      "label": {
+        "ipoId": "melcon",
+        "stockName": "멜콘",
+        "blogId": "juan116_",
+        "authorProxy": "juan116_",
+        "url": "https://blog.naver.com/juan116_/224426451017",
+        "originaldate": "2026. 9. 29. 23:15",
+        "humanClearIntent": "POSITIVE",
+        "reviewStatus": "CONTEXT_REVIEWED",
+        "scope": "멜콘 최소수량 균등 참여",
+        "category": "CLEAR_PERSONAL_SUBMISSION_INTENT_WITHOUT_PARTICIPATION_VERB",
+        "reason": "멜콘 전용 분석 마지막 결론의 직접 1인칭 최소수량 청약 계획. 회사명이 같은 문단에 없고 청약/참여 대신 넣어볼 생각이라고 표현됨.",
+        "automaticExclusionReasons": [
+          "TARGET_COMPANY_OMITTED_IN_CONCLUSION_PARAGRAPH",
+          "INTENT_USES_SUBMISSION_VERB_NOT_SUPPORTED_PARTICIPATION_VERB"
+        ],
+        "evaluationExclusionReasons": [],
+        "usesArticleEvidence": true,
+        "isLatestWithinVerifiedDiscoveredSet": true,
+        "primaryReference": true,
+        "eligibleAsHumanReference": true,
+        "sourceAnalysisBlindedToOutcomes": true,
+        "independentReferenceSamplesForStock": 1,
+        "smallSample": true
+      }
+    }
+  ]
+}

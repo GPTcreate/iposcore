@@ -1,0 +1,2743 @@
+{
+  "generatedAt": "2026-11-01T12:22:27.493Z",
+  "productionMutation": false,
+  "universeRetrievedAt": "2026-11-01T11:49:16.438Z",
+  "collection": {
+    "activeBlogs": 10,
+    "listedPosts": 1951,
+    "originalPages": 45,
+    "failedOriginalPages": 0,
+    "classifierCommit": "1a26c27ce2ccb5e224a6d636b53cb78c62dc28f1",
+    "classifierSourceSha256": "5fdfbf9d2cd2b986e78cfab3c2f873d16c1c02c45799b409b73f64f269f6636f",
+    "sameD1BatchRobustness": {
+      "method": "Production source functions; identical subscriptionStart batch among the eight independently accepted targets. Every first-300 paragraph containing any production-required first-person token was transferred from the existing in-memory audit; paragraphs without those tokens always return UNCLASSIFIED by the unchanged classifier.",
+      "additionalHttpRequests": 0,
+      "articles": 45,
+      "eligibleRows": 47,
+      "classified": 0,
+      "changedFromFullUniverseGuard": 0,
+      "outcomesUsed": false
+    },
+    "cutoff": "Calendar day before subscription ends at 23:59:59.999 KST; actual retrieval timestamps are preserved.",
+    "limitation": "Retrospective displayed publication dates; unexposed later edits remain unknown."
+  },
+  "universeAudit": [
+    {
+      "id": "melcon",
+      "name": "멜콘",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "179880",
+        "subscriptionStart": "2026-10-01",
+        "subscriptionEnd": "2026-10-02",
+        "listingDate": "2026-10-15",
+        "offerPrice": 12300,
+        "metrics": {
+          "institutionalCompetitionRate": 1136.8,
+          "lockupCommitmentRate": 33.1,
+          "circulatingSupplyRate": 34.6
+        },
+        "openingPrice": 22750,
+        "closingPrice": 17470
+      },
+      "officialIdentity": {
+        "name": "멜콘",
+        "market": "코스닥",
+        "code": "179880",
+        "listingDate": "2026-10-15",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": false,
+      "notes": []
+    },
+    {
+      "id": "jincostec",
+      "name": "진코스텍",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "KONEX_TO_KOSDAQ_TRANSFER",
+      "stored": {
+        "code": "250030",
+        "subscriptionStart": "2026-10-02",
+        "subscriptionEnd": "2026-10-06",
+        "listingDate": "2026-10-15",
+        "offerPrice": 23500,
+        "metrics": {
+          "institutionalCompetitionRate": 1097.6,
+          "lockupCommitmentRate": 5.3,
+          "circulatingSupplyRate": 58.4
+        },
+        "openingPrice": 24000,
+        "closingPrice": 14940
+      },
+      "officialIdentity": {
+        "name": "진코스텍",
+        "market": "코스닥",
+        "code": "250030",
+        "listingDate": "2026-10-15",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": false,
+      "notes": [
+        "Issuer IR confirms KONEX-to-KOSDAQ transfer; do not silently pool with ordinary IPOs."
+      ]
+    },
+    {
+      "id": "elice-group",
+      "name": "엘리스그룹",
+      "status": "EXCLUDE_IDENTITY_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "459100",
+        "subscriptionStart": "2026-10-07",
+        "subscriptionEnd": "2026-10-08",
+        "listingDate": "2026-10-20",
+        "offerPrice": 90500,
+        "metrics": {
+          "institutionalCompetitionRate": 388.8,
+          "lockupCommitmentRate": 15.2,
+          "circulatingSupplyRate": 20.8
+        },
+        "openingPrice": 75700,
+        "closingPrice": 61500
+      },
+      "officialIdentity": {
+        "name": "위츠",
+        "market": "코스닥",
+        "code": "459100",
+        "listingDate": "2024-11-20",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": false,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "ms-bio",
+      "name": "엠에스바이오",
+      "status": "EXCLUDE_CODE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "391020",
+        "subscriptionStart": "2026-10-12",
+        "subscriptionEnd": "2026-10-13",
+        "listingDate": "2026-10-22",
+        "offerPrice": 7800,
+        "metrics": {
+          "institutionalCompetitionRate": 1096.56,
+          "lockupCommitmentRate": 82.52,
+          "circulatingSupplyRate": 31.8
+        },
+        "openingPrice": 16000,
+        "closingPrice": 13440
+      },
+      "officialIdentity": {
+        "name": "엠에스바이오",
+        "market": "코스닥",
+        "code": "0013Y0",
+        "listingDate": "2026-10-22",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": false,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "dts-tech",
+      "name": "디티에스",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "0015M0",
+        "subscriptionStart": "2026-10-13",
+        "subscriptionEnd": "2026-10-14",
+        "listingDate": "2026-10-23",
+        "offerPrice": 18500,
+        "metrics": {
+          "institutionalCompetitionRate": 983.98,
+          "lockupCommitmentRate": 13.31,
+          "circulatingSupplyRate": 15.12
+        },
+        "openingPrice": 32350,
+        "closingPrice": 26950
+      },
+      "officialIdentity": {
+        "name": "디티에스",
+        "market": "코스닥",
+        "code": "0015M0",
+        "listingDate": "2026-10-23",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": true,
+      "notes": []
+    },
+    {
+      "id": "ck-solution",
+      "name": "씨케이솔루션",
+      "status": "SEPARATE_2025_REFERENCE",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "480370",
+        "subscriptionStart": "2025-03-04",
+        "subscriptionEnd": "2025-03-05",
+        "listingDate": "2025-03-17",
+        "offerPrice": 15000,
+        "metrics": {
+          "institutionalCompetitionRate": 1020.35,
+          "lockupCommitmentRate": 5.46,
+          "circulatingSupplyRate": 25
+        },
+        "openingPrice": 27650,
+        "closingPrice": 18760
+      },
+      "officialIdentity": {
+        "name": "씨케이솔루션",
+        "market": "유가",
+        "code": "480370",
+        "listingDate": "2025-03-17",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "creates",
+      "name": "크리에이츠",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "439270",
+        "subscriptionStart": "2026-10-20",
+        "subscriptionEnd": "2026-10-21",
+        "listingDate": "2026-10-30",
+        "offerPrice": 15000,
+        "metrics": {
+          "institutionalCompetitionRate": 240.46,
+          "lockupCommitmentRate": 0,
+          "circulatingSupplyRate": 39.43
+        },
+        "openingPrice": 12000,
+        "closingPrice": 9000
+      },
+      "officialIdentity": {
+        "name": "크리에이츠",
+        "market": "코스닥",
+        "code": "439270",
+        "listingDate": "2026-10-30",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": true,
+      "notes": []
+    },
+    {
+      "id": "tne-korea",
+      "name": "티앤이코리아",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "0053F0",
+        "subscriptionStart": "2026-10-20",
+        "subscriptionEnd": "2026-10-21",
+        "listingDate": "2026-10-29",
+        "offerPrice": 15300,
+        "metrics": {
+          "institutionalCompetitionRate": 1041.02,
+          "lockupCommitmentRate": 29.52,
+          "circulatingSupplyRate": 31.29
+        },
+        "openingPrice": 30350,
+        "closingPrice": 21000
+      },
+      "officialIdentity": {
+        "name": "티앤이코리아",
+        "market": "코스닥",
+        "code": "0053F0",
+        "listingDate": "2026-10-29",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": true,
+      "notes": []
+    },
+    {
+      "id": "intellivix",
+      "name": "인텔리빅스",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "420610",
+        "subscriptionStart": "2026-10-21",
+        "subscriptionEnd": "2026-10-22",
+        "listingDate": "2026-10-30",
+        "offerPrice": 9000,
+        "metrics": {
+          "institutionalCompetitionRate": 1234.3,
+          "lockupCommitmentRate": 6.14,
+          "circulatingSupplyRate": 23.95
+        },
+        "openingPrice": 19290,
+        "closingPrice": 29150
+      },
+      "officialIdentity": {
+        "name": "인텔리빅스",
+        "market": "코스닥",
+        "code": "420610",
+        "listingDate": "2026-10-30",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": true,
+      "notes": []
+    },
+    {
+      "id": "brills",
+      "name": "브릴스",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "468670",
+        "subscriptionStart": "2026-09-22",
+        "subscriptionEnd": "2026-09-23",
+        "listingDate": "2026-10-10",
+        "offerPrice": 19500,
+        "metrics": {
+          "institutionalCompetitionRate": 1676.3,
+          "lockupCommitmentRate": 85.39,
+          "circulatingSupplyRate": 23.5
+        },
+        "openingPrice": 61800,
+        "closingPrice": 30450
+      },
+      "officialIdentity": {
+        "name": "브릴스",
+        "market": "코스닥",
+        "code": "468670",
+        "listingDate": "2026-10-01",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "duksan-nepcores",
+      "name": "덕산넵코어스",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "266690",
+        "subscriptionStart": "2026-09-23",
+        "subscriptionEnd": "2026-09-24",
+        "listingDate": "2026-10-14",
+        "offerPrice": 14600,
+        "metrics": {
+          "institutionalCompetitionRate": 914.8,
+          "lockupCommitmentRate": 57.26,
+          "circulatingSupplyRate": 27.8
+        },
+        "openingPrice": 27100,
+        "closingPrice": 17980
+      },
+      "officialIdentity": {
+        "name": "덕산넵코어스",
+        "market": "코스닥",
+        "code": "266690",
+        "listingDate": "2026-09-30",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "bigwave-robotics",
+      "name": "빅웨이브로보틱스",
+      "status": "EXCLUDE_CODE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "468300",
+        "subscriptionStart": "2026-09-24",
+        "subscriptionEnd": "2026-09-25",
+        "listingDate": "2026-10-16",
+        "offerPrice": 18000,
+        "metrics": {
+          "institutionalCompetitionRate": 885.2,
+          "lockupCommitmentRate": 78.39,
+          "circulatingSupplyRate": 29.1
+        },
+        "openingPrice": 56000,
+        "closingPrice": 29900
+      },
+      "officialIdentity": {
+        "name": "빅웨이브로보틱스",
+        "market": "코스닥",
+        "code": "0035S0",
+        "listingDate": "2026-09-29",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": false,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "theborn-korea",
+      "name": "더본코리아",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "475560",
+        "subscriptionStart": "2026-09-15",
+        "subscriptionEnd": "2026-09-16",
+        "listingDate": "2026-09-25",
+        "offerPrice": 34000,
+        "metrics": {
+          "institutionalCompetitionRate": 734.7,
+          "lockupCommitmentRate": 12.3,
+          "circulatingSupplyRate": 19.7
+        },
+        "openingPrice": 46350,
+        "closingPrice": 51400
+      },
+      "officialIdentity": {
+        "name": "더본코리아",
+        "market": "유가",
+        "code": "475560",
+        "listingDate": "2024-11-06",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "clobot",
+      "name": "클로봇",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "466100",
+        "subscriptionStart": "2026-09-08",
+        "subscriptionEnd": "2026-09-09",
+        "listingDate": "2026-09-19",
+        "offerPrice": 13000,
+        "metrics": {
+          "institutionalCompetitionRate": 933.6,
+          "lockupCommitmentRate": 11.2,
+          "circulatingSupplyRate": 28.5
+        },
+        "openingPrice": 12500,
+        "closingPrice": 10070
+      },
+      "officialIdentity": {
+        "name": "클로봇",
+        "market": "코스닥",
+        "code": "466100",
+        "listingDate": "2024-10-28",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "inspien",
+      "name": "인스피언",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "465480",
+        "subscriptionStart": "2026-09-01",
+        "subscriptionEnd": "2026-09-02",
+        "listingDate": "2026-09-12",
+        "offerPrice": 12000,
+        "metrics": {
+          "institutionalCompetitionRate": 1069.6,
+          "lockupCommitmentRate": 18.9,
+          "circulatingSupplyRate": 23.2
+        },
+        "openingPrice": 20000,
+        "closingPrice": 15820
+      },
+      "officialIdentity": {
+        "name": "인스피언",
+        "market": "코스닥",
+        "code": "465480",
+        "listingDate": "2024-10-18",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "toprun-total",
+      "name": "탑런토탈솔루션",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "336680",
+        "subscriptionStart": "2026-08-20",
+        "subscriptionEnd": "2026-08-21",
+        "listingDate": "2026-09-01",
+        "offerPrice": 18000,
+        "metrics": {
+          "institutionalCompetitionRate": 841.4,
+          "lockupCommitmentRate": 17.5,
+          "circulatingSupplyRate": 29.8
+        },
+        "openingPrice": 15120,
+        "closingPrice": 13740
+      },
+      "officialIdentity": {
+        "name": "탑런토탈솔루션",
+        "market": "코스닥",
+        "code": "336680",
+        "listingDate": "2024-11-01",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "tomocube",
+      "name": "토모큐브",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "475960",
+        "subscriptionStart": "2026-08-12",
+        "subscriptionEnd": "2026-08-13",
+        "listingDate": "2026-08-26",
+        "offerPrice": 16000,
+        "metrics": {
+          "institutionalCompetitionRate": 967.8,
+          "lockupCommitmentRate": 15.6,
+          "circulatingSupplyRate": 32.1
+        },
+        "openingPrice": 12250,
+        "closingPrice": 10070
+      },
+      "officialIdentity": {
+        "name": "토모큐브",
+        "market": "코스닥",
+        "code": "475960",
+        "listingDate": "2024-11-07",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "alux",
+      "name": "에이럭스",
+      "status": "EXCLUDE_STORED_LISTING_DATE_MISMATCH",
+      "cohort": "OPERATING_COMPANY",
+      "stored": {
+        "code": "475580",
+        "subscriptionStart": "2026-08-04",
+        "subscriptionEnd": "2026-08-05",
+        "listingDate": "2026-08-18",
+        "offerPrice": 16000,
+        "metrics": {
+          "institutionalCompetitionRate": 973.1,
+          "lockupCommitmentRate": 14.8,
+          "circulatingSupplyRate": 34.6
+        },
+        "openingPrice": 12460,
+        "closingPrice": 9880
+      },
+      "officialIdentity": {
+        "name": "에이럭스",
+        "market": "코스닥",
+        "code": "475580",
+        "listingDate": "2024-11-01",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": false
+      },
+      "candleMatchesStored": null,
+      "notes": []
+    },
+    {
+      "id": "hanwha-plus-spac6",
+      "name": "한화플러스제6호기업인수목적",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "SPAC",
+      "stored": {
+        "code": "0127E0",
+        "subscriptionStart": "2026-10-20",
+        "subscriptionEnd": "2026-10-21",
+        "listingDate": "2026-10-30",
+        "offerPrice": 2000,
+        "metrics": {
+          "institutionalCompetitionRate": 1256.48,
+          "lockupCommitmentRate": 0,
+          "circulatingSupplyRate": 93.6
+        },
+        "openingPrice": 2810,
+        "closingPrice": 1866
+      },
+      "officialIdentity": {
+        "name": "한화플러스제6호스팩",
+        "market": "코스닥",
+        "code": "0127E0",
+        "listingDate": "2026-10-30",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": true,
+      "notes": []
+    },
+    {
+      "id": "dart-02032951",
+      "name": "에스케이증권제14호기업인수목적",
+      "status": "CONDITIONAL_2026_CANDIDATE",
+      "cohort": "SPAC",
+      "stored": {
+        "code": "0205H0",
+        "subscriptionStart": "2026-10-15",
+        "subscriptionEnd": "2026-10-16",
+        "listingDate": "2026-10-27",
+        "offerPrice": 2000,
+        "metrics": {
+          "institutionalCompetitionRate": 1228.38,
+          "lockupCommitmentRate": 0.24,
+          "circulatingSupplyRate": 97.45
+        },
+        "openingPrice": 4065,
+        "closingPrice": 1882
+      },
+      "officialIdentity": {
+        "name": "에스케이증권제14호기업인수목적",
+        "market": "코스닥",
+        "code": "0205H0",
+        "listingDate": "2026-10-27",
+        "source": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "matchedName": true,
+        "matchedCode": true,
+        "matchedListingDate": true
+      },
+      "candleMatchesStored": true,
+      "notes": []
+    }
+  ],
+  "articles": [
+    {
+      "url": "https://blog.naver.com/msql/224448138247",
+      "blogId": "msql",
+      "title": "크리에이츠, 티앤이코리아, 한화플러스제6호스팩, 인텔리빅스 동시 청약 비교 및 청약 전략",
+      "displayedPublishedAt": "2026. 10. 20. 20:36",
+      "publishedAt": "2026-10-20T11:36:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:01.462Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "03cc28bce9b513fed8645e134191c58682c5bc2de69ec20b1420a5fc9af714bc",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "ce135c6f331e47bb6ba6d9f0d8124ee1c49c3da305223dd254277b4251f1fca3",
+          "paragraphIndex": 0,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224447960464",
+      "blogId": "msql",
+      "title": "인텔리빅스 수요예측 결과 공모가 확정 9,000원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+      "displayedPublishedAt": "2026. 10. 20. 17:25",
+      "publishedAt": "2026-10-20T08:25:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:02.114Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "a7a0c9233618b881a959ec1852ae96c1a94500fc90d5bd7577d0d0cc710eb518",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "76f74cce20be9b62d3165030ad25674af3fde0e7229944c08be01b3808ca5db3",
+          "paragraphIndex": 2,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224446664326",
+      "blogId": "msql",
+      "title": "한화플러스제6호스팩 수요예측 결과 공모가 확정 2,000원 - 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+      "displayedPublishedAt": "2026. 10. 19. 16:00",
+      "publishedAt": "2026-10-19T07:00:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:02.770Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "1ccc1af112510a1289fff3b3034aebc5cfa73b1cae81a99e718542c850765dff",
+      "eligibleTargetIds": [
+        "hanwha-plus-spac6"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "hanwha-plus-spac6",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "20d1e7d6e6842f7a311ce1c6682d6ee28e46d59d0dc6fdcd8428b46166a0c84b",
+          "paragraphIndex": 1,
+          "matchedAlias": "한화플러스제6호스팩"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224446546887",
+      "blogId": "msql",
+      "title": "크리에이츠 수요예측 결과 공모가 확정 15,000원 - [매우 안 좋은 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+      "displayedPublishedAt": "2026. 10. 19. 14:25",
+      "publishedAt": "2026-10-19T05:25:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:03.425Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "66519574e268cff1081b4816bcca58edf5676d7892b56d2bd8adab67b68a143d",
+      "eligibleTargetIds": [
+        "creates"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "07d123095b54b69d591d06d87a9dbb6b18623a2b7fb1ea73176394272006d48d",
+          "paragraphIndex": 1,
+          "matchedAlias": "크리에이츠"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224443893072",
+      "blogId": "msql",
+      "title": "티앤이코리아 수요예측 결과 공모가 확정 15,300원 - [좋은 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+      "displayedPublishedAt": "2026. 10. 16. 16:56",
+      "publishedAt": "2026-10-16T07:56:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:04.080Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "2ba354800d6aa8b16243d10a1c21b507c97e767db94f7f66f7bcb39bd6434b57",
+      "eligibleTargetIds": [
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "c2408c1638b70cd48ae581395b36c497c7500a6a66efbb3c88768dd1b23af365",
+          "paragraphIndex": 1,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224441737424",
+      "blogId": "msql",
+      "title": "인텔리빅스 공모주 청약 정보 및 증권사, 상장 정보 - 비전 AI 영상관제",
+      "displayedPublishedAt": "2026. 10. 14. 20:30",
+      "publishedAt": "2026-10-14T11:30:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:04.739Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "825d8c46122bade50ad9a252e450b975349076bf1adb33fca6b4bdff94f041eb",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "c8de45ee4dba32e70962b97f3ce073f12dd9cd9f80aadbe62bcb53117bd8be71",
+          "paragraphIndex": 0,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224440481347",
+      "blogId": "msql",
+      "title": "티앤이코리아 공모주 청약 정보 및 증권사, 상장 정보 - 수소발전 터보블로워",
+      "displayedPublishedAt": "2026. 10. 13. 17:51",
+      "publishedAt": "2026-10-13T08:51:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:05.398Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "139e0b3fd3f00f61ba98d3137c7e333006a3d3d60400f463634052447f9955f7",
+      "eligibleTargetIds": [
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "f3cb0fe0958d3e94176527a4ecdd13e011204872d4653c8a5d50c26f08bc43b0",
+          "paragraphIndex": 1,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224439404295",
+      "blogId": "msql",
+      "title": "크리에이츠 공모주 청약 정보 및 증권사, 상장 정보 - 유니코 골프 론치모니터",
+      "displayedPublishedAt": "2026. 10. 12. 20:34",
+      "publishedAt": "2026-10-12T11:34:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:06.057Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "2c4c91c774f7731f6848e57c344a5777055c6a78f1625614a6ec776b66915245",
+      "eligibleTargetIds": [
+        "creates"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "886a101558cd18b20c6a4d42055ef2c279e6e65855bc2728a6fe965557226517",
+          "paragraphIndex": 3,
+          "matchedAlias": "크리에이츠"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224439143316",
+      "blogId": "msql",
+      "title": "디티에스 수요예측 결과 공모가 확정 18,500원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+      "displayedPublishedAt": "2026. 10. 12. 16:07",
+      "publishedAt": "2026-10-12T07:07:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:06.717Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "df5f83b7dc6d7aeb8538f7843aef1ed86d0513788d59c1a8ba0e9b838a6e606f",
+      "eligibleTargetIds": [
+        "dts-tech"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dts-tech",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "74208d0e20fdb0fb2b0fc72747ad61a1320f3bf4502de1cb7dfaf17bd4a9e699",
+          "paragraphIndex": 1,
+          "matchedAlias": "디티에스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224437132908",
+      "blogId": "msql",
+      "title": "디티에스 공모주 청약 정보 - 공랭식 열교환기, 대신/유진증권 청약",
+      "displayedPublishedAt": "2026. 10. 10. 14:55",
+      "publishedAt": "2026-10-10T05:55:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:07.374Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "3b2d2bd0e5da5ce6e03da908cb6d4d1148e737f6569009abf3043ff4bfbb7e09",
+      "eligibleTargetIds": [
+        "dts-tech"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dts-tech",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "ce8abc6b33ffdfa0cd2a6bcdf0a5ec6a77c1fbfa03a478614d8d685236cdebfe",
+          "paragraphIndex": 0,
+          "matchedAlias": "디티에스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224428572389",
+      "blogId": "msql",
+      "title": "진코스텍 공모주 청약 정보 및 코넥스 주가 비교, 멜콘 동시 청약",
+      "displayedPublishedAt": "2026. 10. 1. 19:13",
+      "publishedAt": "2026-10-01T10:13:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:08.027Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "93b746556f2a224d1b03f9ee16cfda83d5c2c583d237ecde7747d5b785901adc",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "9434622f6332c38528a9e26b2b4099a189bfed0313618e928be681b7ec82302d",
+          "paragraphIndex": 0,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224427123311",
+      "blogId": "msql",
+      "title": "멜콘 공모주 청약 정보 - 공모가 12,300원 확정, 대신증권 청약 - 동시상장으로 변경!",
+      "displayedPublishedAt": "2026. 9. 30. 15:08",
+      "publishedAt": "2026-09-30T06:08:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:08.687Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "b66e456668fc13483ba822eb087939e35048012997f69283d3ad73dc31ed9d3f",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "d94343bcb80e186cfd3ccc32b9825ade8a3845d87ec16d858ee5dde893b88a98",
+          "paragraphIndex": 0,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224426020635",
+      "blogId": "msql",
+      "title": "멜콘 수요예측 결과 공모가 확정 12,300원 - [좋은 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+      "displayedPublishedAt": "2026. 9. 29. 15:42",
+      "publishedAt": "2026-09-29T06:42:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:09.341Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "3c2deb58bba32185ec4fdb0a36a5401547b8a173b3557b58b2f607c712e21e35",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "401f732e383d9ae27b7950a5a4b3ac5312e7c8e52a931c736bacc04967daef49",
+          "paragraphIndex": 1,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/msql/224425128856",
+      "blogId": "msql",
+      "title": "진코스텍 수요예측 결과 공모가 확정 23,500원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약, 코넥스 주가와 비교",
+      "displayedPublishedAt": "2026. 9. 28. 19:53",
+      "publishedAt": "2026-09-28T10:53:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:09.996Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "2db1df2bb8ecb3ea4b1af8c32b605f5e413c716d2bd9751ba48c1151b8fb016d",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "deb6948f10808f440afa95510caf35858913d993a5b6df98a0ced908610050d6",
+          "paragraphIndex": 1,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224448141708",
+      "blogId": "kastro83",
+      "title": "인텔리빅스 공모주 청약분석 기관경쟁률 1,234대 1, AI 테마는 매력적이지만 동시상장 부담",
+      "displayedPublishedAt": "2026. 10. 20. 20:40",
+      "publishedAt": "2026-10-20T11:40:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:10.652Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "cfe8b480f21c9bb49eea241fbecfe47239118380ebae690614f8b22e038e5ff3",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "0c84bd3d1a3178ebed16713642d4a9a6ff1d6868cacd65472d12d2b75337383f",
+          "paragraphIndex": 0,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224446745167",
+      "blogId": "kastro83",
+      "title": "한화플러스제6호스팩 공모주 청약분석 기관경쟁률과 균등·비례배정 전망, 참여할까?",
+      "displayedPublishedAt": "2026. 10. 19. 17:07",
+      "publishedAt": "2026-10-19T08:07:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:11.312Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "da273c24dd826f322a45fea119199b0b0cd85bab9533b1c1b1b785cd782f7725",
+      "eligibleTargetIds": [
+        "hanwha-plus-spac6"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "hanwha-plus-spac6",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "2067be99230c85a5b3ae69dd864536b07c782f63e6c560f419e5f0cc61cb485f",
+          "paragraphIndex": 0,
+          "matchedAlias": "한화플러스제6호스팩"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224446607662",
+      "blogId": "kastro83",
+      "title": "크리에이츠 공모주 청약분석 기관경쟁률 240대 1, 확약 사실상 0% 균등·비례청약 참여할까?",
+      "displayedPublishedAt": "2026. 10. 19. 15:15",
+      "publishedAt": "2026-10-19T06:15:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:11.966Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "b62a59d472b3c516739ffd31204d7dded675dfcd9d373d4b10e742b31bd53518",
+      "eligibleTargetIds": [
+        "creates"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "4b44456219cf944017fcdf706d2c47bad16dc6e921d7afb9c71efe17844e91d5",
+          "paragraphIndex": 0,
+          "matchedAlias": "크리에이츠"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224444103843",
+      "blogId": "kastro83",
+      "title": "2026년 10월 4주차 공모주 일정 청약 9종목 상장 3종목, 티앤이코리아와 크리에이츠 주목",
+      "displayedPublishedAt": "2026. 10. 17. 20:10",
+      "publishedAt": "2026-10-17T11:10:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:12.623Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "0bdede1d7655cb779eb23e96223df5b9d662a5312adf36dee3e4da43ad23d501",
+      "eligibleTargetIds": [
+        "creates",
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "1f1053e220e3c2b3d25ef743539e911debd0294dcbf70468f33a32993086509c",
+          "paragraphIndex": 7,
+          "matchedAlias": "크리에이츠"
+        },
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "8616a236ff2d0a5113b977007a379ecdb393027e1fe435a004e327ebd01c19c1",
+          "paragraphIndex": 3,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224444046807",
+      "blogId": "kastro83",
+      "title": "티앤이코리아 공모주 청약분석 기관경쟁률 1,041대 1 확약 29.52% 균등 비례 참여할까?",
+      "displayedPublishedAt": "2026. 10. 16. 19:58",
+      "publishedAt": "2026-10-16T10:58:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:13.280Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "006fb78e885e038c88fe3d652876fb01c4f5d9943697de649f9ac6234ca449ed",
+      "eligibleTargetIds": [
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "b3d38b87b2c3269e3c090ca73bc026055a60f561bc3d39e8ee68a8e209b4dabc",
+          "paragraphIndex": 0,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224439243360",
+      "blogId": "kastro83",
+      "title": "디티에스 공모주 청약 분석 기관경쟁률 983.98대 1, 균등·비례 청약 참여할까?",
+      "displayedPublishedAt": "2026. 10. 12. 18:30",
+      "publishedAt": "2026-10-12T09:30:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:13.942Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "b1d8a4c55a66fc96faaaf3321485f9e324059c04d1a13a1871b24129b04b5824",
+      "eligibleTargetIds": [
+        "dts-tech"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dts-tech",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "4f3067980b6cef474ed1b212baaac77788b15db096e93c1872fde2d65f6d7e93",
+          "paragraphIndex": 0,
+          "matchedAlias": "디티에스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/kastro83/224427206492",
+      "blogId": "kastro83",
+      "title": "멜콘 공모주 청약분석, 기관경쟁률 1,136.84대 1과 비례청약 기회비용 5일",
+      "displayedPublishedAt": "2026. 9. 30. 16:14",
+      "publishedAt": "2026-09-30T07:14:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:14.595Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "b6ad08ad61b8e314dd347877bb37a4ab4f0d5b0fe47d7545842cc750ecbf857a",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "5382ae6bd9ce899f7d2d3951488193a0f36f8ab72afd325595b1b584137e4d9d",
+          "paragraphIndex": 0,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/xuenxu/224446958768",
+      "blogId": "xuenxu",
+      "title": "10월 크리에이츠 공모주 청약(10.20~21)",
+      "displayedPublishedAt": "2026. 10. 19. 20:53",
+      "publishedAt": "2026-10-19T11:53:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:15.251Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "5cd102711e8c6340bf700303b86c8c1a88210162cbd3ea84925699b5145d9f2f",
+      "eligibleTargetIds": [
+        "creates"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "ba62db0abdf183ff23982d9a8ebe30f980b5f238273eb7d6a6f3574b407b39cc",
+          "paragraphIndex": 2,
+          "matchedAlias": "크리에이츠"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/xuenxu/224444800372",
+      "blogId": "xuenxu",
+      "title": "10월 한화플러스제6호스팩 공모주 청약(10.20~21)",
+      "displayedPublishedAt": "2026. 10. 17. 17:14",
+      "publishedAt": "2026-10-17T08:14:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:15.905Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "714d184b2e033f7fb2ff9d40d8671a9b4339a4b445b81b0921a9f6d4200095b2",
+      "eligibleTargetIds": [
+        "hanwha-plus-spac6"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "hanwha-plus-spac6",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "e8e7eb752c59d3e64f990a12b3b45bd8d3ba344e6f2f3487523bbbfa3c15c3cb",
+          "paragraphIndex": 7,
+          "matchedAlias": "한화플러스제6호스팩"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/xuenxu/224441615258",
+      "blogId": "xuenxu",
+      "title": "10월 에스케이증권제14호스팩 공모주 청약(10.15~16)",
+      "displayedPublishedAt": "2026. 10. 14. 17:23",
+      "publishedAt": "2026-10-14T08:23:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:16.563Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "605fe4eef0fd2604eeb712359c1fd661f4994af3182e4a31e1fdfe3799e6b754",
+      "eligibleTargetIds": [
+        "dart-02032951"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dart-02032951",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "f0792fdd69412e7ab7cdef4a6d9f3f178be1031a3145f31e3ce944b492bf0185",
+          "paragraphIndex": 8,
+          "matchedAlias": "에스케이증권제14호스팩"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/xuenxu/224428362525",
+      "blogId": "xuenxu",
+      "title": "10월 진코스텍 공모주 청약(10.2~6)",
+      "displayedPublishedAt": "2026. 10. 1. 15:59",
+      "publishedAt": "2026-10-01T06:59:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:17.215Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "8b414ca14a6b64090969e1212ba161c11d5a42c7e2ac883b1fcf56efe82ccce8",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "c94d39ad6fdfd1f4b21619c9727a90c691fbc067fd4306d7c84f783cd6c1af5c",
+          "paragraphIndex": 1,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/dividendqueen/224444538064",
+      "blogId": "dividendqueen",
+      "title": "티앤이코리아 공모주 수요예측 결과 및 신규 상장일 10월 29일",
+      "displayedPublishedAt": "2026. 10. 17. 11:14",
+      "publishedAt": "2026-10-17T02:14:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:17.868Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "3e6b56890518a6328cb95dc978b1273d9474644f2f566108012b1ec96fe2f2ee",
+      "eligibleTargetIds": [
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "a5902b398a99a657fd899bfa0e9699c455dd1796d912df53da5b4f6fb60c2e1b",
+          "paragraphIndex": 0,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/dividendqueen/224428329704",
+      "blogId": "dividendqueen",
+      "title": "공모주 일정 진코스텍 청약, 공모가 23,500원 코넥스 주가 28,050원 과연?",
+      "displayedPublishedAt": "2026. 10. 1. 15:34",
+      "publishedAt": "2026-10-01T06:34:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:18.531Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "70c94b4e864b97ee824c5acf5a7c6e4b26bc25ac61b1230befab2941211ade45",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "2b9bf89d3de1498f8739453a13b1527f527d96bf90891e4049f3011cdcafad08",
+          "paragraphIndex": 0,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/dividendqueen/224426213559",
+      "blogId": "dividendqueen",
+      "title": "신규상장종목 멜콘 공모주 10월 15일 상장 수요예측 결과 및 공모가 12300원 체크",
+      "displayedPublishedAt": "2026. 9. 29. 18:31",
+      "publishedAt": "2026-09-29T09:31:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:19.188Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "e49914e5908d492baca0b81977221f9dd87775b022282bad6f1695de9322e44a",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "1de3ac901312a2b601f7ce213d695a4c337e061b8be23ec0e3c16ef34b20f5be",
+          "paragraphIndex": 0,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/hippocamp/224446365007",
+      "blogId": "hippocamp",
+      "title": "[2026년 10월 공모주] 인텔리빅스 수요예측 결과 핵심 정리 (Feat. 카카오페이 간식 이벤트, 상장일, 주가, 공모가, 장외가, AI 관련주)",
+      "displayedPublishedAt": "2026. 10. 19. 11:38",
+      "publishedAt": "2026-10-19T02:38:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:19.841Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "e94bf23c821379ccb6af36438caff42943d795a19dd7eaf016353d1daf2e1a5b",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "a00a76ba2cebae3b7b85785433e9d0e34c99f5faee6fa42fa5d2daf3beb21b8c",
+          "paragraphIndex": 8,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/hippocamp/224445960695",
+      "blogId": "hippocamp",
+      "title": "[2026년 10월 공모주] 크리에이츠 수요예측 결과 핵심 정리 (Feat. 한화플러스제6호스팩, 상장일, 주가, 공모가, 장외가, 골프 관련주)",
+      "displayedPublishedAt": "2026. 10. 19. 0:02",
+      "publishedAt": "2026-10-18T15:02:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:20.494Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "bdac7d516beab3cf2fb3ab5e36c86acb3015ad9644e9c505a4100e9972ac5a2c",
+      "eligibleTargetIds": [
+        "creates",
+        "hanwha-plus-spac6"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "9106a4c2e20dbcee95bc916bf21ec30e54d722cb480c5bff983a8c5cc4e22350",
+          "paragraphIndex": 6,
+          "matchedAlias": "크리에이츠"
+        },
+        {
+          "ipoId": "hanwha-plus-spac6",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "9106a4c2e20dbcee95bc916bf21ec30e54d722cb480c5bff983a8c5cc4e22350",
+          "paragraphIndex": 6,
+          "matchedAlias": "한화플러스제6호스팩"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/hippocamp/224445714146",
+      "blogId": "hippocamp",
+      "title": "[2026년 10월 공모주] 티앤이코리아 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, AI 데이터센터, 수소 관련주)",
+      "displayedPublishedAt": "2026. 10. 18. 19:10",
+      "publishedAt": "2026-10-18T10:10:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:21.150Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "8e789a72faa055d703cf6d7e7d1e6cb5e449dcb9f274476679ac28db559d203b",
+      "eligibleTargetIds": [
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "7b59c15ed502b32f97c46e764eee04545a3e63fc782842e0f11c14fd95f02a94",
+          "paragraphIndex": 6,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/hippocamp/224438609489",
+      "blogId": "hippocamp",
+      "title": "[2026년 10월 공모주] 디티에스 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, AI 데이터센터 관련주, 다산네트웍스 중복상장)",
+      "displayedPublishedAt": "2026. 10. 12. 7:24",
+      "publishedAt": "2026-10-11T22:24:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:21.804Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "3ab857b64401a78983eab7cc54076991a6d7f26faf1638ceb9a93ad67f0b03ce",
+      "eligibleTargetIds": [
+        "dts-tech"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dts-tech",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "5cd8d5814614d83aaf1e4f909b66ac47a6007bef31f8e11ca0aa68c09b9c9d48",
+          "paragraphIndex": 15,
+          "matchedAlias": "디티에스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/hippocamp/224427269812",
+      "blogId": "hippocamp",
+      "title": "[2026년 10월 공모주] 진코스텍 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, 화장품 뷰티 관련주)",
+      "displayedPublishedAt": "2026. 9. 30. 17:06",
+      "publishedAt": "2026-09-30T08:06:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:22.462Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "41bfeebe4d572dd38570bd332c13086ce835b2dbf126abd2eeadc2a38f89ed95",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "12a761fcfd51b8e73ce2b527536ba0d65501c97c8571b1dc7eaf696b926037e7",
+          "paragraphIndex": 13,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/hippocamp/224426185420",
+      "blogId": "hippocamp",
+      "title": "[2026년 10월 공모주] 멜콘 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, 반도체 관련주)",
+      "displayedPublishedAt": "2026. 9. 29. 18:00",
+      "publishedAt": "2026-09-29T09:00:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:23.117Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "154f0239dcf680cc7506a6ae94378127f2762f240e8e9a00a960c89c5a3b047d",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "7ddae546e1f52d4420908cf2c90c340e052e5e57ee7aa9da93697451dbf38bdb",
+          "paragraphIndex": 9,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224448317981",
+      "blogId": "juan116_",
+      "title": "공모주 분석:인텔리빅스 (10/21~10/22), 미래에셋증권",
+      "displayedPublishedAt": "2026. 10. 20. 23:52",
+      "publishedAt": "2026-10-20T14:52:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:23.770Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "7c1590d14422841792e30941f0cfe037d890e0be1f9753783e323830fb812a33",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "a861987ffa002875f6ada678a483a072694a712a00f410692288ee86adaaeccc",
+          "paragraphIndex": 0,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224447058992",
+      "blogId": "juan116_",
+      "title": "공모주 분석:크리에이츠 (10/20~10/21), 삼성증권",
+      "displayedPublishedAt": "2026. 10. 19. 22:32",
+      "publishedAt": "2026-10-19T13:32:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:24.425Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "340bbbc10232de94c1923da6c74b73d7feacb27567193aa961eded785bbc3c8f",
+      "eligibleTargetIds": [
+        "creates"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "creates",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "5cf378910ea0e77816bbe0d1efc1769bb4e75d6c6838f5214cb0f43497f1e0c2",
+          "paragraphIndex": 0,
+          "matchedAlias": "크리에이츠"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224445935080",
+      "blogId": "juan116_",
+      "title": "공모주 분석:티앤이코리아 (10/20~10/21), 신한투자증권",
+      "displayedPublishedAt": "2026. 10. 18. 23:32",
+      "publishedAt": "2026-10-18T14:32:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:25.076Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "98621b2a1e0bf8c11b21f7c0a0688a8c24e352073f23311a9b2e187df89294f9",
+      "eligibleTargetIds": [
+        "tne-korea"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "tne-korea",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "33cc10d8d3c59dfaeae9ccfafe3f060686219470293bab4ebdc345cf94357089",
+          "paragraphIndex": 0,
+          "matchedAlias": "티앤이코리아"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224439569113",
+      "blogId": "juan116_",
+      "title": "공모주 분석:디티에스 (10/13~10/14), 대신증권·유진투자증권",
+      "displayedPublishedAt": "2026. 10. 12. 23:26",
+      "publishedAt": "2026-10-12T14:26:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:25.738Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "867aa642802a8d641e815a236c26c97113b6bcc48778f59ce1df5dd7e5cb8ec2",
+      "eligibleTargetIds": [
+        "dts-tech"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dts-tech",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "c0190ca990c7c9a0467711a963b83424e095a68e8147cf07ec0ec489e834c369",
+          "paragraphIndex": 0,
+          "matchedAlias": "디티에스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224427599322",
+      "blogId": "juan116_",
+      "title": "공모주 분석:진코스텍 (10/2~10/6), 하나증권",
+      "displayedPublishedAt": "2026. 9. 30. 23:11",
+      "publishedAt": "2026-09-30T14:11:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:26.391Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "7f013eaccbce7a3284603b9523fd3029dd0a36f09741026f010a43131a8d2aad",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "e0d625cb25003228bd1900d77b32dfe4cb5a5fce800d12e152472670d7da2210",
+          "paragraphIndex": 1,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/juan116_/224426451017",
+      "blogId": "juan116_",
+      "title": "공모주 분석:멜콘 (10/1-10/2), 대신증권",
+      "displayedPublishedAt": "2026. 9. 29. 23:15",
+      "publishedAt": "2026-09-29T14:15:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:27.042Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "a3d3e5a993600a1a19827965e90a9c42c2906523dd0be960a71c88552305bf7c",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "0472e532d621708ff9353fa52fd7dda70aee456d3b1ad701c40256d19dd11653",
+          "paragraphIndex": 0,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/findaway12/224428731175",
+      "blogId": "findaway12",
+      "title": "진코스텍 공모주 청약, 수요예측 결과와 상장일정 정리",
+      "displayedPublishedAt": "2026. 10. 1. 23:20",
+      "publishedAt": "2026-10-01T14:20:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:27.698Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "3cecda798460a63e52421ce657b6a5a2769499b662708b485dc3a8be7db62e67",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "7453f2b2da583b929c0be87c47a68f37bf26212c4200ab29b8af262c3fcbcf99",
+          "paragraphIndex": 1,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/lsyivy0722/224448072589",
+      "blogId": "lsyivy0722",
+      "title": "인텔리빅스 공모주 9,000원 확정, 최소 20주라 증거금 9만원",
+      "displayedPublishedAt": "2026. 10. 20. 20:20",
+      "publishedAt": "2026-10-20T11:20:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:28.350Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "5ccdd460b7105a9f9d51951ebee143c8115057cd5b3cf47f340d846751dc31aa",
+      "eligibleTargetIds": [
+        "intellivix"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "intellivix",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "fd6ae9d5adcfc46edbb99cb5eeb93aa3d8dce0f32cb0f32504857292051a313e",
+          "paragraphIndex": 0,
+          "matchedAlias": "인텔리빅스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/lsyivy0722/224439267074",
+      "blogId": "lsyivy0722",
+      "title": "디티에스 공모주 18,500원 확정, 대신 vs 유진 어디서 청약할까?",
+      "displayedPublishedAt": "2026. 10. 12. 18:00",
+      "publishedAt": "2026-10-12T09:00:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:29.009Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "3e9903f5551d3d847509e84571b5c61b92d8bf3657824375bfdb14e092facca2",
+      "eligibleTargetIds": [
+        "dts-tech"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "dts-tech",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "b0934b6bd361ebd8084e7f46e47a7cdcb2e5480bc606e40c3b6edd285de07a6f",
+          "paragraphIndex": 0,
+          "matchedAlias": "디티에스"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/lsyivy0722/224426672333",
+      "blogId": "lsyivy0722",
+      "title": "멜콘 공모주 공모가 12,300원, 청약 몇 건이면 균등 1주씩일까?",
+      "displayedPublishedAt": "2026. 9. 30. 18:00",
+      "publishedAt": "2026-09-30T09:00:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:29.667Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "8ce0c51d0806b92c6b957e17ae85a30237f816ba58c9ee07e8cf399acf9a4002",
+      "eligibleTargetIds": [
+        "melcon"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "melcon",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "6030ce74f2327131b1fa6116b57fbe5a2356a6f23cf7a1768d1c7d35119a6278",
+          "paragraphIndex": 0,
+          "matchedAlias": "멜콘"
+        }
+      ]
+    },
+    {
+      "url": "https://blog.naver.com/lsyivy0722/224425191304",
+      "blogId": "lsyivy0722",
+      "title": "진코스텍 공모주 청약 10월 2일과 6일, 사이 연휴에 묶이는 증거금",
+      "displayedPublishedAt": "2026. 9. 30. 11:00",
+      "publishedAt": "2026-09-30T02:00:00.000Z",
+      "retrievedAt": "2026-11-01T11:58:30.323Z",
+      "publicationVerified": true,
+      "modifiedAt": null,
+      "immutableHistoricalContent": false,
+      "bodyHash": "5ad882e0930beb266c9ed5008c14cc7efaabd4bcfea7250a8d72779248c3ce6b",
+      "eligibleTargetIds": [
+        "jincostec"
+      ],
+      "exclusions": [],
+      "classifications": [
+        {
+          "ipoId": "jincostec",
+          "sentiment": "UNCLASSIFIED",
+          "classification": "unclassified",
+          "evidenceHash": "b37ba8cd5e6bd3f75609b69766a1f4bc290942374ce055ee618f1a4e43ea96dc",
+          "paragraphIndex": 0,
+          "matchedAlias": "진코스텍"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "melcon",
+      "name": "멜콘",
+      "cohort": "OPERATING_COMPANY",
+      "code": "179880",
+      "subscriptionStart": "2026-10-01",
+      "listingDate": "2026-10-15",
+      "decisionCutoff": "2026-09-30T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "MANUAL_CURRENT_AMENDMENT_TABLE",
+      "metrics": {
+        "confirmedPrice": 12300,
+        "institutionalCompetitionRate": 1136.84,
+        "lockupCommitmentRate": 36.07,
+        "circulatingSupplyRate": 34.5
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+      "metricReceipt": "20260929000191",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 70,
+      "quantitativeScore": 82,
+      "outcomeVerified": true,
+      "openingPrice": 27400,
+      "closingPrice": 17120,
+      "openingReturn": 122.76422764227641,
+      "closingReturn": 39.1869918699187,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=179880&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": true,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 6,
+        "latest": [
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224426672333",
+            "publishedAt": "2026-09-30T09:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224427206492",
+            "publishedAt": "2026-09-30T07:14:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224427123311",
+            "publishedAt": "2026-09-30T06:08:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224426451017",
+            "publishedAt": "2026-09-29T14:15:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "dividendqueen",
+            "url": "https://blog.naver.com/dividendqueen/224426213559",
+            "publishedAt": "2026-09-29T09:31:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224426185420",
+            "publishedAt": "2026-09-29T09:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 1,
+        "positiveRatio": 1,
+        "positive": 1,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 6,
+        "latest": [
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224426672333",
+            "publishedAt": "2026-09-30T09:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224427206492",
+            "publishedAt": "2026-09-30T07:14:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224427123311",
+            "publishedAt": "2026-09-30T06:08:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224426451017",
+            "publishedAt": "2026-09-29T14:15:00.000Z",
+            "sentiment": "POSITIVE"
+          },
+          {
+            "blogId": "dividendqueen",
+            "url": "https://blog.naver.com/dividendqueen/224426213559",
+            "publishedAt": "2026-09-29T09:31:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224426185420",
+            "publishedAt": "2026-09-29T09:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "jincostec",
+      "name": "진코스텍",
+      "cohort": "KONEX_TO_KOSDAQ_TRANSFER",
+      "code": "250030",
+      "subscriptionStart": "2026-10-02",
+      "listingDate": "2026-10-15",
+      "decisionCutoff": "2026-10-01T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "MISSING_D1_METRICS",
+      "metricExtraction": "PRODUCTION_PARSER",
+      "metrics": null,
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000586",
+      "metricReceipt": "20261001000586",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": null,
+      "quantitativeScore": null,
+      "outcomeVerified": false,
+      "openingPrice": 24000,
+      "closingPrice": 14350,
+      "openingReturn": null,
+      "closingReturn": null,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=250030&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": true,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 8,
+        "representedBlogs": 7,
+        "latest": [
+          {
+            "blogId": "findaway12",
+            "url": "https://blog.naver.com/findaway12/224428731175",
+            "publishedAt": "2026-10-01T14:20:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224428572389",
+            "publishedAt": "2026-10-01T10:13:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224428362525",
+            "publishedAt": "2026-10-01T06:59:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "dividendqueen",
+            "url": "https://blog.naver.com/dividendqueen/224428329704",
+            "publishedAt": "2026-10-01T06:34:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224427599322",
+            "publishedAt": "2026-09-30T14:11:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224427269812",
+            "publishedAt": "2026-09-30T08:06:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224425191304",
+            "publishedAt": "2026-09-30T02:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 8,
+        "representedBlogs": 7,
+        "latest": [
+          {
+            "blogId": "findaway12",
+            "url": "https://blog.naver.com/findaway12/224428731175",
+            "publishedAt": "2026-10-01T14:20:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224428572389",
+            "publishedAt": "2026-10-01T10:13:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224428362525",
+            "publishedAt": "2026-10-01T06:59:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "dividendqueen",
+            "url": "https://blog.naver.com/dividendqueen/224428329704",
+            "publishedAt": "2026-10-01T06:34:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224427599322",
+            "publishedAt": "2026-09-30T14:11:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224427269812",
+            "publishedAt": "2026-09-30T08:06:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224425191304",
+            "publishedAt": "2026-09-30T02:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "dts-tech",
+      "name": "디티에스",
+      "cohort": "OPERATING_COMPANY",
+      "code": "0015M0",
+      "subscriptionStart": "2026-10-13",
+      "listingDate": "2026-10-23",
+      "decisionCutoff": "2026-10-12T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "PRODUCTION_PARSER",
+      "metrics": {
+        "confirmedPrice": 18500,
+        "institutionalCompetitionRate": 983.98,
+        "lockupCommitmentRate": 13.31,
+        "circulatingSupplyRate": 15.12
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+      "metricReceipt": "20261012000308",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 73,
+      "quantitativeScore": 86,
+      "outcomeVerified": true,
+      "openingPrice": 32350,
+      "closingPrice": 26950,
+      "openingReturn": 74.86486486486486,
+      "closingReturn": 45.67567567567568,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=0015M0&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": false,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 6,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224439569113",
+            "publishedAt": "2026-10-12T14:26:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224439243360",
+            "publishedAt": "2026-10-12T09:30:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224439267074",
+            "publishedAt": "2026-10-12T09:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224439143316",
+            "publishedAt": "2026-10-12T07:07:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224438609489",
+            "publishedAt": "2026-10-11T22:24:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 2,
+        "positiveRatio": 1,
+        "positive": 2,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 6,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224439569113",
+            "publishedAt": "2026-10-12T14:26:00.000Z",
+            "sentiment": "POSITIVE"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224439243360",
+            "publishedAt": "2026-10-12T09:30:00.000Z",
+            "sentiment": "POSITIVE"
+          },
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224439267074",
+            "publishedAt": "2026-10-12T09:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224439143316",
+            "publishedAt": "2026-10-12T07:07:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224438609489",
+            "publishedAt": "2026-10-11T22:24:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "creates",
+      "name": "크리에이츠",
+      "cohort": "OPERATING_COMPANY",
+      "code": "439270",
+      "subscriptionStart": "2026-10-20",
+      "listingDate": "2026-10-30",
+      "decisionCutoff": "2026-10-19T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "PRODUCTION_PARSER",
+      "metrics": {
+        "confirmedPrice": 15000,
+        "institutionalCompetitionRate": 240.46,
+        "lockupCommitmentRate": 0,
+        "circulatingSupplyRate": 39.43
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+      "metricReceipt": "20261019000286",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 23,
+      "quantitativeScore": 27,
+      "outcomeVerified": true,
+      "openingPrice": 12000,
+      "closingPrice": 9000,
+      "openingReturn": -19.999999999999996,
+      "closingReturn": -40,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=439270&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": false,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224447058992",
+            "publishedAt": "2026-10-19T13:32:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224446958768",
+            "publishedAt": "2026-10-19T11:53:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224446607662",
+            "publishedAt": "2026-10-19T06:15:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224446546887",
+            "publishedAt": "2026-10-19T05:25:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224445960695",
+            "publishedAt": "2026-10-18T15:02:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 2,
+        "positiveRatio": 0,
+        "positive": 0,
+        "neutral": 1,
+        "caution": 1,
+        "validArticles": 7,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224447058992",
+            "publishedAt": "2026-10-19T13:32:00.000Z",
+            "sentiment": "CAUTION"
+          },
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224446958768",
+            "publishedAt": "2026-10-19T11:53:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224446607662",
+            "publishedAt": "2026-10-19T06:15:00.000Z",
+            "sentiment": "NEUTRAL"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224446546887",
+            "publishedAt": "2026-10-19T05:25:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224445960695",
+            "publishedAt": "2026-10-18T15:02:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "tne-korea",
+      "name": "티앤이코리아",
+      "cohort": "OPERATING_COMPANY",
+      "code": "0053F0",
+      "subscriptionStart": "2026-10-20",
+      "listingDate": "2026-10-29",
+      "decisionCutoff": "2026-10-19T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "MANUAL_CURRENT_AMENDMENT_TABLE",
+      "metrics": {
+        "confirmedPrice": 15300,
+        "institutionalCompetitionRate": 1041.02,
+        "lockupCommitmentRate": 29.52,
+        "circulatingSupplyRate": 31.29
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+      "metricReceipt": "20261016000158",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 70,
+      "quantitativeScore": 82,
+      "outcomeVerified": true,
+      "openingPrice": 30350,
+      "closingPrice": 21000,
+      "openingReturn": 98.36601307189542,
+      "closingReturn": 37.254901960784316,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=0053F0&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": false,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224445935080",
+            "publishedAt": "2026-10-18T14:32:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224445714146",
+            "publishedAt": "2026-10-18T10:10:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224444103843",
+            "publishedAt": "2026-10-17T11:10:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "dividendqueen",
+            "url": "https://blog.naver.com/dividendqueen/224444538064",
+            "publishedAt": "2026-10-17T02:14:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224443893072",
+            "publishedAt": "2026-10-16T07:56:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 1,
+        "positiveRatio": 1,
+        "positive": 1,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224445935080",
+            "publishedAt": "2026-10-18T14:32:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224445714146",
+            "publishedAt": "2026-10-18T10:10:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224444103843",
+            "publishedAt": "2026-10-17T11:10:00.000Z",
+            "sentiment": "POSITIVE"
+          },
+          {
+            "blogId": "dividendqueen",
+            "url": "https://blog.naver.com/dividendqueen/224444538064",
+            "publishedAt": "2026-10-17T02:14:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224443893072",
+            "publishedAt": "2026-10-16T07:56:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "intellivix",
+      "name": "인텔리빅스",
+      "cohort": "OPERATING_COMPANY",
+      "code": "420610",
+      "subscriptionStart": "2026-10-21",
+      "listingDate": "2026-10-30",
+      "decisionCutoff": "2026-10-20T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "PRODUCTION_PARSER",
+      "metrics": {
+        "confirmedPrice": 9000,
+        "institutionalCompetitionRate": 1234.3,
+        "lockupCommitmentRate": 6.14,
+        "circulatingSupplyRate": 23.95
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+      "metricReceipt": "20261020000365",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 71,
+      "quantitativeScore": 84,
+      "outcomeVerified": true,
+      "openingPrice": 19290,
+      "closingPrice": 29150,
+      "openingReturn": 114.33333333333336,
+      "closingReturn": 223.88888888888889,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=420610&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": false,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224448317981",
+            "publishedAt": "2026-10-20T14:52:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224448141708",
+            "publishedAt": "2026-10-20T11:40:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224448138247",
+            "publishedAt": "2026-10-20T11:36:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224448072589",
+            "publishedAt": "2026-10-20T11:20:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224446365007",
+            "publishedAt": "2026-10-19T02:38:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 1,
+        "positiveRatio": 1,
+        "positive": 1,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 7,
+        "representedBlogs": 5,
+        "latest": [
+          {
+            "blogId": "juan116_",
+            "url": "https://blog.naver.com/juan116_/224448317981",
+            "publishedAt": "2026-10-20T14:52:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224448141708",
+            "publishedAt": "2026-10-20T11:40:00.000Z",
+            "sentiment": "POSITIVE"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224448138247",
+            "publishedAt": "2026-10-20T11:36:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "lsyivy0722",
+            "url": "https://blog.naver.com/lsyivy0722/224448072589",
+            "publishedAt": "2026-10-20T11:20:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224446365007",
+            "publishedAt": "2026-10-19T02:38:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "hanwha-plus-spac6",
+      "name": "한화플러스제6호기업인수목적",
+      "cohort": "SPAC",
+      "code": "0127E0",
+      "subscriptionStart": "2026-10-20",
+      "listingDate": "2026-10-30",
+      "decisionCutoff": "2026-10-19T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "PRODUCTION_PARSER",
+      "metrics": {
+        "confirmedPrice": 2000,
+        "institutionalCompetitionRate": 1256.48,
+        "lockupCommitmentRate": 0,
+        "circulatingSupplyRate": 93.6
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+      "metricReceipt": "20261019000187",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 45,
+      "quantitativeScore": 53,
+      "outcomeVerified": true,
+      "openingPrice": 2810,
+      "closingPrice": 1866,
+      "openingReturn": 40.5,
+      "closingReturn": -6.699999999999995,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=0127E0&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": false,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 4,
+        "representedBlogs": 4,
+        "latest": [
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224446745167",
+            "publishedAt": "2026-10-19T08:07:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224446664326",
+            "publishedAt": "2026-10-19T07:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224445960695",
+            "publishedAt": "2026-10-18T15:02:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224444800372",
+            "publishedAt": "2026-10-17T08:14:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 1,
+        "positiveRatio": 1,
+        "positive": 1,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 4,
+        "representedBlogs": 4,
+        "latest": [
+          {
+            "blogId": "kastro83",
+            "url": "https://blog.naver.com/kastro83/224446745167",
+            "publishedAt": "2026-10-19T08:07:00.000Z",
+            "sentiment": "POSITIVE"
+          },
+          {
+            "blogId": "msql",
+            "url": "https://blog.naver.com/msql/224446664326",
+            "publishedAt": "2026-10-19T07:00:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "hippocamp",
+            "url": "https://blog.naver.com/hippocamp/224445960695",
+            "publishedAt": "2026-10-18T15:02:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          },
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224444800372",
+            "publishedAt": "2026-10-17T08:14:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    },
+    {
+      "id": "dart-02032951",
+      "name": "에스케이증권제14호기업인수목적",
+      "cohort": "SPAC",
+      "code": "0205H0",
+      "subscriptionStart": "2026-10-15",
+      "listingDate": "2026-10-27",
+      "decisionCutoff": "2026-10-14T14:59:59.999Z",
+      "identityVerified": true,
+      "metricProvenance": "RECONSTRUCTED_D1_FILING",
+      "metricExtraction": "PRODUCTION_PARSER",
+      "metrics": {
+        "confirmedPrice": 2000,
+        "institutionalCompetitionRate": 1228.38,
+        "lockupCommitmentRate": 0.24,
+        "circulatingSupplyRate": 97.45
+      },
+      "metricSource": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+      "metricReceipt": "20261014000202",
+      "metricIdentityVerified": true,
+      "metricPublishedByCutoff": true,
+      "quantitativeRawScore": 54,
+      "quantitativeScore": 64,
+      "outcomeVerified": true,
+      "openingPrice": 4065,
+      "closingPrice": 1882,
+      "openingReturn": 103.25000000000001,
+      "closingReturn": -5.900000000000006,
+      "priceSource": "https://fchart.stock.naver.com/sise.nhn?symbol=0205H0&timeframe=day&count=1000&requestType=0",
+      "priceDisagreesWithStored": false,
+      "automatic": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 1,
+        "representedBlogs": 1,
+        "latest": [
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224441615258",
+            "publishedAt": "2026-10-14T08:23:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ]
+      },
+      "manualReference": {
+        "sampleSize": 0,
+        "positiveRatio": null,
+        "positive": 0,
+        "neutral": 0,
+        "caution": 0,
+        "validArticles": 1,
+        "representedBlogs": 1,
+        "latest": [
+          {
+            "blogId": "xuenxu",
+            "url": "https://blog.naver.com/xuenxu/224441615258",
+            "publishedAt": "2026-10-14T08:23:00.000Z",
+            "sentiment": "UNCLASSIFIED"
+          }
+        ],
+        "method": "All context-reviewed eligible latest-blog diagnostic labels; unreviewed/ambiguous articles remain unclassified."
+      }
+    }
+  ]
+}

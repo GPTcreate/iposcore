@@ -1,0 +1,792 @@
+{
+  "generatedAt": "2026-11-01T12:22:27.943Z",
+  "design": "Retrospective reconstruction; descriptive only; no weight selected or deployed.",
+  "outcomeDefinition": "Verified original offer price to exact listing-day provider opening/closing price; fees and allocation excluded.",
+  "strictArchivedPointInTimeSamples": 0,
+  "coverage": {
+    "auditedUniverse": 20,
+    "dateIdentityCandidates": 8,
+    "uniqueArticles": 45,
+    "reconstructedMetricAndOutcomeCases": 7,
+    "comparisonUniqueArticles": 37,
+    "comparisonArticleTargetLinks": 39,
+    "automaticPairedCases": 0,
+    "manualReferencePairedCases": 6
+  },
+  "operationalAutomatic": [
+    {
+      "weight": 0,
+      "n": 7,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.5225437283634242,
+      "closeSpearman": 0.9549937104572925,
+      "displayedOpenSpearman": 0.5225437283634242,
+      "displayedCloseSpearman": 0.9549937104572925,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 6,
+      "positiveClose": 4
+    },
+    {
+      "weight": 15,
+      "n": 7,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.5225437283634242,
+      "closeSpearman": 0.9549937104572925,
+      "displayedOpenSpearman": 0.5225437283634242,
+      "displayedCloseSpearman": 0.9549937104572925,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 6,
+      "positiveClose": 4
+    },
+    {
+      "weight": 25,
+      "n": 7,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.5225437283634242,
+      "closeSpearman": 0.9549937104572925,
+      "displayedOpenSpearman": 0.5225437283634242,
+      "displayedCloseSpearman": 0.9549937104572925,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 6,
+      "positiveClose": 4
+    },
+    {
+      "weight": 30,
+      "n": 7,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.5225437283634242,
+      "closeSpearman": 0.9549937104572925,
+      "displayedOpenSpearman": 0.5225437283634242,
+      "displayedCloseSpearman": 0.9549937104572925,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 6,
+      "positiveClose": 4
+    }
+  ],
+  "operationalAutomaticParserOnly": [
+    {
+      "weight": 0,
+      "n": 5,
+      "ids": [
+        "dts-tech",
+        "creates",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        85.88235294117646,
+        27.058823529411764,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        86,
+        27,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.7,
+      "closeSpearman": 0.9,
+      "displayedOpenSpearman": 0.7,
+      "displayedCloseSpearman": 0.9,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 2
+    },
+    {
+      "weight": 15,
+      "n": 5,
+      "ids": [
+        "dts-tech",
+        "creates",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        85.88235294117646,
+        27.058823529411764,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        86,
+        27,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.7,
+      "closeSpearman": 0.9,
+      "displayedOpenSpearman": 0.7,
+      "displayedCloseSpearman": 0.9,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 2
+    },
+    {
+      "weight": 25,
+      "n": 5,
+      "ids": [
+        "dts-tech",
+        "creates",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        85.88235294117646,
+        27.058823529411764,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        86,
+        27,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.7,
+      "closeSpearman": 0.9,
+      "displayedOpenSpearman": 0.7,
+      "displayedCloseSpearman": 0.9,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 2
+    },
+    {
+      "weight": 30,
+      "n": 5,
+      "ids": [
+        "dts-tech",
+        "creates",
+        "intellivix",
+        "hanwha-plus-spac6",
+        "dart-02032951"
+      ],
+      "scores": [
+        85.88235294117646,
+        27.058823529411764,
+        83.52941176470588,
+        52.94117647058824,
+        63.52941176470588
+      ],
+      "displayedScores": [
+        86,
+        27,
+        84,
+        53,
+        64
+      ],
+      "openSpearman": 0.7,
+      "closeSpearman": 0.9,
+      "displayedOpenSpearman": 0.7,
+      "displayedCloseSpearman": 0.9,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 2
+    }
+  ],
+  "operationalAutomaticOrdinary": [
+    {
+      "weight": 0,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    },
+    {
+      "weight": 15,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    },
+    {
+      "weight": 25,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    },
+    {
+      "weight": 30,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    }
+  ],
+  "automaticPaired": [
+    {
+      "weight": 0,
+      "n": 0,
+      "ids": [],
+      "scores": [],
+      "displayedScores": [],
+      "openSpearman": null,
+      "closeSpearman": null,
+      "displayedOpenSpearman": null,
+      "displayedCloseSpearman": null,
+      "openPositiveAuc": null,
+      "closePositiveAuc": null,
+      "positiveOpen": 0,
+      "positiveClose": 0
+    },
+    {
+      "weight": 15,
+      "n": 0,
+      "ids": [],
+      "scores": [],
+      "displayedScores": [],
+      "openSpearman": null,
+      "closeSpearman": null,
+      "displayedOpenSpearman": null,
+      "displayedCloseSpearman": null,
+      "openPositiveAuc": null,
+      "closePositiveAuc": null,
+      "positiveOpen": 0,
+      "positiveClose": 0
+    },
+    {
+      "weight": 25,
+      "n": 0,
+      "ids": [],
+      "scores": [],
+      "displayedScores": [],
+      "openSpearman": null,
+      "closeSpearman": null,
+      "displayedOpenSpearman": null,
+      "displayedCloseSpearman": null,
+      "openPositiveAuc": null,
+      "closePositiveAuc": null,
+      "positiveOpen": 0,
+      "positiveClose": 0
+    },
+    {
+      "weight": 30,
+      "n": 0,
+      "ids": [],
+      "scores": [],
+      "displayedScores": [],
+      "openSpearman": null,
+      "closeSpearman": null,
+      "displayedOpenSpearman": null,
+      "displayedCloseSpearman": null,
+      "openPositiveAuc": null,
+      "closePositiveAuc": null,
+      "positiveOpen": 0,
+      "positiveClose": 0
+    }
+  ],
+  "manualReferencePaired": [
+    {
+      "weight": 0,
+      "n": 6,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588,
+        52.94117647058824
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84,
+        53
+      ],
+      "openSpearman": 0.550782483869826,
+      "closeSpearman": 0.9276336570439175,
+      "displayedOpenSpearman": 0.550782483869826,
+      "displayedCloseSpearman": 0.9276336570439175,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 5,
+      "positiveClose": 4
+    },
+    {
+      "weight": 15,
+      "n": 6,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6"
+      ],
+      "scores": [
+        85,
+        88,
+        23,
+        85,
+        86,
+        60
+      ],
+      "displayedScores": [
+        85,
+        88,
+        23,
+        85,
+        86,
+        60
+      ],
+      "openSpearman": 0.550782483869826,
+      "closeSpearman": 0.9276336570439175,
+      "displayedOpenSpearman": 0.550782483869826,
+      "displayedCloseSpearman": 0.9276336570439175,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 5,
+      "positiveClose": 4
+    },
+    {
+      "weight": 25,
+      "n": 6,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6"
+      ],
+      "scores": [
+        86.76470588235294,
+        89.41176470588235,
+        20.294117647058822,
+        86.76470588235294,
+        87.64705882352942,
+        64.70588235294117
+      ],
+      "displayedScores": [
+        87,
+        89,
+        20,
+        87,
+        88,
+        65
+      ],
+      "openSpearman": 0.550782483869826,
+      "closeSpearman": 0.9276336570439175,
+      "displayedOpenSpearman": 0.550782483869826,
+      "displayedCloseSpearman": 0.9276336570439175,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 5,
+      "positiveClose": 4
+    },
+    {
+      "weight": 30,
+      "n": 6,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix",
+        "hanwha-plus-spac6"
+      ],
+      "scores": [
+        87.64705882352942,
+        90.11764705882354,
+        18.941176470588236,
+        87.64705882352942,
+        88.47058823529412,
+        67.05882352941177
+      ],
+      "displayedScores": [
+        88,
+        90,
+        19,
+        88,
+        88,
+        67
+      ],
+      "openSpearman": 0.550782483869826,
+      "closeSpearman": 0.9276336570439175,
+      "displayedOpenSpearman": 0.5768179036829705,
+      "displayedCloseSpearman": 0.819688599970537,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 5,
+      "positiveClose": 4
+    }
+  ],
+  "manualReferenceOrdinary": [
+    {
+      "weight": 0,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        82.35294117647058,
+        85.88235294117646,
+        27.058823529411764,
+        82.35294117647058,
+        83.52941176470588
+      ],
+      "displayedScores": [
+        82,
+        86,
+        27,
+        82,
+        84
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    },
+    {
+      "weight": 15,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        85,
+        88,
+        23,
+        85,
+        86
+      ],
+      "displayedScores": [
+        85,
+        88,
+        23,
+        85,
+        86
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    },
+    {
+      "weight": 25,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        86.76470588235294,
+        89.41176470588235,
+        20.294117647058822,
+        86.76470588235294,
+        87.64705882352942
+      ],
+      "displayedScores": [
+        87,
+        89,
+        20,
+        87,
+        88
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.20519567041703082,
+      "displayedCloseSpearman": 0.872081599272381,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    },
+    {
+      "weight": 30,
+      "n": 5,
+      "ids": [
+        "melcon",
+        "dts-tech",
+        "creates",
+        "tne-korea",
+        "intellivix"
+      ],
+      "scores": [
+        87.64705882352942,
+        90.11764705882354,
+        18.941176470588236,
+        87.64705882352942,
+        88.47058823529412
+      ],
+      "displayedScores": [
+        88,
+        90,
+        19,
+        88,
+        88
+      ],
+      "openSpearman": 0.20519567041703082,
+      "closeSpearman": 0.872081599272381,
+      "displayedOpenSpearman": 0.22360679774997896,
+      "displayedCloseSpearman": 0.6708203932499369,
+      "openPositiveAuc": 1,
+      "closePositiveAuc": 1,
+      "positiveOpen": 4,
+      "positiveClose": 4
+    }
+  ],
+  "limitations": [
+    "Current pages were fetched after listing: unexposed later edits cannot be excluded.",
+    "No preserved original D-1 fetch exists for these articles. Publication cutoff is not immutable historical content.",
+    "Weight scenarios use the identical issuer set. Missing opinions retain the quantitative score, not an invented neutral score.",
+    "Manual reference labels are diagnostic human readings, not the production classifier or independently validated ground truth.",
+    "A narrow, small sample mixing SPACs and operating companies cannot establish predictive improvement.",
+    "No chronological holdout or weight optimization was performed; no optimal weight is established."
+  ]
+}
