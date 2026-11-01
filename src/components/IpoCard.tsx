@@ -81,6 +81,8 @@ export default function IpoCard({ ipo }: IpoCardProps) {
             isVerified={hasVerifiedForecast(ipo)}
             basis={score.basis}
             sampleSize={score.sampleSize}
+            reviewEligible={score.reviewEligible}
+            reviewStartsOn={score.reviewStartsOn}
           />
         </div>
 

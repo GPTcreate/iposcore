@@ -96,13 +96,16 @@ export function getEffectiveIpoStatus(ipo: IpoItem, now = new Date()): IpoStatus
  * 개별 IPO 아이템에 실시간 동적 상태(status)를 반영하여 반환
  */
 export function getEffectiveIpo(ipo: IpoItem, now = new Date()): IpoItem {
-  const scoring = calculateIpoScore(ipo);
+  const scoring = calculateIpoScore(ipo, now);
   const reviews = summarizeReviews(ipo, now);
   return {
     ...ipo,
     status: getEffectiveIpoStatus(ipo, now),
     aiScore: scoring.score,
     scoreGrade: scoring.scoreGrade,
+    scoreBasis: scoring.basis,
+    reviewScoreEligible: scoring.reviewEligible,
+    reviewScoreStartsOn: scoring.reviewStartsOn,
     expertReviews: getCollectedReviews(ipo, now),
     sentimentConsensus: { positiveRatio: reviews.positiveRatio, neutralRatio: reviews.neutralRatio, cautionRatio: reviews.cautionRatio },
   };

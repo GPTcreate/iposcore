@@ -91,6 +91,9 @@ export interface IpoItem {
   // AI 분석 & 점수
   aiScore: number;                      // 0 ~ 100점 (미검토/지표 누락 시 공개 산출 보류)
   scoreGrade: 'S' | 'A' | 'B' | 'C';    // 정량 지표 구간. 투자 추천 등급이 아님
+  scoreBasis?: 'PENDING' | 'QUANTITATIVE' | 'COMBINED';
+  reviewScoreEligible?: boolean;
+  reviewScoreStartsOn?: string | null; // KST 청약 시작 전날, 일정 미정/충돌/철회이면 null
   aiSummary: {
     headline: string;
     bulletPoints: string[];

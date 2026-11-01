@@ -41,11 +41,12 @@ export function getCollectedReviewsContext(ipo: Partial<IpoItem> | string): {
  */
 export async function analyzeIpoSentiment(
   ipo: Partial<IpoItem> & { name: string },
-  triggerType: 'NEW_SCHEDULE' | 'DAY_BEFORE_SUBSCRIPTION' | 'MANUAL_FORCE'
+  triggerType: 'NEW_SCHEDULE' | 'DAY_BEFORE_SUBSCRIPTION' | 'MANUAL_FORCE',
+  now = new Date(),
 ): Promise<SentimentAnalysisOutput> {
   void triggerType;
-  const expertReviews = getCollectedReviews(ipo);
-  const reviewSummary = summarizeReviews(ipo);
+  const expertReviews = getCollectedReviews(ipo, now);
+  const reviewSummary = summarizeReviews(ipo, now);
   const sentimentConsensus = {
     positiveRatio: reviewSummary.positiveRatio,
     neutralRatio: reviewSummary.neutralRatio,
@@ -68,7 +69,9 @@ export async function analyzeIpoSentiment(
     name: ipo.name,
     subscriptionStart: ipo.subscriptionStart,
     reviewCollection: ipo.reviewCollection,
-  });
+    isCancelled: ipo.isCancelled,
+    scheduleVerification: ipo.scheduleVerification,
+  }, now);
 
   const bulletPoints: string[] = [];
   if (expertReviews.length > 0) {
