@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-01T06:37:34.080Z",
+  "updatedAt": "2026-11-01T07:09:42.261Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -38,8 +38,8 @@
       "ipoId": "barofarm",
       "stockName": "바로팜",
       "subscriptionStart": "2026-11-02",
-      "collectedAt": "2026-11-01T06:37:34.080Z",
-      "lastSuccessfulAt": "2026-11-01T06:37:34.080Z",
+      "collectedAt": "2026-11-01T07:09:42.261Z",
+      "lastSuccessfulAt": "2026-11-01T07:09:42.261Z",
       "status": "success",
       "reviews": [
         {
@@ -53,7 +53,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "9d2a7e85469180e5c84d473c7398cabe31178548080a1c222a00059702a79066",
             "matchedAlias": "바로팜",
             "excerpt": "다음 주에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다.",
@@ -71,7 +71,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "2eef2098798f02c8398de38c75f815d502a1ef4ac9257445ce4116dd5360542e",
             "matchedAlias": "바로팜",
             "excerpt": "다음 주 11월 2일(월)부터 11월 3일(화)까지 바로팜의 청약이 진행됩니다.",
@@ -89,7 +89,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "50dc0bbf290e00c64e00f2174498b8225098e622f65e71d90c884bbc021c9956",
             "matchedAlias": "바로팜",
             "excerpt": "2026년 11월 2일부터 3일까지 진행되는 바로팜 공모주 청약에 앞서 기업의 주요 사업과 기관 수요예측 결과, 상장일 유통가능물량, 균등배정",
@@ -107,7 +107,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "d83c97f8e30c18cbafa5ef3c465bcfac98e3a5a98df7071244ee730d1a00f741",
             "matchedAlias": "바로팜",
             "excerpt": "다음주 11월 2일(월)부터 동원파츠와 함께 청약이 진행되는 바로팜의 수요예측 결과가 발표되었습니다.",
@@ -125,7 +125,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "1b5a5c04238011e95af29e2e33138b9ebe6cea54316380b99912bd6d87b98bf6",
             "matchedAlias": "바로팜",
             "excerpt": "다음 청약일인 11월 2일(월)부터 바로팜과 함께 청약이 진행되는 동원파츠의 수요예측 결과가 발표되었습니다.",
@@ -143,7 +143,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "f6f09ee9009390e96bd3fd2f4040628111e8c9c4963de50617c6b36272714e0e",
             "matchedAlias": "바로팜",
             "excerpt": "11월에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇, 다비오, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지, 에스에프씨, 유캐스트, 아델, 제논, 케이엠에프, 에이엔에이치스트럭쳐",
@@ -161,7 +161,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "15d67ee3592cb64c598a3eeef169a7dcb898b4ed71dbd5b2a2356e76c454b937",
             "matchedAlias": "바로팜",
             "excerpt": "다음 주 청약이 진행되는 바로팜은 약국에서 사용하는 의약품 통합주문 플랫폼을 운영하는 회사입니다.",
@@ -197,8 +197,8 @@
       "ipoId": "dongwon-parts",
       "stockName": "동원파츠",
       "subscriptionStart": "2026-11-02",
-      "collectedAt": "2026-11-01T06:37:34.080Z",
-      "lastSuccessfulAt": "2026-11-01T06:37:34.080Z",
+      "collectedAt": "2026-11-01T07:09:42.261Z",
+      "lastSuccessfulAt": "2026-11-01T07:09:42.261Z",
       "status": "success",
       "reviews": [
         {
@@ -212,7 +212,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "9d2a7e85469180e5c84d473c7398cabe31178548080a1c222a00059702a79066",
             "matchedAlias": "동원파츠",
             "excerpt": "다음 주에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다.",
@@ -230,7 +230,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "9a63ba7d8bcf79a41bdea020b902dfc68e0c5aae84eb2abbe79a39e3dd08e67a",
             "matchedAlias": "동원파츠",
             "excerpt": "2026년 11월 2일부터 3일까지 진행되는 동원파츠 공모주 청약의 기관 수요예측 결과와 균등배정 및 비례배정 예상, 상장일 유통가능물량을 정리하고",
@@ -248,7 +248,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "d83c97f8e30c18cbafa5ef3c465bcfac98e3a5a98df7071244ee730d1a00f741",
             "matchedAlias": "동원파츠",
             "excerpt": "다음주 11월 2일(월)부터 동원파츠와 함께 청약이 진행되는 바로팜의 수요예측 결과가 발표되었습니다.",
@@ -266,7 +266,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "1b5a5c04238011e95af29e2e33138b9ebe6cea54316380b99912bd6d87b98bf6",
             "matchedAlias": "동원파츠",
             "excerpt": "청약일인 11월 2일(월)부터 바로팜과 함께 청약이 진행되는 동원파츠의 수요예측 결과가 발표되었습니다.",
@@ -284,7 +284,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "f6f09ee9009390e96bd3fd2f4040628111e8c9c4963de50617c6b36272714e0e",
             "matchedAlias": "동원파츠",
             "excerpt": "11월에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇, 다비오, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지, 에스에프씨, 유캐스트, 아델, 제논, 케이엠에프, 에이엔에이치스트럭쳐",
@@ -302,7 +302,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-01T06:37:34.080Z",
+            "fetchedAt": "2026-11-01T07:09:42.261Z",
             "contentHash": "a9e54c6651d45df69229598e1b9545a14d445d54c6208ee15633132820cd15e5",
             "matchedAlias": "동원파츠",
             "excerpt": "처음 청약이 진행되는 동원파츠는 반도체 제조장비에 들어가는 정밀부품을 만드는 회사입니다.",
