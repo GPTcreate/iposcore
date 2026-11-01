@@ -108,14 +108,33 @@ function inspectOfferingAmounts(sourceName, ipos) {
         reportError(sourceName, ipo.name, `${amountField}가 공시 주식수 × 확정 공모가와 다릅니다.`);
       }
     }
-    for (const field of ['totalOfferingAmount', 'marketCapAtIpo', 'offeringShareCount', 'listedShareCount', 'businessDescription']) {
-      const evidence = ipo.fieldEvidence?.[field];
-      if (evidence?.value !== undefined && evidence.value !== ipo[field]) reportError(sourceName, ipo.name, `${field}의 원문 근거가 현재 값과 다릅니다.`);
+    for (const [field, evidence] of Object.entries(ipo.fieldEvidence || {})) {
+      if (evidence?.value !== undefined && evidence.value !== (ipo[field] ?? null)) reportError(sourceName, ipo.name, `${field}의 원문 근거가 현재 값과 다릅니다.`);
     }
   }
 }
 inspectOfferingAmounts('customIpos.json', customIpos);
 inspectOfferingAmounts('mockIpo.ts', mockIpos);
+
+// A listing correction must move issuer identity, candle date and denominator together.
+function inspectListingPrices(sourceName, ipos) {
+  for (const ipo of ipos) {
+    const evidence = ipo.listingPriceEvidence;
+    if (evidence && (evidence.code !== ipo.code || evidence.tradeDate !== ipo.listingDate)) {
+      reportError(sourceName, ipo.name, '상장 가격 근거의 종목코드·거래일이 현재 종목과 다릅니다.');
+    }
+    for (const [priceField, returnField] of [['openingPrice', 'openingReturnRate'], ['closingPrice', 'closingReturnRate']]) {
+      const price = ipo[priceField], rate = ipo[returnField];
+      if (price === undefined && rate === undefined) continue;
+      if (!Number.isFinite(price) || price <= 0 || !Number.isFinite(rate) || !(ipo.confirmedPrice > 0)
+        || Math.abs((price / ipo.confirmedPrice - 1) * 100 - rate) > 0.11) {
+        reportError(sourceName, ipo.name, `${priceField}/${returnField}가 현재 확정 공모가와 일치하지 않습니다.`);
+      }
+    }
+  }
+}
+inspectListingPrices('customIpos.json', customIpos);
+inspectListingPrices('mockIpo.ts', mockIpos);
 
 // 3. 엔키화이트햇 등 공식 DART 정정 공시 데이터 특수 검증
 const enki = customIpos.find(i => i.id === 'enki-whitehat');

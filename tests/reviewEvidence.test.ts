@@ -225,13 +225,16 @@ test('review contribution comes from classified collected evidence, excluding un
   assert.equal(result.sampleSize, 3);
   assert.equal(result.quantitativeRawScore, 85);
   assert.equal(result.quantitativeScore, 100);
-  assert.ok(Math.abs(result.breakdown.sentimentScore - 5) < 0.0001);
-  assert.equal(result.score, 90);
+  assert.equal(result.sentimentIndex, 60);
+  assert.equal(result.sentimentWeight, 15);
+  assert.equal(result.breakdown.sentimentScore, 9);
+  assert.equal(result.breakdown.quantitativeContribution, 85);
+  assert.equal(result.score, 94);
   assert.equal(result.coverage.collectedReviews, 4);
   assert.equal(result.reviewSummary.unclassifiedCount, 1);
   const neutral = calculateIpoScore({ ...forecast, ...collected([article('writer1', 'NEUTRAL')]) });
   assert.equal(neutral.basis, 'COMBINED');
-  assert.equal(neutral.score, 85);
+  assert.equal(neutral.score, 98);
   const absent = calculateIpoScore({ ...forecast, ...collected([]) });
   assert.equal(absent.basis, 'QUANTITATIVE');
   assert.equal(absent.score, 100);
@@ -244,6 +247,32 @@ function phaseFixture(sentiment: ExpertReview['sentiment'] = 'CAUTION') {
   return { ...forecast, institutionalCompetitionRate: 950, lockupCommitmentRate: 12, circulatingSupplyRate: 27,
     ...collected([review], { collectedAt: '2020-01-01T02:00:00Z' }), ...identity, status: 'UPCOMING' as const };
 }
+
+test('v3 separates participation, defer and nonparticipation and tempers small samples', () => {
+  const atD1 = now;
+  const score = (sentiment: ExpertReview['sentiment'], count: number) => calculateIpoScore({
+    ...phaseFixture(sentiment),
+    ...collected(Array.from({ length: count }, (_, index) => article(`author${index}`, sentiment))),
+  }, atD1);
+  const one = score('POSITIVE', 1), five = score('POSITIVE', 5), ten = score('POSITIVE', 10);
+  assert.equal(one.sentimentWeight, 5);
+  assert.equal(one.sentimentConfidence, 0.2);
+  assert.equal(one.score, 80);
+  assert.equal(five.sentimentWeight, 25);
+  assert.equal(five.sentimentConfidence, 1);
+  assert.equal(five.score, 84);
+  assert.equal(ten.score, five.score);
+  assert.equal(score('NEUTRAL', 5).sentimentIndex, 65);
+  assert.equal(score('NEUTRAL', 5).score, 75);
+  assert.equal(score('CAUTION', 5).sentimentIndex, 15);
+  assert.equal(score('CAUTION', 5).score, 63);
+  assert(one.score > score('NEUTRAL', 1).score);
+  assert(score('NEUTRAL', 1).score > score('CAUTION', 1).score);
+  const unknown = score('UNCLASSIFIED', 10);
+  assert.equal(unknown.sentimentIndex, null);
+  assert.equal(unknown.sentimentWeight, 0);
+  assert.equal(unknown.score, 79);
+});
 
 test('switches from quantitative to combined at exactly KST midnight on subscription D-1', () => {
   const ipo = phaseFixture();
@@ -259,13 +288,13 @@ test('switches from quantitative to combined at exactly KST midnight on subscrip
   assert.equal(after.reviewEligible, true);
   assert.equal(after.basis, 'COMBINED');
   assert.equal(after.reviewSummary.cautionRatio, 100);
-  assert.equal(after.score, 67);
-  assert.equal(after.scoreGrade, 'B');
+  assert.equal(after.score, 76);
+  assert.equal(after.scoreGrade, 'A');
   for (const status of ['SUBSCRIPTION', 'WAITING_LISTING', 'LISTED'] as const) {
     const later = calculateIpoScore({ ...ipo, status }, new Date('2020-01-05T00:00:00Z'));
     assert.equal(later.reviewEligible, true);
     assert.equal(later.basis, 'COMBINED');
-    assert.equal(later.score, 67);
+    assert.equal(later.score, 76);
   }
 });
 
@@ -282,8 +311,9 @@ test('early positive opinions remain visible without contributing points before 
   assert.equal(output.expertReviews.length, 1);
   const after = calculateIpoScore(ipo, new Date('2020-01-01T15:00:00Z'));
   assert.equal(after.basis, 'COMBINED');
-  assert.equal(after.breakdown.sentimentScore, 15);
-  assert.equal(after.score, 82);
+  assert.equal(after.breakdown.sentimentScore, 5);
+  assert.equal(after.sentimentWeight, 5);
+  assert.equal(after.score, 80);
 });
 
 test('D-1 without usable opinions keeps the quantitative score and does not invent neutral evidence', () => {
@@ -292,7 +322,7 @@ test('D-1 without usable opinions keeps the quantitative score and does not inve
     const result = calculateIpoScore(phaseFixture(sentiment), atD1);
     assert.equal(result.reviewEligible, true);
     assert.equal(result.basis, sentiment === 'NEUTRAL' ? 'COMBINED' : 'QUANTITATIVE');
-    assert.equal(result.score, sentiment === 'NEUTRAL' ? 67 : 79);
+    assert.equal(result.score, sentiment === 'NEUTRAL' ? 78 : 79);
   }
   const failed = phaseFixture(); failed.reviewCollection!.status = 'failed';
   const result = calculateIpoScore(failed, atD1);
@@ -366,7 +396,10 @@ test('effective API records pass one evaluation time to scoring and review aggre
   assert.equal(before.reviewScoreStartsOn, '2020-01-02');
   assert.equal(before.sentimentConsensus.positiveRatio, 100);
   const after = effective.getAllEffectiveIpos(new Date('2020-01-01T15:00:00Z'))[0];
-  assert.equal(after.aiScore, 82);
+  assert.equal(after.aiScore, 80);
+  assert.equal(after.scoreVersion, '2026-11-01-v3');
+  assert.equal(after.sentimentIndex, 100);
+  assert.equal(after.sentimentWeight, 5);
   assert.equal(after.scoreBasis, 'COMBINED');
   assert.equal(after.reviewScoreEligible, true);
 });
@@ -392,7 +425,7 @@ test('partial refresh displays retained failed-channel articles but counts only 
   assert.equal(summary.positiveRatio, 100);
   const score = calculateIpoScore(ipo);
   assert.equal(score.basis, 'COMBINED');
-  assert.equal(score.breakdown.sentimentScore, 15);
+  assert.equal(score.breakdown.sentimentScore, 5);
   assert.equal(score.coverage.stale, true);
   const output = await analyzeIpoSentiment(ipo, 'MANUAL_FORCE');
   assert.match(output.aiSummary.riskPoints[0], /일부 채널/);

@@ -27,3 +27,14 @@ test('the build audit rejects valuation-share totals and stale field citations',
   assert.equal(inspect({ listedShareCount: 46271412 }).status, 1);
   assert.equal(inspect({ fieldEvidence: { businessDescription: { value: 'old profile' } }, businessDescription: 'current profile' }).status, 1);
 });
+
+test('the build audit rejects stale listing identity, candle dates and return denominators', () => {
+  const listing = { code: '0013Y0', listingDate: '2026-10-22', openingPrice: 16000,
+    closingPrice: 12000, openingReturnRate: 100, closingReturnRate: 50,
+    listingPriceEvidence: { code: '0013Y0', tradeDate: '2026-10-22', source: 'fchart_origin' } };
+  assert.equal(inspect(listing).status, 0);
+  assert.equal(inspect({ ...listing, code: '391020' }).status, 1);
+  assert.equal(inspect({ ...listing, listingDate: '2026-10-10' }).status, 1);
+  assert.equal(inspect({ ...listing, closingReturnRate: 60 }).status, 1);
+  assert.equal(inspect({ fieldEvidence: { code: { value: '391020' } }, code: '0013Y0' }).status, 1);
+});

@@ -37,7 +37,7 @@ export default function ReviewPanel({ ipo }: { ipo: IpoItem }) {
         <article key={review.url} className="rounded-lg border border-gray-200 p-4 space-y-2">
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500"><span className="font-semibold text-gray-800">{review.author}</span><time dateTime={review.publishedAt}>발행 {dayLabel(review.publishedAt)} (KST)</time><span>{stanceLabel[review.sentiment]}</span></div>
           <h3 className="font-bold text-sm leading-relaxed"><a className="text-blue-700 underline break-words" href={review.url} target="_blank" rel="noopener noreferrer">{review.title} ↗</a></h3>
-          {review.evidence?.excerpt && <p className="text-xs text-gray-700 leading-relaxed"><span className="font-semibold">확인한 문장: </span>“{review.evidence.excerpt}”</p>}
+          {review.evidence?.excerpt && <p className="text-xs text-gray-700 leading-relaxed"><span className="font-semibold">확인한 근거: </span>“{review.evidence.excerpt}”</p>}
           {(collection?.status === 'failed' || collection?.channels.some(channel => channel.status === 'failed' && channel.feedUrl === review.evidence?.feedUrl)) && <p className="text-[11px] text-amber-700">이전 수집 자료 · 현재 집계 제외</p>}
         </article>
       ))}</div>

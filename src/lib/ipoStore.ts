@@ -52,6 +52,10 @@ export function getAllIpos(): IpoItem[] {
  * 이전 임시 종목코드 호환용 별칭 맵 (이전 북마크나 외부 링크 유입 시 정상 접근 보장)
  */
 export const LEGACY_CODE_ALIASES: Record<string, string> = {
+  '459100': 'elice-group', // 이전 오등록 코드. 실제 459100 종목이 있으면 해당 종목을 우선합니다.
+  '391020': 'ms-bio',
+  '468300': 'bigwave-robotics',
+  '엘리스그룹': 'elice-group', // 공식 거래명은 엘리스, 법인명은 엘리스그룹.
   '462900': 'creates', // KRX 공식 439270으로 정정. 이전 서비스 링크 유지.
   '382010': 'tne-korea', // KRX 공식 0053F0.
   '450043': 'hanwha-plus-spac6', // KRX 공식 0127E0.
@@ -78,8 +82,11 @@ export function getIpoByIdOrCode(idOrCode: string): IpoItem | undefined {
     decoded = idOrCode.trim();
   }
 
-  const target = LEGACY_CODE_ALIASES[decoded] || LEGACY_CODE_ALIASES[idOrCode] || decoded;
   const all = getAllIpos();
+  // A real current issuer must never be shadowed by a former misregistered code.
+  const exact = all.find(i => i.id.toLowerCase() === decoded.toLowerCase() || i.code === decoded || i.name === decoded);
+  if (exact) return exact;
+  const target = LEGACY_CODE_ALIASES[decoded] || LEGACY_CODE_ALIASES[idOrCode] || decoded;
 
   return all.find(
     (i) =>

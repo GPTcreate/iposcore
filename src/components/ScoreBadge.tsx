@@ -27,7 +27,7 @@ export default function ScoreBadge({
   const isHeld = isPendingForecast || basis === 'PENDING' || !Number.isFinite(score) || score < 0 || score > 100;
   const combined = basis === 'COMBINED' && Number.isFinite(sampleSize) && sampleSize > 0;
   const basisLabel = `${isVerified ? '공시' : '등록자료'} ${isHeld ? '참고점수' : combined ? '종합점수' : '정량점수'}`;
-  const reviewPhaseLabel = combined ? '정량 최대 85점 + 감성 최대 15점'
+  const reviewPhaseLabel = combined ? '감성 최대 25% · 표본 수에 따라 반영'
     : reviewEligible ? (sampleSize > 0 ? '감성 표본 확보 · 정량 지표 대기' : '감성 표본 대기')
       : reviewStartsOn ? `${reviewStartsOn.slice(5)} 00시(KST)부터 감성 반영`
         : '청약 일정 확인 후 감성 반영';
