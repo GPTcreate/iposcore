@@ -111,6 +111,57 @@ test('bounds evidence with emoji and long source text without persisting the art
   assert.ok(JSON.stringify(snapshot).length < 4000);
 });
 
+test('recognizes directly attributed subscription intentions found in actual source paragraphs', async () => {
+  for (const text of [
+    '저는 아이엠스팩 균등 청약을 해봐야겠어요^^',
+    '그럼에도 개인적으로 이번 아이엠스팩은 균등배정뿐 아니라 비례청약까지 참여할 생각입니다.',
+    '저는 아이엠스팩 공모주에 청약하겠습니다.',
+  ]) {
+    const network = mockNetwork(xml('아이엠스팩 청약 분석'), html(text));
+    const [snapshot] = await collectReviewsForIpos([iam], { channels: [channel], now, fetcher: network.fetcher });
+    assert.equal(snapshot.reviews[0].sentiment, 'POSITIVE', text);
+    assert.equal(snapshot.reviews[0].evidence?.excerpt, text);
+    assert.equal(snapshot.reviews[0].evidence?.classification, 'explicit-stance-v1');
+  }
+  for (const text of [
+    '저는 아이엠스팩 균등 청약을 해봐야겠어요?',
+    '저는 아이엠스팩 경쟁률이 낮다면 균등 청약을 해봐야겠어요.',
+    '저는 아이엠스팩에 참여할 생각이 없습니다.',
+    '전문가는 “저는 아이엠스팩 균등 청약을 해봐야겠어요”라고 말했습니다.',
+    '저는 아이엠스팩은 패스합니다. 하지만 청약을 해봐야겠어요.',
+    '저는 아이엠스팩은 참여할 생각입니다. 최종적으로 청약하지 않겠습니다.',
+    '아이엠스팩 경쟁률이 낮다면. 저는 아이엠스팩은 참여할 생각입니다.',
+    '저는 아이엠스팩은 참여할 생각입니다. 현재 참여할 계획은 없습니다.',
+    '저는 아이엠스팩과 멜콘 균등 청약을 해봐야겠어요.',
+  ]) {
+    const network = mockNetwork(xml('아이엠스팩 청약 분석'), html(text));
+    const [snapshot] = await collectReviewsForIpos([iam, melcon], { channels: [channel], now, fetcher: network.fetcher });
+    assert.equal(snapshot.reviews[0].sentiment, 'UNCLASSIFIED', text);
+  }
+});
+
+test('retains word boundaries and a later explicit stance sentence before clipping evidence', async () => {
+  for (const body of [
+    '<div class="se-main-container"><p>저는<br>아이엠스팩은<br>참여합니다.</p></div>',
+    html('아이엠스팩의 공모 조건을 확인합니다. 저는 아이엠스팩은 참여합니다.'),
+    html(`아이엠스팩의 공모 조건을 확인합니다. ${'추가로 확인할 숫자와 상세 조건이 있습니다. '.repeat(20)}저는 아이엠스팩은 참여합니다.`),
+  ]) {
+    const network = mockNetwork(xml('아이엠스팩 청약 분석'), body);
+    const [snapshot] = await collectReviewsForIpos([iam], { channels: [channel], now, fetcher: network.fetcher });
+    assert.equal(snapshot.reviews[0].sentiment, 'POSITIVE');
+    assert.equal(snapshot.reviews[0].evidence?.excerpt, '저는 아이엠스팩은 참여합니다.');
+  }
+});
+
+test('sentence splitting preserves punctuation-tolerant company aliases without aborting collection', async () => {
+  const target = { ...iam, id: 'dongwon-parts', name: '동원파츠' };
+  const network = mockNetwork(xml('동원파츠 청약 분석'), html('저는 동. 원파츠는 참여합니다.'));
+  const [snapshot] = await collectReviewsForIpos([target], { channels: [channel], now, fetcher: network.fetcher });
+  assert.equal(snapshot.status, 'success');
+  assert.equal(snapshot.reviews[0].sentiment, 'POSITIVE');
+  assert.equal(snapshot.reviews[0].evidence?.excerpt, '저는 동. 원파츠는 참여합니다.');
+});
+
 test('does not transfer a later company stance to the target, even if only one IPO is requested', async () => {
   const network = mockNetwork(xml('아이엠스팩과 멜콘'), fixture('multi-stock.html'));
   const [snapshot] = await collectReviewsForIpos([iam], { channels: [channel], now, fetcher: network.fetcher });
@@ -287,12 +338,36 @@ test('ten related sources each get their newest representative before extra arti
   assert.deepEqual(first.reviews.filter(review => review.author === '원문 작가 0').map(review => review.url),
     ['https://blog.naver.com/writer0/12', 'https://blog.naver.com/writer0/11', 'https://blog.naver.com/writer0/10']);
   assert.equal(bodyCalls.length, 12);
-  assert.equal(new Set(bodyCalls.slice(0, 10).map(url => new URL(url).searchParams.get('blogId'))).size, 10);
+  assert.equal(new Set(bodyCalls.slice(0, 6).map(url => new URL(url).searchParams.get('blogId'))).size, 6);
+  assert.equal(bodyCalls.filter(url => new URL(url).searchParams.get('logNo') === '100').length, 6);
   assert.equal(new URL(bodyCalls[0]).searchParams.get('blogId'), 'writer9');
   assert.equal(feedCalls.length, 10);
   assert.equal(second.status, 'success'); assert.equal(second.reviews.length, 10);
   assert(second.channels.every(source => source.matchedCount === 1 && !source.error));
   assert(second.reviews.every(review => review.sentiment === 'UNCLASSIFIED' && review.evidence?.contentHash));
+});
+
+test('a later IPO retains body evidence and stance after a busy earlier IPO', async () => {
+  const items = Array.from({ length: 12 }, (_, index) => `<item><title>아이엠스팩 분석 ${index}</title><link>${channel.url}/${1001 + index}</link><pubDate>Sat, 24 Oct 2020 15:00:00 +0900</pubDate><description>아이엠스팩 조건 확인</description></item>`);
+  items.push(`<item><title>멜콘 분석</title><link>${channel.url}/2001</link><pubDate>Sat, 24 Oct 2020 15:00:00 +0900</pubDate><description>멜콘 조건 확인</description></item>`);
+  let bodyRequests = 0;
+  const fetcher: typeof fetch = async input => {
+    const url = String(input);
+    if (url === channel.feedUrl) return new Response(`<rss><channel><title>실제 작성자</title>${items.join('')}</channel></rss>`);
+    bodyRequests++;
+    return new Response(html(url.includes('logNo=2001') ? '저는 멜콘 균등 청약을 해봐야겠어요^^' : '아이엠스팩의 공모 조건을 확인합니다.'));
+  };
+  const [first, second] = await collectReviewsForIpos([iam, melcon], { channels: [channel], now, fetcher });
+  assert.equal(first.reviews.length, 12);
+  assert.equal(second.reviews[0].sentiment, 'POSITIVE');
+  assert.equal(second.reviews[0].evidence?.excerpt, '저는 멜콘 균등 청약을 해봐야겠어요^^');
+  assert.equal(bodyRequests, 7);
+  bodyRequests = 0;
+  const unrelated = { ...melcon, id: 'no-reviews', name: '관련없는회사' };
+  const [busy, empty] = await collectReviewsForIpos([iam, unrelated], { channels: [channel], now, fetcher });
+  assert.equal(busy.reviews.length, 12);
+  assert.equal(empty.reviews.length, 0);
+  assert.equal(bodyRequests, 12);
 });
 
 test('RSS requests accept Tistory text/xml while retaining the ordinary article accept type', async () => {

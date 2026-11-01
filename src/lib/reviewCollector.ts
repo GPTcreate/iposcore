@@ -205,6 +205,7 @@ function sourceParagraphs(html: string): string[] {
   $('script,style,noscript,iframe,nav,footer,aside').remove();
   const container = $('.se-main-container,#postViewArea,.tt_article_useless_p_margin,.article-view,.entry-content,#article-view').first();
   if (!container.length) return [];
+  container.find('br').replaceWith(' ');
   const paragraphs = container.find('.se-text-paragraph,p').map((_, element) => $(element).text().replace(/\s+/g, ' ').trim()).get().filter(Boolean);
   return paragraphs.length ? [...new Set(paragraphs)].slice(0, 300) : [container.text().replace(/\s+/g, ' ').trim()].filter(Boolean);
 }
@@ -222,8 +223,8 @@ function classifyStance(excerpt: string, sourceParagraph: string, target: IpoIde
   if (ipos.some((other) => other.id !== target.id && aliasMatch(sourceParagraph, other.name))) return 'UNCLASSIFIED';
   if (/[“”"'「」『』]|에 따르면|라고 (?:말|했|하)|유튜버|블로거|전문가|그는|그녀는/.test(sourceParagraph)) return 'UNCLASSIFIED';
   if (!aliasMatch(excerpt, target.name) || !/(?:저는|제가|나는|개인적으로|필자는|저희는)/.test(excerpt)) return 'UNCLASSIFIED';
-  if (/(?:만약|라면|다면|경우|수도|않을까|할까|패스.{0,8}(?:하지|안|않)|불참.{0,8}(?:하지|안|않))/.test(excerpt)) return 'UNCLASSIFIED';
-  if (/(?:계획|예정|생각|의사).{0,8}(?:없|아니|않)|하기로.{0,10}(?:아니|않)|(?:유보|보류|관망).{0,8}(?:하지|안|않)/.test(excerpt)) return 'UNCLASSIFIED';
+  if (/(?:만약|라면|다면|경우|수도|않을까|할까|[?？]|패스.{0,8}(?:하지|안|않)|불참.{0,8}(?:하지|안|않))/.test(sourceParagraph)) return 'UNCLASSIFIED';
+  if (/(?:계획|예정|생각|의사).{0,8}(?:없|아니|않)|하기로.{0,10}(?:아니|않)|(?:유보|보류|관망).{0,8}(?:하지|안|않)/.test(sourceParagraph)) return 'UNCLASSIFIED';
   const alias = aliasMatch(excerpt, target.name)!;
   const aliasPosition = excerpt.indexOf(alias);
   // The stance must immediately concern this company, rather than a later name
@@ -231,13 +232,14 @@ function classifyStance(excerpt: string, sourceParagraph: string, target: IpoIde
   const subject = excerpt.slice(0, aliasPosition);
   if (!/(?:저는|제가|나는|개인적으로|필자는|저희는)/.test(subject)) return 'UNCLASSIFIED';
   const tail = excerpt.slice(aliasPosition + alias.length).trim();
-  const prefix = '^(?:은|는|을|를|에|의|도)?\\s*(?:(?:이번(?:에는)?|균등(?:으로|만)?|비례(?:로|만)?|청약(?:에|은|을|만)?|최소\\s*수량으로|만)\\s*)*';
+  const prefix = '^(?:은|는|을|를|에|의|도)?\\s*(?:(?:이번(?:에는)?|균등\\s*(?:배정|청약)?(?:으로|만)?|비례\\s*(?:배정|청약)?(?:로|만|까지)?|뿐\\s*아니라|공모주(?:에|는|를|도)?|청약(?:에|은|을|만)?|최소\\s*수량으로|만)\\s*)*';
   const neutral = new RegExp(prefix + '(?:(?:청약|참여)?\\s*(?:여부|결정)(?:는|은|을)?\\s*(?:아직\\s*)?(?:유보|보류|미정|결정하지 않|정하지 않)|(?:판단|결정)(?:을)?\\s*(?:유보|보류)|관망하겠습니다)').test(tail);
   const caution = new RegExp(prefix + '(?:(?:참여|청약)(?:을|에)?\\s*하지\\s*(?:않겠습니다|않기로|않을 예정|않습니다|않았)|(?:패스|불참)(?:하겠습니다|합니다|할 예정입니다|하기로 했습니다|했습니다))').test(tail);
-  const positive = new RegExp(prefix + '(?:참여|청약)(?:하겠습니다|합니다|할 예정입니다|할 계획입니다|하기로 했습니다|했습니다)').test(tail);
+  const positiveAction = '(?:(?:참여|청약)(?:하겠습니다|합니다|할 예정입니다|할 계획입니다|할 생각입니다|하기로 했습니다|했습니다)|청약(?:을)?\\s*해봐야겠(?:어요|습니다))';
+  const positive = new RegExp(prefix + positiveAction).test(tail);
   // An earlier clear stance must not survive a later correction or conflicting
   // decision in the same source paragraph, even beyond the short public excerpt.
-  const anyPositive = /(?:참여|청약)(?:하겠습니다|합니다|할 예정입니다|할 계획입니다|하기로 했습니다|했습니다)/.test(sourceParagraph);
+  const anyPositive = new RegExp(positiveAction).test(sourceParagraph);
   const anyCaution = /(?:참여|청약)(?:을|에)?\s*(?:하지\s*않|안\s*하)|(?:패스|불참)(?:하겠습니다|합니다|할 예정|하기로|했습니다)/.test(sourceParagraph);
   const anyNeutral = /(?:판단|결정)(?:을)?\s*(?:보류|유보)|관망하겠습니다|청약\s*여부.{0,15}(?:미정|보류|유보)/.test(sourceParagraph);
   if ((positive && (anyCaution || anyNeutral)) || (caution && (anyPositive || anyNeutral)) || (neutral && (anyPositive || anyCaution))) return 'UNCLASSIFIED';
@@ -274,8 +276,20 @@ export async function collectReviewsForIpos(
   }));
   const articleCache = new Map<string, Promise<ArticleResult>>();
   const snapshots: ReviewSnapshot[] = [];
+  const hasCandidates = ipos.map(ipo => {
+    const window = subscriptionWindow(ipo, now);
+    return Boolean(window && feeds.some(feed => feed.identity && !feed.error && feed.entries.some(entry => {
+      const publishedAt = Date.parse(entry.publishedAt);
+      return publishedAt >= window.earliest && publishedAt <= window.latest && aliasMatch(`${entry.title} ${entry.description}`, ipo.name);
+    })));
+  });
 
-  for (const ipo of ipos) {
+  for (const [ipoIndex, ipo] of ipos.entries()) {
+    // Reserve a fair share of the remaining unique body requests for later IPOs.
+    // Cached articles remain reusable without consuming another IPO's allowance.
+    const remainingTargets = hasCandidates.slice(ipoIndex).filter(Boolean).length;
+    const bodyAllowance = Math.ceil((MAX_ARTICLES_PER_RUN - articleCache.size) / Math.max(1, remainingTargets));
+    let bodyRequests = 0;
     const reviews: ExpertReview[] = [];
     const seen = new Set<string>();
     const channelResults: ChannelCollectionResult[] = [];
@@ -303,7 +317,7 @@ export async function collectReviewsForIpos(
         if (!entry) continue;
         seen.add(entry.url);
         let article = articleCache.get(entry.url);
-        if (!article && articleCache.size < MAX_ARTICLES_PER_RUN) {
+        if (!article && articleCache.size < MAX_ARTICLES_PER_RUN && bodyRequests < bodyAllowance) {
           const identity = feed.identity!;
           const canonical = new URL(entry.url);
           const articleUrl = identity.platform === 'naver'
@@ -313,20 +327,26 @@ export async function collectReviewsForIpos(
             .then((html) => ({ paragraphs: sourceParagraphs(html) }))
             .catch((error) => ({ paragraphs: [], error: error instanceof Error ? error.message : '본문 확인 실패' }));
           articleCache.set(entry.url, article);
+          bodyRequests++;
         }
         const body = article ? await article : { paragraphs: [] };
         if (body.error) channelResult.error = '일부 원문 본문을 가져오지 못해 RSS에 제공된 내용만 확인했습니다.';
         const matchedParagraphs = body.paragraphs.filter((paragraph) => aliasMatch(paragraph, ipo.name));
         const candidates = matchedParagraphs.length ? matchedParagraphs : [`${entry.title} ${entry.description}`];
-        const evidenceCandidates = candidates.map((paragraph) => {
-          const matchedAlias = aliasMatch(paragraph, ipo.name)!;
-          const excerpt = boundedExcerpt(paragraph, matchedAlias);
-          return { paragraph, matchedAlias, excerpt, sentiment: classifyStance(excerpt, paragraph, ipo, ipos) };
+        const evidenceCandidates = candidates.flatMap((paragraph) => {
+          // Find the actual stance sentence before shortening the public evidence.
+          // Whole-paragraph attribution and contradiction checks still apply.
+          const sentences = paragraph.split(/(?<=[.!?。！？])\s+/).filter(sentence => aliasMatch(sentence, ipo.name));
+          return (sentences.length ? sentences : [paragraph]).map(sentence => {
+            const matchedAlias = aliasMatch(sentence, ipo.name)!;
+            const excerpt = boundedExcerpt(sentence, matchedAlias);
+            return { paragraph, matchedAlias, excerpt, sentiment: classifyStance(excerpt, paragraph, ipo, ipos) };
+          });
         });
         const classified = evidenceCandidates.filter((candidate) => candidate.sentiment !== 'UNCLASSIFIED');
         const conflicting = new Set(classified.map((candidate) => candidate.sentiment)).size > 1;
         const selected = classified[0] || evidenceCandidates[0];
-        if (!selected.excerpt.includes(selected.matchedAlias)) continue;
+        if (!selected || !selected.excerpt.includes(selected.matchedAlias)) continue;
         const sentiment = conflicting ? 'UNCLASSIFIED' : selected.sentiment;
         reviews.push({
           id: `rss-${createHash('sha256').update(`${ipo.id}\n${entry.url}`).digest('hex').slice(0, 20)}`,
