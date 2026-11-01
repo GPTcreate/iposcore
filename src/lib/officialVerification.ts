@@ -159,6 +159,8 @@ export interface VerificationResult {
   changes: { id: string; name: string; fields: OfficialField[] }[];
   notices: { id: string; status: string; conflicts: OfficialField[] }[];
   errorCount: number; coverage: { id: string; status: string }[];
+  /** Selected targets left unfinished when this pass's HTTP budget was exhausted. */
+  deferredTargets: string[];
 }
 /** One sequential, bounded batch. Stores only normalized evidence, never HTML or credentials. */
 export async function verifyOfficialSchedules(ipos: IpoItem[], input: VerificationArchive, options: {
@@ -166,7 +168,7 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
 } = {}): Promise<VerificationResult> {
   const now = options.now || new Date(), checkedAt = now.toISOString();
   const archive = validateVerificationArchive(input), result: VerificationResult = {
-    ipos: structuredClone(ipos), archive, requestCount: 0, checkedCount: 0, skippedCount: 0, changes: [], notices: [], errorCount: 0, coverage: [],
+    ipos: structuredClone(ipos), archive, requestCount: 0, checkedCount: 0, skippedCount: 0, changes: [], notices: [], errorCount: 0, coverage: [], deferredTargets: [],
   };
   const maxRequests = options.maxRequests ?? 30, maxTargets = options.maxTargets ?? 12;
   const transport: typeof fetch = async (url, init) => {
@@ -220,6 +222,7 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
   } catch (error) {
     if (!(error instanceof Error) || error.message !== 'REQUEST_BUDGET') throw error;
     result.skippedCount = ipos.length;
+    result.deferredTargets = due.map(ipo => ipo.id);
     return result;
   }
   for (const ipo of due) {
@@ -296,5 +299,95 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
     if ((failed || reconciled.conflicts.length) && old?.fingerprint !== fingerprint) result.notices.push({ id: ipo.id, status, conflicts: reconciled.conflicts });
   }
   result.skippedCount = ipos.length - result.checkedCount;
+  result.deferredTargets = due.filter(ipo => !result.coverage.some(item => item.id === ipo.id)).map(ipo => ipo.id);
   return result;
+}
+
+export const OFFICIAL_RECOVERY_DELAY_MS = 30_000;
+interface VerificationAttempt {
+  pass: number; requestCount: number; checkedCount: number; errorCount: number;
+  coverage: VerificationResult['coverage']; deferredTargets: string[];
+}
+export interface VerificationRecoveryResult extends VerificationResult {
+  success: boolean;
+  attempts: VerificationAttempt[];
+  unresolved: { id: string; status: 'unavailable' | 'conflict' | 'deferred' }[];
+}
+
+/** One delayed reread of this job's failed targets, sharing the original 30-request/12-target limits. */
+export async function verifyOfficialSchedulesWithRecovery(ipos: IpoItem[], input: VerificationArchive, options: {
+  now?: Date; fetcher?: typeof fetch; maxRequests?: number; maxTargets?: number;
+  retryDelayMs?: number; pause?: (milliseconds: number) => Promise<void>;
+} = {}): Promise<VerificationRecoveryResult> {
+  const requestedRequests = options.maxRequests ?? 30, requestedTargets = options.maxTargets ?? 12;
+  const delay = options.retryDelayMs ?? OFFICIAL_RECOVERY_DELAY_MS;
+  if (![requestedRequests, requestedTargets, delay].every(value => Number.isSafeInteger(value) && value >= 0)
+    || delay > 60_000) throw new Error('공식 일정 복구 예산이 유효하지 않습니다.');
+  const maxRequests = Math.min(30, requestedRequests), maxTargets = Math.min(12, requestedTargets);
+  const firstNow = options.now || new Date();
+  const first = await verifyOfficialSchedules(ipos, input, { now: firstNow, fetcher: options.fetcher, maxRequests, maxTargets });
+  const snapshot = (pass: number, result: VerificationResult): VerificationAttempt => ({ pass,
+    requestCount: result.requestCount, checkedCount: result.checkedCount, errorCount: result.errorCount,
+    coverage: structuredClone(result.coverage), deferredTargets: [...result.deferredTargets] });
+  const attempts = [snapshot(1, first)];
+  let combined = first;
+  const retryIds = new Set(first.coverage.filter(item => item.status === 'unavailable').map(item => item.id));
+  if (retryIds.size && first.requestCount < maxRequests) {
+    await (options.pause || (milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))))(delay);
+    const retryNow = options.now ? new Date(firstNow.getTime() + delay) : new Date();
+    const retryTimestamp = retryNow.toISOString();
+    const retryArchive = validateVerificationArchive(first.archive);
+    const retryIpos = first.ipos.filter(ipo => retryIds.has(ipo.id));
+    const failedSourceUrls = new Set<string>();
+    for (const ipo of retryIpos) {
+      const target = retryArchive.targets[ipo.id];
+      if (target) target.nextCheckAt = retryTimestamp;
+      if (ipo.discovery?.receiptNo) failedSourceUrls.add(`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${ipo.discovery.receiptNo}`);
+      if (target?.brokerUrl) failedSourceUrls.add(target.brokerUrl);
+      if (ipo.underwriters.some(item => item.name === '한국투자증권')) failedSourceUrls.add(KIS_IPO_INDEX);
+      if (ipo.underwriters.some(item => /^(?:IBK투자증권|아이비케이투자증권)$/.test(item.name))) failedSourceUrls.add(IBK_IPO_INDEX);
+    }
+    // Only error entries used by these targets can bypass their delay. Healthy immutable facts stay intact.
+    for (const url of failedSourceUrls) {
+      const source = retryArchive.sources[url];
+      if (source?.error) source.nextCheckAt = retryTimestamp;
+    }
+    const retry = await verifyOfficialSchedules(retryIpos, retryArchive, { now: retryNow, fetcher: options.fetcher,
+      maxRequests: maxRequests - first.requestCount, maxTargets: retryIpos.length });
+    // Exhausting the shared budget must not persist a temporary override for an unread source/target.
+    for (const url of failedSourceUrls) {
+      if (retry.archive.sources[url]?.nextCheckAt === retryTimestamp && first.archive.sources[url]) {
+        retry.archive.sources[url].nextCheckAt = first.archive.sources[url].nextCheckAt;
+      }
+    }
+    for (const ipo of retryIpos) {
+      if (retry.archive.targets[ipo.id]?.nextCheckAt === retryTimestamp && first.archive.targets[ipo.id]) {
+        retry.archive.targets[ipo.id].nextCheckAt = first.archive.targets[ipo.id].nextCheckAt;
+      }
+    }
+    attempts.push(snapshot(2, retry));
+    const coverage = [...new Map([...first.coverage, ...retry.coverage].map(item => [item.id, item])).values()];
+    const changed = new Map<string, VerificationResult['changes'][number]>();
+    for (const change of [...first.changes, ...retry.changes]) {
+      const previous = changed.get(change.id);
+      changed.set(change.id, { ...change, fields: [...new Set([...(previous?.fields || []), ...change.fields])] });
+    }
+    const checked = new Set(coverage.map(item => item.id));
+    combined = { ...first, archive: retry.archive, requestCount: first.requestCount + retry.requestCount,
+      checkedCount: checked.size, skippedCount: ipos.length - checked.size, coverage,
+      ipos: first.ipos.map(ipo => retry.ipos.find(item => item.id === ipo.id) || ipo), changes: [...changed.values()],
+      notices: [...new Map([...first.notices, ...retry.notices].map(item => [item.id, item])).values()],
+      deferredTargets: [...new Set([...first.deferredTargets, ...retry.deferredTargets])] };
+  }
+  const unresolved: VerificationRecoveryResult['unresolved'] = [];
+  for (const ipo of combined.ipos) {
+    if (ipo.isCancelled || hasFinalizedListingPrices(ipo)) continue;
+    const status = ipo.scheduleVerification?.status;
+    if (status === 'unavailable' || status === 'conflict') unresolved.push({ id: ipo.id, status });
+    else if (combined.deferredTargets.includes(ipo.id)) unresolved.push({ id: ipo.id, status: 'deferred' });
+  }
+  const unresolvedIds = new Set(unresolved.map(item => item.id));
+  return { ...combined, success: unresolved.length === 0, attempts, unresolved,
+    errorCount: unresolved.filter(item => item.status === 'unavailable').length,
+    notices: combined.notices.filter(item => unresolvedIds.has(item.id)) };
 }

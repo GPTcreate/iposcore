@@ -308,10 +308,14 @@ export async function syncExistingIposWithDartFilings(options?: {
   pendingStocks: { name: string; code: string; receiptNo: string; sourceUrl: string; reason: string; evidence: string }[];
   deferredCount: number;
   deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[];
+  /** Keep first-day returns unfrozen until each latest filing has actually been checked. */
+  blockedCodes: string[];
+  /** An incomplete filing list/configuration cannot identify which current offer prices are safe. */
+  blockedAll: boolean;
 }> {
   const apiKey = options?.apiKey || process.env.DART_API_KEY;
   const failed = (message: string) => ({ success: false, updatedCount: 0, updatedStocks: [], pendingCount: 0, pendingStocks: [],
-    deferredCount: 0, deferredStocks: [], message, errors: [{ error: message }] });
+    deferredCount: 0, deferredStocks: [], blockedCodes: [], blockedAll: true, message, errors: [{ error: message }] });
   if (!apiKey?.trim()) return failed('DART_API_KEY가 설정되지 않았습니다. 기존 수치를 유지합니다.');
   const monotonicNow = options?.monotonicNow || (() => performance.now());
   const budget = options?.timeBudgetMs ?? DART_METRIC_SYNC_BUDGET_MS;
@@ -358,6 +362,7 @@ export async function syncExistingIposWithDartFilings(options?: {
   const errors: { name?: string; receiptNo?: string; error: string }[] = [];
   const pendingStocks: { name: string; code: string; receiptNo: string; sourceUrl: string; reason: string; evidence: string }[] = [];
   const deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[] = [];
+  const blockedCodes = new Set<string>();
 
   for (const ipo of allCurrentIpos) {
     // A displayed/stored LISTED state does not prove that listing results were collected.
@@ -378,6 +383,7 @@ export async function syncExistingIposWithDartFilings(options?: {
     const filing = targetFilings[0];
     if (!filing) continue;
     if (budgetExpired()) {
+      blockedCodes.add(ipo.code);
       deferredStocks.push({ name: ipo.name, code: ipo.code, receiptNo: filing.rcept_no,
         reason: '이번 실행의 금융 원문 조회 시간 예산을 사용하여 다음 실행에서 재시도합니다.' });
       continue;
@@ -388,6 +394,10 @@ export async function syncExistingIposWithDartFilings(options?: {
       const pending = parsed?.publicationPending;
       const hasPendingEvidence = Boolean(pending?.reason?.trim() && pending.evidence?.trim()
         && pending.sourceUrl === `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${filing.rcept_no}`);
+      // A partial/pending latest filing can be valid evidence without confirming an old
+      // registered offer price. It must not authorize permanently frozen return calculations.
+      if (finite(ipo.confirmedPrice) && ipo.confirmedPrice > 0
+        && !(finite(parsed?.confirmedPrice) && parsed.confirmedPrice > 0)) blockedCodes.add(ipo.code);
       if (pending && hasPendingEvidence) {
         pendingStocks.push({ name: ipo.name, code: ipo.code, receiptNo: filing.rcept_no,
           sourceUrl: pending.sourceUrl, reason: pending.reason, evidence: pending.evidence });
@@ -395,6 +405,7 @@ export async function syncExistingIposWithDartFilings(options?: {
       if (!parsed || ![parsed.confirmedPrice, parsed.circulatingSupplyRate, parsed.institutionalCompetitionRate, parsed.lockupCommitmentRate, parsed.totalOfferingAmount]
         .some((value) => typeof value === 'number' && Number.isFinite(value))) {
         if (hasPendingEvidence) continue;
+        blockedCodes.add(ipo.code);
         errors.push({ name: ipo.name, receiptNo: filing.rcept_no, error: '최신 공시에서 수치를 추출하지 못했습니다. 기존 수치를 유지합니다.' });
         continue;
       }
@@ -481,5 +492,7 @@ export async function syncExistingIposWithDartFilings(options?: {
     pendingStocks,
     deferredCount: deferredStocks.length,
     deferredStocks,
+    blockedCodes: [...blockedCodes],
+    blockedAll: false,
   };
 }

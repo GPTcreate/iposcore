@@ -26,6 +26,9 @@ export interface SyncPriceResult {
 }
 
 type PriceFetcher = (url: string) => Promise<string>;
+const PRICE_RESPONSE_TIMEOUT_MS = 15_000;
+const MAX_PRICE_RESPONSE_BYTES = 1_000_000;
+const PRICE_SYNC_BUDGET_MS = 3 * 60 * 1000;
 const isIsoDay = (value: string | undefined): value is string => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value)
   && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value);
 
@@ -34,7 +37,23 @@ const isIsoDay = (value: string | undefined): value is string => Boolean(value &
  */
 function httpsGet(url: string, headers: Record<string, string> = {}): Promise<string> {
   return new Promise((resolve, reject) => {
-    const req = https.get(
+    let request: import('http').ClientRequest | undefined;
+    let response: import('http').IncomingMessage | undefined;
+    let settled = false;
+    const finish = (error?: Error, data = '') => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(deadline);
+      if (error) {
+        response?.destroy();
+        request?.destroy();
+        reject(error);
+      } else resolve(data);
+    };
+    // Socket inactivity alone does not bound a peer that keeps sending tiny chunks.
+    const deadline = setTimeout(() => finish(new Error('시세 전체 응답 시간 초과')), PRICE_RESPONSE_TIMEOUT_MS);
+    try {
+      request = https.get(
       url,
       {
         headers: {
@@ -46,20 +65,33 @@ function httpsGet(url: string, headers: Record<string, string> = {}): Promise<st
         timeout: 5000,
       },
       (res) => {
-        if (res.statusCode !== 200) { res.resume(); reject(new Error(`시세 HTTP ${res.statusCode}`)); return; }
-        let data = '';
-        res.on('data', (chunk) => (data += chunk));
-        res.on('error', reject);
-        res.on('aborted', () => reject(new Error('시세 응답이 중단되었습니다.')));
-        res.on('end', () => resolve(data));
+        response = res;
+        if (settled) { res.destroy(); return; }
+        res.on('error', error => finish(error));
+        res.on('aborted', () => finish(new Error('시세 응답이 중단되었습니다.')));
+        if (res.statusCode !== 200) { finish(new Error(`시세 HTTP ${res.statusCode}`)); return; }
+        if (Number(res.headers['content-length']) > MAX_PRICE_RESPONSE_BYTES) {
+          finish(new Error('시세 응답 크기 한도 초과')); return;
+        }
+        const chunks: Buffer[] = [];
+        let bytes = 0;
+        res.on('data', chunk => {
+          if (settled) return;
+          const part = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+          bytes += part.byteLength;
+          if (bytes > MAX_PRICE_RESPONSE_BYTES) { finish(new Error('시세 응답 크기 한도 초과')); return; }
+          chunks.push(part);
+        });
+        res.on('end', () => {
+          if (settled) return;
+          if (!res.complete) { finish(new Error('시세 응답이 중단되었습니다.')); return; }
+          finish(undefined, Buffer.concat(chunks, bytes).toString('utf8'));
+        });
       }
     );
-
-    req.on('error', (err) => reject(err));
-    req.on('timeout', () => {
-      req.destroy();
-      reject(new Error(`요청 시간 초과: ${url}`));
-    });
+      request.on('error', error => finish(error));
+      request.on('timeout', () => finish(new Error('시세 응답 대기 시간 초과')));
+    } catch (error) { finish(error instanceof Error ? error : new Error('시세 요청을 시작하지 못했습니다.')); }
   });
 }
 
@@ -192,8 +224,13 @@ export async function syncListingReturnsForIpos(options?: {
   targetCode?: string;
   /** Scheduled runs must verify the listing date before freezing its first-day prices. */
   requireVerifiedListingDate?: boolean;
-  /** Latest filing was not processed within this run's budget; avoid freezing an old denominator. */
+  /** Latest filing failed or was deferred; avoid freezing an old denominator. */
   deferCodes?: string[];
+  /** A filing-list failure leaves every incomplete listing's latest denominator unverified. */
+  deferAll?: boolean;
+  /** Stop starting another bounded quote lookup after this elapsed-time budget. */
+  timeBudgetMs?: number;
+  monotonicNow?: () => number;
   now?: Date;
   fetchPrices?: (code: string, listingDate?: string) => Promise<CrawledStockPrice | null>;
 }): Promise<SyncPriceResult> {
@@ -209,6 +246,25 @@ export async function syncListingReturnsForIpos(options?: {
   let deferredCount = 0;
   const deferredStocks: SyncPriceResult['deferredStocks'] = [];
   const errors: SyncPriceResult['errors'] = [];
+  const budget = options?.timeBudgetMs ?? PRICE_SYNC_BUDGET_MS;
+  // Node uses the monotonic clock; isolated fixtures can supply their own clock.
+  const clock = options?.monotonicNow || (() => typeof performance === 'undefined' ? Date.now() : performance.now());
+  let started = Number.NaN;
+  try { started = clock(); } catch { /* A broken injected clock must never start quote requests. */ }
+  let lastClock = started;
+  let invalidTiming = !Number.isFinite(budget) || budget < 0 || !Number.isFinite(started);
+  const invalidTimingReason = '시세 조회 시간 예산 또는 기준 시각이 유효하지 않아 기존 상장성과를 유지합니다.';
+  if (invalidTiming) errors.push({ code: '', name: '시세 수집', error: invalidTimingReason });
+  const budgetReason = (): string | undefined => {
+    let current = Number.NaN;
+    if (!invalidTiming) {
+      try { current = clock(); } catch { /* Report only the fixed diagnostic below. */ }
+      invalidTiming = !Number.isFinite(current) || current < lastClock;
+    }
+    if (invalidTiming) return invalidTimingReason;
+    lastClock = current;
+    return current - started >= budget ? '이번 실행의 시세 조회 시간 예산을 사용하여 다음 실행에서 재시도합니다.' : undefined;
+  };
 
   // 크롤링 대상 종목 필터링:
   // 1) 상장 완료(LISTED) 또는 오늘 상장일 도래 종목
@@ -228,7 +284,7 @@ export async function syncListingReturnsForIpos(options?: {
 
     // 관리자가 특정 종목 코드를 명시하여 강제 갱신을 요청한 경우가 아니라면,
     // 최종 등록 완료된 종목은 일체 다시 보거나 크롤링하지 않음!
-    if (isAlreadyFinalized && (!options?.targetCode || options.targetCode !== ipo.code)) {
+    if (isAlreadyFinalized && (options?.deferAll || !options?.targetCode || options.targetCode !== ipo.code)) {
       if (ipo.listingPriceEvidence && (ipo.listingPriceEvidence.code !== ipo.code
         || ipo.listingPriceEvidence.tradeDate !== ipo.listingDate)) {
         errors.push({ code: ipo.code, name: ipo.name, error: '확정 가격의 종목코드·거래일 근거가 현재 등록자료와 다릅니다. 기존 가격을 보존하고 검토가 필요합니다.' });
@@ -258,11 +314,11 @@ export async function syncListingReturnsForIpos(options?: {
   }
 
   for (const ipo of candidates) {
-    if (options?.deferCodes?.includes(ipo.code)) {
+    if (options?.deferAll || options?.deferCodes?.includes(ipo.code)) {
       deferredCount++;
       skippedCount++;
-      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '최신 공시 시간 예산 보류: 공모가 확인 후 상장성과 저장' });
-      errors.push({ code: ipo.code, name: ipo.name, error: '최신 공시 확인이 시간 예산으로 보류되어 기존 공모가로 상장성과를 확정하지 않았습니다.' });
+      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '최신 공시 확인 실패 또는 시간 예산 보류: 공모가 확인 후 상장성과 저장' });
+      errors.push({ code: ipo.code, name: ipo.name, error: '최신 공시 확인 실패 또는 시간 예산 보류로 기존 공모가로 상장성과를 확정하지 않았습니다.' });
       continue;
     }
     if (!isIsoDay(ipo.listingDate)) {
@@ -301,6 +357,16 @@ export async function syncListingReturnsForIpos(options?: {
       deferredStocks.push({ code: ipo.code, name: ipo.name, reason: '종목코드 또는 확정 공모가 확인 대기' });
       if (ipo.listingDate < todayStr || (ipo.listingDate === todayStr && !beforeFinalClose)) errors.push({ code: ipo.code, name: ipo.name,
         error: '상장일 저녁 집계 시점이 지났으나 종목코드 또는 확정 공모가가 없어 가격이 누락되어 있습니다.' });
+      continue;
+    }
+
+    // An already-started lookup may finish under its per-request limits; no later stock starts after expiry.
+    const deferredReason = budgetReason();
+    if (deferredReason) {
+      skippedCount++;
+      deferredCount++;
+      deferredStocks.push({ code: ipo.code, name: ipo.name, reason: deferredReason });
+      errors.push({ code: ipo.code, name: ipo.name, error: deferredReason });
       continue;
     }
 
