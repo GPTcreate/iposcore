@@ -136,7 +136,7 @@ async function fetchText(
       if (!validate(url)) throw new Error('수집 주소 또는 이동 주소가 허용 범위를 벗어났습니다.');
       const response = await Promise.race([fetcher(url, {
         redirect: 'manual', signal: controller.signal,
-        headers: { 'User-Agent': 'IPOScore-ReviewCollector/1.0', Accept: 'application/rss+xml, application/xml, text/html;q=0.9' },
+        headers: { 'User-Agent': 'IPOScore-ReviewCollector/1.0', Accept: 'application/rss+xml, application/xml, text/xml, text/html;q=0.9' },
       }), timeout]);
       if (response.url && !validate(response.url)) throw new Error('응답 주소가 허용 범위를 벗어났습니다.');
       if ([301, 302, 303, 307, 308].includes(response.status)) {
@@ -280,19 +280,31 @@ export async function collectReviewsForIpos(
     const seen = new Set<string>();
     const channelResults: ChannelCollectionResult[] = [];
     const window = subscriptionWindow(ipo, now);
-    for (const feed of feeds) {
+    const groups = feeds.map(feed => {
       const channelResult: ChannelCollectionResult = { channelId: feed.channel.id, feedUrl: feed.channel.feedUrl, status: feed.error ? 'failed' : feed.count ? 'success' : 'empty', fetchedCount: feed.count, matchedCount: 0, ...(feed.error ? { error: feed.error } : {}) };
       channelResults.push(channelResult);
-      if (!window || !feed.identity || feed.error) continue;
-      for (const entry of feed.entries) {
-        if (reviews.length >= MAX_REVIEWS_PER_IPO || seen.has(entry.url)) continue;
+      const entries = !window || !feed.identity || feed.error ? [] : feed.entries.filter(entry => {
         const publishedAt = Date.parse(entry.publishedAt);
-        if (publishedAt < window.earliest || publishedAt > window.latest || !aliasMatch(`${entry.title} ${entry.description}`, ipo.name)) continue;
+        return publishedAt >= window.earliest && publishedAt <= window.latest && aliasMatch(`${entry.title} ${entry.description}`, ipo.name);
+      }).sort((first, second) => second.publishedAt.localeCompare(first.publishedAt) || first.url.localeCompare(second.url));
+      return { feed, channelResult, entries };
+    });
+    // Give every related source its newest article before taking a second from any source.
+    // Each round also prefers newer articles, independently of configured channel/RSS order.
+    while (reviews.length < MAX_REVIEWS_PER_IPO) {
+      for (const group of groups) while (group.entries.length && seen.has(group.entries[0].url)) group.entries.shift();
+      const round = groups.filter(group => group.entries.length)
+        .sort((first, second) => second.entries[0].publishedAt.localeCompare(first.entries[0].publishedAt));
+      if (!round.length) break;
+      for (const { feed, channelResult, entries } of round) {
+        if (reviews.length >= MAX_REVIEWS_PER_IPO) break;
+        let entry = entries.shift();
+        while (entry && seen.has(entry.url)) entry = entries.shift();
+        if (!entry) continue;
         seen.add(entry.url);
-        channelResult.matchedCount++;
         let article = articleCache.get(entry.url);
         if (!article && articleCache.size < MAX_ARTICLES_PER_RUN) {
-          const identity = feed.identity;
+          const identity = feed.identity!;
           const canonical = new URL(entry.url);
           const articleUrl = identity.platform === 'naver'
             ? `https://blog.naver.com/PostView.naver?blogId=${identity.blogId}&logNo=${canonical.pathname.split('/')[2]}`
@@ -332,6 +344,7 @@ export async function collectReviewsForIpos(
             classification: sentiment === 'UNCLASSIFIED' ? 'unclassified' : 'explicit-stance-v1',
           },
         });
+        channelResult.matchedCount++;
       }
     }
     const failed = channelResults.filter((result) => result.status === 'failed').length;
