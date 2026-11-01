@@ -258,3 +258,60 @@ test('inactive sources make no requests and invalid calendar dates fail the IPO 
   const [invalid] = await collectReviewsForIpos([{ ...iam, subscriptionStart: '2020-02-30' }], { channels: [], now, fetcher: network.fetcher });
   assert.equal(invalid.status, 'failed');
 });
+
+test('ten related sources each get their newest representative before extra articles, with shared body and review limits', async () => {
+  const channels: ReviewChannel[] = Array.from({ length: 10 }, (_, index) => ({ id: `writer-${index}`, name: `설정 명칭 ${index}`, type: 'BLOG',
+    url: `https://blog.naver.com/writer${index}`, feedUrl: `https://rss.blog.naver.com/writer${index}.xml`, isActive: true }));
+  const feeds = new Map(channels.map((source, index) => {
+    const entries = Array.from({ length: index === 0 ? 12 : 1 }, (_, article) => {
+      const day = index === 0 ? article + 1 : 24;
+      return `<item><title>아이엠스팩 분석 ${article + 1}</title><link>${source.url}/${article + 1}</link><pubDate>${new Date(Date.UTC(2020, 9, day, 1, index)).toUTCString()}</pubDate><author>원문 작가 ${index}</author><description>아이엠스팩 청약 검토</description></item>`;
+    });
+    // A second IPO needs different bodies after the first IPO has used the shared 12-request allowance.
+    entries.push(`<item><title>멜콘 분석</title><link>${source.url}/100</link><pubDate>Sat, 24 Oct 2020 15:00:00 +0900</pubDate><author>원문 작가 ${index}</author><description>멜콘 청약 검토</description></item>`);
+    return [source.feedUrl, `<rss><channel><title>피드 ${index}</title>${entries.join('')}</channel></rss>`];
+  }));
+  const bodyCalls: string[] = [], feedCalls: string[] = [];
+  const fetcher: typeof fetch = async input => {
+    const url = String(input), feed = feeds.get(url);
+    if (feed) { feedCalls.push(url); return new Response(feed); }
+    assert(url.startsWith('https://blog.naver.com/PostView.naver?'));
+    bodyCalls.push(url);
+    return new Response(html('아이엠스팩 청약 조건을 확인한 원문입니다.'));
+  };
+  const [first, second] = await collectReviewsForIpos([iam, melcon], { channels, now, fetcher });
+  assert.equal(first.status, 'success'); assert.equal(first.reviews.length, 12);
+  assert.equal(new Set(first.reviews.map(review => review.author)).size, 10);
+  assert.deepEqual(first.channels.map(source => source.matchedCount), [3, ...Array(9).fill(1)]);
+  assert.deepEqual(first.channels.map(source => source.fetchedCount), [13, ...Array(9).fill(2)]);
+  assert.deepEqual(first.reviews.filter(review => review.author === '원문 작가 0').map(review => review.url),
+    ['https://blog.naver.com/writer0/12', 'https://blog.naver.com/writer0/11', 'https://blog.naver.com/writer0/10']);
+  assert.equal(bodyCalls.length, 12);
+  assert.equal(new Set(bodyCalls.slice(0, 10).map(url => new URL(url).searchParams.get('blogId'))).size, 10);
+  assert.equal(new URL(bodyCalls[0]).searchParams.get('blogId'), 'writer9');
+  assert.equal(feedCalls.length, 10);
+  assert.equal(second.status, 'success'); assert.equal(second.reviews.length, 10);
+  assert(second.channels.every(source => source.matchedCount === 1 && !source.error));
+  assert(second.reviews.every(review => review.sentiment === 'UNCLASSIFIED' && review.evidence?.contentHash));
+});
+
+test('RSS requests accept Tistory text/xml while retaining the ordinary article accept type', async () => {
+  const tistory: ReviewChannel = { ...channel, id: 'tistory-xml', url: 'https://example-blog.tistory.com', feedUrl: 'https://example-blog.tistory.com/rss' };
+  let feedRequests = 0, articleRequests = 0;
+  const fetcher: typeof fetch = async (input, init) => {
+    const accept = new Headers(init?.headers).get('Accept') || '';
+    assert(accept.includes('text/html'));
+    if (String(input) === tistory.feedUrl) {
+      feedRequests++;
+      if (!accept.split(',').some(value => /^text\/xml(?:\s*;|$)/.test(value.trim()))) return new Response('Not Acceptable', { status: 406 });
+      return new Response(xml('아이엠스팩 분석', '아이엠스팩 관련 내용', undefined, 'https://example-blog.tistory.com/123'),
+        { headers: { 'content-type': 'text/xml;charset=UTF-8' } });
+    }
+    articleRequests++;
+    return new Response('<div class="entry-content"><p>저는 아이엠스팩은 패스합니다.</p></div>');
+  };
+  const [snapshot] = await collectReviewsForIpos([iam], { channels: [tistory], now, fetcher });
+  assert.equal(snapshot.status, 'success'); assert.equal(snapshot.channels[0].fetchedCount, 1);
+  assert.equal(snapshot.reviews[0].sentiment, 'CAUTION');
+  assert.equal(feedRequests, 1); assert.equal(articleRequests, 1);
+});

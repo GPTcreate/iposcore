@@ -22,5 +22,61 @@
     "url": "https://blog.naver.com/kastro83",
     "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
     "isActive": true
+  },
+  {
+    "id": "naver-xuenxu",
+    "name": "재테크의 여왕 슈엔슈",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/xuenxu",
+    "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-dividendqueen",
+    "name": "배당의 여왕",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/dividendqueen",
+    "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-hippocamp",
+    "name": "히포의 경제와 규제",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/hippocamp",
+    "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-juan116_",
+    "name": "공부방",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/juan116_",
+    "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-findaway12",
+    "name": "1% 해석",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/findaway12",
+    "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-lsyivy0722",
+    "name": "맨즈스터프",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/lsyivy0722",
+    "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+    "isActive": true
+  },
+  {
+    "id": "naver-dreamsorte",
+    "name": "생활머니랩",
+    "type": "BLOG",
+    "url": "https://blog.naver.com/dreamsorte",
+    "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+    "isActive": true
   }
 ]
