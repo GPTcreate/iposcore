@@ -53,7 +53,8 @@ function dartFixture(initial: IpoItem) {
 }
 
 interface DartResult { success: boolean; updatedCount: number; errors: unknown[]; pendingCount: number; pendingStocks: { sourceUrl: string; evidence: string; reason: string }[];
-  deferredCount: number; deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[] }
+  deferredCount: number; deferredStocks: { name: string; code: string; receiptNo: string; reason: string }[];
+  blockedCodes: string[]; blockedAll: boolean }
 interface Parsed { rcpNo: string; corpName: string; confirmedPrice?: number; circulatingSupplyRate?: number; institutionalCompetitionRate?: number; lockupCommitmentRate?: number;
   offeringShareCount?: number; totalOfferingAmount?: number; offeringExcerpt?: string;
   publicationPending?: { sourceUrl: string; evidence: string; reason: string } }
@@ -130,6 +131,8 @@ test('the five-minute monotonic budget defers only remaining real filings and pr
   assert.match(result.deferredStocks[0].reason, /시간 예산/);
   assert.equal(result.pendingCount, 0);
   assert.equal(result.errors.length, 0);
+  assert.equal(result.blockedAll, false);
+  assert.deepEqual([...result.blockedCodes], [second.stock_code]);
   assert.equal(fixture.writes.length, 1);
 });
 
@@ -175,6 +178,8 @@ test('exhausted pagination stops safely before treating a partial list as the la
   assert.equal(fixture.writes.length, 0);
   assert.equal(result.pendingCount, 0);
   assert.equal(result.errors.length, 1);
+  assert.equal(result.blockedAll, true);
+  assert.deepEqual([...result.blockedCodes], []);
 });
 
 test('raw LISTED without complete prices can recover its offer price while twenty completed records stay untouched', async () => {
@@ -209,6 +214,8 @@ test('latest unchanged 1266/95.42/0 metrics never fall back to an older differen
     } });
   assert.equal(result.success, true);
   assert.equal(result.updatedCount, 0);
+  assert.equal(result.blockedAll, false);
+  assert.deepEqual([...result.blockedCodes], []);
   assert.deepEqual(parsed, [latest.rcept_no]);
   assert.equal(fixture.writes.length, 0);
   assert.equal(fixture.current().lockupCommitmentRate, 0);
@@ -224,8 +231,34 @@ test('unparseable latest filing records failure and cannot overwrite with an old
     parseFiling: async (receipt) => { receipts.push(receipt); return null; } });
   assert.equal(result.success, false);
   assert.equal(result.errors.length, 1);
+  assert.equal(result.blockedAll, false);
+  assert.deepEqual([...result.blockedCodes], [fixture.current().code]);
   assert.deepEqual(receipts, ['20261024000002']);
   assert.equal(fixture.writes.length, 0);
+});
+
+test('a failed latest filing blocks exactly its stock while another filing recovers and complete prices stay frozen', async () => {
+  const failed = fixtureIpo({ status: 'LISTED', listingDate: '2026-10-20', confirmedPrice: 2000 });
+  const recoveredFiling = filing({ corp_code: '87654321', corp_name: '복구기업', stock_code: '654321', rcept_no: '20261024000003', rcept_dt: '20261024' });
+  const recovered = createDiscoveredIpo(recoveredFiling)!;
+  const frozenFiling = filing({ corp_code: '11223344', corp_name: '성과완결기업', stock_code: '444444', rcept_no: '20261024000004', rcept_dt: '20261024' });
+  const frozen = { ...createDiscoveredIpo(frozenFiling)!, openingPrice: 3000, closingPrice: 4000 };
+  const fixture = dartBatchFixture([failed, recovered, frozen]);
+  const parsed: string[] = [];
+  const result = await fixture.sync({ apiKey: 'fixture-key',
+    fetcher: async () => Response.json({ status: '000', list: [filing(), recoveredFiling, frozenFiling] }),
+    parseFiling: async receipt => {
+      parsed.push(receipt);
+      return receipt === filing().rcept_no ? null : { rcpNo: receipt, corpName: '', confirmedPrice: 3300 };
+    } });
+  assert.equal(result.success, false);
+  assert.equal(result.updatedCount, 1);
+  assert.equal(result.blockedAll, false);
+  assert.deepEqual([...result.blockedCodes], [failed.code]);
+  assert.deepEqual(parsed, [filing().rcept_no, recoveredFiling.rcept_no]);
+  assert.deepEqual(fixture.current()[0], failed);
+  assert.equal(fixture.current()[1].confirmedPrice, 3300);
+  assert.deepEqual(fixture.current()[2], frozen);
 });
 
 const publicationPending = {
@@ -233,6 +266,22 @@ const publicationPending = {
   evidence: '확정공모가액은 수요예측 후 대표주관회사와 발행회사가 협의하여 결정할 예정입니다.',
   sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${filing().rcept_no}`,
 };
+
+test('a partial or pending latest filing cannot authorize a previously registered price as the return denominator', async () => {
+  for (const data of [{ publicationPending }, { circulatingSupplyRate: 25.5 }]) {
+    const fixture = dartFixture(fixtureIpo({ confirmedPrice: 2000 }));
+    const result = await (fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart)({ apiKey: 'fixture-key',
+      fetcher: async () => Response.json({ status: '000', list: [filing()] }),
+      parseFiling: async receipt => ({ rcpNo: receipt, corpName: '', ...data }) });
+    assert.equal(result.success, true);
+    assert.equal(result.errors.length, 0);
+    assert.equal(result.blockedAll, false);
+    assert.deepEqual([...result.blockedCodes], [fixture.current().code]);
+    assert.equal(fixture.current().confirmedPrice, 2000);
+    assert.equal(fixture.current().openingPrice, undefined);
+    assert.equal(fixture.current().closingPrice, undefined);
+  }
+});
 
 test('explicit unpublished evidence is normal pending without manufacturing numbers or writing a record', async () => {
   const initial = createDiscoveredIpo(filing())!;
@@ -243,6 +292,8 @@ test('explicit unpublished evidence is normal pending without manufacturing numb
   assert.equal(result.success, true);
   assert.equal(result.pendingCount, 1);
   assert.equal(result.errors.length, 0);
+  assert.equal(result.blockedAll, false);
+  assert.deepEqual([...result.blockedCodes], []);
   assert.equal(result.updatedCount, 0);
   assert.equal(result.pendingStocks[0].sourceUrl, publicationPending.sourceUrl);
   assert.equal(result.pendingStocks[0].evidence, publicationPending.evidence);
@@ -349,9 +400,18 @@ test('missing configured DART key and rejected DART responses fail without mutat
   let requests = 0;
   const fetcher = (async () => { requests++; return Response.json({ status: '020' }); }) as typeof fetch;
   const sync = fixture.module.syncExistingIposWithDartFilings as unknown as SyncDart;
-  assert.equal((await sync({ fetcher })).success, false);
+  const missingKey = await sync({ fetcher });
+  assert.equal(missingKey.success, false);
+  assert.equal(missingKey.blockedAll, true);
+  assert.deepEqual([...missingKey.blockedCodes], []);
   assert.equal(requests, 0);
-  assert.equal((await sync({ apiKey: 'fixture-key', fetcher })).success, false);
+  for (const response of [fetcher, (async () => new Response('', { status: 503 })) as typeof fetch,
+    (async () => { throw new TypeError('temporary socket failure'); }) as typeof fetch]) {
+    const rejected = await sync({ apiKey: 'fixture-key', fetcher: response });
+    assert.equal(rejected.success, false);
+    assert.equal(rejected.blockedAll, true);
+    assert.deepEqual([...rejected.blockedCodes], []);
+  }
   assert.equal(fixture.writes.length, 0);
   const source = fs.readFileSync(path.join(process.cwd(), 'src/lib/dartFilingSync.ts'), 'utf8');
   assert.equal(/DART_API_KEY\s*\|\|\s*['"][a-z0-9]{30,}/i.test(source), false);

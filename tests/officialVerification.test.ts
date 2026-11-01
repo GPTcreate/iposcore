@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
+import path from 'node:path';
 import vm from 'node:vm';
 import ts from 'typescript';
 import type { IpoItem } from '../src/types/ipo';
 import { isKisNoticeUrl, KIS_IPO_INDEX, parseKisIndex, parseKisNotice } from '../src/lib/brokerSchedule';
-import { emptyVerificationArchive, isVerificationDue, reconcileOfficialFacts, validateVerificationArchive, VERIFICATION_VERSION, verificationIntervalHours, verifyOfficialSchedules } from '../src/lib/officialVerification';
+import { emptyVerificationArchive, isVerificationDue, reconcileOfficialFacts, validateVerificationArchive, VERIFICATION_VERSION, verificationIntervalHours, verifyOfficialSchedules, verifyOfficialSchedulesWithRecovery } from '../src/lib/officialVerification';
 import type { OfficialFacts } from '../src/lib/brokerSchedule';
 import { getFieldEvidence } from '../src/lib/contentQuality';
 import { parseOfficialArguments } from '../scripts/verify-official';
@@ -257,4 +258,137 @@ test('portal discrepancies do not mutate registered official values', async () =
   const result = await (exported.crossCheckAndSyncIpos as () => Promise<{ updatedCount: number; discrepancies: unknown[]; message: string }>)();
   assert.equal(requests, 2); assert.equal(result.updatedCount, 0); assert.equal(result.discrepancies.length, 1);
   assert.equal(original.listingDate, '2026-11-18'); assert(!result.message.includes('100%'));
+});
+
+const scheduleMain = (receipt: string) => `node1['text']='I. 모집 또는 매출에 관한 일반사항';node1['rcpNo']='${receipt}';node1['dcmNo']='1';node1['eleId']='1';node1['offset']='1';node1['length']='100';node1['dtd']='dart4.xsd';`;
+
+test('one delayed retry rereads only the failed notice and retains healthy immutable facts and earlier changes', async () => {
+  const calls: string[] = [], pauses: number[] = [];
+  let articleCalls = 0;
+  const result = await verifyOfficialSchedulesWithRecovery([ipo()], emptyVerificationArchive(), { now,
+    pause: async delay => { pauses.push(delay); }, fetcher: async input => {
+      const address = String(input); calls.push(address);
+      if (address === KIS_IPO_INDEX) return new Response(index);
+      if (address === url) return ++articleCalls === 1 ? new Response('temporary', { status: 503 }) : new Response(article());
+      return new Response(address.includes('viewer.do')
+        ? '<table><tr><td>환불일</td><td>2026년 11월 11일</td></tr></table>' : scheduleMain(ipo().discovery!.receiptNo));
+    } });
+  assert.equal(result.success, true);
+  assert.deepEqual(pauses, [30000]);
+  assert.equal(result.requestCount, 5);
+  assert.equal(result.checkedCount, 1);
+  assert.equal(result.attempts.length, 2);
+  assert.equal(result.attempts[0].errorCount, 1);
+  assert.equal(result.attempts[1].requestCount, 1);
+  assert.equal(result.errorCount, 0);
+  assert.deepEqual(result.unresolved, []);
+  assert.deepEqual(result.notices, []);
+  assert.equal(calls.filter(address => address.includes('dart.fss.or.kr')).length, 2);
+  assert.equal(calls.filter(address => address === KIS_IPO_INDEX).length, 1);
+  assert.equal(result.archive.sources[ipo().discovery!.sourceUrl].checkedAt, now.toISOString());
+  assert.equal(result.ipos[0].refundDate, '2026-11-11');
+  assert.equal(result.ipos[0].listingDate, '2026-11-17');
+  assert.deepEqual(result.changes[0].fields.sort(), ['listingDate', 'refundDate']);
+});
+
+test('persistent source failures remain unresolved after one retry and retain registered dates', async () => {
+  let pauses = 0;
+  const result = await verifyOfficialSchedulesWithRecovery([ipo()], emptyVerificationArchive(), { now,
+    pause: async () => { pauses++; }, fetcher: async () => new Response('temporary', { status: 503 }) });
+  assert.equal(pauses, 1);
+  assert.equal(result.attempts.length, 2);
+  assert.equal(result.success, false);
+  assert.equal(result.errorCount, 1);
+  assert.deepEqual(result.unresolved, [{ id: ipo().id, status: 'unavailable' }]);
+  assert.equal(result.ipos[0].listingDate, ipo().listingDate);
+  assert.equal(result.archive.targets[ipo().id].failures, 2);
+});
+
+test('backoff skips retain outstanding source failures and conflicts without pretending to have checked them', async () => {
+  const first = await verifyOfficialSchedules([ipo()], emptyVerificationArchive(), { now,
+    fetcher: async () => new Response('temporary', { status: 503 }) });
+  let requests = 0, pauses = 0;
+  const soon = await verifyOfficialSchedulesWithRecovery(first.ipos, first.archive, { now: new Date(now.getTime() + 120000),
+    pause: async () => { pauses++; }, fetcher: async () => { requests++; throw new Error('No backoff request is allowed.'); } });
+  assert.equal(requests, 0); assert.equal(pauses, 0);
+  assert.equal(soon.checkedCount, 0); assert.equal(soon.requestCount, 0);
+  assert.equal(soon.success, false);
+  assert.deepEqual(soon.unresolved, [{ id: ipo().id, status: 'unavailable' }]);
+  assert.deepEqual(soon.archive, first.archive);
+
+  const conflict = { ...ipo(), scheduleVerification: { status: 'conflict' as const, checkedAt: now.toISOString(),
+    conflicts: ['listingDate' as const], coveredFields: [] } };
+  const archive = emptyVerificationArchive();
+  archive.targets[conflict.id] = { parserVersion: VERIFICATION_VERSION, receiptNo: conflict.discovery!.receiptNo,
+    checkedAt: now.toISOString(), nextCheckAt: new Date(now.getTime() + 6 * 3600000).toISOString(), failures: 1, fingerprint: '' };
+  const skipped = await verifyOfficialSchedulesWithRecovery([conflict], archive, { now, fetcher: async () => { requests++; throw new Error('No request'); } });
+  assert.equal(skipped.success, false); assert.equal(skipped.errorCount, 0); assert.deepEqual(skipped.coverage, []);
+  assert.deepEqual(skipped.unresolved, [{ id: conflict.id, status: 'conflict' }]);
+  assert.equal(requests, 0);
+});
+
+test('an exhausted first-pass HTTP budget reports only selected unfinished targets and cannot claim success', async () => {
+  let requests = 0, pauses = 0;
+  const result = await verifyOfficialSchedulesWithRecovery([ipo()], emptyVerificationArchive(), { now, maxRequests: 1,
+    pause: async () => { pauses++; }, fetcher: async () => { requests++; return new Response('temporary', { status: 503 }); } });
+  assert.equal(requests, 1); assert.equal(pauses, 0);
+  assert.equal(result.success, false);
+  assert.equal(result.checkedCount, 0);
+  assert.deepEqual(result.deferredTargets, [ipo().id]);
+  assert.deepEqual(result.unresolved, [{ id: ipo().id, status: 'deferred' }]);
+});
+
+test('both passes share at most thirty requests and twelve distinct targets while other cadence waits and twenty frozen records stay normal', async () => {
+  const active = Array.from({ length: 13 }, (_, offset) => {
+    const receipt = `20261021${String(210 + offset).padStart(6, '0')}`;
+    return { ...ipo(), id: `candidate-${offset}`, underwriters: [], discovery: { ...ipo().discovery!, receiptNo: receipt,
+      sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${receipt}` } };
+  });
+  const frozen = Array.from({ length: 20 }, (_, offset) => ({ ...ipo(), id: `frozen-${offset}`, openingPrice: 15000, closingPrice: 16000 }));
+  let retry = false, requests = 0;
+  const result = await verifyOfficialSchedulesWithRecovery([...active, ...frozen], emptyVerificationArchive(), { now,
+    maxRequests: 100, maxTargets: 100, pause: async () => { retry = true; }, fetcher: async input => {
+      requests++;
+      if (!retry) return new Response('temporary', { status: 503 });
+      const address = String(input), receipt = new URL(address).searchParams.get('rcpNo')!;
+      return new Response(address.includes('viewer.do') ? '<p>청약 일정 미정</p>' : scheduleMain(receipt));
+    } });
+  assert.equal(requests, 30); assert.equal(result.requestCount, 30);
+  assert.equal(result.checkedCount, 12);
+  assert.equal(new Set(result.attempts.flatMap(attempt => attempt.coverage.map(item => item.id))).size, 12);
+  assert.equal(result.success, false); assert.equal(result.unresolved.length, 3);
+  assert(!result.unresolved.some(item => item.id === active[12].id));
+  assert.deepEqual(result.ipos.find(item => item.id === active[12].id), active[12]);
+  assert.deepEqual(result.ipos.slice(-20), frozen);
+  for (const entry of result.unresolved) {
+    assert.equal(result.archive.targets[entry.id].nextCheckAt, new Date(now.getTime() + 6 * 3600000).toISOString());
+    assert.equal(result.archive.sources[active.find(item => item.id === entry.id)!.discovery.sourceUrl].nextCheckAt,
+      new Date(now.getTime() + 6 * 3600000).toISOString());
+  }
+});
+
+test('the CLI fails an unresolved cached conflict even with zero requests, new errors and coverage', async () => {
+  const item = { ...ipo(), scheduleVerification: { status: 'conflict' as const, checkedAt: now.toISOString(),
+    conflicts: ['listingDate' as const], coveredFields: [] } };
+  const archive = emptyVerificationArchive();
+  archive.targets[item.id] = { parserVersion: VERIFICATION_VERSION, receiptNo: item.discovery!.receiptNo, checkedAt: now.toISOString(),
+    nextCheckAt: new Date(now.getTime() + 6 * 3600000).toISOString(), failures: 1, fingerprint: '' };
+  const unresolved = await verifyOfficialSchedulesWithRecovery([item], archive, { now });
+  const exported: Record<string, unknown> = {}, printed: Record<string, unknown>[] = [];
+  const processMock: { env: Record<string, string>; argv: string[]; cwd: () => string; exitCode?: number } = {
+    env: {}, argv: [], cwd: () => process.cwd(),
+  };
+  const compiled = ts.transpileModule(fs.readFileSync('scripts/verify-official.ts', 'utf8'),
+    { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
+  const imports: Record<string, unknown> = { 'node:fs': { existsSync: () => false }, 'node:path': path,
+    './sync-ipo-discovery': { loadDiscoverySource: () => ({ combined: [item], custom: [] }) },
+    '../src/lib/ipoDiscovery': {}, '../src/lib/officialVerification': { emptyVerificationArchive,
+      verifyOfficialSchedulesWithRecovery: async () => unresolved } };
+  vm.runInNewContext(compiled, { exports: exported, module: { exports: exported }, process: processMock,
+    require: (name: string) => { assert(Object.prototype.hasOwnProperty.call(imports, name), name); return imports[name]; },
+    console: { log: (value: string) => printed.push(JSON.parse(value)) } });
+  await (exported.main as (args: string[]) => Promise<void>)(['--dry-run']);
+  assert.equal(processMock.exitCode, 1);
+  assert.equal(printed[0].requestCount, 0); assert.equal(printed[0].errorCount, 0);
+  assert.equal(printed[0].unresolvedCount, 1); assert.equal(printed[0].success, false);
 });

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadDiscoverySource, writeDiscoveredIpos } from './sync-ipo-discovery';
-import { emptyVerificationArchive, validateVerificationArchive, verifyOfficialSchedules } from '../src/lib/officialVerification';
+import { emptyVerificationArchive, validateVerificationArchive, verifyOfficialSchedulesWithRecovery } from '../src/lib/officialVerification';
 import { isSameIpoIdentity } from '../src/lib/ipoDiscovery';
 
 export function parseOfficialArguments(args: string[]) {
@@ -30,7 +30,7 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
   const archive = fs.existsSync(statePath) ? validateVerificationArchive(JSON.parse(fs.readFileSync(statePath, 'utf8'))) : emptyVerificationArchive();
   if (options.stocks.some(id => !source.combined.some(ipo => ipo.id === id))) throw new Error('등록되지 않은 종목 ID입니다. 조회를 실행하지 않았습니다.');
   const selected = options.stocks.length ? source.combined.filter(ipo => options.stocks.includes(ipo.id)) : source.combined;
-  const result = await verifyOfficialSchedules(selected, archive);
+  const result = await verifyOfficialSchedulesWithRecovery(selected, archive);
   if (options.write) {
     const custom = structuredClone(source.custom);
     for (const ipo of result.ipos) {
@@ -48,19 +48,25 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
   }
   const summary = { checkedCount: result.checkedCount, skippedCount: result.skippedCount, requestCount: result.requestCount,
     changes: result.changes, newNotices: result.notices, errorCount: result.errorCount, coverage: result.coverage,
+    success: result.success, attempts: result.attempts, unresolvedCount: result.unresolved.length, unresolved: result.unresolved,
+    deferredTargets: result.deferredTargets,
     storageStatus: options.write ? 'local-file-checked' : 'preview-only', deploymentConfirmed: false };
   console.log(JSON.stringify(summary, null, 2));
   if (process.env.GITHUB_STEP_SUMMARY) {
     const clean = (value: string) => value.replace(/[|\r\n<>]/g, ' ');
-    const lines = ['## 공식 일정 검증', '', `확인 ${result.checkedCount} · 조회 ${result.requestCount}/30 · 생략 ${result.skippedCount} · 오류 ${result.errorCount}`,
+    const lines = ['## 공식 일정 검증', '', `확인 ${result.checkedCount} · 조회 ${result.requestCount}/30 · 생략 ${result.skippedCount} · 오류 ${result.errorCount} · 미해결 ${result.unresolved.length}`,
       '미지원·누락은 partial, 조회 실패는 unavailable로 기록합니다. 전체 일치나 발행 가능을 뜻하지 않습니다.', ''];
+    if (result.attempts.length > 1) for (const attempt of result.attempts) {
+      lines.push(`- ${attempt.pass}차: 확인 ${attempt.checkedCount}, 조회 ${attempt.requestCount}, 오류 ${attempt.errorCount}, 예산 보류 ${attempt.deferredTargets.length}`);
+    }
+    for (const unresolved of result.unresolved) lines.push(`- ${clean(unresolved.id)}: 미해결 ${unresolved.status}`);
     for (const change of result.changes) lines.push(`- ${clean(change.name)}: ${change.fields.join(', ')} 변경`);
     for (const notice of result.notices) lines.push(`- ${clean(notice.id)}: ${notice.status} ${notice.conflicts.join(', ')}`);
     if (!result.changes.length && !result.notices.length) lines.push('새 변경·충돌 알림 없음.');
     fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join('\n')}\n`);
   }
   // Persist partial evidence and retry state, but never turn a fetch/parse failure into a successful check.
-  if (result.errorCount || result.coverage.some(item => item.status === 'conflict')) process.exitCode = 1;
+  if (!result.success) process.exitCode = 1;
 }
 if (require.main === module) main().catch(() => {
   console.error('공식 일정 검증을 완료하지 못했습니다. 기존 근거와 실행 이력을 확인하세요.'); process.exitCode = 1;

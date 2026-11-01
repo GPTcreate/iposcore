@@ -3,6 +3,18 @@ import test from 'node:test';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
+// Load the runner through the isolated VM below so test compilation does not import server stores.
+interface TestDartResult { success: boolean; updatedCount: number; updatedStocks?: unknown[]; message: string; errors: unknown[];
+  blockedCodes?: string[]; blockedAll?: boolean; deferredCount?: number;
+  deferredStocks?: { code: string; name: string; receiptNo: string; reason: string }[] }
+interface FinancialDependencies {
+  load: () => unknown[]; syncDart: (options: { days: number; timeBudgetMs?: number }) => Promise<TestDartResult>;
+  syncPrices: (options?: { deferCodes?: string[]; deferAll?: boolean }) => Promise<{ success: boolean; totalCandidates: number; updatedCount: number; skippedCount: number; errors: unknown[] }>;
+  syncListings?: () => Promise<{ success: boolean; updatedCount: number; pendingCount: number; errors: unknown[] }>;
+  pause?: (delay: number) => Promise<void>; monotonicNow?: () => number; flushMetricCache?: () => void;
+}
+interface FinancialResult { success: boolean; dart: TestDartResult;
+  recovery: { stage: string; attempt: number; success: boolean; errors: number; deferred: number }[] }
 
 const receipt = '20261015000345';
 const pending = { name: '발표 대기 기업', receiptNo: receipt,
@@ -10,7 +22,7 @@ const pending = { name: '발표 대기 기업', receiptNo: receipt,
   reason: '수요예측 및 확정 공모가 발표 전', evidence: '수요예측 결과를 반영하여 최종 결정할 예정입니다.' };
 
 function fixture(dartFailure = false, priceFailure = false, unreadable = false, missingParser = false,
-  throwStage?: 'listings' | 'prices' | 'dart' | 'cache' | 'flush') {
+  throwStage?: 'listings' | 'prices' | 'dart' | 'cache' | 'flush', backlogs?: number[]) {
   const moduleExports: Record<string, unknown> = {};
   const writes: Record<string, string> = {};
   const calls: string[] = [];
@@ -21,6 +33,7 @@ function fixture(dartFailure = false, priceFailure = false, unreadable = false, 
   let loads = 0;
   let cacheCreations = 0;
   let cacheFlushes = 0;
+  let dartPass = 0;
   const imports: string[] = [];
   const services: Record<string, unknown> = {
     '../src/lib/ipoServerStore': { loadServerCustomIpos: () => {
@@ -31,6 +44,11 @@ function fixture(dartFailure = false, priceFailure = false, unreadable = false, 
       assert.equal(typeof options.parseFiling, 'function');
       calls.push('dart');
       if (throwStage === 'dart') throw new Error('https://private.invalid/?crtfc_key=fixture-only');
+      if (backlogs) {
+        const deferredCount = backlogs[Math.min(dartPass++, backlogs.length - 1)];
+        return { success: deferredCount === 0, updatedCount: 0, message: 'budget', errors: [], blockedAll: false, blockedCodes: [],
+          deferredCount, deferredStocks: deferredCount ? [{ name: '기업', code: '123456', receiptNo: receipt, reason: 'budget' }] : [] };
+      }
       return { success: !dartFailure, updatedCount: 0, message: 'fixture',
         errors: dartFailure ? [{ error: 'DART request failed' }] : [], pendingCount: 1, pendingStocks: [pending] };
     } },
@@ -178,4 +196,127 @@ test('an unavailable latest parser stops before cache access or synchronization'
   assert(!run.imports.includes('../src/lib/dartMetricCache'));
   assert.deepEqual(run.effects(), { loads: 0, cacheCreations: 0, cacheFlushes: 0 });
   assert.equal(run.calls.length, 0);
+});
+
+async function injectedRun(overrides: Partial<FinancialDependencies>): Promise<FinancialResult> {
+  const run = fixture();
+  const dependencies: FinancialDependencies = { load: () => [],
+    syncDart: async () => ({ success: true, updatedCount: 0, message: 'ok', errors: [], blockedCodes: [], blockedAll: false }),
+    syncPrices: async () => ({ success: true, totalCandidates: 0, updatedCount: 0, skippedCount: 20, errors: [] }),
+    ...overrides };
+  return (run.runFinancialSync as (options: { write: boolean; days: number; help: boolean }, dependencies: FinancialDependencies) => Promise<FinancialResult>)(
+    { write: true, days: 14, help: false }, dependencies);
+}
+
+test('a temporary exchange outage receives one delayed recovery before the final outcome', async () => {
+  const calls: string[] = [];
+  let listingPass = 0;
+  const result = await injectedRun({
+    syncListings: async () => { calls.push('listings'); return ++listingPass === 1
+      ? { success: false, updatedCount: 0, pendingCount: 0, errors: [{ code: 'HTTP_503' }] }
+      : { success: true, updatedCount: 0, pendingCount: 3, errors: [] }; },
+    pause: async delay => { assert.equal(delay, 30000); calls.push('pause'); },
+    syncDart: async () => { calls.push('dart'); return { success: true, updatedCount: 0, message: 'ok', errors: [] }; },
+    syncPrices: async () => { calls.push('prices'); return { success: true, totalCandidates: 0, updatedCount: 0, skippedCount: 20, errors: [] }; },
+  });
+  assert.equal(result.success, true);
+  assert.deepEqual(calls, ['listings', 'pause', 'listings', 'dart', 'prices']);
+  assert.deepEqual(JSON.parse(JSON.stringify(result.recovery.filter(attempt => attempt.stage === 'listings'))), [
+    { stage: 'listings', attempt: 1, success: false, errors: 1, deferred: 0 },
+    { stage: 'listings', attempt: 2, success: true, errors: 0, deferred: 0 },
+  ]);
+});
+
+test('persistent exchange failures stay unsuccessful and permanent failures are not retried', async () => {
+  for (const code of ['HTTP_503', 'SCHEMA_200', 'HTTP_403', 'REDIRECT_302', 'SIZE_200']) {
+    let calls = 0, pauses = 0;
+    const retryable = ['HTTP_503', 'SCHEMA_200'].includes(code);
+    const result = await injectedRun({ syncListings: async () => {
+      calls++; return { success: false, updatedCount: 0, pendingCount: 0, errors: [{ code }] };
+    }, pause: async () => { pauses++; } });
+    assert.equal(result.success, false, code);
+    assert.equal(calls, retryable ? 2 : 1, code);
+    assert.equal(pauses, retryable ? 1 : 0, code);
+  }
+});
+
+test('cold DART budgets continue with the same cache and flush each chunk before final pricing', async () => {
+  const run = fixture(false, false, false, false, undefined, [9, 0]);
+  await run.main(['--write']);
+  const result = JSON.parse(run.printed[0]);
+  assert.equal(result.success, true);
+  assert.deepEqual(run.calls, ['listings', 'dart', 'dart', 'prices']);
+  assert.deepEqual(run.effects(), { loads: 2, cacheCreations: 1, cacheFlushes: 2 });
+  assert.deepEqual(result.recovery.filter((attempt: { stage: string }) => attempt.stage === 'dart').map((attempt: { deferred: number }) => attempt.deferred), [9, 0]);
+  assert.match(run.writes['summary.md'], /자동 복구 이력/);
+  assert.equal(run.processMock.exitCode, undefined);
+});
+
+test('DART chunks retain earlier updates and release only the final checked price denominator', async () => {
+  let pass = 0, flushes = 0;
+  let priceOptions: unknown;
+  const sequence: string[] = [];
+  const result = await injectedRun({ syncDart: async () => {
+    sequence.push('dart');
+    const deferred = [2, 1, 0][pass++];
+    return { success: deferred === 0, updatedCount: deferred ? 1 : 0, updatedStocks: deferred ? [{ code: `12345${pass}` }] : [],
+      message: 'budget', errors: [], blockedAll: false, blockedCodes: deferred ? ['123456'] : [], deferredCount: deferred,
+      deferredStocks: deferred ? [{ code: '123456', name: '기업', receiptNo: receipt, reason: 'budget' }] : [] };
+  }, flushMetricCache: () => { flushes++; }, syncPrices: async options => {
+    sequence.push('prices'); priceOptions = options;
+    return { success: true, totalCandidates: 1, updatedCount: 1, skippedCount: 20, errors: [] };
+  } });
+  assert.equal(result.success, true);
+  assert.equal(result.dart.updatedCount, 2);
+  assert.equal(result.dart.updatedStocks?.length, 2);
+  assert.equal(flushes, 3);
+  assert.deepEqual(sequence, ['dart', 'dart', 'dart', 'prices']);
+  assert.deepEqual(JSON.parse(JSON.stringify(priceOptions)), { deferCodes: [] });
+});
+
+test('no-progress backlog, total time budget and chunk cap stop with a truthful failure', async () => {
+  for (const mode of ['stalled', 'deadline', 'chunk-cap']) {
+    let calls = 0, elapsed = 0;
+    const result = await injectedRun({ monotonicNow: () => elapsed, syncDart: async () => {
+      calls++;
+      if (mode === 'deadline') elapsed = 13 * 60 * 1000;
+      return { success: false, updatedCount: 0, message: 'budget', errors: [], blockedAll: false,
+        deferredCount: mode === 'chunk-cap' ? 10 - calls : 2,
+        deferredStocks: [{ code: '123456', name: '기업', receiptNo: receipt, reason: 'budget' }] };
+    } });
+    assert.equal(result.success, false, mode);
+    assert.equal(calls, mode === 'deadline' ? 1 : mode === 'stalled' ? 2 : 3, mode);
+  }
+});
+
+test('failed latest filings block affected prices and global uncertainty blocks all new prices', async () => {
+  for (const global of [false, true]) {
+    let calls = 0, forwarded: unknown;
+    const result = await injectedRun({ syncDart: async () => { calls++;
+      return { success: false, updatedCount: 0, message: 'source failure', errors: [{ error: 'source failure' }],
+        blockedAll: global, blockedCodes: global ? [] : ['123456'], deferredStocks: [] };
+    }, syncPrices: async options => {
+      forwarded = options;
+      return { success: true, totalCandidates: 1, updatedCount: 0, skippedCount: 20, errors: [] };
+    } });
+    assert.equal(result.success, false);
+    assert.equal(calls, 1);
+    assert.deepEqual(JSON.parse(JSON.stringify(forwarded)), global ? { deferCodes: [], deferAll: true } : { deferCodes: ['123456'] });
+  }
+});
+
+test('cache persistence failure never releases prices or becomes a budget continuation success', async () => {
+  let calls = 0, forwarded: unknown;
+  const result = await injectedRun({ syncDart: async () => { calls++;
+    return { success: false, updatedCount: 1, message: 'budget', errors: [], blockedAll: false,
+      deferredCount: 1, deferredStocks: [{ code: '123456', name: '기업', receiptNo: receipt, reason: 'budget' }] };
+  }, flushMetricCache: () => { throw new Error('private storage details'); }, syncPrices: async options => {
+    forwarded = options;
+    return { success: true, totalCandidates: 0, updatedCount: 0, skippedCount: 20, errors: [] };
+  } });
+  assert.equal(result.success, false);
+  assert.equal(calls, 1);
+  assert.equal(result.dart.updatedCount, 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(forwarded)), { deferCodes: ['123456'], deferAll: true });
+  assert(!JSON.stringify(result).includes('private storage details'));
 });
