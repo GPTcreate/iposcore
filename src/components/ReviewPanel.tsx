@@ -32,7 +32,7 @@ export default function ReviewPanel({ ipo }: { ipo: IpoItem }) {
           </div>
           <p className="text-xs text-gray-600 leading-relaxed">수집한 글의 의견 분포입니다. 미분류 {summary.unclassifiedCount}건 제외.</p>
         </div>
-      ) : <p className="text-sm leading-relaxed text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-4">{reviews.length ? '관련 글을 모았습니다. 명시적인 참여·불참 의견은 아직 없습니다.' : collection?.status === 'failed' ? '이번 수집에 실패했습니다. 다시 확인하고 있습니다.' : '청약 전날 관련 글을 확인합니다.'}</p>}
+      ) : <p className="text-sm leading-relaxed text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-4">{reviews.length ? '관련 글을 모았습니다. 청약 의견은 아직 분류하지 못했습니다.' : collection?.status === 'failed' ? '이번 수집에 실패했습니다. 다시 확인하고 있습니다.' : '청약 전날 관련 글을 확인합니다.'}</p>}
       <div className="space-y-3">{reviews.map((review) => (
         <article key={review.url} className="rounded-lg border border-gray-200 p-4 space-y-2">
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500"><span className="font-semibold text-gray-800">{review.author}</span><time dateTime={review.publishedAt}>발행 {dayLabel(review.publishedAt)} (KST)</time><span>{stanceLabel[review.sentiment]}</span></div>
