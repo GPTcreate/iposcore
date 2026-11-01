@@ -19,12 +19,12 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 1136.8,
+    "institutionalCompetitionRate": 1136.84,
     "generalCompetitionRate": 1741.48,
-    "lockupCommitmentRate": 33.1,
-    "circulatingSupplyRate": 34.6,
-    "totalOfferingAmount": 308,
-    "marketCapAtIpo": 1550,
+    "lockupCommitmentRate": 36.07,
+    "circulatingSupplyRate": 34.5,
+    "totalOfferingAmount": 307.5,
+    "marketCapAtIpo": 1549.8,
     "subscriptionResults": {
       "proportionalCompetitionRate": 3481.33,
       "totalAccounts": 254009,
@@ -32,19 +32,16 @@
       "equalAllocationShares": 1.23
     },
     "aiSummary": {
-      "headline": "10월 15일 코스닥 신규 상장! 시초가 22,750원(+85.0%), 종가 17,470원(+42.0%) 마감",
+      "headline": "2026-10-15 상장 · 시초가 27,400원(+122.8%) · 종가 17,120원(+39.2%)",
       "bulletPoints": [
-        "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 179880)",
-        "일반 청약 최종 경쟁률 1,741.48:1(비례 3,481.33:1) 기록, 청약 증거금 약 6조 7,000억원 유입",
-        "균등 배정 1인당 약 1.23주(추첨 2주 확률), 비례 배정 1주당 증거금 약 2,140만원 소요",
-        "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력 확보"
+        "2026-10-01~2026-10-02 일반청약, 환불 2026-10-07.",
+        "확정 공모가 12,300원, 총 공모금액 307.5억원.",
+        "기관 수요예측 1,136.84:1, 신청수량 기준 의무보유확약 36.07%.",
+        "특수 목적용 기계 제조업. 주요 제품·서비스: THC, XPS."
       ],
-      "positivePoints": [
-        "일반 청약 1,741:1(비례 3,481:1) 초흥행으로 상장일 시초가 수급 유입 기록",
-        "ASML 및 도쿄일렉트론(TEL) 노광장비 필수 초정밀 온·습도 제어시스템 독점력"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "상장 직후 유통가능물량 34.6% 출회 가능성 및 시장 수급 변동성 주의"
+        "공모 후 기준 상장일 유통가능물량 34.5%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -86,16 +83,129 @@
     ],
     "aiScore": 94,
     "scoreGrade": "S",
-    "openingPrice": 22750,
-    "openingReturnRate": 85,
-    "closingPrice": 17470,
-    "closingReturnRate": 42,
+    "openingPrice": 27400,
+    "openingReturnRate": 122.8,
+    "closingPrice": 17120,
+    "closingReturnRate": 39.2,
     "discovery": {
       "corpCode": "01028933",
       "receiptNo": "20260929000191",
       "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
       "receivedAt": "2026-09-29",
       "reportName": "[발행조건확정]증권신고서(지분증권)"
+    },
+    "offeringShareCount": 2500000,
+    "listedShareCount": 12600000,
+    "pendingForecastFields": [],
+    "fieldEvidence": {
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 12300,
+        "publishedAt": "2026-09-29",
+        "excerpt": "confirmedPrice: 12300; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1136.84,
+        "publishedAt": "2026-09-29",
+        "excerpt": "institutionalCompetitionRate: 1136.84; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 36.07,
+        "publishedAt": "2026-09-29",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 36.07% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 34.5,
+        "publishedAt": "2026-09-29",
+        "excerpt": "circulatingSupplyRate: 34.5; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2500000,
+        "publishedAt": "2026-09-29",
+        "excerpt": "offeringShareCount: 2500000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 12600000,
+        "publishedAt": "2026-09-29",
+        "excerpt": "listedShareCount: 12600000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 307.5,
+        "publishedAt": "2026-09-29",
+        "excerpt": "공모 2,500,000주 × 확정공모가 12,300원 = 307.5억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1549.8,
+        "publishedAt": "2026-09-29",
+        "excerpt": "공모 후 주식수 12,600,000주 × 확정공모가 12,300원 ÷ 1억원 = 1549.8억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "179880",
+        "excerpt": "멜콘 | 코스닥 | 179880 | 상장일 2026-10-15",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "2026-10-15",
+        "excerpt": "멜콘 | 코스닥 | 179880 | 상장일 2026-10-15",
+        "parserVersion": "krx-company-list-v1"
+      }
+    },
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260929000191"
+        }
+      ]
+    },
+    "listingPriceEvidence": {
+      "code": "179880",
+      "tradeDate": "2026-10-15",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=179880&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-11-01T11:52:46.704Z"
     }
   },
   {
@@ -118,12 +228,12 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 1097.6,
+    "institutionalCompetitionRate": 1097.62,
     "generalCompetitionRate": 685.83,
-    "lockupCommitmentRate": 5.3,
-    "circulatingSupplyRate": 58.4,
-    "totalOfferingAmount": 200,
-    "marketCapAtIpo": 890,
+    "lockupCommitmentRate": 5.29,
+    "circulatingSupplyRate": 58.44,
+    "totalOfferingAmount": 200.22,
+    "marketCapAtIpo": 889.835255,
     "subscriptionResults": {
       "proportionalCompetitionRate": 1371.66,
       "totalAccounts": 147227,
@@ -131,19 +241,16 @@
       "equalAllocationShares": 0.72
     },
     "aiSummary": {
-      "headline": "10월 15일 코스닥 신규 상장! 시초가 24,000원(+2.1%), 첫날 종가 14,940원(-36.4%) 마감",
+      "headline": "2026-10-15 상장 · 시초가 24,000원(+2.1%) · 종가 14,350원(-38.9%)",
       "bulletPoints": [
-        "2026년 10월 15일(목) 코스닥 시장 신규 상장 완료 (공식 종목코드: 250030)",
-        "일반 청약 최종 경쟁률 685.83:1(비례 1,371.66:1) 기록, 청약 증거금 약 1조 7,200억원 유입",
-        "청약 건수 14.7만건, 균등배정 0.72주(추첨 확률 72%), 확정 공모가 23,500원(상단)",
-        "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
+        "2026-10-02~2026-10-06 일반청약, 환불 2026-10-08.",
+        "확정 공모가 23,500원, 총 공모금액 200.22억원.",
+        "기관 수요예측 1,097.62:1, 신청수량 기준 의무보유확약 5.29%.",
+        "기타 화학제품 제조업. 주요 제품·서비스: 하이드로겔 패치 및 마스크팩 ODM/OEM."
       ],
-      "positivePoints": [
-        "소형주 수급 메리트 및 청약 계좌 14.7만 건 이상 참여로 뜨거운 시장 관심",
-        "글로벌 인디 화장품 브랜드향 하이드로겔 패치 수출 고성장세 지속"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "상장 직후 유통가능물량 58.4% 출회 가능성 및 기존 주주 차익 매물 소화 필요"
+        "공모 후 기준 상장일 유통가능물량 58.44%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -177,20 +284,137 @@
     "scoreGrade": "A",
     "openingPrice": 24000,
     "openingReturnRate": 2.1,
-    "closingPrice": 14940,
-    "closingReturnRate": -36.4,
+    "closingPrice": 14350,
+    "closingReturnRate": -38.9,
     "discovery": {
       "corpCode": "01158632",
       "receiptNo": "20261001000586",
       "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000586",
       "receivedAt": "2026-10-01",
       "reportName": "[발행조건확정]증권신고서(지분증권)"
+    },
+    "offeringShareCount": 852000,
+    "listedShareCount": 3786533,
+    "pendingForecastFields": [],
+    "fieldEvidence": {
+      "confirmedPrice": {
+        "sourceTitle": "DART 진코스텍 정정 투자설명서 공모조건·수요예측 원문",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 23500,
+        "publishedAt": "2026-10-01",
+        "excerpt": "confirmedPrice: 23500; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 진코스텍 정정 투자설명서 공모조건·수요예측 원문",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1097.62,
+        "publishedAt": "2026-10-01",
+        "excerpt": "institutionalCompetitionRate: 1097.62; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 진코스텍 정정 투자설명서 공모조건·수요예측 원문",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 5.29,
+        "publishedAt": "2026-10-01",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 5.29% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 58.44,
+        "publishedAt": "2026-10-01",
+        "excerpt": "circulatingSupplyRate: 58.44; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 진코스텍 정정 투자설명서 공모조건·수요예측 원문",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 852000,
+        "publishedAt": "2026-10-01",
+        "excerpt": "offeringShareCount: 852000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 3786533,
+        "publishedAt": "2026-10-01",
+        "excerpt": "listedShareCount: 3786533; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 진코스텍 정정 투자설명서 공모조건·수요예측 원문",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 200.22,
+        "publishedAt": "2026-10-01",
+        "excerpt": "공모 852,000주 × 확정공모가 23,500원 = 200.22억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 889.835255,
+        "publishedAt": "2026-10-01",
+        "excerpt": "공모 후 주식수 3,786,533주 × 확정공모가 23,500원 ÷ 1억원 = 889.835255억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "250030",
+        "excerpt": "진코스텍 | 코스닥 | 250030 | 상장일 2026-10-15",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "2026-10-15",
+        "excerpt": "진코스텍 | 코스닥 | 250030 | 상장일 2026-10-15",
+        "parserVersion": "krx-company-list-v1"
+      }
+    },
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000586"
+        },
+        {
+          "title": "DART 투자설명서 공모 후 주식수·청약·환불",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261001000594"
+        }
+      ]
+    },
+    "listingPriceEvidence": {
+      "code": "250030",
+      "tradeDate": "2026-10-15",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=250030&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-11-01T11:52:46.714Z"
     }
   },
   {
     "id": "ms-bio",
     "name": "엠에스바이오",
-    "code": "391020",
+    "code": "0013Y0",
     "market": "KOSDAQ",
     "status": "LISTED",
     "subscriptionStart": "2026-10-12",
@@ -203,16 +427,16 @@
     "underwriters": [
       {
         "name": "KB증권",
-        "allocatedShares": 1002500,
+        "allocatedShares": 1000000,
         "fee": 1500
       }
     ],
     "institutionalCompetitionRate": 1096.56,
     "generalCompetitionRate": 1538.51,
-    "lockupCommitmentRate": 82.52,
-    "circulatingSupplyRate": 31.8,
+    "lockupCommitmentRate": 30.62,
+    "circulatingSupplyRate": 23.33,
     "totalOfferingAmount": 312,
-    "marketCapAtIpo": 2122,
+    "marketCapAtIpo": 2121.8067,
     "subscriptionResults": {
       "totalAccounts": 286498,
       "totalDepositAmount": 6.01,
@@ -220,20 +444,16 @@
       "proportionalCompetitionRate": 3076.02
     },
     "aiSummary": {
-      "headline": "10월 22일 코스닥 신규 상장! 시초가 16,000원(+105.1% 따블 초과), 종가 13,440원(+72.3%) 마감",
+      "headline": "2026-10-22 상장 · 시초가 16,000원(+105.1%) · 종가 13,620원(+74.6%)",
       "bulletPoints": [
-        "일반 청약 최종 경쟁률 1,538.51:1 (비례배정 경쟁률 3,076.02:1) 기록, 청약 증거금 약 6조 151억원 유입",
-        "확정 공모가 7,800원 (희망밴드 6,800~7,800원 상단 확정), 총 공모금액 312억원",
-        "기관 수요예측 경쟁률 1,096.56:1 및 최종 의무보유확약 비율 82.52% 배정으로 기관 신뢰도 입증",
-        "상장 첫날 공모가(7,800원) 대비 시초가 16,000원(+105.1% 따블 돌파), 종가 13,440원(+72.3%) 마감"
+        "2026-10-12~2026-10-13 일반청약, 환불 2026-10-15.",
+        "확정 공모가 7,800원, 총 공모금액 312억원.",
+        "기관 수요예측 1,096.56:1, 신청수량 기준 의무보유확약 30.62%.",
+        "의료용 기기 제조업. 주요 제품·서비스: 의료용 인체조직 이식재 및 생체재료 기반 의료기기."
       ],
-      "positivePoints": [
-        "연구개발 바이오텍과 달리 지속적인 영업이익 흑자 달성 및 천연물 건강기능식품 고성장 지속",
-        "최종 의무보유확약 82.52% 배정으로 상장일 기관 유통 출회 가능 물량 대폭 축소",
-        "공모가 7,800원 상단 확정 및 증거금 6조원 돌파로 상장 첫날 수급 모멘텀 우수"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "상장 당일 유통가능물량 31.8%에 대한 단기 차익 실현 매물 출회 가능성 모니터링 필요"
+        "공모 후 기준 상장일 유통가능물량 23.33%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -246,14 +466,171 @@
     "scoreGrade": "S",
     "openingPrice": 16000,
     "openingReturnRate": 105.1,
-    "closingPrice": 13440,
-    "closingReturnRate": 72.3,
+    "closingPrice": 13620,
+    "closingReturnRate": 74.6,
     "discovery": {
       "corpCode": "01749559",
       "receiptNo": "20261007000327",
       "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
       "receivedAt": "2026-10-07",
       "reportName": "[발행조건확정]증권신고서(지분증권)"
+    },
+    "offeringShareCount": 4000000,
+    "listedShareCount": 27202650,
+    "pendingForecastFields": [],
+    "fieldEvidence": {
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 7800,
+        "publishedAt": "2026-10-07",
+        "excerpt": "confirmedPrice: 7800; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1096.56,
+        "publishedAt": "2026-10-07",
+        "excerpt": "institutionalCompetitionRate: 1096.56; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 30.62,
+        "publishedAt": "2026-10-07",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 30.62% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 23.33,
+        "publishedAt": "2026-10-07",
+        "excerpt": "circulatingSupplyRate: 23.33; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 4000000,
+        "publishedAt": "2026-10-07",
+        "excerpt": "offeringShareCount: 4000000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 27202650,
+        "publishedAt": "2026-10-07",
+        "excerpt": "listedShareCount: 27202650; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 312,
+        "publishedAt": "2026-10-07",
+        "excerpt": "공모 4,000,000주 × 확정공모가 7,800원 = 312억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2121.8067,
+        "publishedAt": "2026-10-07",
+        "excerpt": "공모 후 주식수 27,202,650주 × 확정공모가 7,800원 ÷ 1억원 = 2121.8067억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "subscriptionStart": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": "2026-10-12",
+        "publishedAt": "2026-10-07",
+        "excerpt": "subscriptionStart: 2026-10-12; 일반청약 기일 및 초과청약증거금 환불일 직접 명시",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": "2026-10-13",
+        "publishedAt": "2026-10-07",
+        "excerpt": "subscriptionEnd: 2026-10-13; 일반청약 기일 및 초과청약증거금 환불일 직접 명시",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "refundDate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": "2026-10-15",
+        "publishedAt": "2026-10-07",
+        "excerpt": "refundDate: 2026-10-15; 일반청약 기일 및 초과청약증거금 환불일 직접 명시",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "0013Y0",
+        "excerpt": "엠에스바이오 | 코스닥 | 0013Y0 | 상장일 2026-10-22",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "2026-10-22",
+        "excerpt": "엠에스바이오 | 코스닥 | 0013Y0 | 상장일 2026-10-22",
+        "parserVersion": "krx-company-list-v1"
+      }
+    },
+    "scheduleVerification": {
+      "status": "verified",
+      "checkedAt": "2026-11-01T12:48:12.320Z",
+      "conflicts": [],
+      "coveredFields": [
+        "subscriptionStart",
+        "subscriptionEnd",
+        "refundDate",
+        "listingDate",
+        "confirmedPrice"
+      ]
+    },
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000327"
+        },
+        {
+          "title": "DART 투자설명서 공모 후 주식수·청약·환불",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007000328"
+        }
+      ]
+    },
+    "businessDescription": "의료용 기기 제조업. 주요 제품·서비스: 의료용 인체조직 이식재 및 생체재료 기반 의료기기.",
+    "listingPriceEvidence": {
+      "code": "0013Y0",
+      "tradeDate": "2026-10-22",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0013Y0&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-11-01T12:48:12.320Z"
     }
   },
   {
@@ -285,8 +662,8 @@
     "generalCompetitionRate": 986.89,
     "lockupCommitmentRate": 13.31,
     "circulatingSupplyRate": 15.12,
-    "totalOfferingAmount": 412,
-    "marketCapAtIpo": 2338,
+    "totalOfferingAmount": 412.349645,
+    "marketCapAtIpo": 2753.120975,
     "subscriptionResults": {
       "totalAccounts": 240920,
       "totalDepositAmount": 5.09,
@@ -294,20 +671,16 @@
       "proportionalCompetitionRate": 1973.78
     },
     "aiSummary": {
-      "headline": "디티에스 상장 완료! 시초가 32,350원(+74.9%), 종가 26,950원(+45.7%) 기록",
+      "headline": "2026-10-23 상장 · 시초가 32,350원(+74.9%) · 종가 26,950원(+45.7%)",
       "bulletPoints": [
-        "통합 일반 청약 최종 경쟁률 986.89:1 (비례배정 경쟁률 1,973.78:1) 기록, 청약 증거금 약 5조 868억원 유입",
-        "확정 공모가 18,500원, 수요예측 신청수량 기준 의무보유확약률 13.31% (최종 배정 기준과 구분)",
-        "등록된 균등 배정 약 1.16주, 환불일 10월 16일·상장일 10월 23일",
-        "주관사별 경쟁률: 대신증권 일반 998.39:1 (비례 1,996.77:1), 유진투자증권 일반 883.39:1 (비례 1,766.81:1)"
+        "2026-10-13~2026-10-14 일반청약, 환불 2026-10-16.",
+        "확정 공모가 18,500원, 총 공모금액 412.34965억원.",
+        "기관 수요예측 983.98:1, 신청수량 기준 의무보유확약 13.31%.",
+        "특수 목적용 기계 제조업. 주요 제품·서비스: 산업용 공랭식 열교환기 등."
       ],
-      "positivePoints": [
-        "조선 슈퍼사이클 진입에 따른 탄탄한 3년치 일감 확보",
-        "수요예측 신청수량 중 확약 218,871,000주 / 전체 1,644,913,000주",
-        "수익성 높은 특수선용 열교환기 믹스 개선"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "글로벌 원자재(구리, 스테인리스) 가격 변동에 따른 마진 민감도"
+        "공모 후 기준 상장일 유통가능물량 15.12%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -331,10 +704,116 @@
     "closingReturnRate": 45.7,
     "fieldEvidence": {
       "lockupCommitmentRate": {
-        "sourceTitle": "DART 수요예측 신청수량 기준 · 기간별 확약수량/전체 신청수량 대조",
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
         "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
-        "checkedAt": "2026-10-25T01:42:27.329Z"
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 13.31,
+        "publishedAt": "2026-10-12",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 13.31% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 18500,
+        "publishedAt": "2026-10-12",
+        "excerpt": "confirmedPrice: 18500; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 983.98,
+        "publishedAt": "2026-10-12",
+        "excerpt": "institutionalCompetitionRate: 983.98; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 15.12,
+        "publishedAt": "2026-10-12",
+        "excerpt": "circulatingSupplyRate: 15.12; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2228917,
+        "publishedAt": "2026-10-12",
+        "excerpt": "offeringShareCount: 2228917; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 14881735,
+        "publishedAt": "2026-10-12",
+        "excerpt": "listedShareCount: 14881735; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 412.349645,
+        "publishedAt": "2026-10-12",
+        "excerpt": "공모 2,228,917주 × 확정공모가 18,500원 = 412.349645억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2753.120975,
+        "publishedAt": "2026-10-12",
+        "excerpt": "공모 후 주식수 14,881,735주 × 확정공모가 18,500원 ÷ 1억원 = 2753.120975억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "0015M0",
+        "excerpt": "디티에스 | 코스닥 | 0015M0 | 상장일 2026-10-23",
+        "parserVersion": "krx-company-list-v1"
+      },
+      "listingDate": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
+        "value": "2026-10-23",
+        "excerpt": "디티에스 | 코스닥 | 0015M0 | 상장일 2026-10-23",
+        "parserVersion": "krx-company-list-v1"
       }
+    },
+    "offeringShareCount": 2228917,
+    "listedShareCount": 14881735,
+    "pendingForecastFields": [],
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000308"
+        }
+      ]
+    },
+    "listingPriceEvidence": {
+      "code": "0015M0",
+      "tradeDate": "2026-10-23",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0015M0&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-11-01T11:52:46.715Z"
     }
   },
   {
@@ -587,21 +1066,18 @@
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 39.43,
     "totalOfferingAmount": 210,
-    "marketCapAtIpo": 1969,
+    "marketCapAtIpo": 1969.557,
     "aiSummary": {
-      "headline": "크리에이츠 상장 완료! 시초가 12,000원(-20%), 종가 9,000원(-40%) 기록",
+      "headline": "2026-10-30 상장 · 시초가 12,000원(-20%) · 종가 9,000원(-40%)",
       "bulletPoints": [
-        "기관 수요예측 경쟁률 240.46:1 기록, 공모가 희망 밴드 하단인 15,000원 확정",
-        "상장일 유통가능물량 39.43%(5,176,832주), 의무보유확약 0.0%로 수급 부담 주의",
-        "초고속 비전 센서 기반 미국 골프 시뮬레이터 시장 점유율 최상위권 강소기업",
-        "환불일: 10월 23일(금), 상장예정일: 10월 30일(금), 대표 주관사: 삼성증권"
+        "2026-10-20~2026-10-21 일반청약, 환불 2026-10-23.",
+        "확정 공모가 15,000원, 총 공모금액 210억원.",
+        "기관 수요예측 240.46:1, 신청수량 기준 의무보유확약 0%.",
+        "그외 기타 제품 제조업. 주요 제품·서비스: 골프 론치모니터."
       ],
-      "positivePoints": [
-        "희망 공모가 밴드 하단(15,000원) 확정으로 가격 밸류에이션 매력 확보",
-        "미국 골프 시장 내 UNEEKOR 론치모니터 및 구독형 시뮬레이션 SaaS 인지도 보유"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "상장 직후 유통가능물량 비율 39.43% 및 기관 의무보유확약 사실상 0%로 상장일 매도 압력 주의"
+        "공모 후 기준 상장일 유통가능물량 39.43%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -641,7 +1117,7 @@
       "code": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "439270",
         "excerpt": "크리에이츠 | 코스닥 | 439270 | 상장일 2026-10-30",
         "parserVersion": "krx-company-list-v1"
@@ -649,10 +1125,82 @@
       "listingDate": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "2026-10-30",
         "excerpt": "크리에이츠 | 코스닥 | 439270 | 상장일 2026-10-30",
         "parserVersion": "krx-company-list-v1"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 15000,
+        "publishedAt": "2026-10-19",
+        "excerpt": "confirmedPrice: 15000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 240.46,
+        "publishedAt": "2026-10-19",
+        "excerpt": "institutionalCompetitionRate: 240.46; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 0,
+        "publishedAt": "2026-10-19",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 0% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 39.43,
+        "publishedAt": "2026-10-19",
+        "excerpt": "circulatingSupplyRate: 39.43; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1400000,
+        "publishedAt": "2026-10-19",
+        "excerpt": "offeringShareCount: 1400000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 13130380,
+        "publishedAt": "2026-10-19",
+        "excerpt": "listedShareCount: 13130380; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 210,
+        "publishedAt": "2026-10-19",
+        "excerpt": "공모 1,400,000주 × 확정공모가 15,000원 = 210억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1969.557,
+        "publishedAt": "2026-10-19",
+        "excerpt": "공모 후 주식수 13,130,380주 × 확정공모가 15,000원 ÷ 1억원 = 1969.557억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
       }
     },
     "scheduleVerification": {
@@ -674,7 +1222,23 @@
       "tradeDate": "2026-10-30",
       "source": "fchart_origin",
       "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=439270&timeframe=day&count=1000&requestType=0",
-      "checkedAt": "2026-10-31T08:29:39.688Z"
+      "checkedAt": "2026-11-01T11:52:46.716Z"
+    },
+    "offeringShareCount": 1400000,
+    "listedShareCount": 13130380,
+    "pendingForecastFields": [],
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000286"
+        }
+      ]
     }
   },
   {
@@ -701,21 +1265,18 @@
     "lockupCommitmentRate": 29.52,
     "circulatingSupplyRate": 31.29,
     "totalOfferingAmount": 367.2,
-    "marketCapAtIpo": 1737,
+    "marketCapAtIpo": 1736.717688,
     "aiSummary": {
-      "headline": "티앤이코리아 상장 완료! 시초가 30,350원(+98.4%), 종가 21,000원(+37.3%) 기록",
+      "headline": "2026-10-29 상장 · 시초가 30,350원(+98.4%) · 종가 21,000원(+37.3%)",
       "bulletPoints": [
-        "수요예측 결과 공모 희망밴드(12,600~15,300원) 최상단인 15,300원으로 최종 확정 (공모규모 367.2억원)",
-        "기관 수요예측 경쟁률 1,041.02:1 기록 및 의무보유확약 비율 29.52%(신청수량 기준) 달성",
-        "상장 직후 유통가능물량 31.29%(3,551,856주), 상장 시가총액 약 1,737억원",
-        "청약 일정: 2026년 10월 20일(화) ~ 10월 21일(수), 주관사: 신한투자증권 (환불일: 10월 23일, 상장예정일: 10월 29일)"
+        "2026-10-20~2026-10-21 일반청약, 환불 2026-10-23.",
+        "확정 공모가 15,300원, 총 공모금액 367.2억원.",
+        "기관 수요예측 1,041.02:1, 신청수량 기준 의무보유확약 29.52%.",
+        "일반 목적용 기계 제조업. 주요 제품·서비스: 친환경 산업용 터보기계, On-site 발전용 터보기계, 친환경 차량용 터보기계."
       ],
-      "positivePoints": [
-        "초고속 회전체 원천기술 보유로 높은 기술적 진입장벽",
-        "에너지 절감 탄소중립 트렌드에 부합하는 산업용 블로워 수요 급증"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "수소 산업 생태계 개화 속도에 따른 중장기 수혜 편차"
+        "공모 후 기준 상장일 유통가능물량 31.29%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -755,7 +1316,7 @@
       "code": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "0053F0",
         "excerpt": "티앤이코리아 | 코스닥 | 0053F0 | 상장일 2026-10-29",
         "parserVersion": "krx-company-list-v1"
@@ -763,10 +1324,82 @@
       "listingDate": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "2026-10-29",
         "excerpt": "티앤이코리아 | 코스닥 | 0053F0 | 상장일 2026-10-29",
         "parserVersion": "krx-company-list-v1"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 15300,
+        "publishedAt": "2026-10-16",
+        "excerpt": "confirmedPrice: 15300; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1041.02,
+        "publishedAt": "2026-10-16",
+        "excerpt": "institutionalCompetitionRate: 1041.02; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 29.52,
+        "publishedAt": "2026-10-16",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 29.52% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 31.29,
+        "publishedAt": "2026-10-16",
+        "excerpt": "circulatingSupplyRate: 31.29; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2400000,
+        "publishedAt": "2026-10-16",
+        "excerpt": "offeringShareCount: 2400000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 11351096,
+        "publishedAt": "2026-10-16",
+        "excerpt": "listedShareCount: 11351096; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 367.2,
+        "publishedAt": "2026-10-16",
+        "excerpt": "공모 2,400,000주 × 확정공모가 15,300원 = 367.2억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1736.717688,
+        "publishedAt": "2026-10-16",
+        "excerpt": "공모 후 주식수 11,351,096주 × 확정공모가 15,300원 ÷ 1억원 = 1736.717688억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
       }
     },
     "scheduleVerification": {
@@ -788,7 +1421,23 @@
       "tradeDate": "2026-10-29",
       "source": "fchart_origin",
       "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0053F0&timeframe=day&count=1000&requestType=0",
-      "checkedAt": "2026-10-31T08:29:39.721Z"
+      "checkedAt": "2026-11-01T11:52:46.767Z"
+    },
+    "listedShareCount": 11351096,
+    "offeringShareCount": 2400000,
+    "pendingForecastFields": [],
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000158"
+        }
+      ]
     }
   },
   {
@@ -921,7 +1570,7 @@
     "lockupCommitmentRate": 6.14,
     "circulatingSupplyRate": 23.95,
     "totalOfferingAmount": 225,
-    "marketCapAtIpo": 1020,
+    "marketCapAtIpo": 1020.18672,
     "subscriptionResults": {
       "totalAccounts": 237353,
       "totalDepositAmount": 3.97,
@@ -929,20 +1578,16 @@
       "proportionalCompetitionRate": 2821.75
     },
     "aiSummary": {
-      "headline": "인텔리빅스 상장 완료! 시초가 19,290원(+114.3%), 종가 29,150원(+223.9%) 기록",
+      "headline": "2026-10-30 상장 · 시초가 19,290원(+114.3%) · 종가 29,150원(+223.9%)",
       "bulletPoints": [
-        "일반 청약 최종 경쟁률 1,410.9:1, 증거금 약 3.97조 원 몰리며 흥행 성료",
-        "기관 수요예측 1,234.3:1 대흥행 기록, 희망 밴드 최상단인 9,000원에 최종 확정",
-        "상장일 유통가능물량 23.95%로 오버행 리스크 매우 낮음 (최대주주 지분 60% 3년 락업)",
-        "환불일: 10월 26일(월), 상장예정일: 10월 30일(금), 대표 주관사: 미래에셋증권"
+        "2026-10-21~2026-10-22 일반청약, 환불 2026-10-26.",
+        "확정 공모가 9,000원, 총 공모금액 225억원.",
+        "기관 수요예측 1,234.3:1, 신청수량 기준 의무보유확약 6.14%.",
+        "소프트웨어 개발 및 공급업. 주요 제품·서비스: AI 관제 인프라, AI 관제 플랫폼 등."
       ],
-      "positivePoints": [
-        "공모가 희망 밴드 상단(9,000원) 초과 수요 집중 및 일반 청약 증거금 약 4조 원 달성",
-        "상장 직후 유통가능비율 23.95%로 매우 안정적인 수급 구조 보유",
-        "공공 및 스마트시티 안전 관제 시장 점유율 1위와 검증된 13년 연속 흑자 경영 실적"
-      ],
+      "positivePoints": [],
       "riskPoints": [
-        "공공 안전 프로젝트 발주 시기에 따른 계절적 분기 매출 편차"
+        "공모 후 기준 상장일 유통가능물량 23.95%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -982,7 +1627,7 @@
       "code": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "420610",
         "excerpt": "인텔리빅스 | 코스닥 | 420610 | 상장일 2026-10-30",
         "parserVersion": "krx-company-list-v1"
@@ -990,10 +1635,82 @@
       "listingDate": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "2026-10-30",
         "excerpt": "인텔리빅스 | 코스닥 | 420610 | 상장일 2026-10-30",
         "parserVersion": "krx-company-list-v1"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 9000,
+        "publishedAt": "2026-10-20",
+        "excerpt": "confirmedPrice: 9000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1234.3,
+        "publishedAt": "2026-10-20",
+        "excerpt": "institutionalCompetitionRate: 1234.3; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 6.14,
+        "publishedAt": "2026-10-20",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 6.14% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 23.95,
+        "publishedAt": "2026-10-20",
+        "excerpt": "circulatingSupplyRate: 23.95; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2500000,
+        "publishedAt": "2026-10-20",
+        "excerpt": "offeringShareCount: 2500000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 11335408,
+        "publishedAt": "2026-10-20",
+        "excerpt": "listedShareCount: 11335408; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 225,
+        "publishedAt": "2026-10-20",
+        "excerpt": "공모 2,500,000주 × 확정공모가 9,000원 = 225억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1020.18672,
+        "publishedAt": "2026-10-20",
+        "excerpt": "공모 후 주식수 11,335,408주 × 확정공모가 9,000원 ÷ 1억원 = 1020.18672억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
       }
     },
     "scheduleVerification": {
@@ -1015,7 +1732,23 @@
       "tradeDate": "2026-10-30",
       "source": "fchart_origin",
       "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=420610&timeframe=day&count=1000&requestType=0",
-      "checkedAt": "2026-10-31T08:29:39.742Z"
+      "checkedAt": "2026-11-01T11:52:46.768Z"
+    },
+    "offeringShareCount": 2500000,
+    "listedShareCount": 11335408,
+    "pendingForecastFields": [],
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020000365"
+        }
+      ]
     }
   },
   {
@@ -1042,19 +1775,20 @@
     "lockupCommitmentRate": 0,
     "circulatingSupplyRate": 93.6,
     "totalOfferingAmount": 120,
-    "marketCapAtIpo": 128,
+    "marketCapAtIpo": 128.2,
     "aiScore": 53,
     "scoreGrade": "C",
     "aiSummary": {
-      "headline": "한화플러스제6호기업인수목적 상장 완료! 시초가 2,810원(+40.5%), 종가 1,866원(-6.7%) 기록",
+      "headline": "2026-10-30 상장 · 시초가 2,810원(+40.5%) · 종가 1,866원(-6.7%)",
       "bulletPoints": [
-        "공모가 2,000원 고정, 청약 기간: 2026년 10월 20일(화) ~ 10월 21일(수)",
-        "환불일: 10월 23일(금), 대표 주관사: 한화투자증권 (일반 청약한도 15만주)",
-        "합병 실패 시에도 원금과 3년치 은행 이자 보장되는 안정적 하방 구조"
+        "2026-10-20~2026-10-21 일반청약, 환불 2026-10-23.",
+        "확정 공모가 2,000원, 총 공모금액 120억원.",
+        "기관 수요예측 1,256.48:1, 신청수량 기준 의무보유확약 0%.",
+        "금융 지원 서비스업. 주요 제품·서비스: 기업인수합병."
       ],
       "positivePoints": [],
       "riskPoints": [
-        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
+        "공모 후 기준 상장일 유통가능물량 93.6%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
       ]
     },
     "sentimentConsensus": {
@@ -1092,7 +1826,7 @@
       "code": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "0127E0",
         "excerpt": "한화플러스제6호스팩 | 코스닥 | 0127E0 | 상장일 2026-10-30",
         "parserVersion": "krx-company-list-v1"
@@ -1100,10 +1834,82 @@
       "listingDate": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:29:01.737Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "2026-10-30",
         "excerpt": "한화플러스제6호스팩 | 코스닥 | 0127E0 | 상장일 2026-10-30",
         "parserVersion": "krx-company-list-v1"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2000,
+        "publishedAt": "2026-10-19",
+        "excerpt": "confirmedPrice: 2000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1256.48,
+        "publishedAt": "2026-10-19",
+        "excerpt": "institutionalCompetitionRate: 1256.48; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 0,
+        "publishedAt": "2026-10-19",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 0% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 93.6,
+        "publishedAt": "2026-10-19",
+        "excerpt": "circulatingSupplyRate: 93.6; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 6000000,
+        "publishedAt": "2026-10-19",
+        "excerpt": "offeringShareCount: 6000000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 6410000,
+        "publishedAt": "2026-10-19",
+        "excerpt": "listedShareCount: 6410000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 120,
+        "publishedAt": "2026-10-19",
+        "excerpt": "공모 6,000,000주 × 확정공모가 2,000원 = 120억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 128.2,
+        "publishedAt": "2026-10-19",
+        "excerpt": "공모 후 주식수 6,410,000주 × 확정공모가 2,000원 ÷ 1억원 = 128.2억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
       }
     },
     "scheduleVerification": {
@@ -1125,7 +1931,23 @@
       "tradeDate": "2026-10-30",
       "source": "fchart_origin",
       "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0127E0&timeframe=day&count=1000&requestType=0",
-      "checkedAt": "2026-10-31T08:29:39.768Z"
+      "checkedAt": "2026-11-01T11:52:46.770Z"
+    },
+    "offeringShareCount": 6000000,
+    "listedShareCount": 6410000,
+    "pendingForecastFields": [],
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000187"
+        }
+      ]
     }
   },
   {
@@ -3321,7 +4143,17 @@
       "reportName": "[발행조건확정]증권신고서(지분증권)"
     },
     "dataQuality": {
-      "status": "unverified"
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "한국거래소 KIND 상장법인 목록",
+          "url": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
+        },
+        {
+          "title": "DART 확정 공모조건·수요예측",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202"
+        }
+      ]
     },
     "subscriptionStart": "2026-10-15",
     "subscriptionEnd": "2026-10-16",
@@ -3333,15 +4165,22 @@
     "institutionalCompetitionRate": 1228.38,
     "lockupCommitmentRate": 0.24,
     "circulatingSupplyRate": 97.45,
-    "totalOfferingAmount": 0,
-    "marketCapAtIpo": 0,
+    "totalOfferingAmount": 130,
+    "marketCapAtIpo": 133.4,
     "aiScore": 64,
     "scoreGrade": "B",
     "aiSummary": {
-      "headline": "에스케이증권제14호기업인수목적 상장 완료! 시초가 4,065원(+103.3%), 종가 1,882원(-5.9%) 기록",
-      "bulletPoints": [],
+      "headline": "2026-10-27 상장 · 시초가 4,065원(+103.3%) · 종가 1,882원(-5.9%)",
+      "bulletPoints": [
+        "2026-10-15~2026-10-16 일반청약, 환불 .",
+        "확정 공모가 2,000원, 총 공모금액 130억원.",
+        "기관 수요예측 1,228.38:1, 신청수량 기준 의무보유확약 0.24%.",
+        "금융 지원 서비스업. 주요 제품·서비스: 기업인수목적."
+      ],
       "positivePoints": [],
-      "riskPoints": []
+      "riskPoints": [
+        "공모 후 기준 상장일 유통가능물량 97.45%. 의무보유확약은 신청수량 기준이며 최종 배정비율과 다릅니다."
+      ]
     },
     "sentimentConsensus": {
       "positiveRatio": null,
@@ -3352,9 +4191,13 @@
     "pendingForecastFields": [],
     "fieldEvidence": {
       "lockupCommitmentRate": {
-        "sourceTitle": "DART 수요예측 신청수량 기준 · 기간별 확약수량/전체 신청수량 대조",
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
         "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
-        "checkedAt": "2026-10-25T01:42:27.329Z"
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 0.24,
+        "publishedAt": "2026-10-14",
+        "excerpt": "기관 수요예측 신청수량 기준 의무보유확약 0.24% (배정 후 확약과 구분)",
+        "parserVersion": "manual-historical-correction-v1"
       },
       "subscriptionStart": {
         "sourceTitle": "에스케이증권제14호기업인수목적 DART 최신 공시 일정",
@@ -3377,7 +4220,7 @@
       "code": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:32:45.065Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "0205H0",
         "excerpt": "에스케이증권제14호기업인수목적 | 코스닥 | 0205H0 | 상장일 2026-10-27",
         "parserVersion": "krx-company-list-v1"
@@ -3385,10 +4228,73 @@
       "listingDate": {
         "sourceTitle": "한국거래소 KIND 상장법인 목록",
         "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
-        "checkedAt": "2026-10-31T08:32:45.065Z",
+        "checkedAt": "2026-11-01T11:50:57.416Z",
         "value": "2026-10-27",
         "excerpt": "에스케이증권제14호기업인수목적 | 코스닥 | 0205H0 | 상장일 2026-10-27",
         "parserVersion": "krx-company-list-v1"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 2000,
+        "publishedAt": "2026-10-14",
+        "excerpt": "confirmedPrice: 2000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 1228.38,
+        "publishedAt": "2026-10-14",
+        "excerpt": "institutionalCompetitionRate: 1228.38; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 97.45,
+        "publishedAt": "2026-10-14",
+        "excerpt": "circulatingSupplyRate: 97.45; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 6500000,
+        "publishedAt": "2026-10-14",
+        "excerpt": "offeringShareCount: 6500000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "listedShareCount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 6670000,
+        "publishedAt": "2026-10-14",
+        "excerpt": "listedShareCount: 6670000; 정정 후 공모조건·공모 후 기준 대조",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 130,
+        "publishedAt": "2026-10-14",
+        "excerpt": "공모 6,500,000주 × 확정공모가 2,000원 = 130억원",
+        "parserVersion": "manual-historical-correction-v1"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "DART 공모조건·수요예측·공모 후 주식수 원문 대조",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014000202",
+        "checkedAt": "2026-11-01T12:48:12.320Z",
+        "value": 133.4,
+        "publishedAt": "2026-10-14",
+        "excerpt": "공모 후 주식수 6,670,000주 × 확정공모가 2,000원 ÷ 1억원 = 133.4억원 (옵션·전환사채 전환 후 수량 제외)",
+        "parserVersion": "manual-historical-correction-v1"
       }
     },
     "scheduleVerification": {
@@ -3411,8 +4317,10 @@
       "tradeDate": "2026-10-27",
       "source": "fchart_origin",
       "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0205H0&timeframe=day&count=1000&requestType=0",
-      "checkedAt": "2026-10-31T08:33:04.729Z"
-    }
+      "checkedAt": "2026-11-01T11:52:46.770Z"
+    },
+    "offeringShareCount": 6500000,
+    "listedShareCount": 6670000
   },
   {
     "id": "dart-02038432",

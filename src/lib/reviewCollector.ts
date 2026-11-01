@@ -206,8 +206,11 @@ function sourceParagraphs(html: string): string[] {
   const container = $('.se-main-container,#postViewArea,.tt_article_useless_p_margin,.article-view,.entry-content,#article-view').first();
   if (!container.length) return [];
   container.find('br').replaceWith(' ');
-  const paragraphs = container.find('.se-text-paragraph,p').map((_, element) => $(element).text().replace(/\s+/g, ' ').trim()).get().filter(Boolean);
-  return paragraphs.length ? [...new Set(paragraphs)].slice(0, 300) : [container.text().replace(/\s+/g, ' ').trim()].filter(Boolean);
+  const paragraphs = container.find('.se-text-paragraph,p').map((_, element) => $(element).text().replace(/[\u200B\uFEFF]/g, ' ').replace(/\s+/g, ' ').trim()).get().filter(Boolean);
+  // The response is already bounded to 1 MiB. Keep its ordered conclusion and
+  // repeated section headings: an arbitrary first-300 cut hid actual decisions.
+  return paragraphs.length ? paragraphs.filter((paragraph, index) => paragraph !== paragraphs[index - 1])
+    : [container.text().replace(/\s+/g, ' ').trim()].filter(Boolean);
 }
 
 function boundedExcerpt(paragraph: string, alias: string): string {
@@ -248,6 +251,156 @@ function classifyStance(excerpt: string, sourceParagraph: string, target: IpoIde
   if (caution) results.push('CAUTION');
   if (positive) results.push('POSITIVE');
   return results.length === 1 ? results[0] : 'UNCLASSIFIED';
+}
+
+type DecisionScope = 'all' | 'equal' | 'proportional';
+type ArticleEvidence = { paragraph: string; matchedAlias: string; excerpt: string; sentiment: ExpertReview['sentiment']; scope: DecisionScope };
+const ownVoice = /(?:저는|제가|나는|개인적으로|필자는|저희는)/;
+const quotedVoice = /[“”"'「」『』]|에 따르면|라고\s*(?:말|했|하)|유튜버|블로거|전문가|그는|그녀는/;
+const conditionalVoice = /(?:만약|라면|다면|경우|수도|않을까|할까|[?？])/;
+const inversePlan = /(?:계획|예정|생각|의사).{0,8}(?:없|아니|않)|하기로.{0,10}(?:아니|않)|(?:유보|보류|관망).{0,8}(?:하지|안|않)|패스.{0,8}(?:하지|안|않)|불참.{0,8}(?:하지|안|않)/;
+
+function decisionScope(text: string): DecisionScope {
+  const equal = /균등|최소\s*수량/.test(text), proportional = /비례/.test(text);
+  return equal && !proportional ? 'equal' : proportional && !equal ? 'proportional' : 'all';
+}
+
+/** Explicit decisions only. A company's financial appeal is never an opinion vote. */
+function naturalDecisions(paragraph: string): { text: string; sentiment: ExpertReview['sentiment']; scope: DecisionScope }[] {
+  const clauses = paragraph.split(/(?<=[.!?。！？])\s+|[,;]\s*(?=(?:비례|균등))|(?<=참여하되)\s*(?=비례)/).filter(Boolean);
+  // A condition in the general decision cannot be lost by splitting sentences.
+  if (clauses.some(clause => (conditionalVoice.test(clause) || inversePlan.test(clause)) && decisionScope(clause) !== 'proportional')) return [];
+  const results: { text: string; sentiment: ExpertReview['sentiment']; scope: DecisionScope }[] = [];
+  for (const clause of clauses) {
+    if (conditionalVoice.test(clause) || inversePlan.test(clause)) continue;
+    const scope = decisionScope(clause);
+    const positive = clause.match(/(?:참여|청약)(?:하겠습니다|합니다|할\s*(?:예정|계획|생각)입니다|하기로\s*했습니다|했습니다|하되)|참여하는\s*방향으로\s*생각하고\s*있(?:습니다|다)|청약(?:을)?\s*진행해보려고\s*(?:합니다|한다)|(?:넣어볼|신청해볼)\s*생각(?:입니다|이다)|청약(?:을)?\s*해봐야겠(?:어요|습니다)/);
+    const caution = clause.match(/(?:참여|청약|진행|신청)(?:을|에|은|는|도)?\s*(?:하지\s*않(?:겠습니다|습니다|기로|을\s*(?:생각|예정|계획)(?:입니다|이다))|안\s*하겠습니다)|(?:패스|불참)(?:하겠습니다|합니다|할\s*(?:예정|계획|생각)입니다|하기로\s*했습니다)/);
+    const neutral = clause.match(/(?:판단|결정)(?:을)?\s*(?:유보|보류)|관망하겠습니다|(?:청약\s*)?여부.{0,15}(?:미정|보류|유보)|(?:확인한|지켜본|본)\s*(?:뒤|후).{0,25}결정할\s*(?:계획|생각|예정)입니다/);
+    if (Number(Boolean(positive)) + Number(Boolean(caution)) + Number(Boolean(neutral)) !== 1) continue;
+    if (/(?:넣어볼|신청해볼)/.test(clause) && !/청약|균등|최소\s*수량/.test(clause)) continue;
+    const action = (positive || caution || neutral)!;
+    results.push({ text: clause.slice(Math.max(0, action.index! - 35), action.index! + action[0].length),
+      sentiment: positive ? 'POSITIVE' : caution ? 'CAUTION' : 'NEUTRAL', scope });
+  }
+  return results;
+}
+
+function foreignSubject(paragraph: string, target: IpoIdentity): boolean {
+  // Also protect single-target batches: an unregistered later company cannot
+  // borrow the first company's name merely because it precedes the same verb.
+  for (const match of paragraph.matchAll(/([\p{L}\p{N}]{2,30})\s*청약/gu)) {
+    if (!aliasMatch(match[1], target.name)
+      && !/^(?:균등|비례|공모주|이번|최소|배정|저는|제가|나는|개인적으로|우선|직접|일반|해당|보고|통해|따라서|또한|함께|최종적으로|결국)/.test(match[1])) return true;
+  }
+  const subject = paragraph.match(/(?:^|저는\s*|제가\s*|나는\s*|개인적으로(?:는)?\s*)(?:이번\s*)?([\p{L}\p{N}]{2,30})(?:은|는|에|을|를)\s/gu);
+  return Boolean(subject?.some(value => {
+    const clean = value.replace(/^(?:저는|제가|나는|개인적으로(?:는)?)\s*/, '');
+    return Boolean(clean) && !aliasMatch(clean, target.name) && !/^(?:균등|비례|청약|참여|최소|이번|우선|해당|공모주|두\s*증권사)/.test(clean);
+  }));
+}
+
+/**
+ * Bind a personal decision to a dedicated article's conclusion or a nearby,
+ * explicit company section. Evidence joins actual source fragments with an
+ * ellipsis; it never fabricates a company name or a first-person statement.
+ */
+export function classifyReviewArticle(paragraphs: string[], title: string, target: IpoIdentity, ipos: IpoIdentity[]): ArticleEvidence | undefined {
+  const titleAlias = aliasMatch(title, target.name);
+  const others = ipos.filter(other => other.id !== target.id);
+  const titleTail = titleAlias ? title.slice(title.indexOf(titleAlias) + titleAlias.length) : '';
+  const dedicated = Boolean(titleAlias && !others.some(other => aliasMatch(title, other.name))
+    && !/동시|주간|주차|종목|비교/.test(title) && !/^(?:과|와|,|·)\s*\S/.test(titleTail));
+  const candidates: ArticleEvidence[] = [];
+  let fallback: ArticleEvidence | undefined;
+  let sectionAt = -100, sectionAlias: string | null = null, conclusionAt = -100, personalSection = false;
+  let conclusionDecline: DecisionScope | null = null;
+  for (const [index, paragraph] of paragraphs.entries()) {
+    const matched = aliasMatch(paragraph, target.name);
+    const otherMention = others.some(other => aliasMatch(paragraph, other.name));
+    if (matched && !otherMention) { sectionAt = index; sectionAlias = matched; }
+    else if (otherMention) { sectionAt = -100; sectionAlias = null; }
+    const foreignHeading = !matched && paragraph.length <= 100 && !ownVoice.test(paragraph)
+      && /(?:공모\s*(?:정보|개요)|청약\s*(?:분석|개요)|기업\s*(?:개요|분석)|사업과\s*공모개요)\s*$/.test(paragraph);
+    if (foreignHeading) { sectionAt = -100; sectionAlias = null; conclusionAt = -100; personalSection = false; conclusionDecline = null; }
+    if (paragraph.length <= 120 && /(?:개인적(?:인|으로)?\s*(?:청약)?\s*결정|(?:^|\s)(?:정리|결론|종합\s*평가)(?:\s|:|：|$))/.test(paragraph)) {
+      conclusionAt = index;
+      personalSection = /개인|나의|저의/.test(paragraph);
+      conclusionDecline = !otherMention && /(?:균등\s*(?:청약)?|비례\s*(?:청약)?|청약)?(?:도|은|는)?\s*(?:참여|청약)\s*(?:X|불참|안\s*함)/i.test(paragraph)
+        ? decisionScope(paragraph) : null;
+    }
+    if (/^(?:참고\s*자료|출처|관련\s*글|면책|댓글|#[^\s]+)/.test(paragraph)) {
+      conclusionAt = -100; personalSection = false; sectionAt = -100; sectionAlias = null; conclusionDecline = null;
+    }
+    if (matched && !fallback) fallback = { paragraph, matchedAlias: matched, excerpt: boundedExcerpt(paragraph, matched), sentiment: 'UNCLASSIFIED', scope: 'all' };
+    const previous = paragraphs.slice(Math.max(0, index - 2), index);
+    const precedingCondition = previous.at(-1);
+    // A dedicated article can compare alternative subscriptions while its
+    // explicit refusal conclusion still concerns the article's company. Only
+    // the final causal action clause may inherit that heading, and only when
+    // its refusal and allocation scope independently agree with the heading.
+    const refusalTail = dedicated && index - conclusionAt <= 80 && conclusionDecline
+      && /^(?:저는|제가|나는|개인적으로(?:는)?|필자는|저희는)\s/.test(paragraph)
+      && !conditionalVoice.test(paragraph) && !inversePlan.test(paragraph)
+      ? paragraph.match(/(?:생각해서|고려해서|고려하여|이유로)\s+((?:균등|비례|청약)[^.!?。！？]+)[.!。]?$/)?.[1] : undefined;
+    const refusalDecisions = refusalTail && !others.some(other => aliasMatch(refusalTail, other.name))
+      && !foreignSubject(refusalTail, target) ? naturalDecisions(refusalTail) : [];
+    const contextualRefusal = refusalDecisions.length === 1 && refusalDecisions[0].sentiment === 'CAUTION'
+      && refusalDecisions[0].scope === conclusionDecline ? refusalTail : undefined;
+    if (otherMention && !contextualRefusal) {
+      // A later company changes the subject even inside a dedicated article.
+      // Its following unnamed decision cannot borrow the old conclusion.
+      conclusionAt = -100; personalSection = false; conclusionDecline = null;
+    }
+    if ((otherMention && !contextualRefusal) || quotedVoice.test(paragraph)
+      || (!ownVoice.test(paragraph) && /(?:기관(?:투자자)?(?:들)?(?:은|는|이|가)|운용사(?:는|가)|친구(?:는|가)|지인(?:은|이)|다른\s*투자자(?:는|가)).{0,40}(?:참여|청약|신청)/.test(paragraph))
+      || previous.some(text => /(?:전문가|블로거|유튜버).{0,20}(?:말|의견|인용)|(?:라고|다음과 같이)\s*(?:말|했|하)/.test(text))
+      || (precedingCondition && conditionalVoice.test(precedingCondition) && decisionScope(precedingCondition) !== 'proportional')) continue;
+    if (matched) {
+      const sentences = paragraph.split(/(?<=[.!?。！？])\s+/).filter(sentence => aliasMatch(sentence, target.name));
+      for (const sentence of sentences.length ? sentences : [paragraph]) {
+        const alias = aliasMatch(sentence, target.name)!;
+        const excerpt = boundedExcerpt(sentence, alias);
+        const sentiment = classifyStance(excerpt, paragraph, target, ipos);
+        if (sentiment !== 'UNCLASSIFIED') candidates.push({ paragraph, matchedAlias: alias, excerpt, sentiment, scope: decisionScope(sentence) });
+      }
+    }
+    const localOwnVoice = ownVoice.test(paragraph) || previous.some(text => ownVoice.test(text));
+    const inConclusion = dedicated && index - conclusionAt <= 80;
+    const boundSection = sectionAlias && index - sectionAt <= 8;
+    const correction = dedicated && candidates.length > 0 && /정정|번복|최종\s*(?:결정|적으로)/.test(paragraph);
+    const bound = matched || boundSection || inConclusion || correction;
+    const personal = ownVoice.test(paragraph) || (boundSection && localOwnVoice)
+      || (inConclusion && (personalSection || localOwnVoice || /(?:생각이다|해보려고\s*한다)/.test(paragraph))) || correction;
+    if (!bound || !personal || (!contextualRefusal && foreignSubject(paragraph, target))) continue;
+    for (const decision of naturalDecisions(contextualRefusal || paragraph)) {
+      const alias = matched || sectionAlias || titleAlias;
+      if (!alias) continue;
+      const direct = matched && decision.text.includes(matched) ? boundedExcerpt(decision.text, matched) : null;
+      const joined = `${alias} … ${decision.text}`;
+      const excerpt = direct || joined.split(/\s+/).slice(0, 18).join(' ').slice(0, 120).replace(/[\uD800-\uDBFF]$/, '').trim();
+      candidates.push({ paragraph: `${matched ? '' : title + '\n'}${previous.join('\n')}\n${paragraph}`,
+        matchedAlias: alias, excerpt, sentiment: decision.sentiment, scope: decision.scope });
+    }
+  }
+  if (!fallback && titleAlias) fallback = { paragraph: title, matchedAlias: titleAlias, excerpt: boundedExcerpt(title, titleAlias), sentiment: 'UNCLASSIFIED', scope: 'all' };
+  if (!candidates.length) return fallback;
+  const scopes = new Map<DecisionScope, Set<ExpertReview['sentiment']>>();
+  for (const candidate of candidates) {
+    if (!scopes.has(candidate.scope)) scopes.set(candidate.scope, new Set());
+    scopes.get(candidate.scope)!.add(candidate.sentiment);
+  }
+  const sentiments = new Set(candidates.map(candidate => candidate.sentiment));
+  const conflict = [...scopes.values()].some(values => values.size > 1)
+    || (scopes.has('all') && sentiments.size > 1);
+  if (conflict) return { ...candidates[0], sentiment: 'UNCLASSIFIED' };
+  if (scopes.size === 1 && scopes.has('proportional') && !sentiments.has('POSITIVE')) {
+    return { ...candidates[0], sentiment: 'UNCLASSIFIED' };
+  }
+  // A clear minimum/equal participation is still participation when only the
+  // proportional allocation is declined or undecided.
+  return candidates.find(candidate => candidate.sentiment === 'POSITIVE')
+    || candidates.find(candidate => candidate.sentiment === 'NEUTRAL') || candidates[0];
 }
 
 function subscriptionWindow(ipo: IpoIdentity, now: Date): { earliest: number; latest: number } | null {
@@ -331,23 +484,9 @@ export async function collectReviewsForIpos(
         }
         const body = article ? await article : { paragraphs: [] };
         if (body.error) channelResult.error = '일부 원문 본문을 가져오지 못해 RSS에 제공된 내용만 확인했습니다.';
-        const matchedParagraphs = body.paragraphs.filter((paragraph) => aliasMatch(paragraph, ipo.name));
-        const candidates = matchedParagraphs.length ? matchedParagraphs : [`${entry.title} ${entry.description}`];
-        const evidenceCandidates = candidates.flatMap((paragraph) => {
-          // Find the actual stance sentence before shortening the public evidence.
-          // Whole-paragraph attribution and contradiction checks still apply.
-          const sentences = paragraph.split(/(?<=[.!?。！？])\s+/).filter(sentence => aliasMatch(sentence, ipo.name));
-          return (sentences.length ? sentences : [paragraph]).map(sentence => {
-            const matchedAlias = aliasMatch(sentence, ipo.name)!;
-            const excerpt = boundedExcerpt(sentence, matchedAlias);
-            return { paragraph, matchedAlias, excerpt, sentiment: classifyStance(excerpt, paragraph, ipo, ipos) };
-          });
-        });
-        const classified = evidenceCandidates.filter((candidate) => candidate.sentiment !== 'UNCLASSIFIED');
-        const conflicting = new Set(classified.map((candidate) => candidate.sentiment)).size > 1;
-        const selected = classified[0] || evidenceCandidates[0];
+        const selected = classifyReviewArticle(body.paragraphs.length ? body.paragraphs : [`${entry.title} ${entry.description}`], entry.title, ipo, ipos);
         if (!selected || !selected.excerpt.includes(selected.matchedAlias)) continue;
-        const sentiment = conflicting ? 'UNCLASSIFIED' : selected.sentiment;
+        const sentiment = selected.sentiment;
         reviews.push({
           id: `rss-${createHash('sha256').update(`${ipo.id}\n${entry.url}`).digest('hex').slice(0, 20)}`,
           sourceType: 'BLOG', author: entry.author, title: entry.title, url: entry.url, publishedAt: entry.publishedAt,

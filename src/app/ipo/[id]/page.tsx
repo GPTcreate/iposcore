@@ -190,7 +190,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
             {sources.length > 0 && <section className="space-y-2"><h3 className="font-bold text-gray-800">공시 원문</h3><ul className="space-y-2">{sources.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline break-words">{source.title} ↗</a>{sourceCheckedDates.has(source.url) && <span className="ml-2 text-gray-500">확인일 {sourceCheckedDates.get(source.url)}</span>}</li>)}</ul><p>원문 링크는 확인한 항목의 근거이며, 이후 정정이나 다른 조건까지 확인했다는 뜻은 아닙니다.</p></section>}
             <section className="space-y-2"><h3 className="font-bold text-gray-800">점수·계산 기준</h3>
               {score.basis === 'PENDING' ? <p>기관 경쟁률·확약·유통 비율이 갖춰지면 정량점수를 계산합니다.</p> : <p>경쟁률 {score.breakdown.competitionScore} + 확약 {score.breakdown.lockupScore} + 유통 {score.breakdown.circulatingScore} = {score.quantitativeRawScore} / 85점.
-                {score.basis === 'COMBINED' ? ` 청약 D-1 이후 명시 입장 표본 ${score.sampleSize}건의 참여 비율로 감성 ${Number(score.breakdown.sentimentScore.toFixed(2))}점을 더한 종합점수입니다.`
+                {score.basis === 'COMBINED' ? ` 청약 D-1 이후 의견 ${score.sampleSize}건으로 감성지수 ${Number(score.sentimentIndex!.toFixed(1))}를 산출했습니다. 정량 ${Number(score.breakdown.quantitativeContribution.toFixed(2))}점 + 감성 ${Number(score.breakdown.sentimentScore.toFixed(2))}점이며 감성 반영 비중은 ${score.sentimentWeight}%입니다.`
                   : score.reviewEligible ? ' 감성 표본 대기로 정량 합계를 100점으로 환산했습니다.'
                     : score.reviewStartsOn ? ' 청약 D-1 전이므로 정량 합계를 100점으로 환산했습니다.' : ' 청약 일정 확인 중으로 정량 합계를 100점으로 환산했습니다.'}
                 {' '}<Link href="/methodology" className="text-blue-700 underline">전체 산식</Link></p>}

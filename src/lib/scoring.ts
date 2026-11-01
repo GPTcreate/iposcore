@@ -30,6 +30,7 @@ export interface ScoringInput {
 export type ScoreBasis = 'PENDING' | 'QUANTITATIVE' | 'COMBINED';
 
 export interface ScoringResult {
+  version: typeof SCORING_RULES.version;
   score: number;
   scoreGrade: 'S' | 'A' | 'B' | 'C';
   isPendingForecast: boolean;
@@ -48,6 +49,9 @@ export interface ScoringResult {
   };
   quantitativeRawScore: number;
   quantitativeScore: number;
+  sentimentIndex: number | null;
+  sentimentWeight: number;
+  sentimentConfidence: number;
   reviewSummary: ReviewSummary;
   breakdown: {
     competitionScore: number;
@@ -55,23 +59,29 @@ export interface ScoringResult {
     circulatingScore: number;
     priceBonus: number;
     sentimentScore: number;
+    quantitativeContribution: number;
   };
 }
 
 export const SCORING_RULES = {
+  version: '2026-11-01-v3',
   competition: [[1200, 40], [900, 35], [600, 30], [300, 24], [100, 18], [0, 10]],
   lockup: [[20, 25], [15, 22], [10, 18], [5, 14], [0, 9]],
   circulating: [[20, 20], [25, 17], [30, 14], [38, 10], [100, 5]],
   maximumRawScore: 85,
-  maximumSentimentScore: 15,
+  maximumSentimentScore: 25,
+  fullSentimentSamples: 5,
+  opinionValues: { POSITIVE: 100, NEUTRAL: 65, CAUTION: 15 },
   gradeThresholds: { S: 85, A: 75, B: 60 },
 } as const;
 
 /**
  * Before KST D-1: quantitative only, even when classified reviews already exist.
- * From KST D-1 with actual classified reviews: round(raw (max 85) + positiveRatio * .15).
+ * From KST D-1: blend quantitative score with observed participation intent.
+ * Sentiment has up to 25% weight, increasing linearly through five independent samples.
+ * Participation/defer/nonparticipation have index values 100/65/15 respectively.
  * Otherwise: round(quantitative raw / 85 * 100), labelled quantitative only.
- * No market-average replacement, price bonus or legacy sentiment contributes points.
+ * Unknown opinions never receive invented votes or an imputed sentiment index.
  * This rule is a site-defined comparison measure, not a validated return forecast.
  */
 export function calculateIpoScore(ipo: ScoringInput, now = new Date()): ScoringResult {
@@ -95,6 +105,7 @@ export function calculateIpoScore(ipo: ScoringInput, now = new Date()): ScoringR
   };
   if (!scorable) {
     return {
+      version: SCORING_RULES.version,
       score: 0,
       scoreGrade: 'C',
       isPendingForecast: true,
@@ -106,8 +117,11 @@ export function calculateIpoScore(ipo: ScoringInput, now = new Date()): ScoringR
       coverage,
       quantitativeRawScore: 0,
       quantitativeScore: 0,
+      sentimentIndex: null,
+      sentimentWeight: 0,
+      sentimentConfidence: 0,
       reviewSummary,
-      breakdown: { competitionScore: 0, lockupScore: 0, circulatingScore: 0, priceBonus: 0, sentimentScore: 0 },
+      breakdown: { competitionScore: 0, lockupScore: 0, circulatingScore: 0, priceBonus: 0, sentimentScore: 0, quantitativeContribution: 0 },
     };
   }
 
@@ -117,15 +131,25 @@ export function calculateIpoScore(ipo: ScoringInput, now = new Date()): ScoringR
     : SCORING_RULES.lockup.find(([minimum]) => ipo.lockupCommitmentRate >= minimum)![1];
   const circulatingScore = SCORING_RULES.circulating.find(([maximum]) => ipo.circulatingSupplyRate <= maximum)![1];
   const quantitativeRawScore = competitionScore + lockupScore + circulatingScore;
-  const quantitativeScore = Math.round(quantitativeRawScore / SCORING_RULES.maximumRawScore * 100);
+  const quantitativeIndex = quantitativeRawScore / SCORING_RULES.maximumRawScore * 100;
+  const quantitativeScore = Math.round(quantitativeIndex);
   const hasClassifiedReviews = reviewEligible && reviewSummary.sampleSize > 0;
-  const sentimentScore = hasClassifiedReviews ? reviewSummary.positiveRatio! * SCORING_RULES.maximumSentimentScore / 100 : 0;
-  const score = hasClassifiedReviews ? Math.round(quantitativeRawScore + sentimentScore) : quantitativeScore;
+  const sentimentIndex = hasClassifiedReviews ? (
+    reviewSummary.positiveCount * SCORING_RULES.opinionValues.POSITIVE
+    + reviewSummary.neutralCount * SCORING_RULES.opinionValues.NEUTRAL
+    + reviewSummary.cautionCount * SCORING_RULES.opinionValues.CAUTION
+  ) / reviewSummary.sampleSize : null;
+  const sentimentConfidence = hasClassifiedReviews ? Math.min(1, reviewSummary.sampleSize / SCORING_RULES.fullSentimentSamples) : 0;
+  const sentimentWeight = SCORING_RULES.maximumSentimentScore * sentimentConfidence;
+  const sentimentScore = sentimentIndex === null ? 0 : sentimentIndex * sentimentWeight / 100;
+  const quantitativeContribution = quantitativeIndex * (100 - sentimentWeight) / 100;
+  const score = Math.round(quantitativeContribution + sentimentScore);
   const scoreGrade = score >= SCORING_RULES.gradeThresholds.S ? 'S'
     : score >= SCORING_RULES.gradeThresholds.A ? 'A'
     : score >= SCORING_RULES.gradeThresholds.B ? 'B' : 'C';
 
   return {
+    version: SCORING_RULES.version,
     score,
     scoreGrade,
     isPendingForecast: false,
@@ -137,7 +161,10 @@ export function calculateIpoScore(ipo: ScoringInput, now = new Date()): ScoringR
     coverage,
     quantitativeRawScore,
     quantitativeScore,
+    sentimentIndex,
+    sentimentWeight,
+    sentimentConfidence,
     reviewSummary,
-    breakdown: { competitionScore, lockupScore, circulatingScore, priceBonus: 0, sentimentScore },
+    breakdown: { competitionScore, lockupScore, circulatingScore, priceBonus: 0, sentimentScore, quantitativeContribution },
   };
 }

@@ -77,7 +77,7 @@ export interface IpoItem {
   lockupCommitmentRate: number;         // 의무보유확약 비율 (%)
   circulatingSupplyRate: number;        // 유통가능물량 비율 (%)
   totalOfferingAmount: number;          // 총 공모금액 (억원)
-  marketCapAtIpo: number;               // 상장 시 시가총액 (억원)
+  marketCapAtIpo: number;               // 확인한 공모 후 주식수 × 공모가 기준 시가총액 (억원)
   offeringShareCount?: number;          // 공시의 총 공모주식수, 일반청약 배정수량과 구분
   listedShareCount?: number;            // 공모 후 실제 상장예정주식수, 옵션 포함 평가용 수량 제외
   businessDescription?: string;        // 항목 원문과 연결한 사업 개요
@@ -92,6 +92,10 @@ export interface IpoItem {
   aiScore: number;                      // 0 ~ 100점 (미검토/지표 누락 시 공개 산출 보류)
   scoreGrade: 'S' | 'A' | 'B' | 'C';    // 정량 지표 구간. 투자 추천 등급이 아님
   scoreBasis?: 'PENDING' | 'QUANTITATIVE' | 'COMBINED';
+  scoreVersion?: string;
+  sentimentIndex?: number | null; // 0~100; actual classified opinions only, not the positive ratio
+  sentimentWeight?: number; // 0~25 percentage points, scaled by independent sample coverage
+  sentimentConfidence?: number; // 0~1; sample coverage, not a probability of investment success
   reviewScoreEligible?: boolean;
   reviewScoreStartsOn?: string | null; // KST 청약 시작 전날, 일정 미정/충돌/철회이면 null
   aiSummary: {
