@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fetchOfficialText, OFFICIAL_RESPONSE_TIMEOUT_MS } from '../src/lib/officialHttp';
+import { fetchOfficialText, OFFICIAL_RESPONSE_TIMEOUT_MS, OfficialResponseError } from '../src/lib/officialHttp';
 
 const url = 'https://dart.fss.or.kr/report/viewer.do';
 test('a transient connection failure retries once with the complete response deadline', async () => {
@@ -39,6 +39,18 @@ test('persistent network errors stop after two attempts', async () => {
   let calls = 0;
   await assert.rejects(fetchOfficialText(url, { maxBytes: 100, retryDelayMs: 0, fetcher: async () => { calls++; throw new TypeError('fetch failed'); } }));
   assert.equal(calls, 2);
+});
+
+test('callers with their own shared retry budget can request exactly one transport attempt', async () => {
+  let calls = 0;
+  await assert.rejects(fetchOfficialText(url, { maxBytes: 100, maxAttempts: 1, retryDelayMs: 0,
+    fetcher: async () => { calls++; throw new TypeError('fetch failed'); } }));
+  assert.equal(calls, 1);
+});
+
+test('HTTP rejection exposes only a fixed reason and numeric status', async () => {
+  await assert.rejects(fetchOfficialText(url, { maxBytes: 100, fetcher: async () => new Response('private body', { status: 503 }) }),
+    error => error instanceof OfficialResponseError && error.code === 'HTTP' && error.status === 503 && error.message === 'OFFICIAL_HTTP_503');
 });
 test('HTTP rejection, redirects, oversized bodies and certificate errors are not retried', async () => {
   for (const make of [

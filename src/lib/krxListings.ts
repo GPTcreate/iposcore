@@ -1,11 +1,13 @@
 import * as cheerio from 'cheerio';
 import type { IpoItem } from '../types/ipo';
 import { KRX_COMPANY_LIST, normalizeListingCompany } from './officialSource';
-import { fetchOfficialText } from './officialHttp';
+import { fetchOfficialText, isTransientOfficialError, OfficialResponseError } from './officialHttp';
 import { isStockCode } from './stockCode';
 import { getFieldEvidence } from './contentQuality';
 
 export const KRX_LISTING_VERSION = 'krx-company-list-v1';
+export const KRX_MAX_REQUESTS = 3;
+const retryableStatuses = new Set([408, 429, 500, 502, 503, 504]);
 interface ListedCompany { name: string; code: string; listingDate: string; market: 'KOSPI' | 'KOSDAQ'; excerpt: string }
 const isDay = (day: string) => /^\d{4}-\d{2}-\d{2}$/.test(day) && Number.isFinite(Date.parse(day))
   && new Date(day).toISOString().slice(0, 10) === day;
@@ -33,6 +35,7 @@ export function parseKrxCompanyList(html: string): ListedCompany[] {
 
 export async function syncKrxListingIdentities(ipos: IpoItem[], options: {
   now?: Date; fetcher?: typeof fetch; save: (ipo: IpoItem) => unknown;
+  retryDelayMs?: number;
 }) {
   const now = options.now || new Date(), today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(now);
   const targets = ipos.filter(ipo => !ipo.isCancelled && !finalized(ipo)
@@ -44,19 +47,45 @@ export async function syncKrxListingIdentities(ipos: IpoItem[], options: {
     .sort((a, b) => (a.listingDate || a.subscriptionEnd).localeCompare(b.listingDate || b.subscriptionEnd));
   const result = { success: true, checkedCount: targets.length, requestCount: 0, updatedCount: 0,
     updatedStocks: [] as { id: string; code: string; listingDate: string }[], pendingCount: 0,
-    errors: [] as { name: string; error: string }[] };
+    attempts: [] as { request: number; outcome: string; status?: number; characters?: number }[],
+    errors: [] as { name: string; error: string; code?: string }[] };
   if (!targets.length) return result;
-  let companies: ListedCompany[];
-  try {
-    const { text } = await fetchOfficialText(KRX_COMPANY_LIST, { fetcher: async (url, init) => {
-      result.requestCount++;
-      return (options.fetcher || fetch)(url, init);
-    }, maxBytes: 3_000_000,
-      encoding: 'euc-kr', init: { headers: { 'User-Agent': 'IPOScore/1.0' } } });
-    companies = parseKrxCompanyList(text);
-  } catch {
+  let companies: ListedCompany[] | undefined;
+  // Each complete attempt owns its deadline and body. Never parse/reuse a partial export.
+  // HTTP overload and temporary HTML/error pages need the same bounded recovery as sockets.
+  for (let attempt = 0; attempt < KRX_MAX_REQUESTS; attempt++) {
+    let status: number | undefined, characters: number | undefined, parsing = false;
+    try {
+      const { text } = await fetchOfficialText(KRX_COMPANY_LIST, { fetcher: async (url, init) => {
+        result.requestCount++;
+        const response = await (options.fetcher || fetch)(url, init);
+        status = response.status;
+        return response;
+      }, maxBytes: 3_000_000, maxAttempts: 1,
+        // Expose the redirect response to the shared rejection guard; native redirect:error
+        // otherwise throws an unclassified TypeError that resembles a temporary socket failure.
+        encoding: 'euc-kr', init: { redirect: 'manual', headers: { 'User-Agent': 'IPOScore/1.0' } } });
+      characters = text.length;
+      parsing = true;
+      companies = parseKrxCompanyList(text);
+      result.attempts.push({ request: result.requestCount, outcome: 'ok', status, characters });
+      break;
+    } catch (error) {
+      const code = parsing ? 'SCHEMA' : error instanceof OfficialResponseError ? error.code
+        : isTransientOfficialError(error) ? 'TRANSPORT' : 'RESPONSE';
+      result.attempts.push({ request: result.requestCount, outcome: code, status, characters });
+      const retryable = parsing || isTransientOfficialError(error)
+        || (error instanceof OfficialResponseError && (error.code === 'EMPTY_BODY'
+          || (error.code === 'HTTP' && retryableStatuses.has(error.status || 0))));
+      if (!retryable || attempt + 1 === KRX_MAX_REQUESTS) break;
+      await new Promise(resolve => setTimeout(resolve, options.retryDelayMs ?? 1_000 * (attempt + 1)));
+    }
+  }
+  if (!companies) {
     result.success = false;
-    result.errors.push({ name: 'KRX', error: '상장법인 목록 조회 또는 해석 실패. 기존 종목코드와 상장일을 보존했습니다.' });
+    const last = result.attempts.at(-1)!;
+    result.errors.push({ name: 'KRX', code: `${last.outcome}${last.status === undefined ? '' : `_${last.status}`}`,
+      error: `상장법인 목록 확인 실패 (${result.requestCount}회, ${last.outcome}${last.status === undefined ? '' : ` HTTP ${last.status}`}). 기존 종목코드와 상장일을 보존했습니다.` });
     return result;
   }
   for (const ipo of targets) {

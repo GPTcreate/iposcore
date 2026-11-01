@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { IpoFieldEvidence, IpoItem } from '../src/types/ipo';
-import { KRX_LISTING_VERSION, parseKrxCompanyList, syncKrxListingIdentities } from '../src/lib/krxListings';
+import { KRX_LISTING_VERSION, KRX_MAX_REQUESTS, parseKrxCompanyList, syncKrxListingIdentities } from '../src/lib/krxListings';
 import { KRX_COMPANY_LIST, normalizeListingCompany } from '../src/lib/officialSource';
 import { getFieldEvidence, hasVerifiedField, isReviewedIpo, isSpecificOfficialSourceUrl } from '../src/lib/contentQuality';
 
@@ -35,7 +35,7 @@ function responseFixture(companies: Company[]) {
   const fetcher: typeof fetch = async (input, init) => {
     calls.push(String(input));
     assert.equal(String(input), KRX_COMPANY_LIST);
-    assert.equal(init?.redirect, 'error');
+    assert.equal(init?.redirect, 'manual');
     return new Response(exportHtml(companies));
   };
   return { calls, writes, options: { now, fetcher, save: (item: IpoItem) => writes.push(structuredClone(item)) } };
@@ -316,14 +316,85 @@ test('transport, malformed export and save failures retain the original register
     const item = ipo(), original = structuredClone(item);
     let saves = 0;
     const result = await syncKrxListingIdentities([item], { now,
+      retryDelayMs: 0,
       fetcher: async () => failure === 'transport' ? new Response('Unavailable', { status: 503 })
         : new Response(failure === 'parse' ? '<html>Access denied</html>' : exportHtml([company()])),
       save: () => { saves++; throw new Error('Write failed'); } });
     assert.equal(result.success, false);
-    assert.equal(result.requestCount, 1);
+    assert.equal(result.requestCount, failure === 'save' ? 1 : KRX_MAX_REQUESTS);
     assert.equal(result.updatedCount, 0);
     assert.equal(result.errors.length, 1);
     assert.equal(saves, failure === 'save' ? 1 : 0);
     assert.deepEqual(item, original);
+  }
+});
+
+test('temporary KRX HTTP failures recover with a fresh complete export and remain bounded', async () => {
+  for (const status of [408, 429, 500, 502, 503, 504]) {
+    const item = ipo(), original = structuredClone(item), writes: IpoItem[] = [];
+    let calls = 0;
+    const result = await syncKrxListingIdentities([item], { now, retryDelayMs: 0,
+      fetcher: async () => ++calls < KRX_MAX_REQUESTS ? new Response('Temporary failure', { status }) : new Response(exportHtml([company()])),
+      save: incoming => writes.push(incoming) });
+    assert.equal(result.success, true, String(status));
+    assert.equal(calls, KRX_MAX_REQUESTS);
+    assert.equal(result.requestCount, KRX_MAX_REQUESTS);
+    assert.equal(result.updatedCount, 1);
+    assert.equal(result.errors.length, 0);
+    assert.deepEqual(result.attempts.map(attempt => attempt.outcome), ['HTTP', 'HTTP', 'ok']);
+    assert.equal(result.attempts[0].status, status);
+    assert.equal(writes[0].code, '123456');
+    assert.deepEqual(item, original);
+  }
+});
+
+test('a temporary non-export HTML page is discarded before a validated exchange row is stored', async () => {
+  let calls = 0;
+  const writes: IpoItem[] = [];
+  const result = await syncKrxListingIdentities([ipo()], { now, retryDelayMs: 0,
+    fetcher: async () => new Response(++calls === 1 ? '<html>Temporary maintenance</html>' : exportHtml([company()])),
+    save: incoming => writes.push(incoming) });
+  assert.equal(result.success, true);
+  assert.equal(result.requestCount, 2);
+  assert.deepEqual(result.attempts.map(attempt => attempt.outcome), ['SCHEMA', 'ok']);
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].listingDate, '2026-10-30');
+});
+
+test('KRX retries share one request cap across network, HTTP and malformed responses', async () => {
+  let calls = 0, saves = 0;
+  const item = ipo(), original = structuredClone(item);
+  const result = await syncKrxListingIdentities([item], { now, retryDelayMs: 0,
+    fetcher: async () => {
+      if (++calls === 1) throw new TypeError('private transport details', { cause: { code: 'ECONNRESET' } });
+      return calls === 2 ? new Response('Overloaded', { status: 503 }) : new Response('<html>Malformed export</html>');
+    }, save: () => saves++ });
+  assert.equal(result.success, false);
+  assert.equal(calls, KRX_MAX_REQUESTS);
+  assert.equal(result.requestCount, KRX_MAX_REQUESTS);
+  assert.deepEqual(result.attempts.map(attempt => attempt.outcome), ['TRANSPORT', 'HTTP', 'SCHEMA']);
+  assert.equal(result.errors[0].code, 'SCHEMA_200');
+  assert.equal(saves, 0);
+  assert(!JSON.stringify(result).includes('private transport'));
+  assert.deepEqual(item, original);
+});
+
+test('KRX authorization, redirects, oversized exports and TLS failures stop immediately with safe diagnostics', async () => {
+  for (const [response, code] of [
+    [() => new Response('Forbidden', { status: 403 }), 'HTTP_403'],
+    [() => new Response('Missing', { status: 404 }), 'HTTP_404'],
+    [() => new Response(null, { status: 302, headers: { location: 'https://other.invalid' } }), 'REDIRECT_302'],
+    [() => new Response('Large', { headers: { 'content-length': '3000001' } }), 'SIZE_200'],
+    [() => { throw new TypeError('secret TLS details', { cause: { code: 'CERT_HAS_EXPIRED' } }); }, 'RESPONSE'],
+  ] as const) {
+    let calls = 0, saves = 0;
+    const result = await syncKrxListingIdentities([ipo()], { now, retryDelayMs: 0,
+      fetcher: async (_url, init) => { assert.equal(init?.redirect, 'manual'); calls++; return response(); }, save: () => saves++ });
+    assert.equal(result.success, false, code);
+    assert.equal(calls, 1, code);
+    assert.equal(result.requestCount, 1, code);
+    assert.equal(result.errors[0].code, code);
+    assert.equal(saves, 0);
+    assert(!JSON.stringify(result).includes('secret TLS'));
   }
 });
