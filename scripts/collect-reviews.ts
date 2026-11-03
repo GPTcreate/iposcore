@@ -4,10 +4,11 @@ import { randomUUID } from 'node:crypto';
 import type { IpoItem } from '../src/types/ipo';
 import type { ReviewArchive, ReviewSnapshot } from '../src/types/reviews';
 import { collectReviewsForIpos } from '../src/lib/reviewCollector';
-import { isReviewDate, mergeReviewSnapshots, normalizeReviewArchive } from '../src/lib/reviewArchive';
+import { isReviewDate, mergeReviewSnapshots, normalizeReviewArchive, reviewSnapshotKey } from '../src/lib/reviewArchive';
 
 interface CollectionOptions { date: string; stockId?: string; write: boolean; help: boolean }
 const kstDate = (date = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+const MAX_CATCH_UP_TARGETS = 4;
 
 export function parseCollectionArguments(args: string[], now = new Date()): CollectionOptions {
   const options: CollectionOptions = { date: kstDate(now), write: false, help: false };
@@ -35,16 +36,35 @@ export function parseCollectionArguments(args: string[], now = new Date()): Coll
   return options;
 }
 
-export function selectReviewCollectionTargets(ipos: IpoItem[], options: Pick<CollectionOptions, 'date' | 'stockId'>): IpoItem[] {
+export function selectReviewCollectionTargets(
+  ipos: IpoItem[], options: Pick<CollectionOptions, 'date' | 'stockId'>, archive?: ReviewArchive,
+): IpoItem[] {
   if (!isReviewDate(options.date)) throw new Error('기준 날짜 형식이 올바르지 않습니다.');
   const tomorrow = new Date(`${options.date}T00:00:00Z`);
   tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
   const tomorrowDate = tomorrow.toISOString().slice(0, 10);
   if (options.stockId && !ipos.some((ipo) => ipo.id === options.stockId)) throw new Error('--stock과 정확히 일치하는 종목 ID가 없습니다.');
-  return ipos.filter((ipo) => !ipo.isCancelled && ipo.status !== 'LISTED'
+  const eligible = ipos.filter((ipo) => !ipo.isCancelled && ipo.status !== 'LISTED'
     && (!isReviewDate(ipo.listingDate) || ipo.listingDate > options.date)
-    && isReviewDate(ipo.subscriptionStart)
-    && (options.stockId ? ipo.id === options.stockId : ipo.subscriptionStart === tomorrowDate));
+    && isReviewDate(ipo.subscriptionStart));
+  if (options.stockId) return eligible.filter((ipo) => ipo.id === options.stockId);
+  const daily = eligible.filter((ipo) => ipo.subscriptionStart === tomorrowDate);
+  if (!archive) return daily;
+  // A skipped persistence step leaves no failed snapshot. Retry missing or incomplete
+  // runs until subscription ends, while a successful empty result remains complete.
+  const catchUp = eligible.filter((ipo) => {
+    if (ipo.subscriptionStart > options.date || !isReviewDate(ipo.subscriptionEnd) || ipo.subscriptionEnd < options.date) return false;
+    const stored = archive.snapshots[reviewSnapshotKey(ipo.id, ipo.subscriptionStart)];
+    const windowStart = Date.parse(`${ipo.subscriptionStart}T00:00:00+09:00`) - 24 * 60 * 60 * 1000;
+    return !stored || stored.stockName !== ipo.name || !['success', 'empty'].includes(stored.status)
+      || Date.parse(stored.collectedAt) < windowStart;
+  }).sort((first, second) => {
+    const attemptedAt = (ipo: IpoItem) => Date.parse(archive.snapshots[reviewSnapshotKey(ipo.id, ipo.subscriptionStart)]?.collectedAt || '') || 0;
+    // Missing and least recently attempted records go first so repeated failures
+    // cannot consume every catch-up slot indefinitely.
+    return attemptedAt(first) - attemptedAt(second) || first.subscriptionEnd.localeCompare(second.subscriptionEnd) || first.id.localeCompare(second.id);
+  }).slice(0, MAX_CATCH_UP_TARGETS);
+  return [...daily, ...catchUp];
 }
 
 function loadSourceIpos(root: string): IpoItem[] {
@@ -90,15 +110,15 @@ export function writeReviewArchiveFile(file: string, archive: ReviewArchive): vo
 export async function main(args = process.argv.slice(2)): Promise<void> {
   const options = parseCollectionArguments(args);
   if (options.help) {
-    console.log('Usage: npm run collect:reviews -- [--date YYYY-MM-DD] [--stock EXACT_IPO_ID] [--write | --dry-run]\nDefault: collect D-1 targets and preview only. --stock forces one eligible ID. --date changes selection, not the actual collection timestamp. --write updates only src/data/reviewSnapshots.json; deployment is separate.');
+    console.log('Usage: npm run collect:reviews -- [--date YYYY-MM-DD] [--stock EXACT_IPO_ID] [--write | --dry-run]\nDefault: collect D-1 targets plus up to 4 missing/incomplete snapshots through subscription end, and preview only. --stock forces one eligible ID. --date changes selection, not the actual collection timestamp. --write updates only src/data/reviewSnapshots.json; deployment is separate.');
     return;
   }
   const root = process.cwd();
   const targetFile = path.join(root, 'src', 'data', 'reviewSnapshots.json');
   const archive = readArchive(targetFile);
-  const targets = selectReviewCollectionTargets(loadSourceIpos(root), options);
+  const targets = selectReviewCollectionTargets(loadSourceIpos(root), options, archive);
   if (targets.length === 0) {
-    console.log(JSON.stringify({ selectionDate: options.date, targetCount: 0, storageStatus: 'unchanged', message: '수집할 D-1 또는 수동 지정 대상이 없습니다.' }));
+    console.log(JSON.stringify({ selectionDate: options.date, targetCount: 0, storageStatus: 'unchanged', message: '수집할 D-1·누락 복구 또는 수동 지정 대상이 없습니다.' }));
     return;
   }
   const snapshots: ReviewSnapshot[] = await collectReviewsForIpos(targets, { now: new Date() });
