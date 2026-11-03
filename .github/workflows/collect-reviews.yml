@@ -204,8 +204,8 @@ jobs:
           done
           # The existing Vercel Git integration must deploy this commit before readers see it.
           # A successful Git push alone does not confirm that a deployment completed.
-      - name: Preserve collected data after a commit or push failure
-        if: ${{ failure() && env.DATA_WRITE == 'true' && steps.commit.outcome == 'failure' }}
+      - name: Preserve collected data after a validation, commit or push failure
+        if: ${{ failure() && env.DATA_WRITE == 'true' && (steps.validation.outcome == 'failure' || steps.commit.outcome == 'failure') }}
         uses: actions/upload-artifact@v4
         with:
           name: collected-data-recovery
@@ -222,6 +222,7 @@ jobs:
           FINANCIALS_OUTCOME: ${{ steps.financials.outcome }}
           OFFICIAL_OUTCOME: ${{ steps.official.outcome }}
           REVIEWS_OUTCOME: ${{ steps.collect.outcome }}
+          VALIDATION_OUTCOME: ${{ steps.validation.outcome }}
           COMMIT_OUTCOME: ${{ steps.commit.outcome }}
         shell: bash
         run: |
@@ -235,6 +236,7 @@ jobs:
             "Financial metrics/listing prices: $FINANCIALS_OUTCOME" \
             "Official schedules: $OFFICIAL_OUTCOME" \
             "D-1 reviews: $REVIEWS_OUTCOME" \
+            "Data validation: $VALIDATION_OUTCOME" \
             "Allowed data commit/push: $COMMIT_OUTCOME" \
             'Read-only dispatches skip financial writes. A commit or push does not confirm a production deployment.' \
             >> "$GITHUB_STEP_SUMMARY"
