@@ -151,6 +151,56 @@ test('D-1 targets include unreviewed financial records but exclude cancelled, li
   assert.throws(() => selectReviewCollectionTargets(input, { date: '2026-10-25', stockId: '테스트 기업' }));
 });
 
+test('a skipped D-1 save is recovered on either subscription day and never after the window', () => {
+  const nexi = pipelineIpo({ id: 'nex-i', name: '넥스아이', subscriptionStart: '2026-11-03', subscriptionEnd: '2026-11-04', listingDate: '2026-11-12' });
+  const unrelated = [
+    { ...nexi, id: 'ended', subscriptionStart: '2026-10-29', subscriptionEnd: '2026-10-30' },
+    { ...nexi, id: 'future', subscriptionStart: '2026-11-10', subscriptionEnd: '2026-11-11' },
+    { ...nexi, id: 'no-end', subscriptionEnd: '' },
+    { ...nexi, id: 'cancelled', isCancelled: true },
+    { ...nexi, id: 'listed', status: 'LISTED' as const },
+    { ...nexi, id: 'already-listed-by-date', listingDate: '2026-11-03' },
+  ];
+  for (const date of ['2026-11-02', '2026-11-03', '2026-11-04']) {
+    assert.deepEqual(selectReviewCollectionTargets([nexi], { date }, empty()).map((item) => item.id), ['nex-i'], date);
+  }
+  assert.deepEqual(selectReviewCollectionTargets([nexi, ...unrelated], { date: '2026-11-03' }, empty()).map((item) => item.id), ['nex-i']);
+  assert.deepEqual(selectReviewCollectionTargets([nexi], { date: '2026-11-05' }, empty()), []);
+  assert.deepEqual(selectReviewCollectionTargets([nexi], { date: '2026-11-01' }, empty()), []);
+  assert.deepEqual(selectReviewCollectionTargets([nexi], { date: '2026-11-03' }), []);
+  assert.deepEqual(selectReviewCollectionTargets([nexi, ...unrelated], { date: '2026-11-03', stockId: 'ended' }, empty()).map((item) => item.id), ['ended']);
+});
+
+test('catch-up retries failed or partial snapshots but treats confirmed empty and success as complete', () => {
+  const ipo = pipelineIpo();
+  for (const status of ['success', 'empty', 'partial', 'failed'] as const) {
+    const archive = mergeReviewSnapshots(empty(), [snapshot({ status, reviews: status === 'empty' ? [] : [review()] })]);
+    const expected = status === 'failed' || status === 'partial' ? [identity.id] : [];
+    assert.deepEqual(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, archive).map((item) => item.id), expected, status);
+    // The usual D-1 refresh still runs even if an earlier attempt was complete.
+    assert.deepEqual(selectReviewCollectionTargets([ipo], { date: '2026-10-25' }, archive).map((item) => item.id), [identity.id]);
+  }
+  const earlyManual = mergeReviewSnapshots(empty(), [snapshot({ collectedAt: '2026-10-24T14:59:59Z' })]);
+  const atWindowStart = mergeReviewSnapshots(empty(), [snapshot({ collectedAt: '2026-10-24T15:00:00Z' })]);
+  assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, earlyManual).length, 1);
+  assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, atWindowStart).length, 0);
+  const oldIdentity = mergeReviewSnapshots(empty(), [snapshot({ stockName: '변경 전 이름' })]);
+  assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, oldIdentity).length, 1);
+  const rescheduled = { ...ipo, subscriptionStart: '2026-10-27', subscriptionEnd: '2026-10-28' };
+  assert.equal(selectReviewCollectionTargets([rescheduled], { date: '2026-10-27' }, atWindowStart).length, 1);
+});
+
+test('catch-up has four extra slots, preserves D-1 targets and rotates recent failed attempts', () => {
+  const active = Array.from({ length: 6 }, (_, index) => pipelineIpo({ id: `catch-up-${index}` }));
+  const daily = pipelineIpo({ id: 'daily', subscriptionStart: '2026-10-27', subscriptionEnd: '2026-10-28' });
+  const selected = selectReviewCollectionTargets([...active, daily], { date: '2026-10-26' }, empty());
+  assert.deepEqual(selected.map((ipo) => ipo.id), ['daily', 'catch-up-0', 'catch-up-1', 'catch-up-2', 'catch-up-3']);
+  const attempted = mergeReviewSnapshots(empty(), active.slice(0, 4).map((ipo) => snapshot({
+    ipoId: ipo.id, status: 'failed', reviews: [], collectedAt: '2026-10-26T03:17:00Z',
+  })));
+  assert.deepEqual(selectReviewCollectionTargets(active, { date: '2026-10-26' }, attempted).map((ipo) => ipo.id), ['catch-up-4', 'catch-up-5', 'catch-up-0', 'catch-up-1']);
+});
+
 test('atomic local writes survive a fresh file reload and exact replay without duplicate reviews', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'iposcore-archive-fixture-'));
   const file = path.join(directory, 'reviewSnapshots.json');
@@ -289,7 +339,7 @@ test('actual pipeline preserves last success after failed refresh but reports ze
   assert.equal(getReviewSnapshot(prior, identity)!.status, 'success');
 });
 
-test('all-failed CLI attempts save failure metadata and prior evidence before marking CI unsuccessful', async () => {
+test('all-failed CLI attempts save prior evidence and recover a skipped save during subscription', async () => {
   const root = path.join(os.tmpdir(), 'iposcore-virtual-cli');
   const targetFile = path.join(root, 'src', 'data', 'reviewSnapshots.json');
   const prior = mergeReviewSnapshots(empty(), [snapshot()]);
@@ -310,11 +360,15 @@ test('all-failed CLI attempts save failure metadata and prior evidence before ma
     unlinkSync: (file: string) => virtualFiles.delete(file),
   };
   const processBoundary = { env: {}, argv: [], cwd: () => root, exitCode: 0 };
+  let collectorCalls = 0;
   const dependencies: Record<string, unknown> = {
     'node:fs': fakeFs, 'node:path': path, 'node:crypto': { randomUUID: () => 'fixture-temp' },
-    '../src/lib/reviewArchive': { isReviewDate, mergeReviewSnapshots, normalizeReviewArchive },
+    '../src/lib/reviewArchive': { isReviewDate, mergeReviewSnapshots, normalizeReviewArchive, reviewSnapshotKey },
     '../src/lib/reviewCollector': {
-      collectReviewsForIpos: async () => [snapshot({ collectedAt: '2026-10-25T09:17:00Z', status: 'failed', reviews: [], channels: [{ channelId: 'fixture-blog', feedUrl: 'https://rss.blog.naver.com/fixture.xml', status: 'failed', fetchedCount: 0, matchedCount: 0, error: 'fixture transport failure' }] })],
+      collectReviewsForIpos: async () => {
+        collectorCalls++;
+        return [snapshot({ collectedAt: '2026-10-25T09:17:00Z', status: 'failed', reviews: [], channels: [{ channelId: 'fixture-blog', feedUrl: 'https://rss.blog.naver.com/fixture.xml', status: 'failed', fetchedCount: 0, matchedCount: 0, error: 'fixture transport failure' }] })];
+      },
     },
   };
   const source = fs.readFileSync(path.join(process.cwd(), 'scripts', 'collect-reviews.ts'), 'utf8');
@@ -333,4 +387,9 @@ test('all-failed CLI attempts save failure metadata and prior evidence before ma
   assert.equal(saved.lastSuccessfulAt, snapshot().collectedAt);
   assert.equal(processBoundary.exitCode, 1);
   assert.equal(Array.from(virtualFiles.keys()).some((file) => file.endsWith('.tmp')), false);
+  // Reproduce a validation/commit failure leaving no archive entry at all.
+  virtualFiles.set(targetFile, JSON.stringify(empty()));
+  await (moduleObject.exports as { main(args: string[]): Promise<void> }).main(['--date', '2026-10-27', '--write']);
+  assert.equal(collectorCalls, 2);
+  assert.equal(getReviewSnapshot(normalizeReviewArchive(JSON.parse(virtualFiles.get(targetFile)!)), identity)!.status, 'failed');
 });

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { mergeIpoSourceRecords } from './ipo-source-records.mjs';
 
 console.log('🛡️  [Content Integrity Audit] 콘텐츠 품질 및 공시 팩트 정합성 감사 시작...\n');
 
@@ -25,6 +26,7 @@ function loadMockIpos() {
 
 const customIpos = loadCustomIpos();
 const mockIpos = loadMockIpos();
+const effectiveIpos = mergeIpoSourceRecords(mockIpos, customIpos);
 
 let auditFailures = 0;
 
@@ -165,12 +167,14 @@ function inspectScheduleValidity(sourceName, ipos) {
   }
 }
 
-inspectScheduleValidity('customIpos.json', customIpos);
-inspectScheduleValidity('mockIpo.ts', mockIpos);
+// A due-date check must inspect the records actually served. An old base record
+// can still have an unconfirmed price after a current custom record replaces it.
+// Static content/evidence checks above continue to inspect both source files.
+inspectScheduleValidity('effective IPO records', effectiveIpos);
 
 if (auditFailures > 0) {
   console.error(`\n🚨 [감사 실패] 총 ${auditFailures}건의 콘텐츠 무결성 오류가 발견되었습니다. 배포가 중단됩니다.\n`);
   process.exit(1);
 } else {
-  console.log(`✅ [감사 통과] 총 ${customIpos.length}개 종목의 콘텐츠 무결성(금지 문구 부재, SSOT 정합성, DART 팩트 일치, 청약일정 유효성) 검증 완료.\n`);
+  console.log(`✅ [감사 통과] 두 원본의 정적 콘텐츠와 유효 ${effectiveIpos.length}개 종목의 청약일정 검증 완료.\n`);
 }

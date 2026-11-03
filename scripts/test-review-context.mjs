@@ -101,6 +101,38 @@ test('an explicit dedicated refusal conclusion can explain alternative subscript
   assert.equal(stance([...paragraphs, '최종 결정을 정정합니다. 균등 청약에 참여할 계획입니다.']), 'UNCLASSIFIED');
 });
 
+test('a current refusal stays distinct from a later hypothetical post-listing investment review', () => {
+  // Reduced public juan116_ 224462589214 conclusion, preserving the exact decision/reflection juxtaposition.
+  const decision = '결론적으로, 이번 청약은 참여하지 않을 생각이다.';
+  const reflection = '향후, 상장 이후 기술이전 등의 성과를 보여줄 때 다시 봐도 좋지 않을까 싶다.';
+  const heading = '7. 결론: 청약 참여 X';
+  const paragraphs = [heading, `${decision} 우선 최근 국내 바이오텍 주식의 흐름이 좋지 않은 점과 좋지 않은 기관 경쟁률과 평가, 의무보유확약률 등 참여하지 않는 게 좋다는 판단이 든다. ${reflection}`];
+  const result = classify(paragraphs);
+  assert.equal(result.sentiment, 'CAUTION');
+  assert.ok(result.excerpt.includes('이번 청약은 참여하지 않을 생각이다'));
+  assert.ok(result.excerpt.length <= 120);
+  assert.ok(result.excerpt.split(/\s+/).length <= 18);
+  assert.equal(stance(paragraphs, { title: '별빛테크와 바다로봇 주간 비교' }), 'UNCLASSIFIED');
+  assert.equal(stance(['7. 결론: 비례 참여 X', paragraphs[1]]), 'UNCLASSIFIED');
+  assert.equal(stance([heading, reflection]), 'UNCLASSIFIED');
+  for (const unsafe of [
+    `이번 청약은 경쟁률이 낮다면 참여하지 않을 생각이다. ${reflection}`,
+    `이번 청약은 참여하지 않을 생각이다? ${reflection}`,
+    `이번 청약은 불참할 생각이 없습니다. ${reflection}`,
+    `기관은 이번 청약은 참여하지 않을 생각이다. ${reflection}`,
+    `이번 청약은 새봄에너지에 참여하지 않을 생각이다. ${reflection}`,
+    `전문가는 “이번 청약은 참여하지 않을 생각이다”라고 말했습니다. ${reflection}`,
+    `${decision} 하지만 이번 청약에 참여할 계획입니다. ${reflection}`,
+    `${decision} 이번 청약에 참여할 계획입니다. ${reflection}`,
+    `${decision} 이번 청약은 참여할 계획입니다, 현재 참여하지 않을 생각입니다. ${reflection}`,
+    `${decision} 이번 청약은 참여할 계획입니다만 참여하지 않을 생각이다. ${reflection}`,
+    `${decision} 이번 청약은 참여합니다, 참여하지 않을 생각입니다. ${reflection}`,
+    `${decision} ${reflection} 최종적으로 청약에 참여할 계획입니다.`,
+    `${decision} 향후, 상장 이후 상황에 따라 이번 청약에 참여할까 생각한다.`,
+  ]) assert.equal(stance([heading, unsafe]), 'UNCLASSIFIED', unsafe);
+  assert.equal(stance([...paragraphs, '최종 결정을 정정합니다. 청약에 참여할 계획입니다.']), 'UNCLASSIFIED');
+});
+
 test('a later contradiction or correction cancels an earlier decision across paragraphs and long tails', () => {
   for (const paragraphs of [
     ['저는 별빛테크 청약에 참여합니다.', '최종 결정을 정정합니다. 청약하지 않겠습니다.'],

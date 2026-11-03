@@ -286,6 +286,28 @@ function naturalDecisions(paragraph: string): { text: string; sentiment: ExpertR
   return results;
 }
 
+/** A later post-listing reflection cannot qualify an explicit current refusal. */
+function currentRefusalBeforePostListingReflection(paragraph: string): string | undefined {
+  const sentences = paragraph.split(/(?<=[.!?。！？])\s+/).filter(Boolean);
+  const first = sentences[0], reflection = sentences.at(-1);
+  if (sentences.length < 2 || !first || !reflection
+    || !/^(?:(?:결론적으로|개인적으로(?:는)?|저는|제가|나는)[,，]?\s*)?이번\s*청약(?:은|에는|을|에)?\s*(?:참여|진행|신청)(?:을|에|은|는|도)?\s*하지\s*않/.test(first)
+    || !/^(?:(?:향후|추후)[,，]?\s*)?상장\s*(?:이후|후)(?:\s|[,，])/.test(reflection)
+    || !conditionalVoice.test(reflection)
+    || /청약|참여|신청|패스|불참|균등|비례|정정|번복/.test(reflection)) return undefined;
+  const current = sentences.slice(0, -1).join(' ');
+  // Preserve ambiguity and correction guards for the subscription itself.
+  // A reason such as "참여하지 않는 게 좋다는 판단" is not another decision.
+  // Any other intervening participation language can contain a discarded mixed
+  // stance, so it must not disappear when only the first sentence is selected.
+  const explanation = sentences.slice(1, -1).join(' ')
+    .replace(/(?:참여|청약)하지\s*않는\s*(?:게|것이)\s*좋(?:다는|다고)/g, '');
+  if (/청약|참여|진행|신청|패스|불참|균등|비례|관망|보류|유보|미정|결정|정정|번복|하지만|그러나|반대로|대신|최종/.test(explanation)) return undefined;
+  const decisions = naturalDecisions(current), firstDecisions = naturalDecisions(first);
+  return decisions.length === 1 && decisions[0].sentiment === 'CAUTION'
+    && firstDecisions.length === 1 && firstDecisions[0].sentiment === 'CAUTION' ? first : undefined;
+}
+
 function foreignSubject(paragraph: string, target: IpoIdentity): boolean {
   // Also protect single-target batches: an unregistered later company cannot
   // borrow the first company's name merely because it precedes the same verb.
@@ -335,6 +357,9 @@ export function classifyReviewArticle(paragraphs: string[], title: string, targe
     if (matched && !fallback) fallback = { paragraph, matchedAlias: matched, excerpt: boundedExcerpt(paragraph, matched), sentiment: 'UNCLASSIFIED', scope: 'all' };
     const previous = paragraphs.slice(Math.max(0, index - 2), index);
     const precedingCondition = previous.at(-1);
+    const precedingRefusal = dedicated && index - conclusionAt <= 80 && conclusionDecline && precedingCondition
+      ? currentRefusalBeforePostListingReflection(precedingCondition) : undefined;
+    const unrelatedPostListingCondition = precedingRefusal && decisionScope(precedingRefusal) === conclusionDecline;
     // A dedicated article can compare alternative subscriptions while its
     // explicit refusal conclusion still concerns the article's company. Only
     // the final causal action clause may inherit that heading, and only when
@@ -355,7 +380,8 @@ export function classifyReviewArticle(paragraphs: string[], title: string, targe
     if ((otherMention && !contextualRefusal) || quotedVoice.test(paragraph)
       || (!ownVoice.test(paragraph) && /(?:기관(?:투자자)?(?:들)?(?:은|는|이|가)|운용사(?:는|가)|친구(?:는|가)|지인(?:은|이)|다른\s*투자자(?:는|가)).{0,40}(?:참여|청약|신청)/.test(paragraph))
       || previous.some(text => /(?:전문가|블로거|유튜버).{0,20}(?:말|의견|인용)|(?:라고|다음과 같이)\s*(?:말|했|하)/.test(text))
-      || (precedingCondition && conditionalVoice.test(precedingCondition) && decisionScope(precedingCondition) !== 'proportional')) continue;
+      || (precedingCondition && conditionalVoice.test(precedingCondition) && decisionScope(precedingCondition) !== 'proportional'
+        && !unrelatedPostListingCondition)) continue;
     if (matched) {
       const sentences = paragraph.split(/(?<=[.!?。！？])\s+/).filter(sentence => aliasMatch(sentence, target.name));
       for (const sentence of sentences.length ? sentences : [paragraph]) {
@@ -373,7 +399,10 @@ export function classifyReviewArticle(paragraphs: string[], title: string, targe
     const personal = ownVoice.test(paragraph) || (boundSection && localOwnVoice)
       || (inConclusion && (personalSection || localOwnVoice || /(?:생각이다|해보려고\s*한다)/.test(paragraph))) || correction;
     if (!bound || !personal || (!contextualRefusal && foreignSubject(paragraph, target))) continue;
-    for (const decision of naturalDecisions(contextualRefusal || paragraph)) {
+    const currentRefusal = inConclusion && conclusionDecline
+      ? currentRefusalBeforePostListingReflection(paragraph) : undefined;
+    const isolatedRefusal = currentRefusal && decisionScope(currentRefusal) === conclusionDecline ? currentRefusal : undefined;
+    for (const decision of naturalDecisions(contextualRefusal || isolatedRefusal || paragraph)) {
       const alias = matched || sectionAlias || titleAlias;
       if (!alias) continue;
       const direct = matched && decision.text.includes(matched) ? boundedExcerpt(decision.text, matched) : null;
