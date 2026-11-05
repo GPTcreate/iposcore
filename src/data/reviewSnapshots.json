@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-03T08:53:13.145Z",
+  "updatedAt": "2026-11-05T00:28:18.489Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -31,6 +31,286 @@
           "status": "success",
           "fetchedCount": 50,
           "matchedCount": 0
+        }
+      ]
+    },
+    "[\"al-robot\",\"2026-11-06\"]": {
+      "ipoId": "al-robot",
+      "stockName": "에이엘로봇",
+      "subscriptionStart": "2026-11-06",
+      "collectedAt": "2026-11-05T00:28:18.489Z",
+      "lastSuccessfulAt": "2026-11-05T00:28:18.489Z",
+      "status": "success",
+      "reviews": [
+        {
+          "id": "rss-f3a2015ff46d3ddb13c9",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "영광와이케이엠씨, 옵토닉스, 에이엘로봇 청약 비교 및 청약 전략",
+          "url": "https://blog.naver.com/msql/224465508202",
+          "publishedAt": "2026-11-04T22:50:39.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "481e0c85b2b424fe16e85faec75be525ae2a260865f2bdb237bb10de25604315",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "와이케이엠씨의 청약이 시작됐고, 오늘은 옵토닉스, 금요일부터는 에이엘로봇의 청약이 이어집니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-1bcb9bbe882eef898f26",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "에이엘로봇 수요예측 결과 공모가 확정 17,600원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+          "url": "https://blog.naver.com/msql/224464996418",
+          "publishedAt": "2026-11-04T09:32:41.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "6f190d3e3477a356772e16cfa986b79f1f042a61ee656b66905ee79c9e64b3b9",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "에이엘로봇 수요예측 결과 공모가 확정 17,600원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약 안녕하세요. 11월 6일(금)부터 청약이",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-39cebabf95dad174ea6c",
+          "sourceType": "BLOG",
+          "author": "hippocamp",
+          "title": "[2026년 11월 공모주] 에이엘로봇 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, 휴머노이드 로봇 관련주)",
+          "url": "https://blog.naver.com/hippocamp/224464980747",
+          "publishedAt": "2026-11-04T09:16:22.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "105fd465746a24a45964a7d9ef10f8ecd7013bfac48f33205d6a773583d5af66",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "관련주인데요. 로봇용 센서와 움직임을 제어하는 장치를 만드는 ‘에이엘로봇’ 공모주에 관해서도 알아볼까요?",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-3d9771463f21a19619ce",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "영광와이케이엠씨 공모주 청약 1일차 경쟁률, 비례청약에서 주목할 장점",
+          "url": "https://blog.naver.com/kastro83/224464873154",
+          "publishedAt": "2026-11-04T08:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "b98dfe2b90dd168414b6a8a371944fd65d441da0a34c1e2c826f3cc702e05544",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "함께 개인적으로 예상하는 최종 청약 결과, 그리고 옵토닉스와 에이엘로봇 청약 일정까지 고려한 자금 활용 전략을 살펴보겠습니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-be2945eacee6274d2103",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "2026년 11월 1주차 공모주 청약 및 상장 일정 총정리, 6종목 청약과 영광·래블업 상장",
+          "url": "https://blog.naver.com/kastro83/224458886113",
+          "publishedAt": "2026-11-01T10:00:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "728a3c935a0218ed85eb49fec3483c5085256980e768c75f17a556ea51feb656",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "는 바로팜, 동원파츠, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 등 총 6개 종목의 청약이 시작됩니다. 여기에 지난주 청약을 진행했던 영광,",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-4bd3e165671b6819a0c1",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "[공모주, 실권주 주간 일정] 11월 2일 ~ 11월 6일, 주요 상황 [청약 6건, 상장 4건(실권주, 일반공모 일정 포함)]",
+          "url": "https://blog.naver.com/msql/224460206843",
+          "publishedAt": "2026-11-01T00:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "a0d5990e1e50a8e6ae6ae7b08555a0fed53bb19b5b3f9d2f12e29df74e5038e6",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다. 실권주 청약은 없어 다음 주에는 총 6건의",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-af5cdf1f23d460c5d58d",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "11월 1주차 공모주 청약/상장 일정 정리",
+          "url": "https://blog.naver.com/juan116_/224460554721",
+          "publishedAt": "2026-10-31T14:24:43.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "97ffc8ce0cfb08f4ad83727d9a341bd83b380fabcca4fd16a68bff963c2cebe6",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "스아이·옵토닉스는 발행조건확정 공시가 나왔고, 영광와이케이엠씨·에이엘로봇은 아직 수요예측 중이다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-9b06a0fbffa8a481a4b3",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "[공모주, 실권주 월간 일정] 2026년 11월 공모주 청약 일정 17건+1건/증권사 정리",
+          "url": "https://blog.naver.com/msql/224457028799",
+          "publishedAt": "2026-10-28T22:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "bb5126e7846d0b6d3de126f6437025e5497c17f5b40eec84889c228e4f04e44e",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇, 다비오, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지, 에스에프씨, 유캐스트, 아델, 제논, 케이엠에프, 에이엔에이치스트럭쳐",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-67f6d998394a4416df5b",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "에이엘로봇(AL로봇) 공모주 청약 정보 - 로봇용 토크센서 기업/ 공모가, 상장일 유통물량",
+          "url": "https://blog.naver.com/msql/224456331283",
+          "publishedAt": "2026-10-28T09:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "857b7a9d0cead7d2e1673fa8ab5d5850cabf179b05eaf60b940d4c3e1a9582b6",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "에이엘로봇(AL로봇) 공모주 청약 정보 - 로봇용 토크센서 기업/ 공모가, 상장일 유통물량 다음 주 청약이 진행되는 에이엘로봇은 로봇용 힘,",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-ba012aca489263a20df6",
+          "sourceType": "BLOG",
+          "author": "xuenxu",
+          "title": "공모주 청약증거금 이자 지급한다",
+          "url": "https://blog.naver.com/xuenxu/224455586858",
+          "publishedAt": "2026-10-27T07:42:43.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "d96aa8d7c5773723fbe765ffb9360af4afe845f6b0d01eba42dcb6d0cfd589c3",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "대신證 주관 에이엘로봇 공모청약 투자자에 연 1.0% 이자 지급예정 정치권 경고하자 시행…확산 관심",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-8f0acf6d907bd23cbf2d",
+          "sourceType": "BLOG",
+          "author": "dreamsorte",
+          "title": "에이엘로봇 공모주, 청약해도 될까? 로봇 '촉각' 만드는 회사의 두 얼굴",
+          "url": "https://blog.naver.com/dreamsorte/224432032448",
+          "publishedAt": "2026-10-14T08:00:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "a6c29eda65d67261d49b4141e453cda1b5b3074783b00a8091c50a935e8df4d0",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "1️⃣ 에이엘로봇, 뭐 하는 회사?",
+            "classification": "unclassified"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 34,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 5
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
         }
       ]
     },
@@ -1080,6 +1360,304 @@
           "status": "success",
           "fetchedCount": 50,
           "matchedCount": 2
+        }
+      ]
+    },
+    "[\"optronics\",\"2026-11-05\"]": {
+      "ipoId": "optronics",
+      "stockName": "옵토닉스",
+      "subscriptionStart": "2026-11-05",
+      "collectedAt": "2026-11-05T00:28:18.489Z",
+      "lastSuccessfulAt": "2026-11-05T00:28:18.489Z",
+      "status": "success",
+      "reviews": [
+        {
+          "id": "rss-4f21116bed2fea78b4c5",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "영광와이케이엠씨, 옵토닉스, 에이엘로봇 청약 비교 및 청약 전략",
+          "url": "https://blog.naver.com/msql/224465508202",
+          "publishedAt": "2026-11-04T22:50:39.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "481e0c85b2b424fe16e85faec75be525ae2a260865f2bdb237bb10de25604315",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "월 4일 수요일부터 영광와이케이엠씨의 청약이 시작됐고, 오늘은 옵토닉스, 금요일부터는 에이엘로봇의 청약이 이어집니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-c56bfbd8f0f0f9fad082",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "공모주 분석:옵토닉스 (11/5~11/6), 한국투자증권",
+          "url": "https://blog.naver.com/juan116_/224464848055",
+          "publishedAt": "2026-11-04T09:00:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "8c88303bdf9ff32e6290ab125e08953030aad25766254d74d5f5f8d4bf7b6cbd",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "학부품을 만들어 한화에어로스페이스에 공급하는 사업을 영위 중인 옵토닉스의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 10,000~12,000원의 상단인 12,000원, 기관",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-f990821e05e22614df81",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "영광와이케이엠씨 공모주 청약 1일차 경쟁률, 비례청약에서 주목할 장점",
+          "url": "https://blog.naver.com/kastro83/224464873154",
+          "publishedAt": "2026-11-04T08:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "b98dfe2b90dd168414b6a8a371944fd65d441da0a34c1e2c826f3cc702e05544",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "의 분위기와 함께 개인적으로 예상하는 최종 청약 결과, 그리고 옵토닉스와 에이엘로봇 청약 일정까지 고려한 자금 활용 전략을 살펴보겠습니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-1de66de8710fb8de7263",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "옵토닉스 공모주 청약 분석, 4일 환불에도 비례까지 참여하는 이유",
+          "url": "https://blog.naver.com/kastro83/224464691197",
+          "publishedAt": "2026-11-04T05:23:23.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "133b1d3238fe837bab772ece904bba002dfb5677ad1b37ad0d515502783f3af9",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "옵토닉스 공모주 청약 분석, 4일 환불에도 비례까지 참여하는 이유 2026년 11월 5일부터 6일까지 진행되는 옵토닉스 공모주 청약을 앞두고",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-47334d81d8001fbd466b",
+          "sourceType": "BLOG",
+          "author": "dreamsorte",
+          "title": "옵토닉스 공모주, 경쟁률 1,202대 1! 근데 확약이…",
+          "url": "https://blog.naver.com/dreamsorte/224460998922",
+          "publishedAt": "2026-11-04T03:40:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "eeb1cf99b86e1f81f24e479ef4793815ab22ecc1bda8f91623ee030445f531ef",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "11월 공모주 2주차, 방산 광학부품 기업 옵토닉스가 청약을 앞두고 있습니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-0f75fd62e0aa0380e87f",
+          "sourceType": "BLOG",
+          "author": "hippocamp",
+          "title": "[2026년 11월 공모주] 옵토닉스 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, 방산 관련주)",
+          "url": "https://blog.naver.com/hippocamp/224463781764",
+          "publishedAt": "2026-11-03T09:36:50.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "1b0cac709a6e29ee8d6182e168c259ed04851a5db70bf0a667594715b23620c8",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "다연장로켓, 지대공 유도무기 등의 초정밀 부품을 만드는 곳인 ‘옵토닉스’에 관해서 알아볼까요?",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-52bd48566c60357f36a3",
+          "sourceType": "BLOG",
+          "author": "xuenxu",
+          "title": "11월 옵토닉스 공모주 청약(11.5~6)",
+          "url": "https://blog.naver.com/xuenxu/224463506713",
+          "publishedAt": "2026-11-03T05:48:46.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "3d8d772b70f2712547d249ed3a73defc978d0cd1524400840b95d5b612e978c6",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "목~금요일- 옵토닉스의 공모주 청약",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-0e6a5eab4870c7e031c8",
+          "sourceType": "BLOG",
+          "author": "dividendqueen",
+          "title": "옵토닉스 공모주 청약 일정 공모가 12,000원 균등청약 할래요",
+          "url": "https://blog.naver.com/dividendqueen/224463273929",
+          "publishedAt": "2026-11-03T02:28:27.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "29a3057f4aae1462d0cb74e399f92d9bfd5c62d328cb0c1d81b044ae06746398",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "옵토닉스 공모주 청약 일정 공모가 12,000원 균등청약 할래요",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-ee64bf67118bd59476c6",
+          "sourceType": "BLOG",
+          "author": "findaway12",
+          "title": "옵토닉스 공모주 청약, 수요예측 경쟁률 1,201대 1, 공모가 12,000원 할까말까",
+          "url": "https://blog.naver.com/findaway12/224461972403",
+          "publishedAt": "2026-11-02T04:00:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "4668f365f41a3687b93dab3659de34c0b0fc58b0e1f10b7ded3dc4541b9106cf",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "11월 5일부터 방산 광학부품 기업 옵토닉스의 공모주 청약이 시작된다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-fa4e9864444fcd78fa22",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "[공모주, 실권주 주간 일정] 11월 2일 ~ 11월 6일, 주요 상황 [청약 6건, 상장 4건(실권주, 일반공모 일정 포함)]",
+          "url": "https://blog.naver.com/msql/224460206843",
+          "publishedAt": "2026-11-01T00:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "a0d5990e1e50a8e6ae6ae7b08555a0fed53bb19b5b3f9d2f12e29df74e5038e6",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "다음 주에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다. 실권주 청약은 없어 다음 주에는",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-6832755b6c1f35f4993f",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "11월 1주차 공모주 청약/상장 일정 정리",
+          "url": "https://blog.naver.com/juan116_/224460554721",
+          "publishedAt": "2026-10-31T14:24:43.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "97ffc8ce0cfb08f4ad83727d9a341bd83b380fabcca4fd16a68bff963c2cebe6",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "청약을 시작하는 종목은 6개다. 그중 바로팜·동원파츠·넥스아이·옵토닉스는 발행조건확정 공시가 나왔고, 영광와이케이엠씨·에이엘로봇은 아직 수요예측 중이다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-10aeafa575afc1fd79b3",
+          "sourceType": "BLOG",
+          "author": "lsyivy0722",
+          "title": "옵토닉스 공모주 12,000원, 최소 증거금 12만원이면 균등 몇 주?",
+          "url": "https://blog.naver.com/lsyivy0722/224458604069",
+          "publishedAt": "2026-10-30T07:00:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "contentHash": "b99f96c1cfa909ccf4eb9eaaf1c6deed853045e960339e239bec6612932572fc",
+            "matchedAlias": "옵토닉스",
+            "excerpt": "옵토닉스 공모주 12,000원, 최소 증거금 12만원이면 균등 몇 주? 옵토닉스의 확정공모가는 2026년 10월 29일 공시된 발행조건확정 증권신고서 기준",
+            "classification": "unclassified"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 34,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
         }
       ]
     },
