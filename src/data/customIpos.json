@@ -4445,10 +4445,10 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01077540",
-      "receiptNo": "20261019000343",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
-      "receivedAt": "2026-10-19",
-      "reportName": "증권신고서(지분증권)"
+      "receiptNo": "20261105000234",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
+      "receivedAt": "2026-11-05",
+      "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
@@ -4462,7 +4462,7 @@
     "underwriters": [],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "circulatingSupplyRate": 37.71,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
     "aiScore": 0,
@@ -4481,8 +4481,7 @@
     "expertReviews": [],
     "pendingForecastFields": [
       "institutionalCompetitionRate",
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
+      "lockupCommitmentRate"
     ],
     "fieldEvidence": {
       "subscriptionStart": {

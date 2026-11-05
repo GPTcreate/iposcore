@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-05T00:28:18.489Z",
+  "updatedAt": "2026-11-05T06:40:37.576Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -38,10 +38,82 @@
       "ipoId": "al-robot",
       "stockName": "에이엘로봇",
       "subscriptionStart": "2026-11-06",
-      "collectedAt": "2026-11-05T00:28:18.489Z",
-      "lastSuccessfulAt": "2026-11-05T00:28:18.489Z",
+      "collectedAt": "2026-11-05T06:40:37.576Z",
+      "lastSuccessfulAt": "2026-11-05T06:40:37.576Z",
       "status": "success",
       "reviews": [
+        {
+          "id": "rss-586addde5afdaf37df3a",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "공모주 분석:에이엘로봇 (11/6~11/9), 대신증권",
+          "url": "https://blog.naver.com/juan116_/224466049377",
+          "publishedAt": "2026-11-05T06:31:25.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
+            "contentHash": "8ffdb12c8b858736555a4ab4feef687a18bb438dfe97db24b9ff27482347042f",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "환기가전 등에 쓰이는 융합 제어장치를 만드는 사업을 영위 중인 에이엘로봇의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 15,700~17,600원의 상단인",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-7000df4829f9794c2fbc",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "에이엘로봇 공모주 청약 분석, 로봇 테마와 2일 환불의 장단점",
+          "url": "https://blog.naver.com/kastro83/224465965077",
+          "publishedAt": "2026-11-05T05:28:52.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
+            "contentHash": "11922983723f35b9165eec9374d4399ee405bed0e956884a8eb2ac766eea5f00",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "2026년 11월 6일과 9일 진행되는 에이엘로봇 공모주 청약을 앞두고 기업소개와 기관 수요예측 결과, 균등배정 및 비례청약 전망을 정리한",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-c1b6bfc6f5a3fad944eb",
+          "sourceType": "BLOG",
+          "author": "dividendqueen",
+          "title": "에이엘로봇 공모주 청약 일정 및 수요예측결과 공모가 17,600원",
+          "url": "https://blog.naver.com/dividendqueen/224465909409",
+          "publishedAt": "2026-11-05T04:47:04.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
+            "contentHash": "bd866b275055d5ea5d3acee45b8e0d75b6d1b76e909278441c72e3b9dfedd5f1",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "에이엘로봇 공모주 청약 일정 및 수요예측결과 공모가 17,600원",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-ff1cc7bf125a7e656089",
+          "sourceType": "BLOG",
+          "author": "findaway12",
+          "title": "에이엘로봇 공모주 청약, 공모가 17,600원 확정에 수요예측 871대 1",
+          "url": "https://blog.naver.com/findaway12/224465586929",
+          "publishedAt": "2026-11-05T03:10:00.000Z",
+          "sentiment": "CAUTION",
+          "summary": "해당 종목에 대한 작성자의 청약 불참 의사를 확인한 글입니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
+            "contentHash": "b1f219654862c8c4dc1e786f42d097772e6a20aa14077a29f27bbfe69a617a87",
+            "matchedAlias": "에이엘로봇",
+            "excerpt": "에이엘로봇 … 나는 이번에는 청약하지 않을 생각이다",
+            "classification": "explicit-stance-v1"
+          }
+        },
         {
           "id": "rss-f3a2015ff46d3ddb13c9",
           "sourceType": "BLOG",
@@ -53,7 +125,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
             "contentHash": "481e0c85b2b424fe16e85faec75be525ae2a260865f2bdb237bb10de25604315",
             "matchedAlias": "에이엘로봇",
             "excerpt": "와이케이엠씨의 청약이 시작됐고, 오늘은 옵토닉스, 금요일부터는 에이엘로봇의 청약이 이어집니다.",
@@ -71,10 +143,10 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
-            "contentHash": "6f190d3e3477a356772e16cfa986b79f1f042a61ee656b66905ee79c9e64b3b9",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
+            "contentHash": "08babff64b49ebb83d5b878a603ced7e44286df09b5aa290030a7be733fc681a",
             "matchedAlias": "에이엘로봇",
-            "excerpt": "에이엘로봇 수요예측 결과 공모가 확정 17,600원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약 안녕하세요. 11월 6일(금)부터 청약이",
+            "excerpt": "11월 6일(금)부터 청약이 진행되는 에이엘로봇의 수요예측 결과가 발표되었습니다.",
             "classification": "unclassified"
           }
         },
@@ -89,7 +161,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
             "contentHash": "105fd465746a24a45964a7d9ef10f8ecd7013bfac48f33205d6a773583d5af66",
             "matchedAlias": "에이엘로봇",
             "excerpt": "관련주인데요. 로봇용 센서와 움직임을 제어하는 장치를 만드는 ‘에이엘로봇’ 공모주에 관해서도 알아볼까요?",
@@ -107,7 +179,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
             "contentHash": "b98dfe2b90dd168414b6a8a371944fd65d441da0a34c1e2c826f3cc702e05544",
             "matchedAlias": "에이엘로봇",
             "excerpt": "함께 개인적으로 예상하는 최종 청약 결과, 그리고 옵토닉스와 에이엘로봇 청약 일정까지 고려한 자금 활용 전략을 살펴보겠습니다.",
@@ -125,28 +197,10 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
-            "contentHash": "728a3c935a0218ed85eb49fec3483c5085256980e768c75f17a556ea51feb656",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
+            "contentHash": "ae13865d689cda952d985f80baaaeb406c696099ab4261ff71b184dc2baa4b49",
             "matchedAlias": "에이엘로봇",
-            "excerpt": "는 바로팜, 동원파츠, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 등 총 6개 종목의 청약이 시작됩니다. 여기에 지난주 청약을 진행했던 영광,",
-            "classification": "unclassified"
-          }
-        },
-        {
-          "id": "rss-4bd3e165671b6819a0c1",
-          "sourceType": "BLOG",
-          "author": "msql",
-          "title": "[공모주, 실권주 주간 일정] 11월 2일 ~ 11월 6일, 주요 상황 [청약 6건, 상장 4건(실권주, 일반공모 일정 포함)]",
-          "url": "https://blog.naver.com/msql/224460206843",
-          "publishedAt": "2026-11-01T00:30:00.000Z",
-          "sentiment": "UNCLASSIFIED",
-          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
-          "evidence": {
-            "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
-            "contentHash": "a0d5990e1e50a8e6ae6ae7b08555a0fed53bb19b5b3f9d2f12e29df74e5038e6",
-            "matchedAlias": "에이엘로봇",
-            "excerpt": "는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다. 실권주 청약은 없어 다음 주에는 총 6건의",
+            "excerpt": "는 바로팜, 동원파츠, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 등 총 6개 종목의 청약이 시작됩니다.",
             "classification": "unclassified"
           }
         },
@@ -161,46 +215,10 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
             "contentHash": "97ffc8ce0cfb08f4ad83727d9a341bd83b380fabcca4fd16a68bff963c2cebe6",
             "matchedAlias": "에이엘로봇",
             "excerpt": "스아이·옵토닉스는 발행조건확정 공시가 나왔고, 영광와이케이엠씨·에이엘로봇은 아직 수요예측 중이다.",
-            "classification": "unclassified"
-          }
-        },
-        {
-          "id": "rss-9b06a0fbffa8a481a4b3",
-          "sourceType": "BLOG",
-          "author": "msql",
-          "title": "[공모주, 실권주 월간 일정] 2026년 11월 공모주 청약 일정 17건+1건/증권사 정리",
-          "url": "https://blog.naver.com/msql/224457028799",
-          "publishedAt": "2026-10-28T22:30:00.000Z",
-          "sentiment": "UNCLASSIFIED",
-          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
-          "evidence": {
-            "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
-            "contentHash": "bb5126e7846d0b6d3de126f6437025e5497c17f5b40eec84889c228e4f04e44e",
-            "matchedAlias": "에이엘로봇",
-            "excerpt": "는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇, 다비오, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지, 에스에프씨, 유캐스트, 아델, 제논, 케이엠에프, 에이엔에이치스트럭쳐",
-            "classification": "unclassified"
-          }
-        },
-        {
-          "id": "rss-67f6d998394a4416df5b",
-          "sourceType": "BLOG",
-          "author": "msql",
-          "title": "에이엘로봇(AL로봇) 공모주 청약 정보 - 로봇용 토크센서 기업/ 공모가, 상장일 유통물량",
-          "url": "https://blog.naver.com/msql/224456331283",
-          "publishedAt": "2026-10-28T09:30:00.000Z",
-          "sentiment": "UNCLASSIFIED",
-          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
-          "evidence": {
-            "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
-            "contentHash": "857b7a9d0cead7d2e1673fa8ab5d5850cabf179b05eaf60b940d4c3e1a9582b6",
-            "matchedAlias": "에이엘로봇",
-            "excerpt": "에이엘로봇(AL로봇) 공모주 청약 정보 - 로봇용 토크센서 기업/ 공모가, 상장일 유통물량 다음 주 청약이 진행되는 에이엘로봇은 로봇용 힘,",
             "classification": "unclassified"
           }
         },
@@ -215,7 +233,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
             "contentHash": "d96aa8d7c5773723fbe765ffb9360af4afe845f6b0d01eba42dcb6d0cfd589c3",
             "matchedAlias": "에이엘로봇",
             "excerpt": "대신證 주관 에이엘로봇 공모청약 투자자에 연 1.0% 이자 지급예정 정치권 경고하자 시행…확산 관심",
@@ -233,7 +251,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
-            "fetchedAt": "2026-11-05T00:28:18.489Z",
+            "fetchedAt": "2026-11-05T06:40:37.576Z",
             "contentHash": "a6c29eda65d67261d49b4141e453cda1b5b3074783b00a8091c50a935e8df4d0",
             "matchedAlias": "에이엘로봇",
             "excerpt": "1️⃣ 에이엘로봇, 뭐 하는 회사?",
@@ -247,7 +265,7 @@
           "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 0
+          "matchedCount": 1
         },
         {
           "channelId": "naver-dreamsorte",
@@ -261,7 +279,7 @@
           "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 0
+          "matchedCount": 1
         },
         {
           "channelId": "naver-hippocamp",
@@ -274,15 +292,15 @@
           "channelId": "naver-juan116_",
           "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
           "status": "success",
-          "fetchedCount": 34,
-          "matchedCount": 1
+          "fetchedCount": 35,
+          "matchedCount": 2
         },
         {
           "channelId": "naver-kastro83",
           "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 2
+          "matchedCount": 3
         },
         {
           "channelId": "naver-lsyivy0722",
@@ -303,7 +321,7 @@
           "feedUrl": "https://rss.blog.naver.com/msql.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 5
+          "matchedCount": 2
         },
         {
           "channelId": "naver-xuenxu",
