@@ -42,8 +42,17 @@ function inspectDartFilingBody(html: string, rcpNo: string): { data: DartFilingP
   const text = (node: AnyNode) => $(node).text().replace(/\s+/g, ' ').trim();
   const markers: { at: number; before: boolean }[] = [];
   $('p,td,th').each((_, node) => {
-    const label = text(node).replace(/[\s\p{P}\p{S}]/gu, '');
-    if (/^(?:주\d+)?정정[전후]$/.test(label) && node.startIndex !== null) markers.push({ at: node.startIndex!, before: label.endsWith('정정전') });
+    let lines = [text(node)];
+    if (node.name === 'p' && $(node).find('br').length) {
+      const paragraph = $(node).clone();
+      paragraph.find('br').replaceWith('\n');
+      lines = paragraph.text().split('\n');
+    }
+    const labels = lines.map(line => line.replace(/[\s\p{P}\p{S}]/gu, ''));
+    const boundaries = labels.filter(label => /^(?:주\d+)?정정[전후]$/.test(label));
+    if (boundaries.length === 1 && typeof node.startIndex === 'number') {
+      markers.push({ at: node.startIndex, before: boundaries[0].endsWith('정정전') });
+    }
   });
   markers.sort((a, b) => a.at - b.at);
   const current = (node: AnyNode): boolean => {

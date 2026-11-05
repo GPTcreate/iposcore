@@ -3,7 +3,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 
 /** Bump when the confirmed-filing extraction rules change. Receipts are immutable. */
-export const DART_METRIC_PARSER_VERSION = 'dart-metrics-v5';
+export const DART_METRIC_PARSER_VERSION = 'dart-metrics-v6';
 export interface DartMetricParseResult {
   rcpNo: string;
   corpName: string;

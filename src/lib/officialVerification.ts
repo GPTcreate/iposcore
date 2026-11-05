@@ -9,7 +9,7 @@ import { isIbkNoticeUrl } from './officialSource';
 import { fetchOfficialText } from './officialHttp';
 
 const HOUR = 3_600_000;
-const VERSION = 'official-verification-v2';
+const VERSION = 'official-verification-v3';
 export const VERIFICATION_VERSION = `${VERSION}:${DART_SCHEDULE_PARSER_VERSION}:${BROKER_PARSER_VERSION}:${IBK_PARSER_VERSION}`;
 export interface SourceCheck {
   parser: string; checkedAt: string; nextCheckAt: string; failures: number;
@@ -85,6 +85,8 @@ export function reconcileOfficialFacts(ipo: IpoItem, facts: OfficialFacts[], che
   const incoming = structuredClone(ipo);
   const evidence: Partial<Record<OfficialField, IpoFieldEvidence>> = {};
   const changed: OfficialField[] = [], conflicts: OfficialField[] = [];
+  const pending = facts.filter(item => validFacts(item) && item.pendingFields?.includes('listingDate'))
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))[0];
   for (const field of fields) {
     const prior = ipo.fieldEvidence?.[field];
     const preserved: OfficialFacts[] = prior?.value !== null && prior?.value === ipo[field] && prior?.publishedAt && prior?.parserVersion ? [{
@@ -92,6 +94,10 @@ export function reconcileOfficialFacts(ipo: IpoItem, facts: OfficialFacts[], che
       fields: { [field]: prior.value }, excerpts: { [field]: prior.excerpt || '' },
     }] : [];
     const candidates = [...facts, ...preserved].filter(item => validFacts(item) && item.fields[field] !== undefined)
+      // An older broker's tentative date is superseded by a newer explicit pending notice.
+      .filter(item => !(field === 'listingDate' && pending && item.publishedAt.slice(0, 10) < pending.publishedAt.slice(0, 10)
+        && (isKisNoticeUrl(item.sourceUrl) || isIbkNoticeUrl(item.sourceUrl))
+        && /상장\s*\(?예정\)?/.test(item.excerpts.listingDate || '')))
       .sort((a, b) => b.publishedAt.slice(0, 10).localeCompare(a.publishedAt.slice(0, 10)));
     if (!candidates.length) continue;
     const latestDay = candidates[0].publishedAt.slice(0, 10);
@@ -114,8 +120,6 @@ export function reconcileOfficialFacts(ipo: IpoItem, facts: OfficialFacts[], che
       : { sourceTitle: newest.sourceTitle, sourceUrl: newest.sourceUrl, checkedAt,
       value: newest.fields[field], publishedAt: newest.publishedAt, excerpt: newest.excerpts[field], parserVersion: VERSION, linkedFrom: newest.linkedFrom };
   }
-  const pending = facts.filter(item => validFacts(item) && item.pendingFields?.includes('listingDate'))
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))[0];
   if (pending) {
     const prior = evidence.listingDate || ipo.fieldEvidence?.listingDate;
     const priorReceipt = prior?.sourceUrl.match(/[?&]rcpNo=(\d{4})(\d{2})(\d{2})\d{6}(?:&|$)/);

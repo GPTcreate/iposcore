@@ -30,7 +30,7 @@ const node = (title: string, id: number, extra = '') => `node1['text']='${title}
 
 test('numbered amendment markers exclude the old offering table before accepting final amount arithmetic', () => {
   const table = (price: number) => `<table><thead><tr><th>증권의 종류</th><th>증권수량</th><th>액면가액</th><th>모집(매출)가액</th><th>모집(매출)총액</th><th>모집(매출)방법</th></tr></thead><tbody><tr><td>보통주</td><td>5,000,000</td><td>500</td><td>${price}</td><td>${5000000 * price}</td><td>일반공모</td></tr></tbody></table>`;
-  const result = body(`<p>(주1) 정 정 전</p><p>1주당 확정공모가액을 10,500원으로 최종 결정하였습니다.</p>${table(10500)}<p>(주1) 정 정 후</p><p>1주당 확정공모가액을 8,000원으로 최종 결정하였습니다.</p>${table(8000)}`, receipt);
+  const result = body(`<p><br/><span>(주1) 정 정 전<br/></span><br/><span>1. 공모개요</span></p><p>1주당 확정공모가액을 10,500원으로 최종 결정하였습니다.</p>${table(10500)}<p>(후략)<br/><span>(주1) 정 정 후<br/></span><span>1. 공모개요</span></p><p>1주당 확정공모가액을 8,000원으로 최종 결정하였습니다.</p>${table(8000)}`, receipt);
   assert.equal(result?.confirmedPrice, 8000);
   assert.equal(result?.offeringShareCount, 5000000);
   assert.equal(result?.totalOfferingAmount, 400);
