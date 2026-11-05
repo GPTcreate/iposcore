@@ -2548,13 +2548,13 @@
     "name": "영광와이케이엠씨",
     "code": "409600",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "SUBSCRIPTION",
     "subscriptionStart": "2026-11-04",
     "subscriptionEnd": "2026-11-05",
     "refundDate": "2026-11-09",
     "priceBandMin": 9400,
     "priceBandMax": 11000,
-    "confirmedPrice": 0,
+    "confirmedPrice": 11000,
     "underwriters": [
       {
         "name": "대신증권",
@@ -2562,20 +2562,18 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 34.86,
+    "institutionalCompetitionRate": 1163.35,
+    "lockupCommitmentRate": 7.21,
+    "circulatingSupplyRate": 34.81,
     "totalOfferingAmount": 253,
-    "marketCapAtIpo": 1591,
+    "marketCapAtIpo": 1593.07841,
     "aiScore": 73,
     "scoreGrade": "B",
     "aiSummary": {
       "headline": "영광와이케이엠씨 공모 일정과 공시 자료",
       "bulletPoints": [],
       "positivePoints": [],
-      "riskPoints": [
-        "수요예측 기관 참여 경쟁률 및 의무확약 비율 체크 필요"
-      ]
+      "riskPoints": []
     },
     "sentimentConsensus": {
       "positiveRatio": 75,
@@ -2626,6 +2624,78 @@
         "publishedAt": "2026-10-30",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
         "parserVersion": "official-verification-v2"
+      },
+      "confirmedPrice": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 11000,
+        "publishedAt": "2026-11-03",
+        "excerpt": "정정 후 확정공모가액 11,000원",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "institutionalCompetitionRate": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 1163.35,
+        "publishedAt": "2026-11-03",
+        "excerpt": "수요예측 참여내역 | 합계 신청수량 1,971,691,000주 | 경쟁률 1,163.35 대 1",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "lockupCommitmentRate": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 7.21,
+        "publishedAt": "2026-11-03",
+        "excerpt": "기관 수요예측 신청수량 기준 | 확약 142,125,000주 / 합계 1,971,691,000주",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "circulatingSupplyRate": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 34.81,
+        "publishedAt": "2026-11-03",
+        "excerpt": "정정 후 공모 후 합계 14,482,531주 | 상장일 유통가능 5,041,041주(34.81%)",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 2300000,
+        "publishedAt": "2026-11-03",
+        "excerpt": "기명식 보통주 일반공모 | 2,300,000주 × 11,000원",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 253,
+        "publishedAt": "2026-11-03",
+        "excerpt": "기명식 보통주 일반공모 | 2,300,000주 × 11,000원 = 25,300,000,000원",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "listedShareCount": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 14482531,
+        "publishedAt": "2026-11-03",
+        "excerpt": "정정 후 공모 후 합계 14,482,531주",
+        "parserVersion": "dart-metrics-v6"
+      },
+      "marketCapAtIpo": {
+        "sourceTitle": "영광와이케이엠씨 DART 발행조건확정 공시",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000312",
+        "checkedAt": "2026-11-05T00:12:59.782Z",
+        "value": 1593.07841,
+        "publishedAt": "2026-11-03",
+        "excerpt": "정정 후 공모 후 14,482,531주 × 확정공모가 11,000원 = 159,307,841,000원",
+        "parserVersion": "dart-metrics-v6"
       }
     },
     "scheduleVerification": {
@@ -2639,7 +2709,9 @@
       "pendingFields": [
         "listingDate"
       ]
-    }
+    },
+    "offeringShareCount": 2300000,
+    "listedShareCount": 14482531
   },
   {
     "id": "optronics",
@@ -3157,15 +3229,14 @@
       }
     },
     "scheduleVerification": {
-      "status": "conflict",
-      "checkedAt": "2026-11-03T08:51:41.366Z",
-      "conflicts": [
-        "listingDate"
-      ],
+      "status": "verified",
+      "checkedAt": "2026-11-05T00:11:03.809Z",
+      "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
         "subscriptionEnd",
-        "refundDate"
+        "refundDate",
+        "listingDate"
       ],
       "pendingFields": [
         "listingDate"

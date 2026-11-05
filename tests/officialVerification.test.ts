@@ -101,6 +101,10 @@ test('explicit unannounced listing dates clear uncited placeholders, while newer
   assert.equal(reconcileOfficialFacts(item, [sameDay, facts()], now.toISOString()).ipo.listingDate, '2026-11-17');
   const latestPending = reconcileOfficialFacts(item, [sameDay], now.toISOString()).ipo;
   const olderDate = { ...facts(), publishedAt: '2026-10-20' };
+  const superseded = reconcileOfficialFacts(latestPending, [olderDate, sameDay], now.toISOString());
+  assert.equal(superseded.ipo.listingDate, undefined);
+  assert.deepEqual(superseded.pendingFields, ['listingDate']);
+  assert.deepEqual(superseded.conflicts, []);
   const refused = reconcileOfficialFacts(latestPending, [olderDate], now.toISOString());
   assert.equal(refused.ipo.listingDate, undefined); assert(refused.conflicts.includes('listingDate'));
   assert.equal(refused.ipo.fieldEvidence?.listingDate?.value, null);
