@@ -4387,40 +4387,40 @@
     ],
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "에스에프씨 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "에스에프씨 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261104000099",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": "2026-11-18",
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-04",
         "excerpt": "청약기일 | 2026년 11월 18일 ~ 2026년 11월 19일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
-        "sourceTitle": "에스에프씨 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "에스에프씨 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261104000099",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": "2026-11-19",
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-04",
         "excerpt": "청약기일 | 2026년 11월 18일 ~ 2026년 11월 19일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "에스에프씨 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261104000099",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": "2026-11-23",
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-04",
         "excerpt": "초과 청약증거금이 있는 경우에는 이를 2026년 11월 23일에 환불합니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       },
       "listingDate": {
         "sourceTitle": "에스에프씨 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000368",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261104000099",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": null,
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-04",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
@@ -4485,40 +4485,40 @@
     ],
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "씨아이에스케미칼 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": "2026-12-10",
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-05",
         "excerpt": "청약기일 | 2026년 12월 10일 ~ 2026년 12월 11일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
-        "sourceTitle": "씨아이에스케미칼 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": "2026-12-11",
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-05",
         "excerpt": "청약기일 | 2026년 12월 10일 ~ 2026년 12월 11일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": "2026-12-15",
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-05",
         "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일(2026년 12월 15일)에 환불합니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       },
       "listingDate": {
         "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261019000343",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
+        "checkedAt": "2026-11-06T06:36:15.937Z",
         "value": null,
-        "publishedAt": "2026-10-19",
+        "publishedAt": "2026-11-05",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
