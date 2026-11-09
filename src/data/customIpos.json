@@ -3161,7 +3161,7 @@
     "listingDate": "2026-11-20",
     "priceBandMin": 4700,
     "priceBandMax": 5700,
-    "confirmedPrice": 0,
+    "confirmedPrice": 5700,
     "underwriters": [
       {
         "name": "IBK투자증권",
@@ -3169,11 +3169,11 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
-    "lockupCommitmentRate": 0,
+    "institutionalCompetitionRate": 1051.38,
+    "lockupCommitmentRate": 4.16,
     "circulatingSupplyRate": 30.83,
-    "totalOfferingAmount": 251,
-    "marketCapAtIpo": 1011,
+    "totalOfferingAmount": 250.8,
+    "marketCapAtIpo": 0,
     "aiScore": 76,
     "scoreGrade": "A",
     "aiSummary": {
@@ -3195,29 +3195,29 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01025617",
-      "receiptNo": "20261016000159",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016000159",
-      "receivedAt": "2026-10-16",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261109000163",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109000163",
+      "receivedAt": "2026-11-09",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
-        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "sourceTitle": "하나에어로다이내믹스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109000163",
+        "checkedAt": "2026-11-09T06:18:19.384Z",
         "value": "2026-11-10",
-        "publishedAt": "2026-10-20T08:15:00+09:00",
-        "excerpt": "청약일 | 2026년 11월 10일(화)~ 11월 11일(수)",
-        "parserVersion": "official-verification-v2"
+        "publishedAt": "2026-11-09",
+        "excerpt": "청약기일 | 2026.11.10~2026.11.11",
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
-        "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
-        "sourceUrl": "https://www.ibks.com/hts/hts_noticeview.do?seq=6125",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "sourceTitle": "하나에어로다이내믹스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109000163",
+        "checkedAt": "2026-11-09T06:18:19.384Z",
         "value": "2026-11-11",
-        "publishedAt": "2026-10-20T08:15:00+09:00",
-        "excerpt": "청약일 | 2026년 11월 10일(화)~ 11월 11일(수)",
-        "parserVersion": "official-verification-v2"
+        "publishedAt": "2026-11-09",
+        "excerpt": "청약기일 | 2026.11.10~2026.11.11",
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "(주)하나에어로다이내믹스 코스닥상장 공모주 청약안내",
@@ -3245,6 +3245,24 @@
         "publishedAt": "2026-10-20T08:15:00+09:00",
         "excerpt": "종목명(종목코드) | 주식회사 하나에어로다이내믹스(A271160)",
         "parserVersion": "ibk-schedule-v1"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "하나에어로다이내믹스 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109000166",
+        "checkedAt": "2026-11-09T06:18:32.498Z",
+        "publishedAt": "2026-11-09",
+        "value": 4400000,
+        "excerpt": "보통주 일반공모 | 증권수량 4,400,000주 | 모집(매출)가액 5,700원 | 모집(매출)총액 25,080,000,000원",
+        "parserVersion": "dart-offering-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "하나에어로다이내믹스 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109000166",
+        "checkedAt": "2026-11-09T06:18:32.498Z",
+        "publishedAt": "2026-11-09",
+        "value": 250.8,
+        "excerpt": "보통주 일반공모 | 증권수량 4,400,000주 | 모집(매출)가액 5,700원 | 모집(매출)총액 25,080,000,000원",
+        "parserVersion": "dart-offering-v1"
       }
     },
     "scheduleVerification": {
@@ -3260,7 +3278,180 @@
     },
     "dataQuality": {
       "status": "unverified"
-    }
+    },
+    "reviewCollection": {
+      "ipoId": "hana-aerodynamics",
+      "stockName": "하나에어로다이내믹스",
+      "subscriptionStart": "2026-11-10",
+      "collectedAt": "2026-11-08T15:58:46.206Z",
+      "lastSuccessfulAt": "2026-11-08T15:58:46.206Z",
+      "status": "success",
+      "reviews": [
+        {
+          "id": "rss-73798674a5c796e0a6fe",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "11월 2주차 공모주 일정, 청약 5종목 상장 3종목과 투자전략",
+          "url": "https://blog.naver.com/kastro83/224468096629",
+          "publishedAt": "2026-11-08T10:10:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "contentHash": "b5b5ef04f4ab937f4f1a7ce69e41e104cb74d4909e10fab7c654b754e5961dec",
+            "matchedAlias": "하나에어로다이내믹스",
+            "excerpt": "이번 주에는 에이엘로봇을 비롯해 하나에어로다이내믹스, 엠비디, 제이앤티지, 씨앤엠까지 총 5개 종목의 청약이 진행됩니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-9741e1ce673fb396ac61",
+          "sourceType": "BLOG",
+          "author": "hippocamp",
+          "title": "[2026년 11월 공모주] 하나에어로다이내믹스 수요예측 결과 핵심 정리 (Feat. 상장일, 주가, 공모가, 장외가, 우주항공 관련주)",
+          "url": "https://blog.naver.com/hippocamp/224469317817",
+          "publishedAt": "2026-11-08T08:43:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "contentHash": "dc1a079a75e92913c11398f8f6305de87174febf85cb37652ea97a8b0a802d42",
+            "matchedAlias": "하나에어로다이내믹스",
+            "excerpt": ". 이름만 봐도 우주항공 관련주라는 것을 물씬 느낄 수 있는 ‘하나에어로다이내믹스’ 공모주에 관해서 알아볼까요?",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-8116c48307fa4990fc78",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "[공모주, 실권주 주간 일정] 11월 9일 ~ 11월 13일, 주요 상황 [청약 5건, 상장 3건(실권주, 일반공모 일정 포함)]",
+          "url": "https://blog.naver.com/msql/224468742569",
+          "publishedAt": "2026-11-07T22:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "contentHash": "e827ed2191395b2bcc0e9b0adb68a54e9ae57b475e577af2dc5f992928b5a617",
+            "matchedAlias": "하나에어로다이내믹스",
+            "excerpt": "다음 주에는 에이엘로봇, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지 5종목의 공모주 청약이 진행됩니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-ec4b355dbd0430ce1e7e",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "하나에어로다이내믹스 공모주 청약 정보 및 증권사, 일정 정보",
+          "url": "https://blog.naver.com/msql/224460176941",
+          "publishedAt": "2026-10-31T22:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "contentHash": "cd56b4dbc8d1e66822834d2b6b564518a1ff0e4b91e5e792d03f951bd6dc2f33",
+            "matchedAlias": "하나에어로다이내믹스",
+            "excerpt": "11월 2주차에 청약이 진행될 하나에어로다이내믹스는 항공기 치공구와 정밀부품을 제조하고, 항공기 동체 등 구조물을 조립하는 기업입니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-2d60ca2d8a541969b110",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "[공모주, 실권주 월간 일정] 2026년 11월 공모주 청약 일정 17건+1건/증권사 정리",
+          "url": "https://blog.naver.com/msql/224457028799",
+          "publishedAt": "2026-10-28T22:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "contentHash": "f6f09ee9009390e96bd3fd2f4040628111e8c9c4963de50617c6b36272714e0e",
+            "matchedAlias": "하나에어로다이내믹스",
+            "excerpt": "넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇, 다비오, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지, 에스에프씨, 유캐스트, 아델, 제논, 케이엠에프, 에이엔에이치스트럭쳐 등 무려",
+            "classification": "unclassified"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 36,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 3
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        }
+      ]
+    },
+    "offeringShareCount": 4400000
   },
   {
     "id": "enki-whitehat",
@@ -4149,10 +4340,10 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01783687",
-      "receiptNo": "20261021000153",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261021000153",
-      "receivedAt": "2026-10-21",
-      "reportName": "증권신고서(지분증권)"
+      "receiptNo": "20261109000160",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109000160",
+      "receivedAt": "2026-11-09",
+      "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
@@ -4166,7 +4357,7 @@
     "underwriters": [],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "circulatingSupplyRate": 25.46,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
     "aiScore": 0,
@@ -4185,8 +4376,7 @@
     "expertReviews": [],
     "pendingForecastFields": [
       "institutionalCompetitionRate",
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
+      "lockupCommitmentRate"
     ],
     "fieldEvidence": {
       "subscriptionStart": {

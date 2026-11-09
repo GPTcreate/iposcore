@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-08T15:58:46.206Z",
+  "updatedAt": "2026-11-09T06:21:22.587Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -932,10 +932,28 @@
       "ipoId": "hana-aerodynamics",
       "stockName": "하나에어로다이내믹스",
       "subscriptionStart": "2026-11-10",
-      "collectedAt": "2026-11-08T15:58:46.206Z",
-      "lastSuccessfulAt": "2026-11-08T15:58:46.206Z",
+      "collectedAt": "2026-11-09T06:21:22.587Z",
+      "lastSuccessfulAt": "2026-11-09T06:21:22.587Z",
       "status": "success",
       "reviews": [
+        {
+          "id": "rss-142795945dd80c7d6917",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "하나에어로다이내믹스 수요예측 결과 공모가 확정 5,700원 - [보통의 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+          "url": "https://blog.naver.com/msql/224470348970",
+          "publishedAt": "2026-11-09T06:01:21.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-09T06:21:22.587Z",
+            "contentHash": "ef761471c7d75bfb77ca32f2c7613417b528f8fc970fd08955c0a31d37bc65ac",
+            "matchedAlias": "하나에어로다이내믹스",
+            "excerpt": "내일인 11월 10일(화)부터 청약이 진행되는 하나에어로다이내믹스의 수요예측 결과가 발표되었습니다.",
+            "classification": "unclassified"
+          }
+        },
         {
           "id": "rss-73798674a5c796e0a6fe",
           "sourceType": "BLOG",
@@ -947,7 +965,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "fetchedAt": "2026-11-09T06:21:22.587Z",
             "contentHash": "b5b5ef04f4ab937f4f1a7ce69e41e104cb74d4909e10fab7c654b754e5961dec",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "이번 주에는 에이엘로봇을 비롯해 하나에어로다이내믹스, 엠비디, 제이앤티지, 씨앤엠까지 총 5개 종목의 청약이 진행됩니다.",
@@ -965,7 +983,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
-            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "fetchedAt": "2026-11-09T06:21:22.587Z",
             "contentHash": "dc1a079a75e92913c11398f8f6305de87174febf85cb37652ea97a8b0a802d42",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": ". 이름만 봐도 우주항공 관련주라는 것을 물씬 느낄 수 있는 ‘하나에어로다이내믹스’ 공모주에 관해서 알아볼까요?",
@@ -983,7 +1001,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "fetchedAt": "2026-11-09T06:21:22.587Z",
             "contentHash": "e827ed2191395b2bcc0e9b0adb68a54e9ae57b475e577af2dc5f992928b5a617",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "다음 주에는 에이엘로봇, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지 5종목의 공모주 청약이 진행됩니다.",
@@ -1001,7 +1019,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "fetchedAt": "2026-11-09T06:21:22.587Z",
             "contentHash": "cd56b4dbc8d1e66822834d2b6b564518a1ff0e4b91e5e792d03f951bd6dc2f33",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "11월 2주차에 청약이 진행될 하나에어로다이내믹스는 항공기 치공구와 정밀부품을 제조하고, 항공기 동체 등 구조물을 조립하는 기업입니다.",
@@ -1019,7 +1037,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-08T15:58:46.206Z",
+            "fetchedAt": "2026-11-09T06:21:22.587Z",
             "contentHash": "f6f09ee9009390e96bd3fd2f4040628111e8c9c4963de50617c6b36272714e0e",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇, 다비오, 하나에어로다이내믹스, 씨앤엠, 엠비디, 제이앤티지, 에스에프씨, 유캐스트, 아델, 제논, 케이엠에프, 에이엔에이치스트럭쳐 등 무려",
@@ -1089,7 +1107,7 @@
           "feedUrl": "https://rss.blog.naver.com/msql.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 3
+          "matchedCount": 4
         },
         {
           "channelId": "naver-xuenxu",
