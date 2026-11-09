@@ -1,0 +1,28 @@
+name: Audit canonical sitemap URLs
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/audit-sitemap-redirects.yml'
+      - 'scripts/audit-sitemap-redirects.mjs'
+      - 'src/app/sitemap.ts'
+      - 'src/app/ipo/**'
+      - 'src/lib/ipoStore.ts'
+  workflow_dispatch:
+  schedule:
+    - cron: '20 1 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify live sitemap URLs resolve without redirects
+        run: node scripts/audit-sitemap-redirects.mjs
