@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10T17:01:50.510Z",
+  "updatedAt": "2026-11-10T22:15:11.099Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -634,8 +634,8 @@
       "ipoId": "cnm",
       "stockName": "씨앤엠",
       "subscriptionStart": "2026-11-12",
-      "collectedAt": "2026-11-10T17:01:50.510Z",
-      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "collectedAt": "2026-11-10T22:15:11.099Z",
+      "lastSuccessfulAt": "2026-11-10T22:15:11.099Z",
       "status": "success",
       "reviewPolicy": "single-issuer-analysis-v1",
       "reviews": [
@@ -650,7 +650,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "0a138f9a3368fa479464ff98c00e9e8c3eff8e1bfe1811b3730f04d21767177c",
             "matchedAlias": "씨앤엠",
             "excerpt": "다음 주 청약이 진행되는 씨앤엠(CNM)은 자동차와 가전에 들어가는 모터 및 핵심부품을 개발하고 생산하는 기업입니다.",
@@ -1034,8 +1034,8 @@
       "ipoId": "hana-aerodynamics",
       "stockName": "하나에어로다이내믹스",
       "subscriptionStart": "2026-11-10",
-      "collectedAt": "2026-11-10T17:01:50.510Z",
-      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "collectedAt": "2026-11-10T22:15:11.099Z",
+      "lastSuccessfulAt": "2026-11-10T22:15:11.099Z",
       "status": "partial",
       "reviewPolicy": "single-issuer-analysis-v1",
       "reviews": [
@@ -1050,7 +1050,7 @@
           "summary": "해당 종목에 대한 작성자의 청약 참여 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "3eb61dfa719f5e5ca50fe3d335b5176e37c777ee35771c428a80507bd7dd2bc6",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "하나에어로다이내믹스 … 이라 오늘은 시간을 놓쳤고, 내일 28,500원 준비해서 균등 청약하려구요",
@@ -1069,7 +1069,7 @@
           "summary": "해당 종목에 대한 작성자의 청약 참여 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "d9ddaa8413dd357203246268660fb7cd4330aa57d0e5fb5b2fe014f03c0bbc19",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "저는 이번 하나에어로다이내믹스 공모주 청약에 적극적으로 참여할 생각입니다",
@@ -1088,7 +1088,7 @@
           "summary": "해당 종목에 대한 작성자의 청약 참여 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "ea8c98df558943d7f89f35618db65b6c0c0d699804f3557439c9a27368855cf2",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "하나에어로다이내믹스는 청약은 무조건 하되",
@@ -1107,7 +1107,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "22da3e21fca4e3783ef595626066ed2aa711677eb4e7ae7dd20325d2d459fe8e",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "치공구와 항공기 구조부품 제조, 기체 조립 사업을 영위 중인 하나에어로다이내믹스의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 4,700~5,700원의",
@@ -1126,7 +1126,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "dd23881a514c2ee6c228a97a0dda348e11120731ba466d7cf19ee2c321973c41",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "내일인 11월 10일(화)부터 청약이 진행되는 하나에어로다이내믹스의 수요예측 결과가 발표되었습니다.",
@@ -1338,8 +1338,8 @@
       "ipoId": "jntg",
       "stockName": "제이앤티지",
       "subscriptionStart": "2026-11-12",
-      "collectedAt": "2026-11-10T17:01:50.510Z",
-      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "collectedAt": "2026-11-10T22:15:11.099Z",
+      "lastSuccessfulAt": "2026-11-10T22:15:11.099Z",
       "status": "success",
       "reviewPolicy": "single-issuer-analysis-v1",
       "reviews": [
@@ -1354,7 +1354,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "ac94dc8ed2bd8270c5ff5b5f303a2632771c51d623d234ac5ee4ad0c742d5f14",
             "matchedAlias": "제이앤티지",
             "excerpt": "다음 주 청약이 진행될 제이앤티지는 비리튬계 ESS용 탄소전극과 수소산업용 소재를 만드는 회사입니다.",
@@ -1472,8 +1472,8 @@
       "ipoId": "mbd",
       "stockName": "엠비디",
       "subscriptionStart": "2026-11-12",
-      "collectedAt": "2026-11-10T17:01:50.510Z",
-      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "collectedAt": "2026-11-10T22:15:11.099Z",
+      "lastSuccessfulAt": "2026-11-10T22:15:11.099Z",
       "status": "partial",
       "reviewPolicy": "single-issuer-analysis-v1",
       "reviews": [
@@ -1488,7 +1488,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "9893d9610caaf1c47054989a0ed5f90f718c1a072e4fdf9c9eaddd640fdc76d6",
             "matchedAlias": "엠비디",
             "excerpt": "와 신약 평가 CRO, 항암제 감수성 검사 서비스를 영위 중인 엠비디의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 9,600~11,700원의",
@@ -1507,7 +1507,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "8d84b80dc6cc7f098505771e750c6387204f08ffddbd7566af646cbdf09050fe",
             "matchedAlias": "엠비디",
             "excerpt": "엠비디 공모주 청약 신규상장주 공모가 밴드 하회 7,000원 확정",
@@ -1526,7 +1526,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "fetchedAt": "2026-11-10T22:15:11.099Z",
             "contentHash": "4e9bd84f8a17e7ca6714ac0579bf3729392634020d9631b232951fde534c785b",
             "matchedAlias": "엠비디",
             "excerpt": "월 12일(목)부터 씨앤엠, 제이앤티지와 함께 청약이 진행되는 엠비디의 수요예측 결과가 발표되었습니다.",

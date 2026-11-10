@@ -933,12 +933,11 @@
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T15:54:12.835Z",
+      "checkedAt": "2026-11-10T22:14:51.582Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd",
-        "listingDate"
+        "subscriptionEnd"
       ]
     },
     "offeringShareCount": 1780000,
@@ -4610,13 +4609,14 @@
       }
     },
     "scheduleVerification": {
-      "status": "unavailable",
-      "checkedAt": "2026-11-10T07:12:32.736Z",
+      "status": "verified",
+      "checkedAt": "2026-11-10T22:14:51.582Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
         "subscriptionEnd",
-        "refundDate"
+        "refundDate",
+        "listingDate"
       ],
       "pendingFields": [
         "listingDate"
