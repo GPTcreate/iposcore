@@ -1049,12 +1049,11 @@
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-30T02:30:19.522Z",
+      "checkedAt": "2026-11-10T07:12:32.736Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd",
-        "listingDate"
+        "subscriptionEnd"
       ]
     },
     "offeringShareCount": 2030000,
@@ -2926,7 +2925,7 @@
     "refundDate": "2026-11-17",
     "priceBandMin": 9600,
     "priceBandMax": 11700,
-    "confirmedPrice": 0,
+    "confirmedPrice": 7000,
     "underwriters": [
       {
         "name": "하나증권",
@@ -2934,11 +2933,11 @@
         "fee": 2000
       }
     ],
-    "institutionalCompetitionRate": 0,
+    "institutionalCompetitionRate": 187.1,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 34.06,
-    "totalOfferingAmount": 234,
-    "marketCapAtIpo": 1798,
+    "circulatingSupplyRate": 34.01,
+    "totalOfferingAmount": 140,
+    "marketCapAtIpo": 0,
     "aiScore": 75,
     "scoreGrade": "A",
     "aiSummary": {
@@ -2959,29 +2958,29 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01705740",
-      "receiptNo": "20261015000329",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000329",
-      "receivedAt": "2026-10-15",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261110000253",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000253",
+      "receivedAt": "2026-11-10",
+      "reportName": "[발행조건확정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "엠비디 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000329",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "엠비디 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000253",
+        "checkedAt": "2026-11-10T07:12:32.736Z",
         "value": "2026-11-12",
-        "publishedAt": "2026-10-15",
+        "publishedAt": "2026-11-10",
         "excerpt": "청약기일 | 2026.11.12 ~ 2026.11.13",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
-        "sourceTitle": "엠비디 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261015000329",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "엠비디 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000253",
+        "checkedAt": "2026-11-10T07:12:32.736Z",
         "value": "2026-11-13",
-        "publishedAt": "2026-10-15",
+        "publishedAt": "2026-11-10",
         "excerpt": "청약기일 | 2026.11.12 ~ 2026.11.13",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "엠비디 DART 공시 일정",
@@ -3000,21 +2999,39 @@
         "publishedAt": "2026-10-15",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
         "parserVersion": "official-verification-v2"
+      },
+      "offeringShareCount": {
+        "sourceTitle": "엠비디 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000261",
+        "checkedAt": "2026-11-10T07:13:50.812Z",
+        "publishedAt": "2026-11-10",
+        "value": 2000000,
+        "excerpt": "보통주 일반공모 | 증권수량 2,000,000주 | 모집(매출)가액 7,000원 | 모집(매출)총액 14,000,000,000원",
+        "parserVersion": "dart-offering-v1"
+      },
+      "totalOfferingAmount": {
+        "sourceTitle": "엠비디 DART 확정 공모조건",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000261",
+        "checkedAt": "2026-11-10T07:13:50.812Z",
+        "publishedAt": "2026-11-10",
+        "value": 140,
+        "excerpt": "보통주 일반공모 | 증권수량 2,000,000주 | 모집(매출)가액 7,000원 | 모집(매출)총액 14,000,000,000원",
+        "parserVersion": "dart-offering-v1"
       }
     },
     "scheduleVerification": {
       "status": "partial",
-      "checkedAt": "2026-10-31T05:35:10.796Z",
+      "checkedAt": "2026-11-10T07:12:32.736Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
-        "subscriptionEnd",
-        "refundDate"
+        "subscriptionEnd"
       ],
       "pendingFields": [
         "listingDate"
       ]
-    }
+    },
+    "offeringShareCount": 2000000
   },
   {
     "id": "nex-i",
@@ -4054,14 +4071,13 @@
       }
     },
     "scheduleVerification": {
-      "status": "verified",
-      "checkedAt": "2026-11-05T00:11:03.809Z",
+      "status": "unavailable",
+      "checkedAt": "2026-11-10T07:12:32.736Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
         "subscriptionEnd",
-        "refundDate",
-        "listingDate"
+        "refundDate"
       ],
       "pendingFields": [
         "listingDate"
@@ -5763,6 +5779,105 @@
     "scheduleVerification": {
       "status": "partial",
       "checkedAt": "2026-10-31T09:01:39.729Z",
+      "conflicts": [],
+      "coveredFields": [
+        "subscriptionStart",
+        "subscriptionEnd",
+        "refundDate"
+      ],
+      "pendingFields": [
+        "listingDate"
+      ]
+    }
+  },
+  {
+    "id": "dart-01136597",
+    "name": "마더스제약",
+    "code": "",
+    "market": "UNCONFIRMED",
+    "status": "UPCOMING",
+    "discovery": {
+      "corpCode": "01136597",
+      "receiptNo": "20261110000330",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000330",
+      "receivedAt": "2026-11-10",
+      "reportName": "증권신고서(지분증권)"
+    },
+    "dataQuality": {
+      "status": "unverified"
+    },
+    "subscriptionStart": "2026-12-08",
+    "subscriptionEnd": "2026-12-09",
+    "refundDate": "2026-12-11",
+    "priceBandMin": 0,
+    "priceBandMax": 0,
+    "confirmedPrice": 0,
+    "underwriters": [],
+    "institutionalCompetitionRate": 0,
+    "lockupCommitmentRate": 0,
+    "circulatingSupplyRate": 0,
+    "pendingForecastFields": [
+      "institutionalCompetitionRate",
+      "lockupCommitmentRate",
+      "circulatingSupplyRate"
+    ],
+    "totalOfferingAmount": 0,
+    "marketCapAtIpo": 0,
+    "aiScore": 0,
+    "scoreGrade": "C",
+    "aiSummary": {
+      "headline": "공시 발견 · 청약 정보 확인 중",
+      "bulletPoints": [],
+      "positivePoints": [],
+      "riskPoints": []
+    },
+    "sentimentConsensus": {
+      "positiveRatio": null,
+      "neutralRatio": null,
+      "cautionRatio": null
+    },
+    "expertReviews": [],
+    "fieldEvidence": {
+      "subscriptionStart": {
+        "sourceTitle": "마더스제약 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000330",
+        "checkedAt": "2026-11-10T07:12:32.736Z",
+        "value": "2026-12-08",
+        "publishedAt": "2026-11-10",
+        "excerpt": "청약기일 | 2026.12.08 ~ 2026.12.09",
+        "parserVersion": "official-verification-v3"
+      },
+      "subscriptionEnd": {
+        "sourceTitle": "마더스제약 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000330",
+        "checkedAt": "2026-11-10T07:12:32.736Z",
+        "value": "2026-12-09",
+        "publishedAt": "2026-11-10",
+        "excerpt": "청약기일 | 2026.12.08 ~ 2026.12.09",
+        "parserVersion": "official-verification-v3"
+      },
+      "refundDate": {
+        "sourceTitle": "마더스제약 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000330",
+        "checkedAt": "2026-11-10T07:12:32.736Z",
+        "value": "2026-12-11",
+        "publishedAt": "2026-11-10",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일(2026년 12월 11일)에 환불합니다",
+        "parserVersion": "official-verification-v3"
+      },
+      "listingDate": {
+        "sourceTitle": "마더스제약 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261110000330",
+        "checkedAt": "2026-11-10T07:12:32.736Z",
+        "value": null,
+        "publishedAt": "2026-11-10",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v3"
+      }
+    },
+    "scheduleVerification": {
+      "status": "partial",
+      "checkedAt": "2026-11-10T07:12:32.736Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
