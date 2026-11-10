@@ -4609,14 +4609,13 @@
       }
     },
     "scheduleVerification": {
-      "status": "verified",
+      "status": "partial",
       "checkedAt": "2026-11-10T22:14:51.582Z",
       "conflicts": [],
       "coveredFields": [
         "subscriptionStart",
         "subscriptionEnd",
-        "refundDate",
-        "listingDate"
+        "refundDate"
       ],
       "pendingFields": [
         "listingDate"

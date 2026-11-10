@@ -8,6 +8,7 @@ import type { IpoItem } from '../src/types/ipo';
 import { isKisNoticeUrl, KIS_IPO_INDEX, parseKisIndex, parseKisNotice } from '../src/lib/brokerSchedule';
 import { emptyVerificationArchive, isVerificationDue, reconcileOfficialFacts, validateVerificationArchive, VERIFICATION_VERSION, verificationIntervalHours, verifyOfficialSchedules, verifyOfficialSchedulesWithRecovery } from '../src/lib/officialVerification';
 import type { OfficialFacts } from '../src/lib/brokerSchedule';
+import { DART_SCHEDULE_PARSER_VERSION } from '../src/lib/dartSchedule';
 import { getFieldEvidence } from '../src/lib/contentQuality';
 import { parseOfficialArguments } from '../scripts/verify-official';
 
@@ -109,6 +110,32 @@ test('explicit unannounced listing dates clear uncited placeholders, while newer
   assert.equal(refused.ipo.listingDate, undefined); assert(refused.conflicts.includes('listingDate'));
   assert.equal(refused.ipo.fieldEvidence?.listingDate?.value, null);
   assert.equal(reconcileOfficialFacts(refused.ipo, [olderDate], now.toISOString()).ipo.listingDate, undefined);
+});
+
+test('a superseded broker listing forecast does not count as a confirmed schedule field', async () => {
+  const receiptNo = '20261103000363', sourceUrl = `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${receiptNo}`;
+  const item: IpoItem = { ...ipo(), id: 'cnm', name: '씨앤엠', listingDate: undefined,
+    subscriptionStart: '2026-11-12', subscriptionEnd: '2026-11-13', refundDate: '2026-11-17',
+    discovery: { ...ipo().discovery!, receiptNo, sourceUrl, receivedAt: '2026-11-03' } };
+  const archive = emptyVerificationArchive();
+  archive.sources[sourceUrl] = { parser: DART_SCHEDULE_PARSER_VERSION, checkedAt: '2026-11-03T08:51:41Z',
+    nextCheckAt: '2027-11-03T08:51:41Z', failures: 0, facts: { sourceUrl, sourceTitle: '씨앤엠 DART 공시 일정', publishedAt: '2026-11-03',
+      fields: { subscriptionStart: item.subscriptionStart, subscriptionEnd: item.subscriptionEnd, refundDate: item.refundDate },
+      pendingFields: ['listingDate'], excerpts: { listingDate: '주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며' } } };
+  const brokerTitle = '(주)씨앤엠 수요예측 공지', detailUrl = url.replace('num=668', 'num=670');
+  for (const [published, status] of [['2026.11.02', 'partial'], ['2026.11.04', 'verified']] as const) {
+    const result = await verifyOfficialSchedules([item], archive, { now: new Date('2026-11-10T22:14:51Z'), fetcher: async input => {
+      if (String(input) === KIS_IPO_INDEX) return new Response(index.replace(title, brokerTitle).replace('668', '670').replace('2026.10.29', published));
+      assert.equal(String(input), detailUrl);
+      return new Response(article('상장예정일은 2026년 11월 23일입니다.').replace(title, brokerTitle).replace('2026.10.29', published));
+    } });
+    const checked = result.ipos[0], verification = checked.scheduleVerification!;
+    assert.equal(result.errorCount, 0);
+    assert.equal(verification.status, status);
+    assert.equal(verification.coveredFields.includes('listingDate'), status === 'verified');
+    assert.equal(checked.listingDate, status === 'verified' ? '2026-11-23' : undefined);
+    assert.deepEqual(verification.pendingFields, status === 'partial' ? ['listingDate'] : undefined);
+  }
 });
 
 test('attachment provenance retains the actual body URL and rejects unrelated cached references', () => {

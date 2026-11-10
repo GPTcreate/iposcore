@@ -281,7 +281,12 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
       failed = true;
     }
     const reconciled = reconcileOfficialFacts(ipo, facts, checkedAt);
-    const coveredFields = fields.filter(field => facts.some(item => validFacts(item) && item.fields[field] !== undefined));
+    // A superseded source can contain a date that reconciliation left pending or rejected.
+    const coveredFields = fields.filter(field => {
+      const value = reconciled.ipo[field];
+      return value !== undefined && !reconciled.conflicts.includes(field)
+        && facts.some(item => validFacts(item) && item.fields[field] === value);
+    });
     const status = reconciled.conflicts.length ? 'conflict' : failed ? 'unavailable'
       : ['subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate'].every(field => coveredFields.includes(field as OfficialField)) ? 'verified' : 'partial';
     const failures = failed ? (old?.failures || 0) + 1 : 0;
@@ -289,7 +294,7 @@ export async function verifyOfficialSchedules(ipos: IpoItem[], input: Verificati
     const nextCheckAt = nextTime(now, interval);
     const fingerprint = hash({ status, conflicts: reconciled.conflicts, pendingFields: reconciled.pendingFields, fields: coveredFields.map(field => [field, reconciled.ipo[field]]) });
     const verification: NonNullable<IpoItem['scheduleVerification']> = { status, checkedAt, conflicts: reconciled.conflicts,
-      coveredFields: coveredFields.filter(field => !reconciled.conflicts.includes(field)),
+      coveredFields,
       ...(reconciled.pendingFields.length ? { pendingFields: reconciled.pendingFields } : {}) };
     const previousVerification = ipo.scheduleVerification;
     reconciled.ipo.scheduleVerification = previousVerification && hash({ ...previousVerification, checkedAt: '' }) === hash({ ...verification, checkedAt: '' })
