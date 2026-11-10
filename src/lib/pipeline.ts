@@ -83,14 +83,15 @@ export async function runMethod2Pipeline(options?: {
 }): Promise<PipelineExecutionResult> {
   const now = options?.now || new Date();
   const executionDate = options?.targetDate || getKstDateString(now);
-  const { targets, skipped } = identifyPipelineTargets(options?.allIpos || getAllIpos(), executionDate, options?.forceStockName);
+  const allIpos = options?.allIpos || getAllIpos();
+  const { targets, skipped } = identifyPipelineTargets(allIpos, executionDate, options?.forceStockName);
   const processedTargets: PipelineExecutionResult['processedTargets'] = [];
   let storageStatus: PipelineExecutionResult['storageStatus'] = 'unchanged';
   let snapshots: ReviewSnapshot[] = [];
   let visibleSnapshots: ReviewSnapshot[] = [];
   if (targets.length > 0) {
     const collector = options?.collector || collectReviewsForIpos;
-    snapshots = await collector(targets.map((target) => target.ipo), { channels: options?.channels, now, fetcher: options?.fetcher });
+    snapshots = await collector(targets.map((target) => target.ipo), { channels: options?.channels, now, fetcher: options?.fetcher, knownIpos: allIpos });
     const expected = new Set(targets.map((target) => reviewSnapshotKey(target.ipo.id, target.ipo.subscriptionStart)));
     const received = new Set(snapshots.map((snapshot) => reviewSnapshotKey(snapshot.ipoId, snapshot.subscriptionStart)));
     if (snapshots.length !== expected.size || received.size !== expected.size || Array.from(received).some((key) => !expected.has(key))) {

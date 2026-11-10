@@ -25,6 +25,7 @@ export interface ReviewSnapshot {
   collectedAt: string;
   lastSuccessfulAt?: string;
   status: 'success' | 'empty' | 'partial' | 'failed';
+  reviewPolicy?: 'single-issuer-analysis-v1';
   reviews: ExpertReview[];
   channels: ChannelCollectionResult[];
 }

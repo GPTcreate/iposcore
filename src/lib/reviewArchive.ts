@@ -48,6 +48,7 @@ function normalizeReview(value: unknown): ExpertReview | undefined {
       feedUrl: normalizedUrl(evidence.feedUrl)!, fetchedAt: evidence.fetchedAt,
       contentHash: evidence.contentHash, matchedAlias: evidence.matchedAlias, excerpt: evidence.excerpt,
       classification: evidence.classification as NonNullable<ExpertReview['evidence']>['classification'],
+      ...(evidence.relevance === 'single-issuer-analysis-v1' ? { relevance: evidence.relevance } : {}),
     };
   }
   return review;
@@ -73,13 +74,16 @@ function normalizeSnapshot(value: unknown): ReviewSnapshot | undefined {
   const reviews = new Map<string, ExpertReview>();
   for (const raw of value.reviews) {
     const review = normalizeReview(raw);
-    if (review) reviews.set(review.url, review);
+    if (review && (value.reviewPolicy !== 'single-issuer-analysis-v1' || review.evidence?.relevance === value.reviewPolicy)) {
+      reviews.set(review.url, review);
+    }
   }
   return {
     ipoId: value.ipoId, stockName: value.stockName, subscriptionStart: value.subscriptionStart,
     collectedAt: value.collectedAt,
     ...(timestamp(value.lastSuccessfulAt) ? { lastSuccessfulAt: value.lastSuccessfulAt } : {}),
     status: value.status as ReviewSnapshot['status'],
+    ...(value.reviewPolicy === 'single-issuer-analysis-v1' ? { reviewPolicy: value.reviewPolicy } : {}),
     reviews: Array.from(reviews.values()).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.url.localeCompare(b.url)),
     channels: value.channels.map(normalizeChannel).filter((channel): channel is ChannelCollectionResult => !!channel)
       .sort((a, b) => a.channelId.localeCompare(b.channelId) || a.feedUrl.localeCompare(b.feedUrl)),
@@ -113,6 +117,7 @@ export function mergeReviewSnapshots(archive: ReviewArchive, incoming: ReviewSna
     const key = reviewSnapshotKey(snapshot.ipoId, snapshot.subscriptionStart);
     const previous = result.snapshots[key];
     if (previous && Date.parse(previous.collectedAt) > Date.parse(snapshot.collectedAt)) continue;
+    if (previous?.reviewPolicy && !snapshot.reviewPolicy) continue;
     if (snapshot.status === 'failed') {
       snapshot.reviews = previous?.reviews || [];
       const successfulAt = previous?.lastSuccessfulAt

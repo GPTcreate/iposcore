@@ -155,7 +155,10 @@ export function getCollectedReviews(ipo: Partial<IpoItem>, now = new Date()): Ex
   // either boundary by nine hours after an RSS timestamp is normalized to ISO.
   const subscriptionStartTime = new Date(`${ipo.subscriptionStart}T00:00:00+09:00`).getTime();
   const earliestPublication = subscriptionStartTime - 30 * DAY_MS;
-  const latestPublication = subscriptionStartTime + DAY_MS - 1;
+  const verifiedEnd = snapshot.reviewPolicy && ipo.subscriptionEnd && ipo.subscriptionEnd >= ipo.subscriptionStart
+    && /^\d{4}-\d{2}-\d{2}$/.test(ipo.subscriptionEnd) && validDate(ipo.subscriptionEnd) !== null;
+  const latestPublication = verifiedEnd
+    ? Date.parse(`${ipo.subscriptionEnd}T16:00:00+09:00`) - 1 : subscriptionStartTime + DAY_MS - 1;
 
   const aliases = allowedAliases(ipo.name);
   const deduplicated = new Map<string, ExpertReview>();
@@ -164,6 +167,7 @@ export function getCollectedReviews(ipo: Partial<IpoItem>, now = new Date()): Ex
       || typeof review.title !== 'string' || !review.title.trim() || typeof review.url !== 'string') continue;
     const url = canonicalizeReviewUrl(review.url);
     const evidence = review.evidence;
+    if (snapshot.reviewPolicy && evidence?.relevance !== snapshot.reviewPolicy) continue;
     const publishedAt = validDate(review.publishedAt);
     const fetchedAt = validDate(evidence?.fetchedAt, true);
     if (!url || !evidence || !matchingFeed(evidence.feedUrl, url)

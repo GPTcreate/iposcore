@@ -6,21 +6,39 @@ import { createRequire } from 'node:module';
 import test from 'node:test';
 import ts from 'typescript';
 
-const require = createRequire(path.resolve('src/lib/reviewCollector.ts'));
-const exports = {};
-const compiled = ts.transpileModule(fs.readFileSync('src/lib/reviewCollector.ts', 'utf8'), {
+const localRequire = createRequire(path.resolve('src/lib/reviewCollector.ts'));
+const transpile = file => ts.transpileModule(fs.readFileSync(file, 'utf8'), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
 }).outputText;
-vm.runInNewContext(`${compiled}\nexports.readParagraphs = sourceParagraphs;`, {
-  exports, module: { exports }, require, URL, AbortController, TextDecoder, Uint8Array, setTimeout, clearTimeout,
+const relevance = {};
+vm.runInNewContext(transpile('src/lib/reviewRelevance.ts'), { exports: relevance });
+const exports = {};
+vm.runInNewContext(`${transpile('src/lib/reviewCollector.ts')}\nexports.readParagraphs = sourceParagraphs;`, {
+  exports, module: { exports }, require: id => id === './reviewRelevance' ? relevance : localRequire(id),
+  URL, AbortController, TextDecoder, Uint8Array, setTimeout, clearTimeout,
   fetch() { throw new Error('Live network is forbidden in review context fixtures.'); },
 });
 const alpha = { id: 'alpha', name: '별빛테크', subscriptionStart: '2020-10-26' };
 const beta = { id: 'beta', name: '바다로봇', subscriptionStart: '2020-10-26' };
-const classify = (paragraphs, { target = alpha, title = `${target.name} 공모주 청약분석`, ipos = [alpha, beta] } = {}) =>
-  exports.classifyReviewArticle(paragraphs, title, target, ipos);
+const classify = (paragraphs, { target = alpha, title = `${target.name} 공모주 청약분석`, ipos = [alpha, beta], verifiedSingleIssuer = false } = {}) =>
+  exports.classifyReviewArticle(paragraphs, title, target, ipos, verifiedSingleIssuer);
 const stance = (paragraphs, options) => classify(paragraphs, options)?.sentiment;
 const html = paragraphs => `<div class="se-main-container">${paragraphs.map(text => `<p>${text}</p>`).join('')}</div>`;
+
+test('recognizes explicit author conclusions in corroborated single-issuer articles', () => {
+  const verified = { verifiedSingleIssuer: true };
+  for (const [paragraphs, expected] of [
+    [['개인적인 청약 결정', '저는 이번 별빛테크 공모주 청약에 적극적으로 참여할 생각입니다.'], 'POSITIVE'],
+    [['별빛테크 공모 조건', '내일 준비해서 균등 청약하려구요^^'], 'POSITIVE'],
+    [['별빛테크 공모주 할까?', '별빛테크는 청약은 무조건 하되, 상장 당일 매도하는 단기 투자로 접근할 생각이다.'], 'POSITIVE'],
+    [['개인적인 청약 판단: 보통'], 'NEUTRAL'],
+    [['개인적으로 이번 별빛테크 공모주 청약은 패스할 생각입니다.'], 'CAUTION'],
+    [['별빛테크 수요예측은 보통의 결과였습니다.'], 'UNCLASSIFIED'],
+    [['별빛테크 공모 조건', '경쟁률이 낮다면 균등 청약하려고요.'], 'UNCLASSIFIED'],
+    [['별빛테크 공모 조건', '바다로봇 균등 청약하려고요.'], 'UNCLASSIFIED'],
+    [['별빛테크 공모 조건', '전문가는 “저는 균등 청약하려구요”라고 말했습니다.'], 'UNCLASSIFIED'],
+  ]) assert.equal(stance(paragraphs, verified), expected, paragraphs.join(' / '));
+});
 
 test('reads the bounded article conclusion after paragraph 300 and preserves later repeated headings', () => {
   const paragraphs = exports.readParagraphs(html([
@@ -161,7 +179,8 @@ test('the real collector applies article context with a one-feed one-body mock a
     + '<link>https://blog.naver.com/fixture/1001</link><pubDate>Sun, 25 Oct 2020 09:00:00 +0900</pubDate>'
     + '<description>별빛테크 청약</description></item></channel></rss>';
   const fetcher = async input => { calls++; return new Response(String(input) === channel.feedUrl ? feed
-    : html(['6. 정리', '우선 나는 균등 배정분만 최소 수량으로 넣어볼 생각이다.'])); };
+    : html(['별빛테크의 기관 수요예측 경쟁률은 400대 1입니다. 확약 비율 12%와 상장일 유통가능 물량 32%를 함께 확인했습니다.',
+      '6. 정리', '우선 나는 균등 배정분만 최소 수량으로 넣어볼 생각이다.'])); };
   const [snapshot] = await exports.collectReviewsForIpos([alpha], { channels: [channel], now: new Date('2020-10-25T03:00:00Z'), fetcher });
   assert.equal(calls, 2);
   assert.equal(snapshot.reviews[0].sentiment, 'POSITIVE');
