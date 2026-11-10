@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10T10:21:47.969Z",
+  "updatedAt": "2026-11-10T17:01:50.510Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -630,6 +630,108 @@
         }
       ]
     },
+    "[\"cnm\",\"2026-11-12\"]": {
+      "ipoId": "cnm",
+      "stockName": "씨앤엠",
+      "subscriptionStart": "2026-11-12",
+      "collectedAt": "2026-11-10T17:01:50.510Z",
+      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "status": "success",
+      "reviewPolicy": "single-issuer-analysis-v1",
+      "reviews": [
+        {
+          "id": "rss-f20f42ff058fbaadf9f0",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "씨앤엠(CNM) 공모주 청약 정보 및 증권사, 일정 정보",
+          "url": "https://blog.naver.com/msql/224467260881",
+          "publishedAt": "2026-11-06T10:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "contentHash": "0a138f9a3368fa479464ff98c00e9e8c3eff8e1bfe1811b3730f04d21767177c",
+            "matchedAlias": "씨앤엠",
+            "excerpt": "다음 주 청약이 진행되는 씨앤엠(CNM)은 자동차와 가전에 들어가는 모터 및 핵심부품을 개발하고 생산하는 기업입니다.",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 38,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        }
+      ]
+    },
     "[\"dongwon-parts\",\"2026-11-02\"]": {
       "ipoId": "dongwon-parts",
       "stockName": "동원파츠",
@@ -932,9 +1034,9 @@
       "ipoId": "hana-aerodynamics",
       "stockName": "하나에어로다이내믹스",
       "subscriptionStart": "2026-11-10",
-      "collectedAt": "2026-11-10T10:21:47.969Z",
-      "lastSuccessfulAt": "2026-11-10T10:21:47.969Z",
-      "status": "success",
+      "collectedAt": "2026-11-10T17:01:50.510Z",
+      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "status": "partial",
       "reviewPolicy": "single-issuer-analysis-v1",
       "reviews": [
         {
@@ -948,7 +1050,7 @@
           "summary": "해당 종목에 대한 작성자의 청약 참여 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
-            "fetchedAt": "2026-11-10T10:21:47.969Z",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
             "contentHash": "3eb61dfa719f5e5ca50fe3d335b5176e37c777ee35771c428a80507bd7dd2bc6",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "하나에어로다이내믹스 … 이라 오늘은 시간을 놓쳤고, 내일 28,500원 준비해서 균등 청약하려구요",
@@ -967,7 +1069,7 @@
           "summary": "해당 종목에 대한 작성자의 청약 참여 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-10T10:21:47.969Z",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
             "contentHash": "d9ddaa8413dd357203246268660fb7cd4330aa57d0e5fb5b2fe014f03c0bbc19",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "저는 이번 하나에어로다이내믹스 공모주 청약에 적극적으로 참여할 생각입니다",
@@ -986,30 +1088,11 @@
           "summary": "해당 종목에 대한 작성자의 청약 참여 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
-            "fetchedAt": "2026-11-10T10:21:47.969Z",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
             "contentHash": "ea8c98df558943d7f89f35618db65b6c0c0d699804f3557439c9a27368855cf2",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "하나에어로다이내믹스는 청약은 무조건 하되",
             "classification": "explicit-stance-v1",
-            "relevance": "single-issuer-analysis-v1"
-          }
-        },
-        {
-          "id": "rss-f55a091c2b50b19b452a",
-          "sourceType": "BLOG",
-          "author": "kastro83",
-          "title": "하나에어로다이내믹스 공모주 청약 분석, 단독상장에 비례청약 최대 참여하는 이유",
-          "url": "https://blog.naver.com/kastro83/224470619607",
-          "publishedAt": "2026-11-09T09:20:16.000Z",
-          "sentiment": "UNCLASSIFIED",
-          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
-          "evidence": {
-            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
-            "fetchedAt": "2026-11-10T10:21:47.969Z",
-            "contentHash": "b146b442a095b2a9e5611d029cf95a6b382ba6ea91bf1da13acccc94583b089b",
-            "matchedAlias": "하나에어로다이내믹스",
-            "excerpt": "2026년 11월 10일부터 11일까지 진행되는 하나에어로다이내믹스 공모주 청약을 앞두고 기업소개와 기관 수요예측 결과, 상장일 유통가능물량 및 균등배정과 비례배정",
-            "classification": "unclassified",
             "relevance": "single-issuer-analysis-v1"
           }
         },
@@ -1024,7 +1107,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
-            "fetchedAt": "2026-11-10T10:21:47.969Z",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
             "contentHash": "22da3e21fca4e3783ef595626066ed2aa711677eb4e7ae7dd20325d2d459fe8e",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "치공구와 항공기 구조부품 제조, 기체 조립 사업을 영위 중인 하나에어로다이내믹스의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 4,700~5,700원의",
@@ -1043,7 +1126,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-10T10:21:47.969Z",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
             "contentHash": "dd23881a514c2ee6c228a97a0dda348e11120731ba466d7cf19ee2c321973c41",
             "matchedAlias": "하나에어로다이내믹스",
             "excerpt": "내일인 11월 10일(화)부터 청약이 진행되는 하나에어로다이내믹스의 수요예측 결과가 발표되었습니다.",
@@ -1079,13 +1162,14 @@
           "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 0
+          "matchedCount": 0,
+          "error": "일부 후보는 원문 확인 요청 한도에 도달해 제외했습니다."
         },
         {
           "channelId": "naver-juan116_",
           "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
           "status": "success",
-          "fetchedCount": 37,
+          "fetchedCount": 38,
           "matchedCount": 1
         },
         {
@@ -1093,7 +1177,8 @@
           "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 2
+          "matchedCount": 1,
+          "error": "일부 후보는 원문 확인 요청 한도에 도달해 제외했습니다."
         },
         {
           "channelId": "naver-lsyivy0722",
@@ -1114,7 +1199,8 @@
           "feedUrl": "https://rss.blog.naver.com/msql.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 1
+          "matchedCount": 1,
+          "error": "일부 후보는 원문 확인 요청 한도에 도달해 제외했습니다."
         },
         {
           "channelId": "naver-xuenxu",
@@ -1248,6 +1334,108 @@
         }
       ]
     },
+    "[\"jntg\",\"2026-11-12\"]": {
+      "ipoId": "jntg",
+      "stockName": "제이앤티지",
+      "subscriptionStart": "2026-11-12",
+      "collectedAt": "2026-11-10T17:01:50.510Z",
+      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "status": "success",
+      "reviewPolicy": "single-issuer-analysis-v1",
+      "reviews": [
+        {
+          "id": "rss-83d0527ec313450accf5",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "제이앤티지 공모주 청약 정보 및 증권사, 일정 정보",
+          "url": "https://blog.naver.com/msql/224467426918",
+          "publishedAt": "2026-11-06T23:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "contentHash": "ac94dc8ed2bd8270c5ff5b5f303a2632771c51d623d234ac5ee4ad0c742d5f14",
+            "matchedAlias": "제이앤티지",
+            "excerpt": "다음 주 청약이 진행될 제이앤티지는 비리튬계 ESS용 탄소전극과 수소산업용 소재를 만드는 회사입니다.",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 38,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        }
+      ]
+    },
     "[\"mbd\",\"2026-10-28\"]": {
       "ipoId": "mbd",
       "stockName": "엠비디",
@@ -1274,6 +1462,148 @@
         {
           "channelId": "naver-msql",
           "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        }
+      ]
+    },
+    "[\"mbd\",\"2026-11-12\"]": {
+      "ipoId": "mbd",
+      "stockName": "엠비디",
+      "subscriptionStart": "2026-11-12",
+      "collectedAt": "2026-11-10T17:01:50.510Z",
+      "lastSuccessfulAt": "2026-11-10T17:01:50.510Z",
+      "status": "partial",
+      "reviewPolicy": "single-issuer-analysis-v1",
+      "reviews": [
+        {
+          "id": "rss-01b80f0f2cb2dc2dba22",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "공모주 분석:엠비디 (11/12~11/13), 하나증권",
+          "url": "https://blog.naver.com/juan116_/224472374368",
+          "publishedAt": "2026-11-10T16:39:16.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "contentHash": "9893d9610caaf1c47054989a0ed5f90f718c1a072e4fdf9c9eaddd640fdc76d6",
+            "matchedAlias": "엠비디",
+            "excerpt": "와 신약 평가 CRO, 항암제 감수성 검사 서비스를 영위 중인 엠비디의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 9,600~11,700원의",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        },
+        {
+          "id": "rss-1822a713dd34e1a26d90",
+          "sourceType": "BLOG",
+          "author": "dividendqueen",
+          "title": "엠비디 공모주 청약 신규상장주 공모가 밴드 하회 7,000원 확정",
+          "url": "https://blog.naver.com/dividendqueen/224472356970",
+          "publishedAt": "2026-11-10T16:08:07.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "contentHash": "8d84b80dc6cc7f098505771e750c6387204f08ffddbd7566af646cbdf09050fe",
+            "matchedAlias": "엠비디",
+            "excerpt": "엠비디 공모주 청약 신규상장주 공모가 밴드 하회 7,000원 확정",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        },
+        {
+          "id": "rss-79b9104016bbda710024",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "엠비디 수요예측 결과 공모가 확정 7,000원 - [매우 안 좋은 결과] 공모주 청약 기관투자자 경쟁률, 의무보유확약",
+          "url": "https://blog.naver.com/msql/224471743781",
+          "publishedAt": "2026-11-10T06:39:52.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-10T17:01:50.510Z",
+            "contentHash": "4e9bd84f8a17e7ca6714ac0579bf3729392634020d9631b232951fde534c785b",
+            "matchedAlias": "엠비디",
+            "excerpt": "월 12일(목)부터 씨앤엠, 제이앤티지와 함께 청약이 진행되는 엠비디의 수요예측 결과가 발표되었습니다.",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0,
+          "error": "일부 후보는 원문 확인 요청 한도에 도달해 제외했습니다."
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 38,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1,
+          "error": "일부 후보는 원문 확인 요청 한도에 도달해 제외했습니다."
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
           "status": "success",
           "fetchedCount": 50,
           "matchedCount": 0
