@@ -25,6 +25,7 @@ export interface ExpertReview {
     matchedAlias: string;
     excerpt: string;
     classification: 'explicit-stance-v1' | 'unclassified';
+    relevance?: 'single-issuer-analysis-v1';
   };
 }
 

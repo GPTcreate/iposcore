@@ -4,6 +4,7 @@ import { load } from 'cheerio';
 import defaultChannels from '../data/reviewChannels.json';
 import type { ExpertReview, IpoItem } from '../types/ipo';
 import type { ChannelCollectionResult, ReviewChannel, ReviewSnapshot } from '../types/reviews';
+import { isSingleIssuerAnalysis, isSingleIssuerTitle, SINGLE_ISSUER_REVIEW_POLICY } from './reviewRelevance';
 
 const MAX_BYTES = 1024 * 1024;
 const MAX_CHANNELS = 12;
@@ -11,7 +12,7 @@ const MAX_ARTICLES_PER_RUN = 12;
 const MAX_REVIEWS_PER_IPO = 12;
 const DAY_MS = 86400000;
 const parser = new XMLParser({ ignoreAttributes: false, parseTagValue: false, processEntities: false });
-type IpoIdentity = Pick<IpoItem, 'id' | 'name' | 'subscriptionStart'>;
+type IpoIdentity = Pick<IpoItem, 'id' | 'name' | 'subscriptionStart'> & Partial<Pick<IpoItem, 'subscriptionEnd'>>;
 type FeedIdentity = { platform: 'naver' | 'tistory'; blogId: string; host: string };
 type FeedEntry = { title: string; url: string; publishedAt: string; author: string; description: string };
 type FeedResult = { channel: ReviewChannel; identity?: FeedIdentity; entries: FeedEntry[]; count: number; error?: string };
@@ -259,6 +260,9 @@ const ownVoice = /(?:저는|제가|나는|개인적으로|필자는|저희는)/;
 const quotedVoice = /[“”"'「」『』]|에 따르면|라고\s*(?:말|했|하)|유튜버|블로거|전문가|그는|그녀는/;
 const conditionalVoice = /(?:만약|라면|다면|경우|수도|않을까|할까|[?？])/;
 const inversePlan = /(?:계획|예정|생각|의사).{0,8}(?:없|아니|않)|하기로.{0,10}(?:아니|않)|(?:유보|보류|관망).{0,8}(?:하지|안|않)|패스.{0,8}(?:하지|안|않)|불참.{0,8}(?:하지|안|않)/;
+const personalEnding = /(?:하려구요|하려고요|할게요|하렵니다|할\s*생각이다|접근할\s*생각이다)(?:[^\p{L}\p{N}]|$)/u;
+const conditionalStatement = /만약|라면|다면|경우|수도|않을까/;
+const personalLabel = /^(?:\d+\.\s*)?(?:개인적인|나의|저의)\s*(?:청약|투자)\s*(?:의견|판단|결정|입장)\s*[:：]\s*(참여|패스|불참|보통|관망|보류|유보)[.!。]?$/;
 
 function decisionScope(text: string): DecisionScope {
   const equal = /균등|최소\s*수량/.test(text), proportional = /비례/.test(text);
@@ -266,7 +270,9 @@ function decisionScope(text: string): DecisionScope {
 }
 
 /** Explicit decisions only. A company's financial appeal is never an opinion vote. */
-function naturalDecisions(paragraph: string): { text: string; sentiment: ExpertReview['sentiment']; scope: DecisionScope }[] {
+function naturalDecisions(paragraph: string, verifiedSingleIssuer = false): { text: string; sentiment: ExpertReview['sentiment']; scope: DecisionScope }[] {
+  const label = verifiedSingleIssuer ? paragraph.match(personalLabel)?.[1] : undefined;
+  if (label) return [{ text: paragraph, sentiment: label === '참여' ? 'POSITIVE' : /패스|불참/.test(label) ? 'CAUTION' : 'NEUTRAL', scope: 'all' }];
   const clauses = paragraph.split(/(?<=[.!?。！？])\s+|[,;]\s*(?=(?:비례|균등))|(?<=참여하되)\s*(?=비례)/).filter(Boolean);
   // A condition in the general decision cannot be lost by splitting sentences.
   if (clauses.some(clause => (conditionalVoice.test(clause) || inversePlan.test(clause)) && decisionScope(clause) !== 'proportional')) return [];
@@ -274,9 +280,12 @@ function naturalDecisions(paragraph: string): { text: string; sentiment: ExpertR
   for (const clause of clauses) {
     if (conditionalVoice.test(clause) || inversePlan.test(clause)) continue;
     const scope = decisionScope(clause);
-    const positive = clause.match(/(?:참여|청약)(?:하겠습니다|합니다|할\s*(?:예정|계획|생각)입니다|하기로\s*했습니다|했습니다|하되)|참여하는\s*방향으로\s*생각하고\s*있(?:습니다|다)|청약(?:을)?\s*진행해보려고\s*(?:합니다|한다)|(?:넣어볼|신청해볼)\s*생각(?:입니다|이다)|청약(?:을)?\s*해봐야겠(?:어요|습니다)/);
-    const caution = clause.match(/(?:참여|청약|진행|신청)(?:을|에|은|는|도)?\s*(?:하지\s*않(?:겠습니다|습니다|기로|을\s*(?:생각|예정|계획)(?:입니다|이다))|안\s*하겠습니다)|(?:패스|불참)(?:하겠습니다|합니다|할\s*(?:예정|계획|생각)입니다|하기로\s*했습니다)/);
-    const neutral = clause.match(/(?:판단|결정)(?:을)?\s*(?:유보|보류)|관망하겠습니다|(?:청약\s*)?여부.{0,15}(?:미정|보류|유보)|(?:확인한|지켜본|본)\s*(?:뒤|후).{0,25}결정할\s*(?:계획|생각|예정)입니다/);
+    const positive = clause.match(/(?:참여|청약)(?:하겠습니다|합니다|할\s*(?:예정|계획|생각)입니다|하기로\s*했습니다|했습니다|하되)|참여하는\s*방향으로\s*생각하고\s*있(?:습니다|다)|청약(?:을)?\s*진행해보려고\s*(?:합니다|한다)|(?:넣어볼|신청해볼)\s*생각(?:입니다|이다)|청약(?:을)?\s*해봐야겠(?:어요|습니다)/)
+      || (verifiedSingleIssuer ? clause.match(/(?:청약|참여)(?:은|는|을|도)?\s*(?:(?:무조건|우선|일단|적극적으로)\s*)?(?:하되|하려구요|하려고요|할게요|하렵니다|할\s*생각이다)|균등(?:으로|만)?\s*(?:넣을게요|신청할게요|들어갈\s*생각입니다)/) : null);
+    const caution = clause.match(/(?:참여|청약|진행|신청)(?:을|에|은|는|도)?\s*(?:하지\s*않(?:겠습니다|습니다|기로|을\s*(?:생각|예정|계획)(?:입니다|이다))|안\s*하겠습니다)|(?:패스|불참)(?:하겠습니다|합니다|할\s*(?:예정|계획|생각)입니다|하기로\s*했습니다)/)
+      || (verifiedSingleIssuer ? clause.match(/(?:청약|참여)(?:은|는|을|도)?\s*(?:안\s*할게요|안\s*하려고요)|(?:패스|불참)(?:할게요|하려고요|할\s*생각이다)/) : null);
+    const neutral = clause.match(/(?:판단|결정)(?:을)?\s*(?:유보|보류)|관망하겠습니다|(?:청약\s*)?여부.{0,15}(?:미정|보류|유보)|(?:확인한|지켜본|본)\s*(?:뒤|후).{0,25}결정할\s*(?:계획|생각|예정)입니다/)
+      || (verifiedSingleIssuer ? clause.match(/청약(?:에\s*대해|은|는)?\s*(?:관망|중립)(?:하려고요|할게요|할\s*생각입니다|으로\s*봅니다|을\s*유지하겠습니다)|청약\s*(?:의견|판단|입장)(?:은|는|이)?\s*보통(?:입니다|이라고\s*봅니다)/) : null);
     if (Number(Boolean(positive)) + Number(Boolean(caution)) + Number(Boolean(neutral)) !== 1) continue;
     if (/(?:넣어볼|신청해볼)/.test(clause) && !/청약|균등|최소\s*수량/.test(clause)) continue;
     const action = (positive || caution || neutral)!;
@@ -313,6 +322,7 @@ function foreignSubject(paragraph: string, target: IpoIdentity): boolean {
   // borrow the first company's name merely because it precedes the same verb.
   for (const match of paragraph.matchAll(/([\p{L}\p{N}]{2,30})\s*청약/gu)) {
     if (!aliasMatch(match[1], target.name)
+      && !/^(?:오늘|내일|오전|오후|일단|직접|적극적으로|최대한)$/.test(match[1])
       && !/^(?:균등|비례|공모주|이번|최소|배정|저는|제가|나는|개인적으로|우선|직접|일반|해당|보고|통해|따라서|또한|함께|최종적으로|결국)/.test(match[1])) return true;
   }
   const subject = paragraph.match(/(?:^|저는\s*|제가\s*|나는\s*|개인적으로(?:는)?\s*)(?:이번\s*)?([\p{L}\p{N}]{2,30})(?:은|는|에|을|를)\s/gu);
@@ -327,11 +337,11 @@ function foreignSubject(paragraph: string, target: IpoIdentity): boolean {
  * explicit company section. Evidence joins actual source fragments with an
  * ellipsis; it never fabricates a company name or a first-person statement.
  */
-export function classifyReviewArticle(paragraphs: string[], title: string, target: IpoIdentity, ipos: IpoIdentity[]): ArticleEvidence | undefined {
+export function classifyReviewArticle(paragraphs: string[], title: string, target: IpoIdentity, ipos: IpoIdentity[], verifiedSingleIssuer = false): ArticleEvidence | undefined {
   const titleAlias = aliasMatch(title, target.name);
   const others = ipos.filter(other => other.id !== target.id);
   const titleTail = titleAlias ? title.slice(title.indexOf(titleAlias) + titleAlias.length) : '';
-  const dedicated = Boolean(titleAlias && !others.some(other => aliasMatch(title, other.name))
+  const dedicated = verifiedSingleIssuer || Boolean(titleAlias && !others.some(other => aliasMatch(title, other.name))
     && !/동시|주간|주차|종목|비교/.test(title) && !/^(?:과|와|,|·)\s*\S/.test(titleTail));
   const candidates: ArticleEvidence[] = [];
   let fallback: ArticleEvidence | undefined;
@@ -357,6 +367,11 @@ export function classifyReviewArticle(paragraphs: string[], title: string, targe
     if (matched && !fallback) fallback = { paragraph, matchedAlias: matched, excerpt: boundedExcerpt(paragraph, matched), sentiment: 'UNCLASSIFIED', scope: 'all' };
     const previous = paragraphs.slice(Math.max(0, index - 2), index);
     const precedingCondition = previous.at(-1);
+    const labeledOwnDecision = verifiedSingleIssuer && personalLabel.test(paragraph);
+    const ownDecision = ownVoice.test(paragraph) || labeledOwnDecision || (verifiedSingleIssuer && personalEnding.test(paragraph));
+    const answersHeadlineQuestion = verifiedSingleIssuer && matched && ownDecision && precedingCondition
+      && aliasMatch(precedingCondition, target.name) && /[?？]$/.test(precedingCondition)
+      && !conditionalStatement.test(precedingCondition);
     const precedingRefusal = dedicated && index - conclusionAt <= 80 && conclusionDecline && precedingCondition
       ? currentRefusalBeforePostListingReflection(precedingCondition) : undefined;
     const unrelatedPostListingCondition = precedingRefusal && decisionScope(precedingRefusal) === conclusionDecline;
@@ -381,7 +396,7 @@ export function classifyReviewArticle(paragraphs: string[], title: string, targe
       || (!ownVoice.test(paragraph) && /(?:기관(?:투자자)?(?:들)?(?:은|는|이|가)|운용사(?:는|가)|친구(?:는|가)|지인(?:은|이)|다른\s*투자자(?:는|가)).{0,40}(?:참여|청약|신청)/.test(paragraph))
       || previous.some(text => /(?:전문가|블로거|유튜버).{0,20}(?:말|의견|인용)|(?:라고|다음과 같이)\s*(?:말|했|하)/.test(text))
       || (precedingCondition && conditionalVoice.test(precedingCondition) && decisionScope(precedingCondition) !== 'proportional'
-        && !unrelatedPostListingCondition)) continue;
+        && !unrelatedPostListingCondition && !answersHeadlineQuestion)) continue;
     if (matched) {
       const sentences = paragraph.split(/(?<=[.!?。！？])\s+/).filter(sentence => aliasMatch(sentence, target.name));
       for (const sentence of sentences.length ? sentences : [paragraph]) {
@@ -395,14 +410,14 @@ export function classifyReviewArticle(paragraphs: string[], title: string, targe
     const inConclusion = dedicated && index - conclusionAt <= 80;
     const boundSection = sectionAlias && index - sectionAt <= 8;
     const correction = dedicated && candidates.length > 0 && /정정|번복|최종\s*(?:결정|적으로)/.test(paragraph);
-    const bound = matched || boundSection || inConclusion || correction;
-    const personal = ownVoice.test(paragraph) || (boundSection && localOwnVoice)
+    const bound = matched || boundSection || inConclusion || correction || (verifiedSingleIssuer && ownDecision);
+    const personal = ownDecision || (boundSection && localOwnVoice)
       || (inConclusion && (personalSection || localOwnVoice || /(?:생각이다|해보려고\s*한다)/.test(paragraph))) || correction;
-    if (!bound || !personal || (!contextualRefusal && foreignSubject(paragraph, target))) continue;
+    if (!bound || !personal || (!contextualRefusal && !labeledOwnDecision && foreignSubject(paragraph, target))) continue;
     const currentRefusal = inConclusion && conclusionDecline
       ? currentRefusalBeforePostListingReflection(paragraph) : undefined;
     const isolatedRefusal = currentRefusal && decisionScope(currentRefusal) === conclusionDecline ? currentRefusal : undefined;
-    for (const decision of naturalDecisions(contextualRefusal || isolatedRefusal || paragraph)) {
+    for (const decision of naturalDecisions(contextualRefusal || isolatedRefusal || paragraph, verifiedSingleIssuer)) {
       const alias = matched || sectionAlias || titleAlias;
       if (!alias) continue;
       const direct = matched && decision.text.includes(matched) ? boundedExcerpt(decision.text, matched) : null;
@@ -436,12 +451,17 @@ function subscriptionWindow(ipo: IpoIdentity, now: Date): { earliest: number; la
   if (!/^\d{4}-\d{2}-\d{2}$/.test(ipo.subscriptionStart)) return null;
   const start = new Date(`${ipo.subscriptionStart}T00:00:00+09:00`);
   if (!Number.isFinite(start.getTime()) || new Date(start.getTime() + 9 * 3600000).toISOString().slice(0, 10) !== ipo.subscriptionStart) return null;
-  return { earliest: start.getTime() - 30 * DAY_MS, latest: Math.min(now.getTime(), start.getTime() + DAY_MS - 1) };
+  const end = ipo.subscriptionEnd && ipo.subscriptionEnd >= ipo.subscriptionStart && /^\d{4}-\d{2}-\d{2}$/.test(ipo.subscriptionEnd)
+    ? new Date(`${ipo.subscriptionEnd}T16:00:00+09:00`) : null;
+  const confirmedEnd = end && Number.isFinite(end.getTime())
+    && new Date(end.getTime() + 9 * 3600000).toISOString().slice(0, 10) === ipo.subscriptionEnd;
+  const latest = confirmedEnd ? end!.getTime() - 1 : start.getTime() + DAY_MS - 1;
+  return { earliest: start.getTime() - 30 * DAY_MS, latest: Math.min(now.getTime(), latest) };
 }
 
 export async function collectReviewsForIpos(
   ipos: IpoIdentity[],
-  options?: { channels?: ReviewChannel[]; now?: Date; fetcher?: typeof fetch; timeoutMs?: number },
+  options?: { channels?: ReviewChannel[]; now?: Date; fetcher?: typeof fetch; timeoutMs?: number; knownIpos?: IpoIdentity[] },
 ): Promise<ReviewSnapshot[]> {
   const suppliedNow = options?.now || new Date();
   if (!Number.isFinite(suppliedNow.getTime())) throw new Error('수집 기준일이 유효하지 않습니다.');
@@ -450,6 +470,7 @@ export async function collectReviewsForIpos(
   const fetcher = options?.fetcher || fetch;
   const timeoutMs = Math.max(10, Math.min(10000, options?.timeoutMs || 6000));
   const channels = (options?.channels || defaultChannels as ReviewChannel[]).filter((channel) => channel.isActive).slice(0, MAX_CHANNELS);
+  const knownIpos = [...new Map([...(options?.knownIpos || []), ...ipos].map(ipo => [ipo.id, ipo])).values()];
   const feedCache = new Map<string, Promise<FeedResult>>();
   const feeds = await Promise.all(channels.map(async (channel) => {
     let feed = feedCache.get(channel.feedUrl);
@@ -462,7 +483,7 @@ export async function collectReviewsForIpos(
     const window = subscriptionWindow(ipo, now);
     return Boolean(window && feeds.some(feed => feed.identity && !feed.error && feed.entries.some(entry => {
       const publishedAt = Date.parse(entry.publishedAt);
-      return publishedAt >= window.earliest && publishedAt <= window.latest && aliasMatch(`${entry.title} ${entry.description}`, ipo.name);
+      return publishedAt >= window.earliest && publishedAt <= window.latest && isSingleIssuerTitle(entry.title, ipo, knownIpos, aliasMatch);
     })));
   });
 
@@ -481,7 +502,7 @@ export async function collectReviewsForIpos(
       channelResults.push(channelResult);
       const entries = !window || !feed.identity || feed.error ? [] : feed.entries.filter(entry => {
         const publishedAt = Date.parse(entry.publishedAt);
-        return publishedAt >= window.earliest && publishedAt <= window.latest && aliasMatch(`${entry.title} ${entry.description}`, ipo.name);
+        return publishedAt >= window.earliest && publishedAt <= window.latest && isSingleIssuerTitle(entry.title, ipo, knownIpos, aliasMatch);
       }).sort((first, second) => second.publishedAt.localeCompare(first.publishedAt) || first.url.localeCompare(second.url));
       return { feed, channelResult, entries };
     });
@@ -511,9 +532,19 @@ export async function collectReviewsForIpos(
           articleCache.set(entry.url, article);
           bodyRequests++;
         }
-        const body = article ? await article : { paragraphs: [] };
-        if (body.error) channelResult.error = '일부 원문 본문을 가져오지 못해 RSS에 제공된 내용만 확인했습니다.';
-        const selected = classifyReviewArticle(body.paragraphs.length ? body.paragraphs : [`${entry.title} ${entry.description}`], entry.title, ipo, ipos);
+        if (!article) {
+          channelResult.error ||= '일부 후보는 원문 확인 요청 한도에 도달해 제외했습니다.';
+          continue;
+        }
+        const body = await article;
+        if (body.error || !body.paragraphs.length) {
+          channelResult.error ||= '일부 후보의 원문 본문을 확인하지 못해 제외했습니다.';
+          // An unreadable newer candidate may contain a revised decision.
+          if (!channelResult.matchedCount) channelResult.status = 'failed';
+          continue;
+        }
+        if (!isSingleIssuerAnalysis(body.paragraphs, ipo, knownIpos, aliasMatch)) continue;
+        const selected = classifyReviewArticle(body.paragraphs, entry.title, ipo, knownIpos, true);
         if (!selected || !selected.excerpt.includes(selected.matchedAlias)) continue;
         const sentiment = selected.sentiment;
         reviews.push({
@@ -527,18 +558,20 @@ export async function collectReviewsForIpos(
                 : '해당 종목에 대한 작성자의 판단 유보 의사를 확인한 글입니다.',
           evidence: {
             feedUrl: feed.channel.feedUrl, fetchedAt,
-            contentHash: createHash('sha256').update(`${entry.title}\n${entry.publishedAt}\n${selected.paragraph}`).digest('hex'),
+            contentHash: createHash('sha256').update(`${entry.title}\n${entry.publishedAt}\n${body.paragraphs.join('\n')}`).digest('hex'),
             matchedAlias: selected.matchedAlias, excerpt: selected.excerpt,
             classification: sentiment === 'UNCLASSIFIED' ? 'unclassified' : 'explicit-stance-v1',
+            relevance: SINGLE_ISSUER_REVIEW_POLICY,
           },
         });
         channelResult.matchedCount++;
       }
     }
-    const failed = channelResults.filter((result) => result.status === 'failed').length;
+    const failed = feeds.filter((feed) => Boolean(feed.error)).length;
     const partial = channelResults.some((result) => Boolean(result.error));
     snapshots.push({
       ipoId: ipo.id, stockName: ipo.name, subscriptionStart: ipo.subscriptionStart, collectedAt: fetchedAt,
+      reviewPolicy: SINGLE_ISSUER_REVIEW_POLICY,
       status: !window ? 'failed' : failed > 0 && failed === channelResults.length ? 'failed' : partial ? 'partial' : reviews.length ? 'success' : 'empty',
       reviews: reviews.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)), channels: channelResults,
     });

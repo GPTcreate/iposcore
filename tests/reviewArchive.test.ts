@@ -10,6 +10,7 @@ import type { ReviewSnapshot } from '../src/types/reviews';
 import { getReviewSnapshot, mergeReviewSnapshots, normalizeReviewArchive, reviewSnapshotKey } from '../src/lib/reviewArchive';
 import { isReviewDate } from '../src/lib/reviewArchive';
 import { analyzeIpoSentiment } from '../src/lib/sentimentAnalyzer';
+import { isSameIpoIdentity } from '../src/lib/ipoDiscovery';
 import { parseCollectionArguments, selectReviewCollectionTargets, writeReviewArchiveFile } from '../scripts/collect-reviews';
 
 const identity = { id: 'fixture-company', subscriptionStart: '2026-10-26' };
@@ -71,6 +72,14 @@ test('a confirmed empty collection clears previous posts and is not restored by 
   const failed = mergeReviewSnapshots(cleared, [snapshot({ collectedAt: '2026-10-25T10:17:00Z', status: 'failed', reviews: [] })]);
   assert.equal(getReviewSnapshot(failed, identity)!.reviews.length, 0);
   assert.equal(getReviewSnapshot(failed, identity)!.lastSuccessfulAt, '2026-10-25T09:17:00Z');
+});
+
+test('a failed refresh under the new policy cannot revive unchecked legacy links', () => {
+  const previous = mergeReviewSnapshots(empty(), [snapshot()]);
+  const failed = snapshot({ collectedAt: '2026-10-25T09:17:00Z', status: 'failed', reviews: [], reviewPolicy: 'single-issuer-analysis-v1' });
+  const saved = getReviewSnapshot(mergeReviewSnapshots(previous, [failed]), identity)!;
+  assert.equal(saved.reviewPolicy, 'single-issuer-analysis-v1');
+  assert.deepEqual(saved.reviews, []);
 });
 
 test('partial refresh preserves only failed publishers old evidence alongside fresh successful posts', () => {
@@ -171,19 +180,18 @@ test('a skipped D-1 save is recovered on either subscription day and never after
   assert.deepEqual(selectReviewCollectionTargets([nexi, ...unrelated], { date: '2026-11-03', stockId: 'ended' }, empty()).map((item) => item.id), ['ended']);
 });
 
-test('catch-up retries failed or partial snapshots but treats confirmed empty and success as complete', () => {
+test('active offerings are refreshed even after a successful or empty collection', () => {
   const ipo = pipelineIpo();
   for (const status of ['success', 'empty', 'partial', 'failed'] as const) {
     const archive = mergeReviewSnapshots(empty(), [snapshot({ status, reviews: status === 'empty' ? [] : [review()] })]);
-    const expected = status === 'failed' || status === 'partial' ? [identity.id] : [];
-    assert.deepEqual(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, archive).map((item) => item.id), expected, status);
+    assert.deepEqual(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, archive).map((item) => item.id), [identity.id], status);
     // The usual D-1 refresh still runs even if an earlier attempt was complete.
     assert.deepEqual(selectReviewCollectionTargets([ipo], { date: '2026-10-25' }, archive).map((item) => item.id), [identity.id]);
   }
   const earlyManual = mergeReviewSnapshots(empty(), [snapshot({ collectedAt: '2026-10-24T14:59:59Z' })]);
   const atWindowStart = mergeReviewSnapshots(empty(), [snapshot({ collectedAt: '2026-10-24T15:00:00Z' })]);
   assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, earlyManual).length, 1);
-  assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, atWindowStart).length, 0);
+  assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, atWindowStart).length, 1);
   const oldIdentity = mergeReviewSnapshots(empty(), [snapshot({ stockName: '변경 전 이름' })]);
   assert.equal(selectReviewCollectionTargets([ipo], { date: '2026-10-26' }, oldIdentity).length, 1);
   const rescheduled = { ...ipo, subscriptionStart: '2026-10-27', subscriptionEnd: '2026-10-28' };
@@ -345,7 +353,7 @@ test('all-failed CLI attempts save prior evidence and recover a skipped save dur
   const prior = mergeReviewSnapshots(empty(), [snapshot()]);
   const virtualFiles = new Map<string, string>([
     [path.join(root, 'src', 'data', 'mockIpo.ts'), `export const MOCK_IPOS: IpoItem[] = ${JSON.stringify([pipelineIpo()])};`],
-    [path.join(root, 'src', 'data', 'customIpos.json'), '[]'],
+    [path.join(root, 'src', 'data', 'customIpos.json'), JSON.stringify([pipelineIpo({ code: '654321' })])],
     [targetFile, JSON.stringify(prior)],
   ]);
   const fakeFs = {
@@ -364,9 +372,11 @@ test('all-failed CLI attempts save prior evidence and recover a skipped save dur
   const dependencies: Record<string, unknown> = {
     'node:fs': fakeFs, 'node:path': path, 'node:crypto': { randomUUID: () => 'fixture-temp' },
     '../src/lib/reviewArchive': { isReviewDate, mergeReviewSnapshots, normalizeReviewArchive, reviewSnapshotKey },
+    '../src/lib/ipoDiscovery': { isSameIpoIdentity },
     '../src/lib/reviewCollector': {
-      collectReviewsForIpos: async () => {
+      collectReviewsForIpos: async (targets: IpoItem[]) => {
         collectorCalls++;
+        assert.deepEqual(Array.from(targets, (target) => target.code), ['654321']);
         return [snapshot({ collectedAt: '2026-10-25T09:17:00Z', status: 'failed', reviews: [], channels: [{ channelId: 'fixture-blog', feedUrl: 'https://rss.blog.naver.com/fixture.xml', status: 'failed', fetchedCount: 0, matchedCount: 0, error: 'fixture transport failure' }] })];
       },
     },

@@ -206,11 +206,11 @@ export default async function IpoDetailPage({ params }: PageProps) {
           </div>
         </details>
 
+        <ReviewPanel ipo={ipo} sentimentIndex={score.sentimentIndex} sentimentWeight={score.sentimentWeight} />
         <div id="ipo-calculator" className="space-y-3">{!ipo.isCancelled ? <>
           {ipo.confirmedPrice <= 0 && <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">{ipo.priceBandMax > 0 ? `공모가 미확정 · 희망밴드 상단 ${money(ipo.priceBandMax)} 기준으로 시작합니다.` : '공모 조건 확인 중 · 예시 값으로 계산합니다.'}</p>}
           <IpoCalculator initialPrice={ipo.confirmedPrice || ipo.priceBandMax || undefined} initialProportionalCompetitionRate={ipo.subscriptionResults?.proportionalCompetitionRate} initialDepositRatePercent={depositRate} stockName={ipo.name} />
         </> : <Link href="/calculator" className="text-sm font-bold text-blue-700 underline">다른 청약 가정으로 배정·손익 계산하기 →</Link>}</div>
-        <ReviewPanel ipo={ipo} />
         <NewsletterBanner />
         <GoogleAdSlot />
       </main>
