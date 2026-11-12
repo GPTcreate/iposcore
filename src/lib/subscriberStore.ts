@@ -162,12 +162,17 @@ export async function fetchSubscribersFromGoogleSheet(options: { required?: bool
     if (res.ok) {
       responseIssue = 'invalid_json';
       const data = await res.json();
+      // Older deployed Apps Script versions return { subscribers } without a
+      // result field. Accept this documented array contract only if no explicit
+      // error flag is present; every subscriber row still needs validation.
+      const confirmedEnvelope = data && (data.result === 'success' || data.result === undefined)
+        && !data.error && data.success !== false && data.status !== 'error';
       responseIssue = !data || !Array.isArray(data.subscribers) ? 'invalid_envelope'
-        : data.result !== 'success' ? 'unconfirmed_response'
+        : !confirmedEnvelope ? 'unconfirmed_response'
         : data.subscribers.some((item: GoogleSheetSubscriberRow | null) => !item || typeof item !== 'object'
           || typeof item.email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email.trim())) ? 'invalid_email'
         : 'invalid_status';
-      if (data?.result === 'success' && Array.isArray(data.subscribers)
+      if (confirmedEnvelope && Array.isArray(data.subscribers)
         && data.subscribers.every((item: GoogleSheetSubscriberRow | null) => item && typeof item === 'object'
           && typeof item.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email.trim())
           && ['ACTIVE', 'PENDING', 'CANCELLED', '구독중', '인증대기', '수신취소'].includes(item.status || ''))) {

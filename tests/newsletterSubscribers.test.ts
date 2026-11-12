@@ -73,6 +73,18 @@ test('required subscriber reads reject missing configuration without consulting 
   assert.equal(run.localEffects.length, 0);
 });
 
+test('legacy subscriber array envelope is accepted while explicit failure flags are rejected', async () => {
+  const legacy = fixture({ env: { GOOGLE_SHEET_WEBHOOK_URL: remoteUrl },
+    response: async () => Response.json({ subscribers: [active] }) });
+  assert.equal((await legacy.list({ requireRemote: true }))[0].email, active.email);
+  for (const data of [{ subscribers: [active], error: 'private-error' },
+    { subscribers: [active], success: false }, { subscribers: [active], status: 'error' },
+    { subscribers: [active], result: 'error' }]) {
+    const failed = fixture({ env: { GOOGLE_SHEET_WEBHOOK_URL: remoteUrl }, response: async () => Response.json(data) });
+    await assert.rejects(failed.list({ requireRemote: true }), /SUBSCRIBER_STORE_UNAVAILABLE/);
+  }
+});
+
 test('HTTP 200 error envelopes and invalid subscriber list shapes fail required reads', async () => {
   for (const data of [
     { result: 'error', subscribers: [active], message: 'private provider details' },

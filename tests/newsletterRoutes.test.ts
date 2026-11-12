@@ -141,3 +141,20 @@ test('new subscription remains pending until opt-in; existing active address nee
   assert.equal((await existing.post(subscribeRequest())).status, 200);
   assert.equal(existing.counts().sends, 0);
 });
+
+test('administrator subscriber read reports unavailable remote store instead of a successful empty list', async () => {
+  const exported = load('src/app/api/newsletter/admin/route.ts', {
+    '@/lib/adminAuth': { verifyAdminRequest: () => ({ authorized: true }) },
+    '@/lib/emailSender': {},
+    '@/lib/subscriberStore': { getAllSubscribersAsync: async (options: { requireRemote: boolean }) => {
+      assert.equal(options.requireRemote, true);
+      throw new Error('private-store-error');
+    } },
+  });
+  const response = await (exported.GET as (request: Request) => Promise<Response>)(request());
+  assert.equal(response.status, 503);
+  const body = await response.json();
+  assert.equal(body.success, false);
+  assert.equal(body.stats, undefined);
+  assert(!JSON.stringify(body).includes('private-store-error'));
+});
