@@ -44,11 +44,16 @@ function validCompactDate(value: string): boolean {
   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === iso;
 }
 
+function isWithdrawalReport(name: string): boolean {
+  return /^(?:\[(?:기재정정|첨부정정)\]\s*)?철회신고서(?:\s*\(\s*지분증권\s*\))?$/.test(name.trim());
+}
+
 export function getDartDiscovery(filing: DartFilingItem): IpoItem['discovery'] | undefined {
   if (!filing || !/^\d{8}$/.test(filing.corp_code) || filing.corp_code === '00000000' || !/^\d{14}$/.test(filing.rcept_no)
     || !validCompactDate(filing.rcept_dt) || filing.rcept_no.slice(0, 8) !== filing.rcept_dt
     || typeof filing.corp_name !== 'string' || !normalizeIpoCompanyName(filing.corp_name)
-    || typeof filing.report_nm !== 'string' || !/증권신고서?\s*\(\s*지분증권\s*\)/.test(filing.report_nm)) return undefined;
+    || typeof filing.report_nm !== 'string' || (!/증권신고서?\s*\(\s*지분증권\s*\)/.test(filing.report_nm)
+      && !isWithdrawalReport(filing.report_nm))) return undefined;
   return {
     corpCode: filing.corp_code, receiptNo: filing.rcept_no,
     sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${filing.rcept_no}`,
@@ -95,17 +100,43 @@ export function findIpoForDartFiling(ipos: IpoItem[], filing: DartFilingItem): I
 
 export interface IpoDiscoveryResult { ipos: IpoItem[]; newIpos: IpoItem[]; updatedIpos: IpoItem[]; ignoredCount: number }
 
-/** Append discoveries without replacing existing schedules, numbers, or lifecycle state. */
+/** Accumulate offerings and apply explicit newer withdrawal notices without replacing historical values. */
 export function mergeDartDiscoveries(current: IpoItem[], filings: DartFilingItem[], limit = Number.MAX_SAFE_INTEGER): IpoDiscoveryResult {
   const ipos = structuredClone(current);
   const newIds = new Set<string>();
   const updatedIds = new Set<string>();
   let ignoredCount = 0;
   const ordered = [...filings].sort((a, b) => String(b.rcept_no).localeCompare(String(a.rcept_no)));
+  const latestWithdrawals = new Map<string, string>();
+  for (const filing of ordered) {
+    const event = getDartDiscovery(filing);
+    if (event && isWithdrawalReport(event.reportName) && ['E', 'N'].includes(filing.corp_cls)
+      && (!latestWithdrawals.has(event.corpCode) || event.receiptNo > latestWithdrawals.get(event.corpCode)!)) {
+      latestWithdrawals.set(event.corpCode, event.receiptNo);
+    }
+  }
   for (const filing of ordered) {
     const discovery = getDartDiscovery(filing);
     if (!discovery) { ignoredCount++; continue; }
     const existing = findIpoForDartFiling(ipos, filing);
+    if (isWithdrawalReport(discovery.reportName)) {
+      // A name match alone cannot cancel an offering, nor can a later capital-raising
+      // withdrawal cancel a completed IPO. C001 is also used by listed companies.
+      if (!existing?.discovery || existing.discovery.corpCode !== discovery.corpCode
+        || (!/증권신고서?\s*\(\s*지분증권\s*\)/.test(existing.discovery.reportName)
+          && !(existing.isCancelled && isWithdrawalReport(existing.discovery.reportName)))
+        || !['E', 'N'].includes(filing.corp_cls) || existing.status === 'LISTED'
+        || (existing.openingPrice ?? 0) > 0 || (existing.closingPrice ?? 0) > 0
+        || discovery.receiptNo <= existing.discovery.receiptNo) { ignoredCount++; continue; }
+      existing.discovery = discovery;
+      existing.isCancelled = true;
+      existing.cancelReason = `${discovery.receivedAt} 철회신고서 접수. 공모 철회로 잔여 청약·환불·상장 일정이 취소되었습니다.`;
+      existing.dataQuality = { ...existing.dataQuality, status: 'unverified', reviewedAt: undefined,
+        sources: [...(existing.dataQuality?.sources || []).filter(source => source.url !== discovery.sourceUrl),
+          { title: `${existing.name} ${discovery.reportName} (${discovery.receivedAt})`, url: discovery.sourceUrl }] };
+      if (!newIds.has(existing.id)) updatedIds.add(existing.id);
+      continue;
+    }
     if (existing) {
       if (!existing.discovery || discovery.receiptNo > existing.discovery.receiptNo) {
         existing.discovery = discovery;
@@ -113,6 +144,9 @@ export function mergeDartDiscoveries(current: IpoItem[], filings: DartFilingItem
       }
       continue;
     }
+    // A withdrawn issuer must not reappear as active when older registrations are
+    // encountered later in this same newest-first response.
+    if ((latestWithdrawals.get(discovery.corpCode) || '') > discovery.receiptNo) { ignoredCount++; continue; }
     const created = createDiscoveredIpo(filing);
     if (!created || newIds.size >= limit) { ignoredCount++; continue; }
     ipos.push(created);

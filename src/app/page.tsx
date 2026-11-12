@@ -18,10 +18,10 @@ import { TrendingUp, HelpCircle, ChevronRight, BookOpen } from 'lucide-react';
 // 2순위: 청약 예정 (UPCOMING)
 // 3순위: 상장 대기 (WAITING_LISTING)
 // 4순위: 전체 (ALL)
-function getDefaultTab(ipos: { status: IpoStatus }[]): 'ALL' | IpoStatus {
-  if (ipos.some((i) => i.status === 'SUBSCRIPTION')) return 'SUBSCRIPTION';
-  if (ipos.some((i) => i.status === 'UPCOMING')) return 'UPCOMING';
-  if (ipos.some((i) => i.status === 'WAITING_LISTING')) return 'WAITING_LISTING';
+function getDefaultTab(ipos: { status: IpoStatus; isCancelled?: boolean }[]): 'ALL' | IpoStatus {
+  if (ipos.some((i) => !i.isCancelled && i.status === 'SUBSCRIPTION')) return 'SUBSCRIPTION';
+  if (ipos.some((i) => !i.isCancelled && i.status === 'UPCOMING')) return 'UPCOMING';
+  if (ipos.some((i) => !i.isCancelled && i.status === 'WAITING_LISTING')) return 'WAITING_LISTING';
   return 'ALL';
 }
 
@@ -75,7 +75,7 @@ export default function Home() {
   const filteredIpos = allIpos
     .filter((ipo) => {
       if (filter === 'ALL') return ipo.status !== 'LISTED';
-      return ipo.status === filter;
+      return !ipo.isCancelled && ipo.status === filter;
     })
     .sort((a, b) => {
       const priorityDiff = (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
@@ -181,8 +181,8 @@ export default function Home() {
         <div className="mb-5 space-y-2">
           <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-gray-200/90 text-xs sm:text-sm font-bold overflow-x-auto scrollbar-none touch-pan-x">
             {(() => {
-              const subCount = allIpos.filter((i) => i.status === 'SUBSCRIPTION').length;
-              const upCount = allIpos.filter((i) => i.status === 'UPCOMING').length;
+              const subCount = allIpos.filter((i) => !i.isCancelled && i.status === 'SUBSCRIPTION').length;
+              const upCount = allIpos.filter((i) => !i.isCancelled && i.status === 'UPCOMING').length;
               const hasSub = subCount > 0;
               const tabs: { key: 'ALL' | IpoStatus; label: string; count: number }[] = [
                 ...(hasSub
@@ -195,8 +195,8 @@ export default function Home() {
                       { key: 'SUBSCRIPTION' as const, label: '청약 진행 중', count: 0 },
                     ]),
                 { key: 'ALL' as const, label: '전체', count: allIpos.filter((i) => i.status !== 'LISTED').length },
-                { key: 'WAITING_LISTING', label: '상장 대기', count: allIpos.filter((i) => i.status === 'WAITING_LISTING').length },
-                { key: 'LISTED', label: '상장 완료 (실전 수익률)', count: allIpos.filter((i) => i.status === 'LISTED').length },
+                { key: 'WAITING_LISTING', label: '상장 대기', count: allIpos.filter((i) => !i.isCancelled && i.status === 'WAITING_LISTING').length },
+                { key: 'LISTED', label: '상장 완료 (실전 수익률)', count: allIpos.filter((i) => !i.isCancelled && i.status === 'LISTED').length },
               ];
 
               return tabs.map((tab) => (

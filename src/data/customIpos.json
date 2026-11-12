@@ -4466,10 +4466,10 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01403198",
-      "receiptNo": "20261104000145",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261104000145",
-      "receivedAt": "2026-11-04",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261111000314",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000314",
+      "receivedAt": "2026-11-11",
+      "reportName": "철회신고서"
     },
     "fieldEvidence": {
       "subscriptionStart": {
@@ -4521,6 +4521,17 @@
       "pendingFields": [
         "listingDate"
       ]
+    },
+    "isCancelled": true,
+    "cancelReason": "2026-11-11 철회신고서 접수. 공모 철회로 잔여 청약·환불·상장 일정이 취소되었습니다.",
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "제이앤티지 철회신고서 (2026-11-11)",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000314"
+        }
+      ]
     }
   },
   {
@@ -4565,10 +4576,10 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "00618173",
-      "receiptNo": "20261103000363",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000363",
-      "receivedAt": "2026-11-03",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261111000246",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000246",
+      "receivedAt": "2026-11-11",
+      "reportName": "철회신고서"
     },
     "fieldEvidence": {
       "subscriptionStart": {
@@ -4619,6 +4630,17 @@
       ],
       "pendingFields": [
         "listingDate"
+      ]
+    },
+    "isCancelled": true,
+    "cancelReason": "2026-11-11 철회신고서 접수. 공모 철회로 잔여 청약·환불·상장 일정이 취소되었습니다.",
+    "dataQuality": {
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "씨앤엠 철회신고서 (2026-11-11)",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000246"
+        }
       ]
     }
   },
