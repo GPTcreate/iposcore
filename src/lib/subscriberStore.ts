@@ -114,20 +114,17 @@ export async function syncToGoogleSheet(
 
     const res = await fetch(webhookUrl, {
       method: 'POST',
+      signal: AbortSignal.timeout(15_000),
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    if (res.ok) {
-      // 보안: 민감한 토큰은 절대 로그에 출력하지 않음
-      console.log(`[GoogleSheetSync] ${action} 동기화 성공: ${subscriber.email}`);
-      return true;
-    } else {
-      console.warn(`[GoogleSheetSync] 응답 실패 (${res.status}): ${subscriber.email}`);
-      return false;
-    }
-  } catch (error) {
-    console.error('[GoogleSheetSync] 전송 에러:', error instanceof Error ? error.message : error);
+    if (!res.ok) return false;
+    const result = await res.json();
+    return result?.result === 'success' && result.action === action
+      && String(result.email || '').toLowerCase() === subscriber.email.toLowerCase();
+  } catch {
+    console.error('[GoogleSheetSync] 영속 저장 응답을 확인하지 못했습니다.');
     return false;
   }
 }
@@ -147,19 +144,26 @@ interface GoogleSheetSubscriberRow {
 /**
  * 구글 스프레드시트에서 구독자 목록 가져오기 (영구 복원)
  */
-export async function fetchSubscribersFromGoogleSheet(): Promise<Subscriber[]> {
+export async function fetchSubscribersFromGoogleSheet(options: { required?: boolean } = {}): Promise<Subscriber[]> {
   const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
-  if (!webhookUrl) return [];
+  if (!webhookUrl) {
+    if (options.required) throw new Error('SUBSCRIBER_STORE_UNCONFIGURED');
+    return [];
+  }
 
   try {
     const res = await fetch(webhookUrl, {
       method: 'GET',
       headers: { Accept: 'application/json' },
       cache: 'no-store',
+      signal: AbortSignal.timeout(15_000),
     });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data.subscribers)) {
+      if (data?.result === 'success' && Array.isArray(data.subscribers)
+        && data.subscribers.every((item: GoogleSheetSubscriberRow | null) => item && typeof item === 'object'
+          && typeof item.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email.trim())
+          && ['ACTIVE', 'PENDING', 'CANCELLED', '구독중', '인증대기', '수신취소'].includes(item.status || ''))) {
         return data.subscribers.map((item: GoogleSheetSubscriberRow) => ({
           id: item.id || `sub_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
           email: String(item.email || '').trim().toLowerCase(),
@@ -180,9 +184,11 @@ export async function fetchSubscribersFromGoogleSheet(): Promise<Subscriber[]> {
         }));
       }
     }
-  } catch (err) {
-    console.warn('[GoogleSheetSync:GET] 구글 시트에서 목록 불러오기 실패:', err);
+  } catch {
+    if (options.required) throw new Error('SUBSCRIBER_STORE_UNAVAILABLE');
+    console.warn('[GoogleSheetSync:GET] 구독자 저장소를 불러오지 못했습니다.');
   }
+  if (options.required) throw new Error('SUBSCRIBER_STORE_UNAVAILABLE');
   return [];
 }
 
@@ -279,7 +285,14 @@ export async function registerSubscriber(params: {
   frequency?: 'WEEKLY' | 'ALL';
   skipDoubleOptIn?: boolean;
 }): Promise<{ subscriber: Subscriber; isNew: boolean }> {
-  await ensureStoreLoaded();
+  if (isProductionEnvironment()) {
+    // A stale ACTIVE cache must not reactivate a remotely cancelled/deleted row.
+    memoryStore = await fetchSubscribersFromGoogleSheet({ required: true });
+    isStoreLoaded = true;
+    lastRemoteFetchTime = Date.now();
+  } else {
+    await ensureStoreLoaded();
+  }
   const normalizedEmail = params.email.trim().toLowerCase();
   const frequency = params.frequency || 'ALL';
 
@@ -288,6 +301,8 @@ export async function registerSubscriber(params: {
   if (existingIndex >= 0) {
     const existing = memoryStore[existingIndex];
     const previousStatus = existing.status;
+    if (!existing.verificationToken) existing.verificationToken = crypto.randomBytes(24).toString('hex');
+    if (!existing.unsubscribeToken) existing.unsubscribeToken = crypto.randomBytes(24).toString('hex');
     existing.frequency = frequency;
     if (params.skipDoubleOptIn) {
       existing.status = 'ACTIVE';
@@ -416,7 +431,10 @@ export function getAllSubscribers(): Subscriber[] {
 /**
  * 전체 구독자 목록 비동기 조회 (원격 영속 저장소 동기화 보장)
  */
-export async function getAllSubscribersAsync(): Promise<Subscriber[]> {
+export async function getAllSubscribersAsync(options: { requireRemote?: boolean } = {}): Promise<Subscriber[]> {
+  // Scheduled mail uses the authoritative, fresh list so a cancellation cannot
+  // be undone by an older serverless memory cache. Empty and failed are distinct.
+  if (options.requireRemote) return fetchSubscribersFromGoogleSheet({ required: true });
   return await ensureStoreLoaded();
 }
 

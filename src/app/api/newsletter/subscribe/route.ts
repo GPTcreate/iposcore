@@ -36,32 +36,23 @@ export async function POST(request: Request) {
     const cleanEmail = validation.normalizedEmail;
     const emailConfigured = isEmailConfigured();
 
-    // 2. 가입 처리:
-    // 실제 메일 발송 서버(Resend/SMTP)가 설정되어 있으면 Double Opt-in (PENDING) 수행
-    // 메일 발송 서버가 아직 설정되지 않은 경우 사용자가 헛걸음하지 않도록 즉시 활성화 (ACTIVE)
+    if (!emailConfigured) {
+      return NextResponse.json({ success: false, error: '메일 발송 설정을 확인 중입니다. 잠시 후 다시 신청해주세요.' }, { status: 503 });
+    }
     const { subscriber, isNew } = await registerSubscriber({
       email: cleanEmail,
       frequency: frequency === 'WEEKLY' ? 'WEEKLY' : 'ALL',
-      skipDoubleOptIn: !emailConfigured,
+      skipDoubleOptIn: false,
     });
-
-    let message: string;
-    let deliveryMode: string;
-
-    if (emailConfigured) {
-      // 3. 실제 메일 발송 서버 연동 시 수신 동의 확인 메일 발송
-      const sendResult = await sendVerificationEmail(subscriber);
-      deliveryMode = sendResult.mode;
-      message = isNew
-        ? `${cleanEmail} 주소로 수신 동의 확인 메일을 발송했습니다. 메일함에서 [구독 동의] 버튼을 눌러주시면 신청이 최종 완료됩니다.`
-        : `이미 등록된 이메일입니다. 구독 확인 메일을 다시 발송해 드렸습니다. 메일함을 확인해주세요.`;
-    } else {
-      // 메일 발송 미설정 시 즉시 구독 완료 안내
-      deliveryMode = 'direct_active';
-      message = isNew
-        ? `${cleanEmail} 님의 구독 신청이 완료되었습니다! 매주 월요일 아침 공모주 핵심 리포트를 보내드립니다.`
-        : `${cleanEmail} 님은 이미 구독 중입니다. 매주 월요일 아침 공모주 핵심 리포트가 발송됩니다.`;
+    if (!isNew && subscriber.status === 'ACTIVE') {
+      return NextResponse.json({ success: true, message: '이미 구독 중인 이메일입니다.', status: 'ACTIVE' });
     }
+    const sendResult = await sendVerificationEmail(subscriber);
+    if (!sendResult.success) {
+      return NextResponse.json({ success: false, error: '구독 확인 메일을 발송하지 못했습니다. 잠시 후 다시 신청해주세요.' }, { status: 502 });
+    }
+    const deliveryMode = sendResult.mode;
+    const message = '수신 동의 확인 메일을 발송했습니다. 메일함에서 [구독 동의] 버튼을 눌러주시면 신청이 완료됩니다.';
 
     return NextResponse.json({
       success: true,

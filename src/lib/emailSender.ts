@@ -1,7 +1,8 @@
 import nodemailer from 'nodemailer';
+import { createHash } from 'node:crypto';
 import { Subscriber } from './subscriberStore';
 import { getAllEffectiveIpos } from './ipoUtils';
-import { isReviewedIpo, hasVerifiedForecast } from './contentQuality';
+import { buildNewsletterPlan, renderWeeklyNewsletter, type NewsletterPlan } from './newsletterContent';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'newsletter@iposcore.kr';
@@ -12,19 +13,29 @@ export interface SendMailOptions {
   subject: string;
   html: string;
   text?: string;
+  idempotencyKey?: string;
+}
+
+export interface SendMailResult {
+  success: boolean;
+  id?: string;
+  mode: string;
+  error?: string;
+  uncertain?: boolean;
 }
 
 /**
  * 실제 외부 이메일 발송 서비스(Resend API 또는 SMTP)가 설정되어 있는지 여부
  */
 export function isEmailConfigured(): boolean {
-  return !!(process.env.RESEND_API_KEY || (process.env.SMTP_USER && process.env.SMTP_PASS));
+  return !!(process.env.RESEND_API_KEY?.trim() || (process.env.SMTP_USER?.trim() && process.env.SMTP_PASS?.trim()));
 }
 
 /**
- * 이메일 전송 발송기 (Resend API -> SMTP -> 시뮬레이션 콘솔 순 자동 처리)
+ * success는 제공자가 해당 수신자를 수락했을 때만 반환한다. 받은편지함 도착을 의미하지 않는다.
+ * Resend의 수락 여부가 불명확하면 SMTP로 재발송하지 않는다 (제공자 간 중복 방지 불가).
  */
-export async function sendEmail({ to, subject, html, text }: SendMailOptions): Promise<{ success: boolean; id?: string; mode: string }> {
+export async function sendEmail({ to, subject, html, text, idempotencyKey }: SendMailOptions): Promise<SendMailResult> {
   // 테스트 더미 도메인 안전 차단 (실제 메일 발송 방지)
   const toLower = to.toLowerCase().trim();
   if (
@@ -33,19 +44,27 @@ export async function sendEmail({ to, subject, html, text }: SendMailOptions): P
     toLower === 'test@test.com' ||
     toLower.startsWith('dummy')
   ) {
-    console.log(`[EmailSender] 테스트 더미 이메일(${to}) 발송이 안전하게 차단되었습니다.`);
-    return { success: true, id: `blocked_test_${Date.now()}`, mode: 'blocked_test' };
+    return { success: false, mode: 'blocked_test', error: 'test_recipient_blocked' };
+  }
+
+  if (!toLower) return { success: false, mode: 'unconfigured', error: 'invalid_recipient' };
+  if (idempotencyKey !== undefined && (typeof idempotencyKey !== 'string' || !/^[\x21-\x7e]{1,256}$/.test(idempotencyKey))) {
+    return { success: false, mode: 'unconfigured', error: 'invalid_idempotency_key' };
   }
 
   // 1. Resend API 방식 (RESEND_API_KEY 존재 시)
-  const resendApiKey = process.env.RESEND_API_KEY;
+  const resendApiKey = process.env.RESEND_API_KEY?.trim();
+  let resendFailure: SendMailResult | undefined;
   if (resendApiKey) {
     try {
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
+        redirect: 'error',
+        signal: AbortSignal.timeout(30_000),
         headers: {
           Authorization: `Bearer ${resendApiKey}`,
           'Content-Type': 'application/json',
+          ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
         },
         body: JSON.stringify({
           from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
@@ -56,58 +75,88 @@ export async function sendEmail({ to, subject, html, text }: SendMailOptions): P
         }),
       });
 
-      const data = await response.json();
       if (response.ok) {
-        console.log(`[EmailSender:Resend] 발송 성공 -> ${to} (ID: ${data.id})`);
-        return { success: true, id: data.id, mode: 'resend' };
-      } else {
-        console.error('[EmailSender:Resend] 실패 응답:', data);
+        const data: unknown = await response.json();
+        const id = data && typeof data === 'object' && 'id' in data ? data.id : undefined;
+        if (typeof id === 'string' && id.trim()) {
+          return { success: true, id, mode: 'resend' };
+        }
+        return { success: false, mode: 'resend', error: 'invalid_provider_response', uncertain: true };
       }
-    } catch (err) {
-      console.error('[EmailSender:Resend] 에러 발생:', err);
+      await response.body?.cancel();
+      // 408/409 및 서버 오류는 이미 수락되었을 가능성이 있어 다른 제공자로 보내지 않는다.
+      if (response.status < 400 || response.status >= 500 || response.status === 408 || response.status === 409) {
+        return { success: false, mode: 'resend', error: 'provider_unavailable', uncertain: true };
+      }
+      resendFailure = { success: false, mode: 'resend', error: 'provider_rejected' };
+    } catch {
+      return { success: false, mode: 'resend', error: 'provider_request_failed', uncertain: true };
     }
   }
 
   // 2. SMTP 방식 (Gmail, Naver 등)
-  const smtpUser = process.env.SMTP_USER;
+  const smtpUser = process.env.SMTP_USER?.trim();
   const smtpPass = process.env.SMTP_PASS;
-  if (smtpUser && smtpPass) {
+  if (smtpUser && smtpPass?.trim()) {
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    let timedOut = false;
+    let closeTransport: (() => void) | undefined;
     try {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.gmail.com',
         port: Number(process.env.SMTP_PORT) || 465,
         secure: (process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) === 465 : true),
+        connectionTimeout: 30_000,
+        greetingTimeout: 30_000,
+        socketTimeout: 30_000,
         auth: {
           user: smtpUser,
           pass: smtpPass,
         },
       });
+      let closed = false;
+      closeTransport = () => {
+        if (closed) return;
+        closed = true;
+        try { transporter.close(); } catch { /* Cleanup must not expose or override the delivery result. */ }
+      };
+      // The socket timeouts above measure inactivity, so also bound the complete SMTP attempt.
+      const deadline = new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => {
+          timedOut = true;
+          reject(new Error('SMTP_SEND_TIMEOUT'));
+          closeTransport?.();
+        }, 45_000);
+      });
 
-      const info = await transporter.sendMail({
+      const info = await Promise.race([transporter.sendMail({
         from: `"${SENDER_NAME}" <${smtpUser}>`,
         to,
         subject,
         html,
         text: text || html.replace(/<[^>]+>/g, ''),
-      });
+        // SMTP에는 제공자 간 중복 방지 보장이 없지만 같은 작업의 Message-ID는 유지한다.
+        ...(idempotencyKey ? { messageId: `<${createHash('sha256').update(idempotencyKey).digest('hex')}@iposcore.kr>` } : {}),
+      }), deadline]);
 
-      console.log(`[EmailSender:SMTP] 발송 성공 -> ${to} (MessageId: ${info.messageId})`);
-      return { success: true, id: info.messageId, mode: 'smtp' };
-    } catch (err) {
-      console.error('[EmailSender:SMTP] 에러 발생:', err);
+      const containsRecipient = (addresses: unknown): boolean => Array.isArray(addresses) && addresses.some(address => {
+        const value = typeof address === 'string' ? address
+          : address && typeof address === 'object' && 'address' in address ? address.address : undefined;
+        return typeof value === 'string' && value.trim().toLowerCase() === toLower;
+      });
+      if (!containsRecipient(info.accepted) || containsRecipient(info.rejected)) {
+        return { success: false, mode: 'smtp', error: 'recipient_not_accepted' };
+      }
+      return { success: true, ...(typeof info.messageId === 'string' && info.messageId.trim() ? { id: info.messageId } : {}), mode: 'smtp' };
+    } catch {
+      return { success: false, mode: 'smtp', error: timedOut ? 'provider_timeout' : 'provider_request_failed', uncertain: true };
+    } finally {
+      if (timeout !== undefined) clearTimeout(timeout);
+      closeTransport?.();
     }
   }
 
-  // 3. 테스트 / 시뮬레이션 모드 (API 키 미설정 시 안전 폴백)
-  console.log(`
-========================================================================
-[EmailSender:SIMULATION] 실제 발송 환경변수(RESEND_API_KEY 또는 SMTP)가 설정되지 않아 가상 발송 처리되었습니다.
-- 수신자: ${to}
-- 제목: ${subject}
-- 사이트 URL: ${SITE_URL}
-========================================================================
-  `);
-  return { success: true, id: `sim_${Date.now()}`, mode: 'simulation' };
+  return resendFailure ?? { success: false, mode: 'unconfigured', error: 'email_not_configured' };
 }
 
 /**
@@ -230,215 +279,13 @@ export function getUnsubscribeEmailTemplate(subscriber: { email: string }) {
 }
 
 /**
- * 3. 주간 정기 공모주 핵심 요약 리포트 메일 HTML 템플릿 생성기
- * [전략: 점수는 간단히 뱃지/등급으로 호기심을 자극하고, 웹사이트 방문(CTR)을 극대화]
+ * 3. 공식 근거와 값이 일치하는 주간 일정 리포트
  */
-export function getWeeklyReportEmailTemplate(subscriber: { email: string; unsubscribeToken?: string }) {
-  const unsubToken = subscriber.unsubscribeToken || 'demo_token';
-  const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${unsubToken}`;
-  const calculatorUrl = `${SITE_URL}/calculator`;
-  const subject = `[공모주 알리미] 이번 주 청약 핵심 리포트 & 실전 배정 공략`;
-
-  const allIpos = getAllEffectiveIpos().filter(ipo => isReviewedIpo(ipo)
-    && (!ipo.scheduleVerification || ipo.scheduleVerification.status === 'verified'));
-
-  // 1. 이번 주 청약 진행 또는 시작 임박 종목 (우선순위: SUBSCRIPTION -> 시작일 가장 빠른 UPCOMING)
-  let activeIpos = allIpos.filter((i) => i.status === 'SUBSCRIPTION' && !i.isCancelled);
-  let isImminentMode = false;
-  if (activeIpos.length === 0) {
-    const upcomingSoon = allIpos
-      .filter((i) => i.status === 'UPCOMING' && !i.isCancelled)
-      .sort((a, b) => a.subscriptionStart.localeCompare(b.subscriptionStart));
-    activeIpos = upcomingSoon.slice(0, 2);
-    isImminentMode = true;
-  }
-
-  const activeIds = new Set(activeIpos.map((i) => i.id));
-
-  // 2. 청약 예정 기대주 (시작일 오름차순 정렬, 상위 3건)
-  const upcomingIpos = allIpos
-    .filter((i) => i.status === 'UPCOMING' && !i.isCancelled && !activeIds.has(i.id))
-    .sort((a, b) => a.subscriptionStart.localeCompare(b.subscriptionStart))
-    .slice(0, 4);
-
-  // 3. 이번 주 상장 대기 종목 (실전 청약 결과 요약, 상장일 오름차순)
-  const waitingIpos = allIpos
-    .filter((i) => i.status === 'WAITING_LISTING' && !i.isCancelled)
-    .sort((a, b) => (a.listingDate || '9999').localeCompare(b.listingDate || '9999'))
-    .slice(0, 3);
-
-  const activeCards = activeIpos.length > 0
-    ? activeIpos.map((ipo) => {
-        const priceText = ipo.confirmedPrice > 0
-          ? `<strong>확정 공모가:</strong> ${ipo.confirmedPrice.toLocaleString()}원`
-          : `<strong>희망 밴드:</strong> ${ipo.priceBandMin.toLocaleString()} ~ ${ipo.priceBandMax.toLocaleString()}원`;
-        const dateText = isImminentMode
-          ? `<strong>청약 시작:</strong> ${ipo.subscriptionStart} ~ ${ipo.subscriptionEnd}`
-          : `<strong>청약 마감:</strong> ~ ${ipo.subscriptionEnd}까지`;
-
-        return `
-          <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="font-size: 17px; font-weight: 800; color: #0f172a;">
-                ${ipo.name} <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${ipo.market} · ${ipo.code})</span>
-              </span>
-              <span style="display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 800; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">
-                ${hasVerifiedForecast(ipo) ? `참고 점수 ${ipo.aiScore}점` : '점수 산출 보류'}
-              </span>
-            </div>
-
-            <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #1e293b; line-height: 1.5;">
-              ${ipo.aiSummary.headline}
-            </p>
-
-            <div style="background-color: #f8fafc; border-radius: 8px; padding: 12px; font-size: 12px; color: #475569; line-height: 1.6; margin-bottom: 14px;">
-              • ${priceText} (${ipo.underwriters.map((u) => u.name).join(', ')})<br/>
-              • ${dateText}
-            </div>
-
-            <div style="text-align: center;">
-              <a href="${SITE_URL}/ipo/${ipo.id}" target="_blank" style="display: block; padding: 11px 16px; background-color: #1d4ed8; color: #ffffff; font-size: 13px; font-weight: bold; text-decoration: none; border-radius: 8px;">
-                👉 ${ipo.name} 공시 출처와 청약 조건 보기
-              </a>
-            </div>
-          </div>
-        `;
-      }).join('')
-    : `
-      <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 18px; text-align: center; color: #475569; font-size: 13px;">
-        현재 원문 확인을 마친 청약 진행 자료가 없습니다. 시장에 청약 종목이 없다는 의미는 아닙니다. 신청 전 주관사의 최종 공고를 확인하세요.
-      </div>
-    `;
-
-  const waitingCards = waitingIpos.map((ipo) => `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <span style="font-weight: 800; font-size: 14px; color: #0f172a;">
-          ${ipo.name} <span style="font-size: 11px; color: #64748b;">(${ipo.market})</span>
-        </span>
-        <span style="font-size: 12px; font-weight: 800; color: #2563eb;">
-          📅 ${ipo.listingDate ? ipo.listingDate.slice(5) : '상장 대기'} 상장 예정
-        </span>
-      </div>
-      <div style="font-size: 12px; color: #475569; line-height: 1.6;">
-        • 확정 공모가: <strong>${ipo.confirmedPrice.toLocaleString()}원</strong><br/>
-        • 기관 수요예측: <strong style="color: #1d4ed8;">${ipo.institutionalCompetitionRate > 0 ? ipo.institutionalCompetitionRate.toLocaleString() + ' : 1' : '결과 대기'}</strong> (확약: ${ipo.lockupCommitmentRate}%)
-      </div>
-      <div style="margin-top: 8px; text-align: right;">
-        <a href="${SITE_URL}/ipo/${ipo.id}" target="_blank" style="font-size: 12px; color: #1d4ed8; text-decoration: none; font-weight: bold;">
-          상세 실전 결과 보기 →
-        </a>
-      </div>
-    </div>
-  `).join('');
-
-  const upcomingList = upcomingIpos.map((ipo) => `
-    <li style="margin-bottom: 10px; font-size: 13px; color: #334155; line-height: 1.5;">
-      <strong>${ipo.name}</strong> (${ipo.subscriptionStart} 청약 예정)
-      <span style="display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; background-color: #f1f5f9; color: #475569; font-weight: bold; margin-left: 4px;">
-        ${hasVerifiedForecast(ipo) ? `참고 구간 ${ipo.scoreGrade}` : '산출 보류'}
-      </span>
-      <br/>
-      <span style="color: #64748b; font-size: 12px;">${ipo.aiSummary.headline.slice(0, 45)}...</span>
-    </li>
-  `).join('');
-
-  const html = `<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <title>${subject}</title>
-</head>
-<body style="margin: 0; padding: 20px 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; color: #0f172a;">
-  <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px; background-color: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-    
-    <!-- 메일 헤더 -->
-    <tr>
-      <td style="padding: 28px 24px 20px 24px; background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%); text-align: center;">
-        <span style="display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; background-color: rgba(255,255,255,0.2); color: #ffffff; margin-bottom: 8px;">
-          매주 월요일 아침 배달되는 핵심 인사이트
-        </span>
-        <h1 style="margin: 0; color: #ffffff; font-size: 21px; font-weight: 900; letter-spacing: -0.5px;">
-          공모주 알리미 주간 핵심 리포트
-        </h1>
-        <p style="margin: 6px 0 0 0; color: #bfdbfe; font-size: 13px;">
-          이번 주 필수 청약 종목 & 실전 배정 전략
-        </p>
-      </td>
-    </tr>
-
-    <!-- 메인 본문 -->
-    <tr>
-      <td style="padding: 24px;">
-        
-        <!-- 섹션 1: 이번 주 청약 종목 -->
-        <div style="margin-bottom: 24px;">
-          <h2 style="margin: 0 0 14px 0; font-size: 15px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
-            🔥 ${isImminentMode ? '이번 주 청약 개시 종목 (핵심 요약)' : '이번 주 청약 진행 종목 (핵심 요약)'}
-          </h2>
-          ${activeCards}
-        </div>
-
-        <!-- 섹션 2: 배정 계산기 유도 박스 (높은 클릭율) -->
-        <div style="background-color: #eff6ff; border: 1.5px dashed #3b82f6; border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 24px;">
-          <strong style="display: block; font-size: 15px; color: #1e40af; margin-bottom: 4px;">
-            🧮 내 투자금으로 몇 주 배정받을까?
-          </strong>
-          <p style="margin: 0 0 12px 0; font-size: 12px; color: #475569; line-height: 1.5;">
-            비례 경쟁률 및 마통 대출 이자 기회비용을 1초 만에 무료로 계산해 보세요.
-          </p>
-          <a href="${calculatorUrl}" target="_blank" style="display: inline-block; padding: 10px 24px; font-size: 13px; font-weight: 800; background-color: #1e40af; color: #ffffff; text-decoration: none; border-radius: 8px;">
-            실전 비례 배정 계산기 바로가기 →
-          </a>
-        </div>
-
-        ${waitingIpos.length > 0 ? `
-        <!-- 섹션 3: 이번 주 신규 상장 예정 종목 (실전 청약 결과 요약) -->
-        <div style="margin-bottom: 24px;">
-          <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 800; color: #0f172a;">
-            🚀 이번 주 코스닥/코스피 신규 상장 종목
-          </h3>
-          ${waitingCards}
-        </div>
-        ` : ''}
-
-        <!-- 섹션 4: 다가오는 청약 예정 기대주 -->
-        <div style="margin-bottom: 24px;">
-          <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 800; color: #0f172a;">
-            📅 다가오는 청약 예정 기대주
-          </h3>
-          <ul style="margin: 0; padding-left: 20px;">
-            ${upcomingList}
-          </ul>
-        </div>
-
-        <!-- 전체 캘린더 방문 유도 버튼 -->
-        <div style="text-align: center; padding-top: 10px; border-top: 1px solid #e2e8f0;">
-          <a href="${SITE_URL}/?tab=UPCOMING" target="_blank" style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 800; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 10px;">
-            📊 공모주 전체 캘린더 & D-Day 알림 확인하기 →
-          </a>
-        </div>
-
-      </td>
-    </tr>
-
-    <!-- 메일 푸터 -->
-    <tr>
-      <td style="padding: 20px 24px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 11px; color: #64748b; line-height: 1.6;">
-        <p style="margin: 0 0 4px 0;">
-          본 메일은 <strong>${subscriber.email}</strong> 님의 수신 동의에 따라 <strong>매주 월요일 아침 9시 35분</strong>에 발송되는 정기 리포트입니다.
-        </p>
-        <p style="margin: 0;">
-          더 이상 메일을 원치 않으시면 <a href="${unsubscribeUrl}" style="color: #475569; text-decoration: underline;">수신거부(구독취소)</a>를 클릭하세요. | © iposcore.kr
-        </p>
-      </td>
-    </tr>
-
-  </table>
-</body>
-</html>`;
-
-  return { subject, html };
+export function getWeeklyReportEmailTemplate(
+  subscriber: { email: string; unsubscribeToken?: string },
+  plan = buildNewsletterPlan(getAllEffectiveIpos())
+) {
+  return renderWeeklyNewsletter(plan, subscriber.unsubscribeToken || 'demo_token', SITE_URL);
 }
 
 /**
@@ -454,7 +301,15 @@ export async function sendUnsubscribeConfirmationEmail(subscriber: Subscriber) {
   return sendEmail({ to: subscriber.email, subject, html });
 }
 
-export async function sendWeeklyReportEmail(subscriber: Subscriber) {
-  const { subject, html } = getWeeklyReportEmailTemplate(subscriber);
-  return sendEmail({ to: subscriber.email, subject, html });
+export async function sendWeeklyReportEmail(
+  subscriber: Subscriber,
+  options: { plan?: NewsletterPlan; idempotencyKey?: string } = {}
+) {
+  if (subscriber.status !== 'ACTIVE' || !subscriber.unsubscribeToken || subscriber.unsubscribeToken.length < 24) {
+    return { success: false, mode: 'invalid_subscriber', error: 'subscriber_not_ready' };
+  }
+  const plan = options.plan || buildNewsletterPlan(getAllEffectiveIpos());
+  if (!plan.hasContent) return { success: false, mode: 'no_content', error: 'no_verified_schedule' };
+  const { subject, html } = getWeeklyReportEmailTemplate(subscriber, plan);
+  return sendEmail({ to: subscriber.email, subject, html, idempotencyKey: options.idempotencyKey });
 }
