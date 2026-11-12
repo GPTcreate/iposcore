@@ -33,8 +33,12 @@ export async function GET(request: Request) {
     }
     console.info('[Cron:WeeklyNewsletter]', JSON.stringify(result));
     return json({ ...result, schedulerConfigured }, result.success ? 200 : result.status === 'already_running' ? 409 : 502);
-  } catch {
+  } catch (error) {
     console.error('[Cron:WeeklyNewsletter] 발송 준비 또는 구독자 저장소 확인 실패');
-    return json({ success: false, status: 'newsletter_unavailable', sentCount: 0 }, 503);
+    const storeError = error instanceof Error && error.message === 'SUBSCRIBER_STORE_UNAVAILABLE';
+    const reason = storeError && typeof error.cause === 'string'
+      && ['request_failed', 'invalid_json', 'invalid_envelope', 'unconfirmed_response', 'invalid_email', 'invalid_status', 'http_error'].includes(error.cause)
+      ? error.cause : 'preparation_failed';
+    return json({ success: false, status: 'newsletter_unavailable', reason, schedulerConfigured, sentCount: 0 }, 503);
   }
 }

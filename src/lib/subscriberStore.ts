@@ -151,6 +151,7 @@ export async function fetchSubscribersFromGoogleSheet(options: { required?: bool
     return [];
   }
 
+  let responseIssue = 'request_failed';
   try {
     const res = await fetch(webhookUrl, {
       method: 'GET',
@@ -159,7 +160,13 @@ export async function fetchSubscribersFromGoogleSheet(options: { required?: bool
       signal: AbortSignal.timeout(15_000),
     });
     if (res.ok) {
+      responseIssue = 'invalid_json';
       const data = await res.json();
+      responseIssue = !data || !Array.isArray(data.subscribers) ? 'invalid_envelope'
+        : data.result !== 'success' ? 'unconfirmed_response'
+        : data.subscribers.some((item: GoogleSheetSubscriberRow | null) => !item || typeof item !== 'object'
+          || typeof item.email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email.trim())) ? 'invalid_email'
+        : 'invalid_status';
       if (data?.result === 'success' && Array.isArray(data.subscribers)
         && data.subscribers.every((item: GoogleSheetSubscriberRow | null) => item && typeof item === 'object'
           && typeof item.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email.trim())
@@ -183,12 +190,12 @@ export async function fetchSubscribersFromGoogleSheet(options: { required?: bool
           unsubscribedAt: item.unsubscribedAt || undefined,
         }));
       }
-    }
+    } else responseIssue = 'http_error';
   } catch {
-    if (options.required) throw new Error('SUBSCRIBER_STORE_UNAVAILABLE');
+    if (options.required) throw new Error('SUBSCRIBER_STORE_UNAVAILABLE', { cause: responseIssue });
     console.warn('[GoogleSheetSync:GET] 구독자 저장소를 불러오지 못했습니다.');
   }
-  if (options.required) throw new Error('SUBSCRIBER_STORE_UNAVAILABLE');
+  if (options.required) throw new Error('SUBSCRIBER_STORE_UNAVAILABLE', { cause: responseIssue });
   return [];
 }
 
