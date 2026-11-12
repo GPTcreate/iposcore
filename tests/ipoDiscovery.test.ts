@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
+import { spawnSync } from 'node:child_process';
 import ts from 'typescript';
 import type { IpoItem } from '../src/types/ipo';
 import { createDiscoveredIpo, findIpoForDartFiling, invalidateChangedIpoEvidence, isSameIpoIdentity,
@@ -95,6 +96,155 @@ test('repeated known filings do not consume the new-company limit', () => {
 test('different known corporation identities cannot be merged by a coincidental company name', () => {
   const existing = ipo();
   assert.equal(findIpoForDartFiling([existing], filing({ corp_code: '23456789' })), undefined);
+});
+
+// Actual 2026-11-11 C001 rows: withdrawals arrive in the existing discovery query.
+const withdrawalFilings: DartFilingItem[] = [
+  filing({ corp_code: '00618173', corp_name: '씨앤엠', report_nm: '철회신고서', rcept_no: '20261111000246', rcept_dt: '20261111', stock_code: '', flr_nm: '씨앤엠', rm: '' }),
+  filing({ corp_code: '01403198', corp_name: '제이앤티지', report_nm: '철회신고서', rcept_no: '20261111000314', rcept_dt: '20261111', stock_code: '', flr_nm: '제이앤티지', rm: '' }),
+];
+function beforeWithdrawal(withdrawal = withdrawalFilings[0], changes: Partial<IpoItem> = {}): IpoItem {
+  const previous = filing({ ...withdrawal, report_nm: '[기재정정]증권신고서(지분증권)', rcept_no: '20261103000363', rcept_dt: '20261103' });
+  return { ...createDiscoveredIpo(previous)!, id: withdrawal.corp_code === '00618173' ? 'cnm' : 'jntg',
+    code: withdrawal.corp_code.slice(2), market: 'KOSDAQ',
+    subscriptionStart: '2026-11-12', subscriptionEnd: '2026-11-13', refundDate: '2026-11-17', listingDate: '2026-11-23',
+    priceBandMin: 10000, priceBandMax: 12000, confirmedPrice: 0, circulatingSupplyRate: 35,
+    totalOfferingAmount: 250, marketCapAtIpo: 1000, depositRatePercent: 50,
+    underwriters: [{ name: '기존증권', fee: 2000, allocatedShares: 100000 }],
+    fieldEvidence: { circulatingSupplyRate: { ...fieldSource, value: 35 } },
+    expertReviews: [{ id: 'saved-review', sourceType: 'BLOG', author: 'fixture writer', title: '기존 보관글',
+      url: 'https://example.com/retained-review', publishedAt: '2026-11-10T00:00:00Z', sentiment: 'UNCLASSIFIED', summary: '기존 원문 기록' }],
+    ...changes };
+}
+function retainedWithdrawalFacts(item: IpoItem) {
+  const { id, name, code, market, status, subscriptionStart, subscriptionEnd, refundDate, listingDate,
+    confirmedPrice, priceBandMin, priceBandMax, depositRatePercent, underwriters, institutionalCompetitionRate,
+    lockupCommitmentRate, circulatingSupplyRate, totalOfferingAmount, marketCapAtIpo, fieldEvidence,
+    expertReviews, sentimentConsensus, aiScore, scoreGrade } = item;
+  return { id, name, code, market, status, subscriptionStart, subscriptionEnd, refundDate, listingDate,
+    confirmedPrice, priceBandMin, priceBandMax, depositRatePercent, underwriters, institutionalCompetitionRate,
+    lockupCommitmentRate, circulatingSupplyRate, totalOfferingAmount, marketCapAtIpo, fieldEvidence,
+    expertReviews, sentimentConsensus, aiScore, scoreGrade };
+}
+
+test('actual C001 withdrawal rows cancel the two known equity issuers without replacing their saved facts', () => {
+  const current = withdrawalFilings.map(withdrawal => beforeWithdrawal(withdrawal));
+  const originals = structuredClone(current);
+  const result = mergeDartDiscoveries(current, withdrawalFilings);
+  assert.equal(result.newIpos.length, 0);
+  assert.equal(result.updatedIpos.length, 2);
+  assert.equal(result.ipos.length, 2);
+  for (const withdrawal of withdrawalFilings) {
+    const previous = current.find(item => item.discovery!.corpCode === withdrawal.corp_code)!;
+    const cancelled = result.ipos.find(item => item.id === previous.id)!;
+    assert.equal(cancelled.isCancelled, true);
+    assert.match(cancelled.cancelReason || '', /철회/);
+    assert.equal(cancelled.discovery!.corpCode, withdrawal.corp_code);
+    assert.equal(cancelled.discovery!.receiptNo, withdrawal.rcept_no);
+    assert.equal(cancelled.discovery!.reportName, '철회신고서');
+    assert.equal(cancelled.discovery!.sourceUrl, `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${withdrawal.rcept_no}`);
+    assert.deepEqual(retainedWithdrawalFacts(cancelled), retainedWithdrawalFacts(previous));
+  }
+  assert.deepEqual(current, originals);
+});
+
+test('withdrawal cancellation requires a known matching corporation and a prior equity filing, not name/code coincidence', () => {
+  const withdrawal = withdrawalFilings[0];
+  const normal = beforeWithdrawal(withdrawal);
+  for (const previous of [
+    { ...normal, discovery: undefined },
+    { ...normal, discovery: { ...normal.discovery!, corpCode: '12345678' } },
+    { ...normal, discovery: { ...normal.discovery!, reportName: '증권신고서(채무증권)' } },
+  ]) {
+    const result = mergeDartDiscoveries([previous], [{ ...withdrawal, stock_code: normal.code }]);
+    assert.equal(result.ipos[0].isCancelled, previous.isCancelled, previous.discovery?.reportName || 'No prior DART corporation');
+    assert.equal(result.newIpos.length, 0);
+    assert.deepEqual(result.ipos[0], previous);
+  }
+});
+
+test('unknown withdrawn issuers never create an active card from an older registration in the same batch', () => {
+  const withdrawal = withdrawalFilings[0];
+  const older = { ...withdrawal, report_nm: '증권신고서(지분증권)', rcept_no: '20261110000001', rcept_dt: '20261110' };
+  for (const filings of [[withdrawal], [older, withdrawal], [withdrawal, older]]) {
+    const result = mergeDartDiscoveries([], filings);
+    assert.equal(result.ipos.length, 0);
+    assert.equal(result.newIpos.length, 0);
+  }
+});
+
+test('an older withdrawal cannot cancel a newer known equity filing, including reversed batch order', () => {
+  const withdrawal = withdrawalFilings[0], normal = beforeWithdrawal(withdrawal);
+  const newer = { ...withdrawal, report_nm: '[기재정정]증권신고서(지분증권)', rcept_no: '20261112000001', rcept_dt: '20261112' };
+  const alreadyNewer = { ...normal, discovery: { ...normal.discovery!, receiptNo: newer.rcept_no, receivedAt: '2026-11-12' } };
+  assert.deepEqual(mergeDartDiscoveries([alreadyNewer], [withdrawal]).ipos[0], alreadyNewer);
+  for (const filings of [[withdrawal, newer], [newer, withdrawal]]) {
+    const result = mergeDartDiscoveries([normal], filings);
+    assert.notEqual(result.ipos[0].isCancelled, true);
+    assert.equal(result.ipos[0].discovery!.receiptNo, newer.rcept_no);
+  }
+});
+
+test('listed or finalized issuers and listed-company capital withdrawals do not cancel an IPO history', () => {
+  const withdrawal = withdrawalFilings[0];
+  for (const previous of [beforeWithdrawal(withdrawal, { status: 'LISTED' }),
+    beforeWithdrawal(withdrawal, { openingPrice: 20000, closingPrice: 19000 })]) {
+    const result = mergeDartDiscoveries([previous], [withdrawal]);
+    assert.notEqual(result.ipos[0].isCancelled, true);
+    assert.deepEqual(retainedWithdrawalFacts(result.ipos[0]), retainedWithdrawalFacts(previous));
+  }
+  for (const corp_cls of ['K', 'Y']) {
+    assert.notEqual(mergeDartDiscoveries([beforeWithdrawal()], [{ ...withdrawal, corp_cls }]).ipos[0].isCancelled, true);
+  }
+});
+
+test('withdrawals are idempotent and later registration metadata cannot automatically revive a cancelled offering', () => {
+  const withdrawal = withdrawalFilings[0];
+  const first = mergeDartDiscoveries([beforeWithdrawal(withdrawal)], [withdrawal]);
+  assert.equal(first.ipos[0].isCancelled, true);
+  const repeated = mergeDartDiscoveries(first.ipos, [withdrawal]);
+  assert.deepEqual(repeated.ipos, first.ipos);
+  assert.equal(repeated.updatedIpos.length, 0);
+  const later = mergeDartDiscoveries(first.ipos, [{ ...withdrawal, report_nm: '증권신고서(지분증권)', rcept_no: '20261112000001', rcept_dt: '20261112' }]);
+  assert.equal(later.ipos[0].isCancelled, true);
+  assert.equal(later.ipos[0].cancelReason, first.ipos[0].cancelReason);
+  assert.deepEqual(retainedWithdrawalFacts(later.ipos[0]), retainedWithdrawalFacts(first.ipos[0]));
+});
+
+test('malformed withdrawal receipts, dates, corporation IDs and unrelated titles cannot cancel a known offering', () => {
+  const current = beforeWithdrawal();
+  for (const changes of [{ rcept_no: '20261311000246' }, { rcept_dt: '20261110' },
+    { corp_code: '00000000' }, { report_nm: '철회 관련 안내' }, { report_nm: '증권신고서(지분증권)', rm: '철' }]) {
+    assert.notEqual(mergeDartDiscoveries([current], [{ ...withdrawalFilings[0], ...changes }]).ipos[0].isCancelled, true);
+  }
+});
+
+test('the unchanged validator rejects a due active zero-price offering and accepts its recorded withdrawal', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'iposcore-withdrawal-validation-'));
+  const dataDir = path.join(root, 'src', 'data'), scriptsDir = path.join(root, 'scripts');
+  fs.mkdirSync(dataDir, { recursive: true }); fs.mkdirSync(scriptsDir, { recursive: true });
+  for (const file of ['audit-content-integrity.mjs', 'ipo-source-records.mjs']) {
+    fs.copyFileSync(path.join(process.cwd(), 'scripts', file), path.join(scriptsDir, file));
+  }
+  fs.writeFileSync(path.join(dataDir, 'mockIpo.ts'), 'export const MOCK_IPOS: IpoItem[] = [];');
+  const customFile = path.join(dataDir, 'customIpos.json');
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const current = beforeWithdrawal(withdrawalFilings[0], { subscriptionStart: today, subscriptionEnd: today, refundDate: today, listingDate: undefined });
+  fs.writeFileSync(customFile, JSON.stringify([current]));
+  const validate = () => spawnSync(process.execPath, [path.join(process.cwd(), 'scripts', 'validate-ipo-data.mjs')], { cwd: root, encoding: 'utf8' });
+  const active = validate();
+  assert.equal(active.status, 1);
+  assert.match(active.stdout + active.stderr, /공모가 미확정/);
+  const cancelled = mergeDartDiscoveries([current], [withdrawalFilings[0]]).ipos[0];
+  assert.equal(cancelled.isCancelled, true);
+  fs.writeFileSync(customFile, JSON.stringify([cancelled]));
+  const withdrawn = validate();
+  assert.equal(withdrawn.status, 0, withdrawn.stdout + withdrawn.stderr);
+  // Marking this issuer withdrawn must not exempt another still-active offering.
+  fs.writeFileSync(customFile, JSON.stringify([cancelled, { ...current, id: 'still-active', name: '다른 예정기업', code: '999999', discovery: undefined }]));
+  const mixed = validate();
+  assert.equal(mixed.status, 1);
+  assert.match(mixed.stdout + mixed.stderr, /다른 예정기업.*공모가 미확정/);
 });
 
 test('changed numerical or date values lose old field evidence and item review', () => {

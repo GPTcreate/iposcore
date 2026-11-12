@@ -244,7 +244,7 @@ export default function IpoCard({ ipo }: IpoCardProps) {
               </span>
               <span className="font-semibold text-gray-800 flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                {effectiveStatus === 'WAITING_LISTING' ? (
+                {ipo.isCancelled ? <span>공모 철회로 취소</span> : effectiveStatus === 'WAITING_LISTING' ? (
                   <span>
                     환불 {ipo.refundDate ? ipo.refundDate.slice(5) : '확인 중'} · 상장 <strong className="text-blue-700">{ipo.listingDate ? ipo.listingDate.slice(5) : '미정'}</strong>
                   </span>

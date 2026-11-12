@@ -35,6 +35,7 @@ const memoText = (value: string) => /(?:원금|이자|수익).{0,40}보장(?:되
   ? '원금·이자 반환 조건과 청약·거래 비용은 공시와 주관사 공고에서 확인할 사항입니다.' : value;
 
 function FieldSource({ ipo, field }: { ipo: IpoItem; field?: IpoEvidenceField }) {
+  if (ipo.isCancelled && field && ['subscriptionStart', 'subscriptionEnd', 'refundDate', 'listingDate'].includes(field)) return null;
   const evidence = field ? getFieldEvidence(ipo, field) : undefined;
   if (!evidence) return null;
   return <a href={evidence.sourceUrl} target="_blank" rel="noopener noreferrer" title={`${evidence.sourceTitle} · 확인일 ${evidence.checkedAt.slice(0, 10)}`} aria-label={`${evidence.sourceTitle} 원문, 확인일 ${evidence.checkedAt.slice(0, 10)}`} className="shrink-0 text-[11px] font-medium text-blue-700 underline">원문 ↗</a>;
@@ -64,9 +65,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const evaluatedAt = new Date();
   const ipo = getEffectiveIpoByIdOrCode(id, evaluatedAt);
   if (!ipo) return { title: '종목 자료를 찾을 수 없습니다', robots: { index: false } };
-  const title = `${ipo.name} 공모주 일정·참고점수·블로그 리뷰`;
+  const title = ipo.isCancelled ? `${ipo.name} 공모 철회 안내` : `${ipo.name} 공모주 일정·참고점수·블로그 리뷰`;
   const indexable = isIndexableIpo(ipo);
-  const description = `${ipo.name}의 등록된 청약 일정, 공모가, 주관사와 기관 지표·참고점수를 확인하고 실제 블로그 원문과 배정·손익 계산기를 이용하세요. 항목별 원문 확인 상태를 구분합니다.`;
+  const description = ipo.isCancelled ? `${ipo.name}은 공모를 철회해 잔여 일정이 취소되었습니다. 철회 공시와 기존 등록자료를 확인하세요.`
+    : `${ipo.name}의 등록된 청약 일정, 공모가, 주관사와 기관 지표·참고점수를 확인하고 실제 블로그 원문과 배정·손익 계산기를 이용하세요. 항목별 원문 확인 상태를 구분합니다.`;
   return {
     title, description,
     alternates: { canonical: `${siteUrl}/ipo/${ipo.id}` },
@@ -125,7 +127,7 @@ export default async function IpoDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap items-center gap-2 text-xs font-bold"><span className={`rounded px-2.5 py-1 text-white ${ipo.isCancelled ? 'bg-rose-700' : statusStyles[ipo.status]}`}>{ipo.isCancelled ? '공모 철회' : statusLabels[ipo.status]}</span><span className="rounded border border-gray-200 bg-gray-100 px-2 py-1">{ipo.market === 'UNCONFIRMED' ? '시장 미확인' : ipo.market}</span>{ipo.code && <span className="text-gray-500">종목코드 {ipo.code}</span>}</div>
               <h1 className="text-2xl sm:text-3xl font-black break-words">{ipo.name} 공모주 분석</h1>
               <p className="text-sm text-gray-700 leading-relaxed">{memoText(ipo.aiSummary.headline)}</p>
-              <p className={`text-xs ${reviewed ? 'text-blue-700' : 'text-gray-500'}`}>{reviewed ? `공시 원문 확인 · ${ipo.dataQuality?.reviewedAt?.slice(0, 10)}` : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료'}</p>
+              <p className={`text-xs ${reviewed ? 'text-blue-700' : 'text-gray-500'}`}>{ipo.isCancelled ? '공모 철회 공시 확인' : reviewed ? `공시 원문 확인 · ${ipo.dataQuality?.reviewedAt?.slice(0, 10)}` : ipo.discovery && !isIndexableIpo(ipo) ? '공시 접수 · 일정 확인 중' : '등록자료'}</p>
             </div>
             <ScoreBadge score={score.score} grade={score.scoreGrade} isVerified={verifiedScore} size="lg" basis={score.basis} sampleSize={score.sampleSize} reviewEligible={score.reviewEligible} reviewStartsOn={score.reviewStartsOn} />
           </header>
@@ -137,10 +139,10 @@ export default async function IpoDetailPage({ params }: PageProps) {
         <section id="ipo-schedule" className="rounded-xl border border-gray-300 bg-white p-5 sm:p-7 space-y-4">
           <h2 className="flex items-center gap-2 text-lg font-bold"><CalendarDays className="w-5 h-5 text-blue-700" />청약 일정과 공모가</h2>
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Metric label="청약 시작" ipo={ipo} field="subscriptionStart">{ipo.subscriptionStart || '일정 확인 중'}</Metric>
-            <Metric label="청약 마감" ipo={ipo} field="subscriptionEnd">{ipo.subscriptionEnd || '일정 확인 중'}</Metric>
-            <Metric label="환불일" ipo={ipo} field="refundDate">{ipo.refundDate || '일정 확인 중'}</Metric>
-            <Metric label="상장일" ipo={ipo} field="listingDate">{ipo.listingDate || '일정 확인 중'}</Metric>
+            <Metric label="청약 시작" ipo={ipo} field="subscriptionStart">{ipo.isCancelled ? '철회로 취소' : ipo.subscriptionStart || '일정 확인 중'}</Metric>
+            <Metric label="청약 마감" ipo={ipo} field="subscriptionEnd">{ipo.isCancelled ? '철회로 취소' : ipo.subscriptionEnd || '일정 확인 중'}</Metric>
+            <Metric label="환불일" ipo={ipo} field="refundDate">{ipo.isCancelled ? '철회로 취소' : ipo.refundDate || '일정 확인 중'}</Metric>
+            <Metric label="상장일" ipo={ipo} field="listingDate">{ipo.isCancelled ? '철회로 취소' : ipo.listingDate || '일정 확인 중'}</Metric>
             <Metric label={ipo.confirmedPrice > 0 ? '확정 공모가' : '공모가 확정 전'} ipo={ipo} field="confirmedPrice">{ipo.confirmedPrice > 0 ? money(ipo.confirmedPrice) : '미확정'}</Metric>
             <Metric label="청약 증거금률" ipo={ipo} field="depositRatePercent">{depositRate === undefined ? '종목별 조건 확인 중' : percentage(depositRate)}</Metric>
             <Metric label="희망 공모가 하단" ipo={ipo}>{money(ipo.priceBandMin)}</Metric>
