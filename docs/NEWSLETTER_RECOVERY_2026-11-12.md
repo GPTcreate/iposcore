@@ -33,3 +33,5 @@
 - 메일/구독/cron 테스트는 모든 외부 통신·파일 쓰기를 모킹하여 실제 수신자에게 발송하지 않는다. 정확한 근거·철회·날짜 경계·미검증 값 비노출·수락/거절/불명·타임아웃·겹친 요청·dryRun·영속 저장 오류/해지/재신청 회귀를 포함한다.
 - 로컬 TypeScript·대상 ESLint·보안58검사 및 Webpack 프로덕션 빌드 통과. 공유 의존성 junction으로 로컬 Turbopack은 사용하지 않았으며 Vercel 기본 빌드는 배포 체크로 확인한다.
 - 최종 운영 배포 SHA·readiness 확인 결과는 PROJECT_HISTORY.md의 이번 작업 이력에 기록한다. 실제 운영에서 CRON_SECRET 미등록을 확인했다. PC Chrome의 Vercel 로그인은 확인됐고 Production Secret 등록 폼을 준비했다. 새 인증키 직접 입력·저장 후 재배포와 dryRun 확인이 필요하다. 운영 설정이나 실발송 검증을 추정으로 완료 처리하지 않는다.
+
+- 최종 코드 PR20/63d4cdc의 Vercel 운영 빌드 성공(GPhQ89rpbCPR4p3fKWaeAwtTu6GH), 공개 미리보기8개 공식 일정·철회 제외 확인. 총427개 콘텐츠/메일 등+58개 보안=485검사 통과. Production CRON_SECRET 등록 전이므로 자동 예약 활성화는 완료하지 않았다.
