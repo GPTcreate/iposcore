@@ -19,7 +19,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 401 });
   }
 
-  const subscribers: Subscriber[] = await getAllSubscribersAsync();
+  let subscribers: Subscriber[];
+  try {
+    subscribers = await getAllSubscribersAsync({ requireRemote: true });
+  } catch {
+    return NextResponse.json({ success: false, error: '구독자 저장소를 확인하지 못했습니다.' }, {
+      status: 503, headers: { 'Cache-Control': 'no-store' },
+    });
+  }
 
   const stats = {
     total: subscribers.length,
