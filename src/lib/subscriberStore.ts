@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { matchesNewsletterUnsubscribeToken } from './newsletterTokens';
 
 export type SubscriberStatus = 'PENDING' | 'ACTIVE' | 'CANCELLED';
 
@@ -121,8 +122,16 @@ export async function syncToGoogleSheet(
 
     if (!res.ok) return false;
     const result = await res.json();
-    return result?.result === 'success' && result.action === action
-      && String(result.email || '').toLowerCase() === subscriber.email.toLowerCase();
+    if (result?.result !== 'success' || result.error || result.success === false) return false;
+    if (result.action === action && String(result.email || '').toLowerCase() === subscriber.email.toLowerCase()) return true;
+    if (result.action !== undefined || result.email !== undefined) return false;
+    // Legacy Apps Script acknowledges only {result:'success'}. Confirm the
+    // requested state from fresh storage instead of treating HTTP200 as saved.
+    const remote = (await fetchSubscribersFromGoogleSheet({ required: true }))
+      .filter(row => row.email === subscriber.email.toLowerCase());
+    return remote.length > 0 && remote.every(row => row.status === subscriber.status
+      && (action === 'UNSUBSCRIBE' || (row.verificationToken === subscriber.verificationToken
+        && row.unsubscribeToken === subscriber.unsubscribeToken)));
   } catch {
     console.error('[GoogleSheetSync] 영속 저장 응답을 확인하지 못했습니다.');
     return false;
@@ -399,7 +408,13 @@ export async function unsubscribeSubscriber(
   identifier: string,
   options?: { allowEmailMatch?: boolean }
 ): Promise<Subscriber | null> {
-  await ensureStoreLoaded();
+  if (isProductionEnvironment()) {
+    memoryStore = await fetchSubscribersFromGoogleSheet({ required: true });
+    isStoreLoaded = true;
+    lastRemoteFetchTime = Date.now();
+  } else {
+    await ensureStoreLoaded();
+  }
   const trimmed = identifier.trim();
   const allowEmail = options?.allowEmailMatch ?? false;
 
@@ -407,6 +422,7 @@ export async function unsubscribeSubscriber(
     (s) =>
       s.unsubscribeToken === trimmed ||
       s.verificationToken === trimmed ||
+      matchesNewsletterUnsubscribeToken(s, trimmed) ||
       (allowEmail && s.email === trimmed.toLowerCase())
   );
 
@@ -417,6 +433,7 @@ export async function unsubscribeSubscriber(
       (s) =>
         s.unsubscribeToken === trimmed ||
         s.verificationToken === trimmed ||
+        matchesNewsletterUnsubscribeToken(s, trimmed) ||
         (allowEmail && s.email === trimmed.toLowerCase())
     );
   }

@@ -35,6 +35,7 @@ function fixture(options: {
     } },
     'node:crypto': crypto,
     './subscriberStore': {},
+    './newsletterTokens': { getNewsletterUnsubscribeToken: (sub: { unsubscribeToken?: string }) => sub.unsubscribeToken || null },
     './ipoUtils': { getAllEffectiveIpos: () => [] },
     './contentQuality': { isReviewedIpo: () => false, hasVerifiedForecast: () => false },
     './newsletterContent': {

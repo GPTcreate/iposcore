@@ -43,6 +43,7 @@ function fixture(options: {
     },
     path,
     crypto: { randomBytes: (size: number) => Buffer.alloc(size, ++randomCalls) },
+    './newsletterTokens': { matchesNewsletterUnsubscribeToken: () => false },
   };
   const source = fs.readFileSync('src/lib/subscriberStore.ts', 'utf8');
   const js = ts.transpileModule(source, { compilerOptions: {
