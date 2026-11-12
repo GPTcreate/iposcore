@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { Subscriber } from './subscriberStore';
 import { getAllEffectiveIpos } from './ipoUtils';
 import { buildNewsletterPlan, renderWeeklyNewsletter, type NewsletterPlan } from './newsletterContent';
+import { getNewsletterUnsubscribeToken } from './newsletterTokens';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iposcore.kr';
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'newsletter@iposcore.kr';
@@ -305,11 +306,12 @@ export async function sendWeeklyReportEmail(
   subscriber: Subscriber,
   options: { plan?: NewsletterPlan; idempotencyKey?: string } = {}
 ) {
-  if (subscriber.status !== 'ACTIVE' || !subscriber.unsubscribeToken || subscriber.unsubscribeToken.length < 24) {
+  const unsubscribeToken = getNewsletterUnsubscribeToken(subscriber);
+  if (subscriber.status !== 'ACTIVE' || !unsubscribeToken) {
     return { success: false, mode: 'invalid_subscriber', error: 'subscriber_not_ready' };
   }
   const plan = options.plan || buildNewsletterPlan(getAllEffectiveIpos());
   if (!plan.hasContent) return { success: false, mode: 'no_content', error: 'no_verified_schedule' };
-  const { subject, html } = getWeeklyReportEmailTemplate(subscriber, plan);
+  const { subject, html } = getWeeklyReportEmailTemplate({ ...subscriber, unsubscribeToken }, plan);
   return sendEmail({ to: subscriber.email, subject, html, idempotencyKey: options.idempotencyKey });
 }

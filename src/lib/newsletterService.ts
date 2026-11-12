@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { Subscriber } from './subscriberStore';
 import type { NewsletterPlan } from './newsletterContent';
+import { getNewsletterUnsubscribeToken } from './newsletterTokens';
 
 interface NewsletterDeliveryResult { success: boolean; mode: string; uncertain?: boolean }
 
@@ -20,8 +21,10 @@ export function selectNewsletterSubscribers(subscribers: Subscriber[]) {
     byEmail.set(email, { ...subscriber, email });
   }
   const active = [...byEmail.values()].filter(subscriber => !suppressed.has(subscriber.email));
-  const ready = active.filter(subscriber => typeof subscriber.unsubscribeToken === 'string'
-    && subscriber.unsubscribeToken.length >= 24);
+  const ready = active.flatMap(subscriber => {
+    const unsubscribeToken = getNewsletterUnsubscribeToken(subscriber);
+    return unsubscribeToken ? [{ ...subscriber, unsubscribeToken }] : [];
+  });
   return { activeCount: active.length, ready, invalidCount: active.length - ready.length };
 }
 

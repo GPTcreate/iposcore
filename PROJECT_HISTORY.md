@@ -75,7 +75,7 @@
 - 사용자 자동 발송 수정 요청. 마지막 실제 주간메일은 10/19 09:43 KST였고 운영 53종목의 전체 reviewed가0이라 기존 cron이 구독자 조회 전 무기한0건 성공을 반환했다. 필드별 공식 근거와 현재 값 일치로 안전한 일정 메일을 생성하며 철회·충돌·상장·불명 근거와 미검증 숫자/사업/점수를 제외한다.
 - 매일07시 수집/월요일09:35 뉴스레터 예약 보존. 발송 중 재수집/파일 쓰기 제거, fresh 원격 ACTIVE/실패 구분/빈 목록·해지 보존/수신거부 필수/안전한 재신청. 실제 제공자 수락만 성공으로 집계, 모의 전송·메일 미설정 즉시활성화 제거. 인증된 dryRun에 CRON_SECRET readiness 추가.
 - Resend 안정키·SMTP 고정Message-ID/인스턴스 guard·동시2/시작195초/Resend30초/SMTP45초 제한. 영속 원장/SMTP 정확히1회 보장은 없으며 불명 요청을 다른 제공자로 재전송하지 않는다. 신규 Apps Script action 없음. 상세 docs/NEWSLETTER_RECOVERY_2026-11-12.md.
-- 검증: 콘텐츠/전송/저장소/cron 등416개+보안58개=총474검사, TypeScript·변경lint·Webpack 프로덕션 빌드 통과. Vercel 배포 및 실발송 없는 운영 readiness 결과는 완료 후 이 항목에 보완한다.
+- 검증: 콘텐츠/전송/저장소/cron 등427개+보안58개=총485검사, TypeScript·변경lint·Webpack 프로덕션 빌드 통과. PR17/7bec974·PR18/3845be5·PR19/6a99b26의 Vercel 운영 빌드 성공. 실제 dryRun은 구형 {subscribers} 응답 호환 후 ACTIVE2/토큰부족2/공식근거19, CRON_SECRET 미설정으로503. 토큰 미반환 구형 저장소는 CRON_SECRET 기반 수신거부 전용 HMAC 링크로 복원하며 저장 토큰은 보존한다. 개인 정보/키는 링크에 포함하지 않는다. 구형 취소 ACK는 새 원격 상태를 읽어 확인한다. PC Chrome의 Vercel 로그인과 키 미등록을 확인하고 Production Secret/CRON_SECRET 입력 폼을 준비했다. 새 키 입력·저장은 브라우저 정책상 사용자 직접 작업이며, 등록 뒤 재배포·dryRun 확인이 남는다.
 
 ### [2026-11-12 공모 철회 반영 누락 복구] 작업자: Codex
 

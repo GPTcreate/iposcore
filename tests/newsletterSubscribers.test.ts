@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import ts from 'typescript';
+import { getNewsletterUnsubscribeToken, matchesNewsletterUnsubscribeToken } from '../src/lib/newsletterTokens';
 
 interface SubscriberFixture {
   id: string; email: string; status: string; frequency: string;
@@ -36,6 +37,8 @@ function fixture(options: {
     },
     path,
     crypto: { randomBytes: (size: number) => Buffer.alloc(size, 7) },
+    './newsletterTokens': { matchesNewsletterUnsubscribeToken: (sub: { email: string }, token: string) =>
+      matchesNewsletterUnsubscribeToken(sub, token, options.env?.CRON_SECRET) },
   };
   const source = fs.readFileSync('src/lib/subscriberStore.ts', 'utf8');
   const js = ts.transpileModule(source, { compilerOptions: {
@@ -61,6 +64,7 @@ function fixture(options: {
     cached: exported.getAllSubscribers as () => SubscriberFixture[],
     fetchRemote: exported.fetchSubscribersFromGoogleSheet as (options?: { required?: boolean }) => Promise<SubscriberFixture[]>,
     sync: exported.syncToGoogleSheet as (action: 'SUBSCRIBE' | 'VERIFY' | 'UNSUBSCRIBE', subscriber: SubscriberFixture) => Promise<boolean>,
+    unsubscribe: exported.unsubscribeSubscriber as (token: string) => Promise<SubscriberFixture | null>,
     requests, localEffects, printed,
   };
 }
@@ -205,4 +209,37 @@ test('POST missing configuration, HTTP rejection and provider failure cannot rep
     const printed = JSON.stringify(run.printed);
     for (const secret of [remoteUrl, active.email, active.verificationToken]) assert(!printed.includes(secret));
   }
+});
+
+test('legacy acknowledgement requires fresh read-back of the same subscriber and requested state', async () => {
+  const cancelled = { ...active, status: 'CANCELLED', unsubscribeToken: '', verificationToken: '' };
+  for (const remote of [[cancelled], [active], [cancelled, active], []]) {
+    const run = fixture({ env: { GOOGLE_SHEET_WEBHOOK_URL: remoteUrl }, response: async init =>
+      Response.json(init.method === 'POST' ? { result: 'success' } : { subscribers: remote }) });
+    assert.equal(await run.sync('UNSUBSCRIBE', cancelled), remote.length === 1 && remote[0].status === 'CANCELLED');
+    assert.equal(run.requests.length, 2);
+  }
+});
+
+test('signed legacy unsubscribe survives cold caches and confirms cancellation without token columns', async () => {
+  const secret = 'fixture-scheduler-secret-not-production';
+  const legacy = { ...active, unsubscribeToken: '', verificationToken: '' };
+  const token = getNewsletterUnsubscribeToken(legacy, secret)!;
+  let remote = legacy;
+  const run = fixture({ env: { NODE_ENV: 'production', GOOGLE_SHEET_WEBHOOK_URL: remoteUrl, CRON_SECRET: secret },
+    response: async init => {
+      if (init.method === 'POST') {
+        const payload = JSON.parse(String(init.body));
+        assert.equal(payload.action, 'UNSUBSCRIBE');
+        assert.equal(payload.email, active.email);
+        remote = { ...legacy, status: payload.status };
+        return Response.json({ result: 'success' });
+      }
+      return Response.json({ subscribers: [remote] });
+    } });
+  const cancelled = await run.unsubscribe(token);
+  assert.equal(cancelled?.status, 'CANCELLED');
+  assert.deepEqual(run.requests.map(request => request.method), ['GET', 'POST', 'GET']);
+  assert(!JSON.stringify(run.printed).includes(secret));
+  assert(!JSON.stringify(run.printed).includes(token));
 });
