@@ -821,7 +821,7 @@
     "name": "바로팜",
     "code": "0153R0",
     "market": "KOSDAQ",
-    "status": "UPCOMING",
+    "status": "LISTED",
     "subscriptionStart": "2026-11-02",
     "subscriptionEnd": "2026-11-03",
     "refundDate": "2026-11-05",
@@ -841,7 +841,7 @@
     "totalOfferingAmount": 291.92,
     "marketCapAtIpo": 2413,
     "aiSummary": {
-      "headline": "바로팜 공모 일정과 공시 자료",
+      "headline": "바로팜 상장 완료! 시초가 16,000원(-2.4%), 종가 11,740원(-28.4%) 기록",
       "bulletPoints": [
         "약국 원스톱 주문 SaaS 락인 효과와 제약 광고·커머스 고성장세"
       ],
@@ -854,13 +854,230 @@
       ]
     },
     "sentimentConsensus": {
-      "positiveRatio": 75,
-      "neutralRatio": 19,
-      "cautionRatio": 6
+      "positiveRatio": 0,
+      "neutralRatio": 0,
+      "cautionRatio": 100
     },
-    "expertReviews": [],
-    "aiScore": 80,
-    "scoreGrade": "A",
+    "expertReviews": [
+      {
+        "id": "rss-a80851eb4a0982574ae6",
+        "sourceType": "BLOG",
+        "author": "kastro83",
+        "title": "2026년 11월 1주차 공모주 청약 및 상장 일정 총정리, 6종목 청약과 영광·래블업 상장",
+        "url": "https://blog.naver.com/kastro83/224458886113",
+        "publishedAt": "2026-11-01T10:00:00.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "ae13865d689cda952d985f80baaaeb406c696099ab4261ff71b184dc2baa4b49",
+          "matchedAlias": "바로팜",
+          "excerpt": "이번 주에는 바로팜, 동원파츠, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 등 총 6개 종목의 청약이 시작됩니다.",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-4041e8ad9e827736b4ca",
+        "sourceType": "BLOG",
+        "author": "hippocamp",
+        "title": "[2026년 11월 공모주] 넥스아이 수요예측 결과 핵심 정리 (Feat. 페이코 이벤트, 상장일, 주가, 공모가, 장외가, 바이오주)",
+        "url": "https://blog.naver.com/hippocamp/224461205612",
+        "publishedAt": "2026-11-01T07:27:45.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "794a49e0586b8b5b26b7f5abb9c9b659fe9dd5545ab5788f21c4f2f28790250b",
+          "matchedAlias": "바로팜",
+          "excerpt": "동원파츠와 바로팜의 뒤를 이어 11월 3일부터 청약을 진행하는 기업은 오랜만에 등장한 신약개발 바이오 기업인데요. 바이오 관련주 ‘넥스아이’에 관해서",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-1060eab333fadddaf972",
+        "sourceType": "BLOG",
+        "author": "dividendqueen",
+        "title": "바로팜 공모주 청약 공모가 하단 16,400원 결정 진짜 이유",
+        "url": "https://blog.naver.com/dividendqueen/224461044579",
+        "publishedAt": "2026-11-01T04:33:09.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "d3c35a270cf0cc67aaa511382bd820f293939ca7f200010414b4abe60e37da35",
+          "matchedAlias": "바로팜",
+          "excerpt": "바로팜 공모주 청약 공모가 하단 16,400원 결정 진짜 이유",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-6949a3e7fe03c06172c3",
+        "sourceType": "BLOG",
+        "author": "juan116_",
+        "title": "공모주 분석:바로팜 (11/2~11/3), 미래에셋증권",
+        "url": "https://blog.naver.com/juan116_/224460870593",
+        "publishedAt": "2026-11-01T00:53:40.000Z",
+        "sentiment": "CAUTION",
+        "summary": "해당 종목에 대한 작성자의 청약 불참 의사를 확인한 글입니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "7da54b886ca931edd1efa25f61ee49ecbc8a4f7a044f879dcfb6e3a7000d1e47",
+          "matchedAlias": "바로팜",
+          "excerpt": "바로팜 … 우 저조할 것으로 예상되어 환매청구권이 있음에도 이번 공모주는 참여하지 않을 생각이다",
+          "classification": "explicit-stance-v1"
+        }
+      },
+      {
+        "id": "rss-385c024a3f0222a6f77b",
+        "sourceType": "BLOG",
+        "author": "msql",
+        "title": "[공모주, 실권주 주간 일정] 11월 2일 ~ 11월 6일, 주요 상황 [청약 6건, 상장 4건(실권주, 일반공모 일정 포함)]",
+        "url": "https://blog.naver.com/msql/224460206843",
+        "publishedAt": "2026-11-01T00:30:00.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "9d2a7e85469180e5c84d473c7398cabe31178548080a1c222a00059702a79066",
+          "matchedAlias": "바로팜",
+          "excerpt": "다음 주에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다.",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-a34f71f448bf1a434314",
+        "sourceType": "BLOG",
+        "author": "juan116_",
+        "title": "11월 1주차 공모주 청약/상장 일정 정리",
+        "url": "https://blog.naver.com/juan116_/224460554721",
+        "publishedAt": "2026-10-31T14:24:43.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "92127ead2a4706b794cbb991064fa09654549b58797d98e6776f375627ab453d",
+          "matchedAlias": "바로팜",
+          "excerpt": "1/9) 이번 주에 일반 청약을 시작하는 종목은 6개다. 그중 바로팜·동원파츠·넥스아이·옵토닉스는 발행조건확정 공시가 나왔고, 영광와이케이엠씨·에이엘로봇은 아직 수요예측 중이다. 동원파츠와",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-69373426c2a2da4822c1",
+        "sourceType": "BLOG",
+        "author": "msql",
+        "title": "바로팜 공모가 16,400원 확정, 변경된 청약정보와 상장일 유통물량",
+        "url": "https://blog.naver.com/msql/224460145605",
+        "publishedAt": "2026-10-31T06:07:13.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "be1e3ebf203db289a9f2347ac7e459720a2ae05dce110c265bb63c089eb1cc12",
+          "matchedAlias": "바로팜",
+          "excerpt": "바로팜 공모가 16,400원 확정, 변경된 청약정보와 상장일 유통물량 안녕하세요. 다음 주 11월 2일(월)부터 11월 3일(화)까지 바로팜의 청약이 진행됩니다.",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-9f2020b82bf730ca1f3b",
+        "sourceType": "BLOG",
+        "author": "findaway12",
+        "title": "바로팜 공모주 수요예측 152대 1, 공모가 낮췄는데 청약할까?",
+        "url": "https://blog.naver.com/findaway12/224459896020",
+        "publishedAt": "2026-10-31T03:50:00.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "c95d53fefce2bbacbe987754d08693de19b8e1fe83a82384261933e91a67f061",
+          "matchedAlias": "바로팜",
+          "excerpt": "11월 2일부터 바로팜 공모주 청약이 시작된다.",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-27387e9e553b82649d6e",
+        "sourceType": "BLOG",
+        "author": "lsyivy0722",
+        "title": "바로팜 공모주 16,400원 하단 확정, 수요예측 48%는 하단 아래였다",
+        "url": "https://blog.naver.com/lsyivy0722/224459506304",
+        "publishedAt": "2026-10-31T03:10:00.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "01363fa93bf2597dfd131ec08a2b4d06975d79a741b7e9d5bc34ebe30bfd8021",
+          "matchedAlias": "바로팜",
+          "excerpt": "바로팜 공모주 16,400원 하단 확정, 수요예측 48%는 하단 아래였다 바로팜의 확정공모가는 2026년 10월 30일 공시된 발행조건확정 증권신고서 기준",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-9c2fad72f059549f91fd",
+        "sourceType": "BLOG",
+        "author": "hippocamp",
+        "title": "[2026년 11월 공모주] 바로팜 수요예측 결과 핵심 정리 (Feat. 코인원 이벤트, 환매청구권, 상장일, 주가, 공모가, 장외가, 제약주)",
+        "url": "https://blog.naver.com/hippocamp/224459419555",
+        "publishedAt": "2026-10-30T11:17:40.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "2a86e0d6eff0da814fe608c48f79a068da1184df404b0f5924767b8ce3bc2d3e",
+          "matchedAlias": "바로팜",
+          "excerpt": "[2026년 11월 공모주] 바로팜 수요예측 결과 핵심 정리 (Feat. 코인원 이벤트, 환매청구권, 상장일, 주가, 공모가, 장외가, 제약주) 본격적인",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-acd3e4fddae5ac8dea09",
+        "sourceType": "BLOG",
+        "author": "kastro83",
+        "title": "바로팜 공모주 청약분석 기관경쟁률 152대 1, 환매청구권에도 패스하는 이유",
+        "url": "https://blog.naver.com/kastro83/224459257287",
+        "publishedAt": "2026-10-30T10:30:00.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "f5e50e284f0aada824c52d6251a4e2686caab1048df0e498d175c58c9a5bf3e6",
+          "matchedAlias": "바로팜",
+          "excerpt": "바로팜 공모주 청약분석 기관경쟁률 152대 1, 환매청구권에도 패스하는 이유 2026년 11월 2일부터 3일까지 진행되는 바로팜 공모주 청약에 앞서",
+          "classification": "unclassified"
+        }
+      },
+      {
+        "id": "rss-80032069eb05e28bd665",
+        "sourceType": "BLOG",
+        "author": "lsyivy0722",
+        "title": "공모주 일정 11월 18곳 총정리, 최소 증거금과 날짜 바뀐 5종목까지",
+        "url": "https://blog.naver.com/lsyivy0722/224455897480",
+        "publishedAt": "2026-10-28T23:10:00.000Z",
+        "sentiment": "UNCLASSIFIED",
+        "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+        "evidence": {
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "fetchedAt": "2026-11-01T12:51:23.365Z",
+          "contentHash": "1d065c99e233702b1514bd334c28745a7d25d2a81a67c9080f15cd7347ef4e22",
+          "matchedAlias": "바로팜",
+          "excerpt": "공모주 일정은 청약 18종목으로, 11월 2일(월) 동원파츠와 바로팜에서 시작해 11월 27일(금)~30일(월) 에이엔에이치스트럭쳐로 끝납니다. 금융감독원 전자공시시스템(DART)에 2026년 10월 27일까지",
+          "classification": "unclassified"
+        }
+      }
+    ],
+    "aiScore": 32,
+    "scoreGrade": "C",
     "discovery": {
       "corpCode": "01835829",
       "receiptNo": "20261030000396",
@@ -1239,7 +1456,25 @@
         }
       ]
     },
-    "listingDate": "2026-11-11"
+    "listingDate": "2026-11-11",
+    "scoreBasis": "COMBINED",
+    "scoreVersion": "2026-11-01-v3",
+    "sentimentIndex": 15,
+    "sentimentWeight": 5,
+    "sentimentConfidence": 0.2,
+    "reviewScoreEligible": true,
+    "reviewScoreStartsOn": "2026-11-01",
+    "openingPrice": 16000,
+    "openingReturnRate": -2.4,
+    "closingPrice": 11740,
+    "closingReturnRate": -28.4,
+    "listingPriceEvidence": {
+      "code": "0153R0",
+      "tradeDate": "2026-11-11",
+      "source": "fchart_origin",
+      "sourceUrl": "https://fchart.stock.naver.com/sise.nhn?symbol=0153R0&timeframe=day&count=1000&requestType=0",
+      "checkedAt": "2026-11-12T03:32:37.655Z"
+    }
   },
   {
     "id": "dongwon-parts",
@@ -3574,7 +3809,7 @@
   {
     "id": "nex-i",
     "name": "넥스아이",
-    "code": "447253",
+    "code": "493410",
     "market": "KOSDAQ",
     "status": "UPCOMING",
     "subscriptionStart": "2026-11-03",
@@ -3649,13 +3884,12 @@
         "parserVersion": "official-verification-v2"
       },
       "listingDate": {
-        "sourceTitle": "(주)넥스아이 확정발행가액 공지 및 청약 안내",
-        "sourceUrl": "https://www.truefriend.com/main/research/corporate/ipo/Pre01.jsp?cmd=TF09ac010002&num=669",
-        "checkedAt": "2026-10-31T05:35:10.796Z",
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-12T03:32:09.884Z",
         "value": "2026-11-12",
-        "publishedAt": "2026-10-30T03:10:00+09:00",
-        "excerpt": "상장 예정일은 2026년 11월 12일",
-        "parserVersion": "official-verification-v2"
+        "excerpt": "넥스아이 | 코스닥 | 493410 | 상장일 2026-11-12",
+        "parserVersion": "krx-company-list-v1"
       },
       "confirmedPrice": {
         "sourceTitle": "(주)넥스아이 확정발행가액 공지 및 청약 안내",
@@ -3710,10 +3944,18 @@
         "value": "항암·면역치료 불응인자를 표적으로 항체 기반 항암 신약을 연구·개발하는 기업입니다.",
         "excerpt": "항암ㆍ면역치료 불응인자 발굴 및 first-in-class 항암 신약을 연구하는 신약개발 기업. 항체 기반의 혁신신약 후보물질 도출, 핵심기술 NEXORA™ 플랫폼.",
         "parserVersion": "editorial-filing-facts-v1"
+      },
+      "code": {
+        "sourceTitle": "한국거래소 KIND 상장법인 목록",
+        "sourceUrl": "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13",
+        "checkedAt": "2026-11-12T03:32:09.884Z",
+        "value": "493410",
+        "excerpt": "넥스아이 | 코스닥 | 493410 | 상장일 2026-11-12",
+        "parserVersion": "krx-company-list-v1"
       }
     },
     "scheduleVerification": {
-      "status": "verified",
+      "status": "partial",
       "checkedAt": "2026-10-31T05:35:10.796Z",
       "conflicts": [],
       "coveredFields": [
@@ -3730,6 +3972,304 @@
     "businessDescription": "항암·면역치료 불응인자를 표적으로 항체 기반 항암 신약을 연구·개발하는 기업입니다.",
     "dataQuality": {
       "status": "unverified"
+    },
+    "reviewCollection": {
+      "ipoId": "nex-i",
+      "stockName": "넥스아이",
+      "subscriptionStart": "2026-11-03",
+      "collectedAt": "2026-11-03T08:45:42.660Z",
+      "lastSuccessfulAt": "2026-11-03T08:45:42.660Z",
+      "status": "success",
+      "reviews": [
+        {
+          "id": "rss-2b1a1e5eaa5c7432a162",
+          "sourceType": "BLOG",
+          "author": "xuenxu",
+          "title": "11월 옵토닉스 공모주 청약(11.5~6)",
+          "url": "https://blog.naver.com/xuenxu/224463506713",
+          "publishedAt": "2026-11-03T05:48:46.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "70137c642c591ee7a7c7e839630dcc99224a27341ab3615c1742973e95b5272c",
+            "matchedAlias": "넥스아이",
+            "excerpt": "화~수요일- 넥스아이 공모주 청약",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-0620631379412ae3f954",
+          "sourceType": "BLOG",
+          "author": "xuenxu",
+          "title": "11월 넥스아이 공모주 청약(11.3~4)",
+          "url": "https://blog.naver.com/xuenxu/224462809380",
+          "publishedAt": "2026-11-02T14:07:47.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "e5846c99a11f1e31f0aefff75898c725c7097c78e7c6c955763fe3dae6c47688",
+            "matchedAlias": "넥스아이",
+            "excerpt": "내일부터 바이오 기업 넥스아이 공모주 청약이 시작됩니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-399231ac0d9a66c7ab1f",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "동원파츠, 바로팜, 넥스아이 동시 청약 비교 및 청약 전략",
+          "url": "https://blog.naver.com/msql/224462678585",
+          "publishedAt": "2026-11-02T11:56:43.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "fc199d3ddb6f5a91f5ef07c564ab0a74ff3529743a55c30c0485dd5ec5ff0519",
+            "matchedAlias": "넥스아이",
+            "excerpt": "와 바로팜의 청약이 시작되고, 내일인 11월 3일 화요일부터는 넥스아이의 청약도 진행됩니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-ba4dbc1099668312e087",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "공모주 분석:넥스아이 (11/3~11/4), 한국투자증권",
+          "url": "https://blog.naver.com/juan116_/224462589214",
+          "publishedAt": "2026-11-02T10:19:01.000Z",
+          "sentiment": "CAUTION",
+          "summary": "해당 종목에 대한 작성자의 청약 불참 의사를 확인한 글입니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "67b041fc1bf3336b401c431910a206225fc35dfd13fc4bcca6c7228e867492f1",
+            "matchedAlias": "넥스아이",
+            "excerpt": "넥스아이 … 결론적으로, 이번 청약은 참여하지 않을 생각이다",
+            "classification": "explicit-stance-v1"
+          }
+        },
+        {
+          "id": "rss-88ee837e7adbd656cba9",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "2026년 11월 1주차 공모주 청약 및 상장 일정 총정리, 6종목 청약과 영광·래블업 상장",
+          "url": "https://blog.naver.com/kastro83/224458886113",
+          "publishedAt": "2026-11-01T10:00:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "ae13865d689cda952d985f80baaaeb406c696099ab4261ff71b184dc2baa4b49",
+            "matchedAlias": "넥스아이",
+            "excerpt": "이번 주에는 바로팜, 동원파츠, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 등 총 6개 종목의 청약이 시작됩니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-7e27af8e711b9178d296",
+          "sourceType": "BLOG",
+          "author": "hippocamp",
+          "title": "[2026년 11월 공모주] 넥스아이 수요예측 결과 핵심 정리 (Feat. 페이코 이벤트, 상장일, 주가, 공모가, 장외가, 바이오주)",
+          "url": "https://blog.naver.com/hippocamp/224461205612",
+          "publishedAt": "2026-11-01T07:27:45.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "794a49e0586b8b5b26b7f5abb9c9b659fe9dd5545ab5788f21c4f2f28790250b",
+            "matchedAlias": "넥스아이",
+            "excerpt": "오랜만에 등장한 신약개발 바이오 기업인데요. 바이오 관련주 ‘넥스아이’에 관해서 알아볼까요?",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-90c934e9194cba5e4a0a",
+          "sourceType": "BLOG",
+          "author": "dividendqueen",
+          "title": "넥스아이 공모주 청약 일정 공모가 하단 더 밑 8,000원",
+          "url": "https://blog.naver.com/dividendqueen/224461076240",
+          "publishedAt": "2026-11-01T05:08:43.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "756e48949507b15b6de2da33d9fa675a923a51284a4b6b77781fcfc14cc0be52",
+            "matchedAlias": "넥스아이",
+            "excerpt": "넥스아이 공모주 청약 일정 공모가 하단 더 밑 8,000원",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-4f92805d83ac84552287",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "[공모주, 실권주 주간 일정] 11월 2일 ~ 11월 6일, 주요 상황 [청약 6건, 상장 4건(실권주, 일반공모 일정 포함)]",
+          "url": "https://blog.naver.com/msql/224460206843",
+          "publishedAt": "2026-11-01T00:30:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "9d2a7e85469180e5c84d473c7398cabe31178548080a1c222a00059702a79066",
+            "matchedAlias": "넥스아이",
+            "excerpt": "다음 주에는 동원파츠, 바로팜, 넥스아이, 영광와이케이엠씨, 옵토닉스, 에이엘로봇 6종목의 공모주 청약이 진행됩니다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-29ccb6f81875a1844cea",
+          "sourceType": "BLOG",
+          "author": "lsyivy0722",
+          "title": "넥스아이 공모주 8,000원, 하단 10,500원 밑으로 정해진 이유는?",
+          "url": "https://blog.naver.com/lsyivy0722/224459508110",
+          "publishedAt": "2026-11-01T00:10:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "350def629f1347e1c7a59155a67f6bef6257f7a9dc2e8c69c47bc322340d83bc",
+            "matchedAlias": "넥스아이",
+            "excerpt": "출처: 넥스아이 공모주 [발행조건확정] 증권신고서, 금융감독원 전자공시시스템 (2026년 10월 30일)",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-8a605bceac51a916dd23",
+          "sourceType": "BLOG",
+          "author": "juan116_",
+          "title": "11월 1주차 공모주 청약/상장 일정 정리",
+          "url": "https://blog.naver.com/juan116_/224460554721",
+          "publishedAt": "2026-10-31T14:24:43.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "97ffc8ce0cfb08f4ad83727d9a341bd83b380fabcca4fd16a68bff963c2cebe6",
+            "matchedAlias": "넥스아이",
+            "excerpt": "에 일반 청약을 시작하는 종목은 6개다. 그중 바로팜·동원파츠·넥스아이·옵토닉스는 발행조건확정 공시가 나왔고, 영광와이케이엠씨·에이엘로봇은 아직 수요예측 중이다.",
+            "classification": "unclassified"
+          }
+        },
+        {
+          "id": "rss-75c8ba547f3e26f04748",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "넥스아이 공모주 청약 분석, 공모가 8,000원에도 패스하는 이유",
+          "url": "https://blog.naver.com/kastro83/224460173128",
+          "publishedAt": "2026-10-31T06:40:01.000Z",
+          "sentiment": "CAUTION",
+          "summary": "해당 종목에 대한 작성자의 청약 불참 의사를 확인한 글입니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "6bfda72089830fcadf53fa004383e44c43f7f7ebfd3fa7443840383e43eeb321",
+            "matchedAlias": "넥스아이",
+            "excerpt": "개인적으로 이번 넥스아이 공모주 청약은 패스할 생각입니다",
+            "classification": "explicit-stance-v1"
+          }
+        },
+        {
+          "id": "rss-bc01c8acb128224e8b01",
+          "sourceType": "BLOG",
+          "author": "findaway12",
+          "title": "넥스아이 공모주 수요예측 66대 1, 공모가 8천원까지 낮췄다",
+          "url": "https://blog.naver.com/findaway12/224459901778",
+          "publishedAt": "2026-10-31T04:50:00.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+            "fetchedAt": "2026-11-03T08:45:42.660Z",
+            "contentHash": "6a27c2c545920b1ed78fd74cda356552dcb82e5d2de6e8b33dff2005f95bf5c3",
+            "matchedAlias": "넥스아이",
+            "excerpt": "11월 3일부터 넥스아이 공모주 청약이 시작된다.",
+            "classification": "unclassified"
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channelId": "naver-dividendqueen",
+          "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-dreamsorte",
+          "feedUrl": "https://rss.blog.naver.com/dreamsorte.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-findaway12",
+          "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-hippocamp",
+          "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-juan116_",
+          "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
+          "status": "success",
+          "fetchedCount": 32,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-kastro83",
+          "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-lsyivy0722",
+          "feedUrl": "https://rss.blog.naver.com/lsyivy0722.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 1
+        },
+        {
+          "channelId": "naver-luy1978",
+          "feedUrl": "https://rss.blog.naver.com/luy1978.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 0
+        },
+        {
+          "channelId": "naver-msql",
+          "feedUrl": "https://rss.blog.naver.com/msql.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        },
+        {
+          "channelId": "naver-xuenxu",
+          "feedUrl": "https://rss.blog.naver.com/xuenxu.xml",
+          "status": "success",
+          "fetchedCount": 50,
+          "matchedCount": 2
+        }
+      ]
     }
   },
   {
@@ -4691,47 +5231,47 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01938746",
-      "receiptNo": "20261027000312",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
-      "receivedAt": "2026-10-27",
+      "receiptNo": "20261111000327",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000327",
+      "receivedAt": "2026-11-11",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "아델 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "아델 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000327",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-11-23",
-        "publishedAt": "2026-10-27",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일 | 2026년 11월 23일 ~ 2026년 11월 24일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
-        "sourceTitle": "아델 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
-        "checkedAt": "2026-10-30T02:31:47.645Z",
+        "sourceTitle": "아델 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000327",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-11-24",
-        "publishedAt": "2026-10-27",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일 | 2026년 11월 23일 ~ 2026년 11월 24일",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "아델 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
-        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000327",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-11-26",
-        "publishedAt": "2026-10-27",
+        "publishedAt": "2026-11-11",
         "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일 2026년 11월 26일(목)에 환불합니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       },
       "listingDate": {
         "sourceTitle": "아델 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261027000312",
-        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000327",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": null,
-        "publishedAt": "2026-10-27",
+        "publishedAt": "2026-11-11",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
@@ -4958,10 +5498,10 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01860700",
-      "receiptNo": "20261022000478",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
-      "receivedAt": "2026-10-22",
-      "reportName": "증권신고서(지분증권)"
+      "receiptNo": "20261111000319",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000319",
+      "receivedAt": "2026-11-11",
+      "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
@@ -4975,7 +5515,7 @@
     "underwriters": [],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "circulatingSupplyRate": 37.5,
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
     "aiScore": 0,
@@ -4994,45 +5534,44 @@
     "expertReviews": [],
     "pendingForecastFields": [
       "institutionalCompetitionRate",
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
+      "lockupCommitmentRate"
     ],
     "fieldEvidence": {
       "subscriptionStart": {
-        "sourceTitle": "인터엑스 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "인터엑스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000319",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-12-09",
-        "publishedAt": "2026-10-22",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일주3) | 일반투자자 | 개시일 | 2026년 12월 9일(수)",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
-        "sourceTitle": "인터엑스 DART 최신 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
-        "checkedAt": "2026-10-30T02:31:06.835Z",
+        "sourceTitle": "인터엑스 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000319",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-12-10",
-        "publishedAt": "2026-10-22",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일주3) | 일반투자자 | 종료일 | 2026년 12월 10일(목)",
-        "parserVersion": "official-verification-v1"
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "인터엑스 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
-        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000319",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-12-14",
-        "publishedAt": "2026-10-22",
+        "publishedAt": "2026-11-11",
         "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일 당일(2026년 12월 14일(월))에 환불합니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       },
       "listingDate": {
         "sourceTitle": "인터엑스 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022000478",
-        "checkedAt": "2026-10-31T08:40:33.068Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000319",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": null,
-        "publishedAt": "2026-10-22",
+        "publishedAt": "2026-11-11",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2"
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
@@ -5526,9 +6065,9 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01077540",
-      "receiptNo": "20261105000234",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
-      "receivedAt": "2026-11-05",
+      "receiptNo": "20261111000341",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000341",
+      "receivedAt": "2026-11-11",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
@@ -5567,37 +6106,37 @@
     "fieldEvidence": {
       "subscriptionStart": {
         "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
-        "checkedAt": "2026-11-06T06:36:15.937Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000341",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-12-10",
-        "publishedAt": "2026-11-05",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일 | 2026년 12월 10일 ~ 2026년 12월 11일",
         "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
         "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
-        "checkedAt": "2026-11-06T06:36:15.937Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000341",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-12-11",
-        "publishedAt": "2026-11-05",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일 | 2026년 12월 10일 ~ 2026년 12월 11일",
         "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
-        "checkedAt": "2026-11-06T06:36:15.937Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000341",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-12-15",
-        "publishedAt": "2026-11-05",
+        "publishedAt": "2026-11-11",
         "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일(2026년 12월 15일)에 환불합니다",
         "parserVersion": "official-verification-v3"
       },
       "listingDate": {
         "sourceTitle": "씨아이에스케미칼 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261105000234",
-        "checkedAt": "2026-11-06T06:36:15.937Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000341",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": null,
-        "publishedAt": "2026-11-05",
+        "publishedAt": "2026-11-11",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장공시시스템을 통하여 안내할 예정입니다",
         "parserVersion": "official-verification-v3"
       }
@@ -5817,13 +6356,19 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "02038432",
-      "receiptNo": "20261012000149",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012000149",
-      "receivedAt": "2026-10-12",
-      "reportName": "증권신고서(지분증권)"
+      "receiptNo": "20261030000200",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000200",
+      "receivedAt": "2026-10-30",
+      "reportName": "철회신고서"
     },
     "dataQuality": {
-      "status": "unverified"
+      "status": "unverified",
+      "sources": [
+        {
+          "title": "SimwonAmericaCorp. 철회신고서 (2026-10-30)",
+          "url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000200"
+        }
+      ]
     },
     "subscriptionStart": "",
     "subscriptionEnd": "",
@@ -5862,7 +6407,9 @@
       "checkedAt": "2026-10-30T02:23:49.036Z",
       "conflicts": [],
       "coveredFields": []
-    }
+    },
+    "isCancelled": true,
+    "cancelReason": "2026-10-30 철회신고서 접수. 공모 철회로 잔여 청약·환불·상장 일정이 취소되었습니다."
   },
   {
     "id": "dart-01706509",
@@ -5872,17 +6419,17 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01706509",
-      "receiptNo": "20261030000682",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
-      "receivedAt": "2026-10-30",
+      "receiptNo": "20261111000426",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000426",
+      "receivedAt": "2026-11-11",
       "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
     },
-    "subscriptionStart": "2026-12-01",
-    "subscriptionEnd": "2026-12-02",
-    "refundDate": "2026-12-04",
+    "subscriptionStart": "2026-12-09",
+    "subscriptionEnd": "2026-12-10",
+    "refundDate": "2026-12-14",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -5912,41 +6459,41 @@
       "circulatingSupplyRate"
     ],
     "fieldEvidence": {
+      "listingDate": {
+        "sourceTitle": "다비오 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000426",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
+        "value": null,
+        "publishedAt": "2026-11-11",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v3"
+      },
       "subscriptionStart": {
         "sourceTitle": "다비오 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
-        "value": "2026-12-01",
-        "publishedAt": "2026-10-30",
-        "excerpt": "청약기일 | 2026년 12월 1일 ~ 2026년 12월 2일",
-        "parserVersion": "official-verification-v2"
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000426",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
+        "value": "2026-12-09",
+        "publishedAt": "2026-11-11",
+        "excerpt": "청약기일 | 2026년 12월 9일 ~ 2026년 12월 10일",
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
         "sourceTitle": "다비오 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
-        "value": "2026-12-02",
-        "publishedAt": "2026-10-30",
-        "excerpt": "청약기일 | 2026년 12월 1일 ~ 2026년 12월 2일",
-        "parserVersion": "official-verification-v2"
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000426",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
+        "value": "2026-12-10",
+        "publishedAt": "2026-11-11",
+        "excerpt": "청약기일 | 2026년 12월 9일 ~ 2026년 12월 10일",
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "다비오 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
-        "value": "2026-12-04",
-        "publishedAt": "2026-10-30",
-        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입일 당일 2026년 12월 4일(금)에 환불합니다",
-        "parserVersion": "official-verification-v2"
-      },
-      "listingDate": {
-        "sourceTitle": "다비오 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030000682",
-        "checkedAt": "2026-10-31T09:01:39.729Z",
-        "value": null,
-        "publishedAt": "2026-10-30",
-        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2"
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000426",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
+        "value": "2026-12-14",
+        "publishedAt": "2026-11-11",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입일 당일 2026년 12월 14일(월)에 환불합니다",
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
@@ -6057,10 +6604,10 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "02041694",
-      "receiptNo": "20261029000239",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239",
-      "receivedAt": "2026-10-29",
-      "reportName": "[첨부정정]증권신고서(지분증권)"
+      "receiptNo": "20261111000235",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000235",
+      "receivedAt": "2026-11-11",
+      "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
@@ -6074,11 +6621,10 @@
     "underwriters": [],
     "institutionalCompetitionRate": 0,
     "lockupCommitmentRate": 0,
-    "circulatingSupplyRate": 0,
+    "circulatingSupplyRate": 98.35,
     "pendingForecastFields": [
       "institutionalCompetitionRate",
-      "lockupCommitmentRate",
-      "circulatingSupplyRate"
+      "lockupCommitmentRate"
     ],
     "totalOfferingAmount": 0,
     "marketCapAtIpo": 0,
@@ -6099,43 +6645,39 @@
     "fieldEvidence": {
       "subscriptionStart": {
         "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000235",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-11-24",
-        "publishedAt": "2026-10-28",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일 | 2026년 11월 24일 ~ 2026년 11월 25일",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
         "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000235",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-11-25",
-        "publishedAt": "2026-10-28",
+        "publishedAt": "2026-11-11",
         "excerpt": "청약기일 | 2026년 11월 24일 ~ 2026년 11월 25일",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000235",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": "2026-11-27",
-        "publishedAt": "2026-10-28",
+        "publishedAt": "2026-11-11",
         "excerpt": "초과 청약증거금이 있는 경우에는 이를 주금납입기일(2026년 11월 27일)에 환불합니다",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+        "parserVersion": "official-verification-v3"
       },
       "listingDate": {
         "sourceTitle": "신영해피투모로우제12호기업인수목적 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261028000471",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111000235",
+        "checkedAt": "2026-11-12T03:32:00.884Z",
         "value": null,
-        "publishedAt": "2026-10-28",
+        "publishedAt": "2026-11-11",
         "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 시장 공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261029000239"
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
