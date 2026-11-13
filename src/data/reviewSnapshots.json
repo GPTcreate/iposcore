@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T03:32:40.650Z",
+  "updatedAt": "2026-11-13T02:24:07.733Z",
   "snapshots": {
     "[\"al-robot\",\"2026-10-26\"]": {
       "ipoId": "al-robot",
@@ -1472,11 +1472,49 @@
       "ipoId": "mbd",
       "stockName": "엠비디",
       "subscriptionStart": "2026-11-12",
-      "collectedAt": "2026-11-12T03:32:40.650Z",
-      "lastSuccessfulAt": "2026-11-12T03:32:40.650Z",
+      "collectedAt": "2026-11-13T02:24:07.733Z",
+      "lastSuccessfulAt": "2026-11-13T02:24:07.733Z",
       "status": "success",
       "reviewPolicy": "single-issuer-analysis-v1",
       "reviews": [
+        {
+          "id": "rss-1484094dab319f4fcad3",
+          "sourceType": "BLOG",
+          "author": "msql",
+          "title": "청약 2일차 공모주 실시간 경쟁률 및 팁 / 엠비디, 삼성바이오로직스",
+          "url": "https://blog.naver.com/msql/224475221022",
+          "publishedAt": "2026-11-12T23:08:39.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/msql.xml",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
+            "contentHash": "514eab4db257bf298df637a37c7e35bbfc315e4cab0e55ee1d2b07224cb82b21",
+            "matchedAlias": "엠비디",
+            "excerpt": "오늘은 엠비디, 삼성바이오로직스의 청약이 마무리 됩니다.",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        },
+        {
+          "id": "rss-2a60a783730fbc015d76",
+          "sourceType": "BLOG",
+          "author": "kastro83",
+          "title": "엠비디 공모주 청약 1일차 경쟁률, 균등배정 44주? 최종 예상과 단독상장 기대감",
+          "url": "https://blog.naver.com/kastro83/224474504100",
+          "publishedAt": "2026-11-12T07:45:37.000Z",
+          "sentiment": "UNCLASSIFIED",
+          "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
+          "evidence": {
+            "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
+            "contentHash": "4071b1b516da16d4eb0b64e06b51f79bcde766b075ac0c4b0fee15826e54a619",
+            "matchedAlias": "엠비디",
+            "excerpt": "2026년 11월 12일부터 13일까지 진행되는 엠비디 공모주 청약 1일차 경쟁률 및 균등배정과 비례배정 전망을 정리한 글입니다.",
+            "classification": "unclassified",
+            "relevance": "single-issuer-analysis-v1"
+          }
+        },
         {
           "id": "rss-1592c05f924d4aa30521",
           "sourceType": "BLOG",
@@ -1488,7 +1526,7 @@
           "summary": "해당 종목에 대한 작성자의 청약 불참 의사를 확인한 글입니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/findaway12.xml",
-            "fetchedAt": "2026-11-12T03:32:40.650Z",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
             "contentHash": "a3ab5359efbca6bfe7b85fbf8a7d928f4c89683d3318e799259485ff87cd24bf",
             "matchedAlias": "엠비디",
             "excerpt": "엠비디 … 나는 이번 청약에 굳이 참여하지 않을 생각이다",
@@ -1507,7 +1545,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/juan116_.xml",
-            "fetchedAt": "2026-11-12T03:32:40.650Z",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
             "contentHash": "9893d9610caaf1c47054989a0ed5f90f718c1a072e4fdf9c9eaddd640fdc76d6",
             "matchedAlias": "엠비디",
             "excerpt": "와 신약 평가 CRO, 항암제 감수성 검사 서비스를 영위 중인 엠비디의 상장관련 정보를 알아보자. 확정 공모가는 희망밴드 9,600~11,700원의",
@@ -1526,7 +1564,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/dividendqueen.xml",
-            "fetchedAt": "2026-11-12T03:32:40.650Z",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
             "contentHash": "8d84b80dc6cc7f098505771e750c6387204f08ffddbd7566af646cbdf09050fe",
             "matchedAlias": "엠비디",
             "excerpt": "엠비디 공모주 청약 신규상장주 공모가 밴드 하회 7,000원 확정",
@@ -1545,7 +1583,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-12T03:32:40.650Z",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
             "contentHash": "4e9bd84f8a17e7ca6714ac0579bf3729392634020d9631b232951fde534c785b",
             "matchedAlias": "엠비디",
             "excerpt": "월 12일(목)부터 씨앤엠, 제이앤티지와 함께 청약이 진행되는 엠비디의 수요예측 결과가 발표되었습니다.",
@@ -1564,7 +1602,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/hippocamp.xml",
-            "fetchedAt": "2026-11-12T03:32:40.650Z",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
             "contentHash": "89152a0b2b4682620815a8d24f14cb359abb4fe27db497b7874b4df3ca90beb1",
             "matchedAlias": "엠비디",
             "excerpt": "잘 듣는지 검사해 주는 사업도 진행하고 있는 바이오 관련주 ‘엠비디’에 관해서 알아볼까요?",
@@ -1583,7 +1621,7 @@
           "summary": "해당 종목을 다룬 글입니다. 작성자의 청약 의사는 분류하지 않았습니다.",
           "evidence": {
             "feedUrl": "https://rss.blog.naver.com/msql.xml",
-            "fetchedAt": "2026-11-12T03:32:40.650Z",
+            "fetchedAt": "2026-11-13T02:24:07.733Z",
             "contentHash": "461f5ed041e98d22db7f3f166d3ab01d94b74a79cc925bc65645dbd4688e1c97",
             "matchedAlias": "엠비디",
             "excerpt": "다음 주에 진행될 예정인 엠비디는 환자 유래 암세포를 배양해 항암제 반응을 확인하는 정밀의료 기업입니다.",
@@ -1633,7 +1671,7 @@
           "feedUrl": "https://rss.blog.naver.com/kastro83.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 0
+          "matchedCount": 1
         },
         {
           "channelId": "naver-lsyivy0722",
@@ -1654,7 +1692,7 @@
           "feedUrl": "https://rss.blog.naver.com/msql.xml",
           "status": "success",
           "fetchedCount": 50,
-          "matchedCount": 2
+          "matchedCount": 3
         },
         {
           "channelId": "naver-xuenxu",
