@@ -5142,10 +5142,10 @@
     "expertReviews": [],
     "discovery": {
       "corpCode": "01795859",
-      "receiptNo": "20261103000358",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261103000358",
-      "receivedAt": "2026-11-03",
-      "reportName": "[기재정정]증권신고서(지분증권)"
+      "receiptNo": "20261113000615",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113000615",
+      "receivedAt": "2026-11-13",
+      "reportName": "[첨부정정]증권신고서(지분증권)"
     },
     "fieldEvidence": {
       "subscriptionStart": {
@@ -5631,17 +5631,17 @@
     "status": "UPCOMING",
     "discovery": {
       "corpCode": "01950720",
-      "receiptNo": "20261026000367",
-      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367",
-      "receivedAt": "2026-10-26",
-      "reportName": "[첨부정정]증권신고서(지분증권)"
+      "receiptNo": "20261113001531",
+      "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113001531",
+      "receivedAt": "2026-11-13",
+      "reportName": "[기재정정]증권신고서(지분증권)"
     },
     "dataQuality": {
       "status": "unverified"
     },
-    "subscriptionStart": "2026-11-24",
-    "subscriptionEnd": "2026-11-25",
-    "refundDate": "2026-11-27",
+    "subscriptionStart": "2026-12-14",
+    "subscriptionEnd": "2026-12-15",
+    "refundDate": "2026-12-17",
     "priceBandMin": 0,
     "priceBandMax": 0,
     "confirmedPrice": 0,
@@ -5670,45 +5670,41 @@
       "lockupCommitmentRate"
     ],
     "fieldEvidence": {
+      "listingDate": {
+        "sourceTitle": "제논 DART 공시 일정",
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113001531",
+        "checkedAt": "2026-11-14T01:58:33.092Z",
+        "value": null,
+        "publishedAt": "2026-11-13",
+        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
+        "parserVersion": "official-verification-v3"
+      },
       "subscriptionStart": {
         "sourceTitle": "제논 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
-        "value": "2026-11-24",
-        "publishedAt": "2026-10-26",
-        "excerpt": "청약기일 | 2026년 11월 24일~2026년 11월 25일",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113001531",
+        "checkedAt": "2026-11-14T01:58:33.092Z",
+        "value": "2026-12-14",
+        "publishedAt": "2026-11-13",
+        "excerpt": "청약기일 | 2026년 12월 14일~2026년 12월 15일",
+        "parserVersion": "official-verification-v3"
       },
       "subscriptionEnd": {
         "sourceTitle": "제논 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
-        "value": "2026-11-25",
-        "publishedAt": "2026-10-26",
-        "excerpt": "청약기일 | 2026년 11월 24일~2026년 11월 25일",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113001531",
+        "checkedAt": "2026-11-14T01:58:33.092Z",
+        "value": "2026-12-15",
+        "publishedAt": "2026-11-13",
+        "excerpt": "청약기일 | 2026년 12월 14일~2026년 12월 15일",
+        "parserVersion": "official-verification-v3"
       },
       "refundDate": {
         "sourceTitle": "제논 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
-        "value": "2026-11-27",
-        "publishedAt": "2026-10-26",
-        "excerpt": "초과 청약증거금이 있는 경우에는 이를 2026년 11월 27일(금)에 환불합니다",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
-      },
-      "listingDate": {
-        "sourceTitle": "제논 DART 공시 일정",
-        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000001",
-        "checkedAt": "2026-10-30T03:52:02.950Z",
-        "value": null,
-        "publishedAt": "2026-10-26",
-        "excerpt": "주권의 신규상장 및 매매개시일은 아직 확정되지 않았으며, 향후 일정이 확정되는 대로 한국거래소 공시시스템을 통하여 안내할 예정입니다",
-        "parserVersion": "official-verification-v2",
-        "linkedFrom": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261026000367"
+        "sourceUrl": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113001531",
+        "checkedAt": "2026-11-14T01:58:33.092Z",
+        "value": "2026-12-17",
+        "publishedAt": "2026-11-13",
+        "excerpt": "초과 청약증거금이 있는 경우에는 이를 2026년 12월 17일(목)에 환불합니다",
+        "parserVersion": "official-verification-v3"
       }
     },
     "scheduleVerification": {
